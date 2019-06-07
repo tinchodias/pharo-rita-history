@@ -2,15 +2,15 @@ Class {
 	#name : #RiTestCase,
 	#superclass : #IceAbstractTestCase,
 	#instVars : [
-		'repositoryModel'
+		'repository'
 	],
 	#category : #'Rita-Tests'
 }
 
 { #category : #running }
-RiTestCase >> buildRepositoryModel [
-	repositoryModel := RiRepositoryModel new
-		repository: self repository;
+RiTestCase >> buildRepository [
+	repository := RiRepository new
+		iceRepository: self repository;
 		process;
 		yourself
 

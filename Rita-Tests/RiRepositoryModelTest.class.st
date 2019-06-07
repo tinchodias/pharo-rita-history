@@ -24,14 +24,14 @@ RiRepositoryModelTest >> testMerge [
 	c3 := self commitWithMessage: '3' andParents: { c2. c1 }.
 	self createTag: 'B'.
 
-	self buildRepositoryModel.
+	self buildRepository.
 
-	self assert: repositoryModel elements size equals: 3.
-	self assert: repositoryModel elementMarks size equals: 3.
+	self assert: repository elements size equals: 3.
+	self assert: repository elementMarks size equals: 3.
 
-	e1 := repositoryModel elementByCommit at: c1.
-	e2 := repositoryModel elementByCommit at: c2.
-	e3 := repositoryModel elementByCommit at: c3.
+	e1 := repository elementByCommit at: c1.
+	e2 := repository elementByCommit at: c2.
+	e3 := repository elementByCommit at: c3.
 
 	"ancestors"
 	self assert: e1 ancestors isEmpty.
@@ -63,9 +63,9 @@ RiRepositoryModelTest >> testSimple [
 	self commitWithMessage: '3'.
 	self createTag: 'A'.
 	
-	self buildRepositoryModel.
+	self buildRepository.
 
-	self assert: repositoryModel elements size equals: 3.
-	self assert: repositoryModel elementMarks size equals: 2.
+	self assert: repository elements size equals: 3.
+	self assert: repository elementMarks size equals: 2.
 
 ]

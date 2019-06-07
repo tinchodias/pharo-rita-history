@@ -21,9 +21,9 @@ RiSummaryGraphTest >> assert: aRiMarkSummaryElement summarizes: aNumberOfCommits
 
 { #category : #tests }
 RiSummaryGraphTest >> buildSummaryGraph [
-	self buildRepositoryModel.
+	self buildRepository.
 	summaryGraph := RiSummaryGraph new
-		repositoryModel: repositoryModel;
+		repository: repository;
 		process;
 		yourself.
 		
