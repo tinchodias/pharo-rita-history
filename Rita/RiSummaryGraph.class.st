@@ -32,7 +32,7 @@ RiSummaryGraph >> process [
 	elementByCommit := Dictionary new.
 	
 	"TODO: fix"
-	repositoryModel elements
+	repository elements
 		select: [:each | each class = RiCommit ]
 		thenDo: [ :each | self processCommit: each ].
 	
@@ -59,11 +59,11 @@ RiSummaryGraph >> processCommit: aRiCommit [
 ]
 
 { #category : #accessing }
-RiSummaryGraph >> repositoryModel [
-	^ repositoryModel
+RiSummaryGraph >> repository [
+	^ repository
 ]
 
 { #category : #accessing }
-RiSummaryGraph >> repositoryModel: aRiRepositoryModel [
-	repositoryModel := aRiRepositoryModel
+RiSummaryGraph >> repository: aRiRepository [
+	repository := aRiRepository
 ]

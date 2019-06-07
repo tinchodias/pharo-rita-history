@@ -2,51 +2,61 @@
 This is a model of a IceLibGitRepository.
 "
 Class {
-	#name : #RiRepositoryModel,
+	#name : #RiRepository,
 	#superclass : #Object,
 	#instVars : [
-		'repository',
 		'elements',
 		'workingCopyElement',
 		'elementByCommit',
-		'elementMarks'
+		'elementMarks',
+		'iceRepository'
 	],
 	#category : #'Rita-Core'
 }
 
 { #category : #accessing }
-RiRepositoryModel >> elementByCommit [
+RiRepository >> elementByCommit [
 	^ elementByCommit
 ]
 
 { #category : #accessing }
-RiRepositoryModel >> elementMarks [
+RiRepository >> elementMarks [
 	^ elementMarks
 ]
 
 { #category : #accessing }
-RiRepositoryModel >> elements [
+RiRepository >> elements [
 	^ elements
 ]
 
+{ #category : #accessing }
+RiRepository >> iceRepository [
+	^ iceRepository
+]
+
+{ #category : #accessing }
+RiRepository >> iceRepository: anIceLibgitRepository [
+	iceRepository := anIceLibgitRepository
+]
+
 { #category : #processing }
-RiRepositoryModel >> process [
+RiRepository >> process [
 
 	| walk marks |
 	elementMarks := OrderedCollection new.
 	elements := OrderedCollection new.
 	elementByCommit := Dictionary new.
-	marks := repository tags, repository localBranches, repository remoteTrackedBranches.
+	marks := iceRepository tags, iceRepository localBranches, iceRepository remoteTrackedBranches.
 
 	"Determine the commits in the proper order via Libgit's revwalk."
-	walk := repository newCommitWalk.
+	walk := iceRepository newCommitWalk.
 	walk revwalk
 		beSortedByCommitTime;
 		beSortedParentsBeforeChildren.
 	(marks collect: #commit as: Set) do: [ :each | walk fromCommit: each ].
 	walk commitsDo: [:each |
 		| newCommit |
-		newCommit := RiCommit model: self commit: each.
+		newCommit := RiCommit repository: self iceCommit: each.
 		elements add: newCommit.
 		elementByCommit at: each put: newCommit ].
 	self processCommitChildren.
@@ -61,7 +71,7 @@ RiRepositoryModel >> process [
 ]
 
 { #category : #processing }
-RiRepositoryModel >> processCommitChildren [
+RiRepository >> processCommitChildren [
 
 	elementByCommit valuesDo: [ :each | 
 		each ancestors do: [ :ancestor |
@@ -69,7 +79,7 @@ RiRepositoryModel >> processCommitChildren [
 ]
 
 { #category : #private }
-RiRepositoryModel >> processMark: anIceCommitish [ 
+RiRepository >> processMark: anIceCommitish [ 
 
 	| element mark |
 	element := elementByCommit at: anIceCommitish commit.
@@ -95,12 +105,12 @@ RiRepositoryModel >> processMark: anIceCommitish [
 ]
 
 { #category : #accessing }
-RiRepositoryModel >> processWorkingCopy [
+RiRepository >> processWorkingCopy [
 
-	workingCopyElement := elementByCommit at: repository workingCopy referenceCommit.
+	workingCopyElement := elementByCommit at: iceRepository workingCopy referenceCommit.
 	workingCopyElement addMark: (RiWorkingCopyMark new element: workingCopyElement; yourself).
 
-	repository workingCopy isModified ifTrue: [
+	iceRepository workingCopy isModified ifTrue: [
 		elements
 			add: (RiWorkingCopyChanges new ancestorWorkingCopyElement: workingCopyElement)
 			before: workingCopyElement ].
@@ -108,19 +118,9 @@ RiRepositoryModel >> processWorkingCopy [
 ]
 
 { #category : #accessing }
-RiRepositoryModel >> processWorkingTree [
+RiRepository >> processWorkingTree [
 
 "	workingCopyElement := elements detect: [ :each |
 		each isCommitElement and: [ each commit = repository headCommit ] ].
 "
-]
-
-{ #category : #accessing }
-RiRepositoryModel >> repository [
-	^ repository
-]
-
-{ #category : #accessing }
-RiRepositoryModel >> repository: anIceLibgitRepository [
-	repository := anIceLibgitRepository
 ]

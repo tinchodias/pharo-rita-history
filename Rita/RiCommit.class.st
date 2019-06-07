@@ -6,17 +6,17 @@ Class {
 	#superclass : #RiElement,
 	#instVars : [
 		'commit',
-		'model',
 		'ancestors',
-		'children'
+		'children',
+		'repository'
 	],
 	#category : #'Rita-Core'
 }
 
 { #category : #'instance creation' }
-RiCommit class >> model: aRiRepositoryModel commit: anIceCommit [
+RiCommit class >> repository: aRiRepository iceCommit: anIceCommit [
 	^ self new
-		model: aRiRepositoryModel;
+		repository: aRiRepository;
 		commit: anIceCommit;
 		yourself
 ]
@@ -30,7 +30,7 @@ RiCommit >> addChildren: aRiElement [
 RiCommit >> ancestors [
 	^ ancestors ifNil: [ 
 		ancestors := commit ancestors
-			collect: [ :each | model elementByCommit at: each ] ]
+			collect: [ :each | repository elementByCommit at: each ] ]
 ]
 
 { #category : #accessing }
@@ -64,16 +64,6 @@ RiCommit >> date [
 	^ commit datetime asDate
 ]
 
-{ #category : #accessing }
-RiCommit >> model [
-	^ model
-]
-
-{ #category : #accessing }
-RiCommit >> model: anObject [
-	model := anObject
-]
-
 { #category : #printing }
 RiCommit >> printOn: aStream [
 
@@ -82,6 +72,16 @@ RiCommit >> printOn: aStream [
 		nextPutAll: '(';
 		nextPutAll: self shortId asString;
 		nextPutAll: ')'
+]
+
+{ #category : #accessing }
+RiCommit >> repository [
+	^ repository
+]
+
+{ #category : #accessing }
+RiCommit >> repository: anObject [
+	repository := anObject
 ]
 
 { #category : #accessing }

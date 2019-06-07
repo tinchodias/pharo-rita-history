@@ -14,8 +14,8 @@ Class {
 { #category : #examples }
 RiRepositoryBrowser class >> example1 [
 	self openWith:
-		(RiRepositoryModel new
-			repository: self exampleRepository;
+		(RiRepository new
+			iceRepository: self exampleRepository;
 			process;
 			yourself)
 ]
@@ -171,9 +171,9 @@ RiRepositoryBrowser >> menuColumn: column row: rowIndex [
 ]
 
 { #category : #accessing }
-RiRepositoryBrowser >> model: aRiRepositoryModel [
+RiRepositoryBrowser >> model: aRiRepository [
 
-	self elements: aRiRepositoryModel elements
+	self elements: aRiRepository elements
 ]
 
 { #category : #visiting }

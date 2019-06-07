@@ -12,5 +12,5 @@ RiWorkingCopyMark >> accept: aVisitor [
 { #category : #accessing }
 RiWorkingCopyMark >> workingCopy [
 	self flag: #fix.
-	^ element model repository workingCopy 
+	^ element repository iceRepository workingCopy 
 ]

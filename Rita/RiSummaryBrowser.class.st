@@ -7,10 +7,10 @@ Class {
 { #category : #examples }
 RiSummaryBrowser class >> example1 [
 
-	| repositoryModel graph |
-	repositoryModel := RiRepositoryModel new repository: self exampleRepository; process; yourself.
+	| repository graph |
+	repository := RiRepository new iceRepository: self exampleRepository; process; yourself.
 	graph := RiSummaryGraph new
-		repositoryModel: repositoryModel;
+		repository: repository;
 		process;
 		yourself.
 	
