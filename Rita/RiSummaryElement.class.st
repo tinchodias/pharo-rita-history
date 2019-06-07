@@ -2,10 +2,16 @@ Class {
 	#name : #RiSummaryElement,
 	#superclass : #Object,
 	#instVars : [
-		'commits'
+		'commits',
+		'ancestors'
 	],
 	#category : #'Rita-Summary'
 }
+
+{ #category : #accessing }
+RiSummaryElement >> addAncestor: aRiSummaryElement [ 
+	self ancestors add: aRiSummaryElement
+]
 
 { #category : #accessing }
 RiSummaryElement >> addCommit: aRiCommit [ 
@@ -13,9 +19,20 @@ RiSummaryElement >> addCommit: aRiCommit [
 ]
 
 { #category : #accessing }
+RiSummaryElement >> ancestors [
+	^ ancestors ifNil: [ 
+		ancestors := OrderedCollection new ]
+]
+
+{ #category : #accessing }
 RiSummaryElement >> commits [
 	^ commits ifNil: [ 
 		commits := OrderedCollection new ]
+]
+
+{ #category : #testing }
+RiSummaryElement >> hasMarks [
+	^ self marks notEmpty
 ]
 
 { #category : #accessing }

@@ -26,11 +26,10 @@ RiSummaryGraphTest >> buildSummaryGraph [
 		repositoryModel: repositoryModel;
 		process;
 		yourself.
-]
-
-{ #category : #running }
-RiSummaryGraphTest >> checkoutBranch: aString [
-	^ self repository checkoutBranch: aString
+		
+"	RiRepositoryBrowser openWith: repositoryModel.
+	RiSummaryBrowser openWith: summaryGraph.
+	1halt."
 ]
 
 { #category : #tests }
@@ -66,6 +65,66 @@ RiSummaryGraphTest >> testHiddenMerge [
 		assert: summaryGraph elements first
 		summarizes: 2
 		markClasses: { RiTagMark. RiBranchMark. RiWorkingCopyMark }.
+	self
+		assert: summaryGraph elements second
+		summarizes: 1
+		markClasses: { RiTagMark }.
+
+]
+
+{ #category : #tests }
+RiSummaryGraphTest >> testHiddenMerge2 [
+	"
+	input:
+
+	7 		master
+	|
+	6		
+	|\
+	| 5
+	|/
+	4		
+	|\
+	| 3
+	|/
+	2
+	|
+	1 		A
+
+	output:
+	
+	o 		master
+	|
+	o 		A
+
+	"
+	
+	| c2 c3 c4 c5 |
+	self commitWithMessage: '1'.
+	self createTag: 'A'.
+
+	c2 := self commitWithMessage: '2'.
+	self checkoutBranch: 'tmp'.
+	c3 := self commitWithMessage: '3'.
+	self checkoutBranch: 'master'.
+	c4 := self commitWithMessage: '4' andParents: { c2. c3 }.
+
+	self checkoutBranch: 'tmp2'.
+	c5 := self commitWithMessage: '5'.
+	self checkoutBranch: 'master'.
+	self commitWithMessage: '6' andParents: { c4. c5 }.
+
+	self commitWithMessage: '7'.
+	self deleteBranch: 'tmp'.
+	self deleteBranch: 'tmp2'.
+
+	self buildSummaryGraph.
+
+	self assert: summaryGraph elements size equals: 2.
+	self
+		assert: summaryGraph elements first
+		summarizes: 6
+		markClasses: { RiBranchMark. RiWorkingCopyMark }.
 	self
 		assert: summaryGraph elements second
 		summarizes: 1

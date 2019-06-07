@@ -8,30 +8,43 @@ Class {
 		'hiedraColumnController',
 		'marksByCommit'
 	],
-	#category : #'Rita-Core'
+	#category : #'Rita-UI'
 }
 
 { #category : #examples }
 RiRepositoryBrowser class >> example1 [
+	self openWith:
+		(RiRepositoryModel new
+			repository: self exampleRepository;
+			process;
+			yourself)
+]
 
-	| repository dataSource table |
-	repository := IceRepository registry detect: [ :each | each name beginsWith: 'pharo' ].
+{ #category : #examples }
+RiRepositoryBrowser class >> exampleRepository [
+	^ IceRepository registry detect: [ :each | each name beginsWith: 'iceberg' ]
+]
+
+{ #category : #examples }
+RiRepositoryBrowser class >> openWith: repositoryModel [
+
+	| dataSource table |
 	dataSource := self new.
 
 	table := FTTableMorph new
-		extent: 1200 @ 700;
+		extent: 500 @ 700;
 		addColumn: (FTColumn id: ' ');
-		addColumn: (FTColumn id: 'Description');
 		addColumn: ((FTColumn id: 'SHA') width: 60);
+		addColumn: (FTColumn id: 'Description');
 		addColumn: ((FTColumn id: 'Author') width: 120);
 		addColumn: ((FTColumn id: 'Date') width: 120);
 		dataSource: dataSource;
 		beResizable;
 		yourself.
 	
-	dataSource model: (RiRepositoryModel new repository: repository; process; yourself).
+	dataSource model: repositoryModel.
 	
-	table openInWindowLabeled: repository name
+	table openInWindowLabeled: 'Repository'
 ]
 
 { #category : #accessing }
@@ -146,6 +159,15 @@ RiRepositoryBrowser >> markMorphText: text icon: icon color: color [
 { #category : #accessing }
 RiRepositoryBrowser >> markMorphsAt: aRiElement [
 	^ aRiElement marks collect: [ :each | each accept: self ]
+]
+
+{ #category : #accessing }
+RiRepositoryBrowser >> menuColumn: column row: rowIndex [
+	| element menu |
+	element := self elementAt: rowIndex.
+	menu := UIManager default newMenuIn: self table for: self.
+	menu add: 'Inspect' target: element selector: #inspect.
+	^ menu
 ]
 
 { #category : #accessing }
