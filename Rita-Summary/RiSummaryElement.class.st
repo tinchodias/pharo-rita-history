@@ -5,7 +5,7 @@ Class {
 		'commits',
 		'ancestors'
 	],
-	#category : #'Rita-Summary'
+	#category : #'Rita-Summary-Model'
 }
 
 { #category : #accessing }

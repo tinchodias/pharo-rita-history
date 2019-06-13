@@ -6,7 +6,7 @@ Class {
 		'elementByCommit',
 		'repository'
 	],
-	#category : #'Rita-Summary'
+	#category : #'Rita-Summary-Model'
 }
 
 { #category : #accessing }

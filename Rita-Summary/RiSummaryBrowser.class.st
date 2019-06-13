@@ -1,7 +1,7 @@
 Class {
 	#name : #RiSummaryBrowser,
 	#superclass : #RiRepositoryBrowser,
-	#category : #'Rita-UI'
+	#category : #'Rita-Summary-UI'
 }
 
 { #category : #examples }
