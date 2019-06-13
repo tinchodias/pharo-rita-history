@@ -106,6 +106,8 @@ RiRepositoryBrowser >> elements: commits [
 		newRulerValues: elements
 		linksBlock: [ :each | each ancestors ]).
 
+	hiedraColumnController table: self table.
+
 	"Reset the visualization"
 	hiedraColumnController reset.
 
@@ -135,11 +137,8 @@ RiRepositoryBrowser >> iconForWorkingCopy [
 RiRepositoryBrowser >> initialize [
 
 	super initialize.
-	hiedraColumnController := HiColumnController new.
-	hiedraColumnController renderer
-		arrowSize: 0;
-		nodeConnectionOffset: 0;
-		nodeRadius: 1.75
+	hiedraColumnController := HiRS3ColumnController new.
+
 ]
 
 { #category : #private }
