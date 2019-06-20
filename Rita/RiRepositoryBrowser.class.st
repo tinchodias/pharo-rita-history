@@ -22,7 +22,7 @@ RiRepositoryBrowser class >> example1 [
 
 { #category : #examples }
 RiRepositoryBrowser class >> exampleRepository [
-	^ IceRepository registry detect: [ :each | each name beginsWith: 'iceberg' ]
+	^ IceRepository registry detect: [ :each | each name beginsWith: 'pharo-rita-history' ]
 ]
 
 { #category : #examples }
@@ -34,9 +34,9 @@ RiRepositoryBrowser class >> openWith: repositoryModel [
 	table := FTTableMorph new
 		extent: 500 @ 700;
 		addColumn: (FTColumn id: ' ');
-		addColumn: ((FTColumn id: 'SHA') width: 60);
-		addColumn: (FTColumn id: 'Description');
+"		addColumn: ((FTColumn id: 'SHA') width: 60);"
 		addColumn: ((FTColumn id: 'Author') width: 120);
+		addColumn: (FTColumn id: 'Comment');
 		addColumn: ((FTColumn id: 'Date') width: 120);
 		dataSource: dataSource;
 		beResizable;
@@ -59,18 +59,18 @@ RiRepositoryBrowser >> cellColumn: column row: rowIndex [
 
 	item := self elementAt: rowIndex.
 
-	column id = 'Description' ifTrue: [
+	column id = 'Comment' ifTrue: [
 		^ FTCellMorph new
 			cellInset: 5;
 			addAllMorphs: (self markMorphsAt: item);
 			addMorphBack: item comment asMorph;
 			yourself ].
 
-	column id = 'SHA' ifTrue: [
+"	column id = 'SHA' ifTrue: [
 		^ FTCellMorph new
 			addMorphBack: item shortId asMorph;
 			yourself ].
-
+"
 	column id = 'Author' ifTrue: [
 		^ FTCellMorph new
 			addMorphBack: item author asMorph;
@@ -187,20 +187,20 @@ RiRepositoryBrowser >> visitBranchMark: aRiBranchMark [
 ]
 
 { #category : #visiting }
+RiRepositoryBrowser >> visitImageMark: aRiMark [
+	^ self
+		markMorphText: 'IMAGE'
+		icon: self iconForWorkingCopy
+		color:
+			(aRiMark element isUncommited
+				ifTrue: [ self colorForOnlyLocal ]
+				ifFalse: [ self colorForAlreadyPushed ])
+]
+
+{ #category : #visiting }
 RiRepositoryBrowser >> visitTagMark: aRiTagMark [
 	^ self
 		markMorphText: aRiTagMark name
 		icon: self iconForTag
 		color: self colorForAlreadyPushed
-]
-
-{ #category : #visiting }
-RiRepositoryBrowser >> visitWorkingCopyMark: aRiWorkingCopyMark [
-	^ self
-		markMorphText: 'WORKING COPY'
-		icon: self iconForWorkingCopy
-		color:
-			(aRiWorkingCopyMark workingCopy isModified
-				ifTrue: [ self colorForOnlyLocal ]
-				ifFalse: [ self colorForAlreadyPushed ])
 ]

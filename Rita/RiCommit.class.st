@@ -17,8 +17,13 @@ Class {
 RiCommit class >> repository: aRiRepository iceCommit: anIceCommit [
 	^ self new
 		repository: aRiRepository;
-		commit: anIceCommit;
+		iceCommit: anIceCommit;
 		yourself
+]
+
+{ #category : #visiting }
+RiCommit >> accept: aVisitor [
+	^ aVisitor visitCommit: self
 ]
 
 { #category : #accessing }
@@ -50,18 +55,18 @@ RiCommit >> comment [
 ]
 
 { #category : #accessing }
-RiCommit >> commit [
+RiCommit >> date [
+	^ commit datetime asDate
+]
+
+{ #category : #accessing }
+RiCommit >> iceCommit [
 	^ commit
 ]
 
 { #category : #accessing }
-RiCommit >> commit: anObject [
+RiCommit >> iceCommit: anObject [
 	commit := anObject
-]
-
-{ #category : #accessing }
-RiCommit >> date [
-	^ commit datetime asDate
 ]
 
 { #category : #printing }

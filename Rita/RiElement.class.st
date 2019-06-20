@@ -10,6 +10,11 @@ Class {
 	#category : #'Rita-Core'
 }
 
+{ #category : #visiting }
+RiElement >> accept: aVisitor [
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 RiElement >> addMark: aRiMark [
 	self marks add: aRiMark.
@@ -47,9 +52,21 @@ RiElement >> date [
 	^ ''
 ]
 
+{ #category : #testing }
+RiElement >> isUncommited [
+	^ false
+]
+
 { #category : #accessing }
 RiElement >> marks [
 	^ marks ifNil: [ marks := OrderedCollection new ]
+]
+
+{ #category : #accessing }
+RiElement >> repository [
+	"Answer the RiRepository that contains me."
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

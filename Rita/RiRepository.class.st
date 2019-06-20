@@ -6,7 +6,6 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'elements',
-		'workingCopyElement',
 		'elementByCommit',
 		'elementMarks',
 		'iceRepository'
@@ -65,8 +64,8 @@ RiRepository >> process [
 	marks do: [ :each | self processMark: each ].
 
 	"Add new non-commit elements to the list, if needed."
-	self processWorkingCopy.
-	self processWorkingTree.
+	self processImageMark.
+	self processDiskMark.
 
 ]
 
@@ -76,6 +75,35 @@ RiRepository >> processCommitChildren [
 	elementByCommit valuesDo: [ :each | 
 		each ancestors do: [ :ancestor |
 			ancestor addChildren: each ] ]
+]
+
+{ #category : #accessing }
+RiRepository >> processDiskMark [
+
+"	| aRiCommit |
+	aRiCommit := elementByCommit at: iceRepository headCommit.
+	aRiCommit addMark: (RiImageMark new element: aRiCommit; yourself).
+"
+	self flag: #todo. "(1) It's not IMAGE, and (2) it can be dirty on disk"
+]
+
+{ #category : #accessing }
+RiRepository >> processImageMark [
+
+	| aRiCommit |
+	aRiCommit := elementByCommit at: iceRepository workingCopy referenceCommit.
+	
+	iceRepository workingCopy isModified
+		ifTrue: [
+			| tmp |
+			tmp := RiUncommitedWorkingCopy new referenceCommit: aRiCommit.
+			elements
+				add: tmp
+				before: aRiCommit.
+			aRiCommit := tmp ].
+
+	aRiCommit addMark: (RiImageMark new element: aRiCommit; yourself).
+
 ]
 
 { #category : #private }
@@ -102,25 +130,4 @@ RiRepository >> processMark: anIceCommitish [
 		
 	elementMarks add: mark.
 
-]
-
-{ #category : #accessing }
-RiRepository >> processWorkingCopy [
-
-	workingCopyElement := elementByCommit at: iceRepository workingCopy referenceCommit.
-	workingCopyElement addMark: (RiWorkingCopyMark new element: workingCopyElement; yourself).
-
-	iceRepository workingCopy isModified ifTrue: [
-		elements
-			add: (RiWorkingCopyChanges new ancestorWorkingCopyElement: workingCopyElement)
-			before: workingCopyElement ].
-
-]
-
-{ #category : #accessing }
-RiRepository >> processWorkingTree [
-
-"	workingCopyElement := elements detect: [ :each |
-		each isCommitElement and: [ each commit = repository headCommit ] ].
-"
 ]
