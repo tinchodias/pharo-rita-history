@@ -139,8 +139,20 @@ HiMNavigator >> addNestedElementsFor: aRSElement [
 	builder classDescriptor
 		classname: #object;
 		instVars: #();
-		methods: #children;
-		methodSelector: #object.
+		methods: [ :aHiMNode |
+
+
+			"TODO: refactor!"
+			| limit methods |
+			limit := 5.
+			methods := aHiMNode children collect: [:each | each object value ].
+			methods size < limit ifFalse: [
+				methods := (methods first: limit) copyWith: '...' ].
+			methods
+
+			
+			];
+		methodSelector: #asString.
 	builder shape: (RSShapeBuilder composite 
 		interactionDo: [ :i | i popupText: #object];
 		shapes: [ :m | builder createShapesFor: m ]).
