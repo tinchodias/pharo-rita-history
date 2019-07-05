@@ -5,7 +5,7 @@ Class {
 		'from',
 		'to'
 	],
-	#category : #'Rita-Navigator'
+	#category : #'Rita-Navigator-Model'
 }
 
 { #category : #'instance creation' }

@@ -1,7 +1,7 @@
 Class {
 	#name : #HiMCollapse,
 	#superclass : #HiMNodeCommand,
-	#category : #'Rita-Navigator'
+	#category : #'Rita-Navigator-UI-Commands'
 }
 
 { #category : #execution }

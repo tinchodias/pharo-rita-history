@@ -1,7 +1,7 @@
 Class {
 	#name : #HiMTopLabelStrategy,
 	#superclass : #HiMLabelStrategy,
-	#category : #'Rita-Navigator'
+	#category : #'Rita-Navigator-UI'
 }
 
 { #category : #applying }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'navigator'
 	],
-	#category : #'Rita-Navigator'
+	#category : #'Rita-Navigator-UI-Commands'
 }
 
 { #category : #accessing }

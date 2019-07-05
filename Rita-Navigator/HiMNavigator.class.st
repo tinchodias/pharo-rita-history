@@ -9,7 +9,7 @@ Class {
 		'labelStrategy',
 		'topLevelNodes'
 	],
-	#category : #'Rita-Navigator'
+	#category : #'Rita-Navigator-UI'
 }
 
 { #category : #examples }

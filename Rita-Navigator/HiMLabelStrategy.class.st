@@ -5,7 +5,7 @@ Class {
 		'navigator',
 		'shapeBuilder'
 	],
-	#category : #'Rita-Navigator'
+	#category : #'Rita-Navigator-UI'
 }
 
 { #category : #applying }

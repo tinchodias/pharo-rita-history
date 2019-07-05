@@ -5,7 +5,7 @@ Class {
 		'commandsToUndo',
 		'commandsToRedo'
 	],
-	#category : #'Rita-Navigator'
+	#category : #'Rita-Navigator-UI-Commands'
 }
 
 { #category : #accessing }

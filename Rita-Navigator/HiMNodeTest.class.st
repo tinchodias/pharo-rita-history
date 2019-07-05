@@ -1,7 +1,7 @@
 Class {
 	#name : #HiMNodeTest,
 	#superclass : #TestCase,
-	#category : #'Rita-Navigator'
+	#category : #'Rita-Navigator-Tests'
 }
 
 { #category : #tests }

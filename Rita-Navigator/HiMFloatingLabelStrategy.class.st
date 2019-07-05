@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'edgeBuilder'
 	],
-	#category : #'Rita-Navigator'
+	#category : #'Rita-Navigator-UI'
 }
 
 { #category : #applying }

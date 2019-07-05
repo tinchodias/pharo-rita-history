@@ -7,7 +7,7 @@ Class {
 		'nodeByDAPackage',
 		'nodeByBehavior'
 	],
-	#category : #'Rita-Navigator'
+	#category : #'Rita-Navigator-Model'
 }
 
 { #category : #accessing }
