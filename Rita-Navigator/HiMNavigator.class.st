@@ -7,7 +7,8 @@ Class {
 		'view',
 		'commandHistory',
 		'labelStrategy',
-		'topLevelNodes'
+		'topLevelNodes',
+		'forceAnimation'
 	],
 	#category : #'Rita-Navigator-UI'
 }
@@ -96,7 +97,7 @@ HiMNavigator >> addElementsFor: someHiMNodes [
 	shapeBuilder := RSShapeBuilder composite
 		interactionDo: [ :interactionBuilder | 
 			interactionBuilder 
-				draggable; 
+				draggable;
 				popupText: #object; 
 				addInteraction: self highlightableForShapes ];
 		color: [ :each | self colorFor: each ];
@@ -104,8 +105,11 @@ HiMNavigator >> addElementsFor: someHiMNodes [
 		onElement;
 		when: TSMouseDragging do: [ :each | [:evt | 
 			layout fix: each at: evt position - (each extent / 2) ]];
+		when: TSMouseDragStart do: [:each | [:evt |
+			self startForceAnimationInfinitely ]];
 		when: TSMouseDragEnd do: [:each | [:evt |
-			layout removeFix: each ]];
+			layout removeFix: each.
+			self startForceAnimationFinitely ]];
 		when: TSMouseDoubleClick do: [ :each | [:evt | self toggleNode: each ] ];
 		yourself.
 		
@@ -124,8 +128,14 @@ HiMNavigator >> addElementsFor: someHiMNodes [
 { #category : #visualization }
 HiMNavigator >> addNestedElementsFor: aRSElement [
 
-	| elements builder |
+	| elements builder renderer color |
 	builder := RSUMLClassBuilder new.
+	renderer := builder renderer.
+	color := self currentTheme textColor.
+	renderer defaultBorder color: color.
+	renderer methodShape color: color.
+	renderer classNameShape color: color.
+		
 	builder classDescriptor
 		classname: #object;
 		instVars: #();
@@ -136,8 +146,8 @@ HiMNavigator >> addNestedElementsFor: aRSElement [
 		shapes: [ :m | builder createShapesFor: m ]).
 	builder shape scaleBy: 0.08.
 	builder renderer classBoxShape
-		color: [ :node | (self currentTheme backgroundColor) alpha: 0.8 ].
-	builder renderer classBoxShape cornerRadius: 3.
+		color: [ :node | (self currentTheme backgroundColor) alpha: 0.9 ];
+		cornerRadius: 3.
 
 	elements := builder shape elementsOn: aRSElement model children.
 
@@ -150,13 +160,16 @@ HiMNavigator >> addNestedElementsFor: aRSElement [
 { #category : #accessing }
 HiMNavigator >> build [
 	self addElementsFor: topLevelNodes.
-
+	self startForceAnimationFinitely.
 ]
 
 { #category : #'expanding-collapsing' }
 HiMNavigator >> collapse: aRSElement [ 
 	| endSize |
 	endSize := self sizeFor: aRSElement model.
+
+	self startForceAnimationFinitely.
+
 	aRSElement animation
 		duration: self expandDuration;
 		from: 1@1;
@@ -225,9 +238,15 @@ HiMNavigator >> expand: aRSElement [
 	| initialPosition |
 	initialPosition := aRSElement position.
 	self addNestedElementsFor: aRSElement.
-	aRSElement adjustToChildren.
-	aRSElement translateTo: initialPosition.
-	aRSElement padding: 1.
+
+	aRSElement
+		adjustToChildren;
+		translateTo: initialPosition;
+		padding: 1;
+		pushFront.
+
+	self startForceAnimationFinitely.
+
 	aRSElement animation
 		duration: self expandDuration;
 		from: (self sizeFor: aRSElement model) / aRSElement extent;
@@ -302,7 +321,6 @@ HiMNavigator >> initializeOn: aRSView [
 		enclosingForce: 0.1;
 		enclosingThreshold: 20;
 		yourself.
-	view animation repeat onStepDo: [ :t | layout step ].
 
 	"Apply forces from the window borders to the elements."
 	view
@@ -312,13 +330,14 @@ HiMNavigator >> initializeOn: aRSView [
 			camera := view canvas camera.
 			origin := camera fromPixelToSpace: 0 @ 0.
 			corner := camera fromPixelToSpace: view canvas extent.
-			layout enclosingRectangle: (origin corner: corner) ].
+			layout enclosingRectangle: (origin corner: corner).
+			self startForceAnimationFinitely ].
 	
 	view
 		when: TSKeyDown
 		do: [ :evt | self processKeyDown: evt ].
 		
-	view addInteraction: RSActivityMonitorView.
+"	view addInteraction: RSActivityMonitorView."
 ]
 
 { #category : #'expanding-collapsing' }
@@ -361,6 +380,36 @@ HiMNavigator >> processKeyDown: evt [
 { #category : #visualization }
 HiMNavigator >> sizeFor: aHiMNode [
 	^ (8 * (aHiMNode children size + 1)) sqrt
+]
+
+{ #category : #animations }
+HiMNavigator >> startForceAnimationFinitely [
+	
+	self stopForceAnimation.
+	forceAnimation := view animation
+		easing: TSEasing cubicOut;
+		from: 0.1;
+		to: 0;
+		duration: 2.5 seconds;
+		onStepDo: [ :t | layout alpha: t; step ];
+		yourself
+]
+
+{ #category : #animations }
+HiMNavigator >> startForceAnimationInfinitely [
+	
+	layout alpha: 0.1.
+	
+	self stopForceAnimation.
+	forceAnimation := view animation
+		repeat;
+		onStepDo: [ :t | layout step ];
+		yourself.
+]
+
+{ #category : #animations }
+HiMNavigator >> stopForceAnimation [
+	forceAnimation ifNotNil: #stop
 ]
 
 { #category : #'expanding-collapsing' }
