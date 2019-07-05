@@ -39,7 +39,7 @@ RiClassDiffPresenter >> buildDiffOn: view [
 		color: [ :node | (self packageColorScale scale: node key) alpha: 0.3 ].
 	self setupRendererOn: builder.
 	
-	builder classes:  classesByName values..
+	builder classes: classesByName values.
 	builder build.
 	self addInteractions: view.
 ]

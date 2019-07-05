@@ -14,23 +14,12 @@ RiMultigranularDiffPresenter >> buildDiffOn: view [
 
 	(HiMNavigator newOn: view)
 		labelStrategy: self labelStrategy;
-		addElementsFor: self initialNodes;
+		topLevelNodes: self topLevelNodes;
+		build;
 		yourself.
 
 "	view @ RSControlsView."
 	view camera scale: 5.
-]
-
-{ #category : #private }
-RiMultigranularDiffPresenter >> initialNodes [
-	
-	| visitor |
-	visitor := RiIceDiffEntityCollector new.
-	iceDiffModel tree accept: visitor.
-
-	^ visitor nodesWithPackages collect: [:each | self nodeForPackageNode: each ].
-	
-
 ]
 
 { #category : #accessing }
@@ -62,4 +51,16 @@ RiMultigranularDiffPresenter >> nodeForPackageNode: node [
 		collect: [ :each | self nodeForClassLevelNode: each ]
 		thenDo: [ :each | result addChild: each ].
 	^ result
+]
+
+{ #category : #private }
+RiMultigranularDiffPresenter >> topLevelNodes [
+	
+	| visitor |
+	visitor := RiIceDiffEntityCollector new.
+	iceDiffModel tree accept: visitor.
+
+	^ visitor nodesWithPackages collect: [:each | self nodeForPackageNode: each ].
+	
+
 ]

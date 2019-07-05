@@ -67,11 +67,6 @@ HiMPackageDependenciesExample >> ensureAddNodeForPackage: aDAPackage [
 ]
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> initialNodes [
-	^ nodeByDAPackage values
-]
-
-{ #category : #accessing }
 HiMPackageDependenciesExample >> initialize [
 	super initialize.
 	
@@ -87,6 +82,11 @@ HiMPackageDependenciesExample >> packageNames [
 { #category : #accessing }
 HiMPackageDependenciesExample >> packageNames: anObject [
 	packageNames := anObject
+]
+
+{ #category : #accessing }
+HiMPackageDependenciesExample >> topLevelNodes [
+	^ nodeByDAPackage values
 ]
 
 { #category : #visiting }

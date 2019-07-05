@@ -5,9 +5,9 @@ Class {
 		'colors',
 		'layout',
 		'view',
-		'highlightable',
 		'commandHistory',
-		'labelStrategy'
+		'labelStrategy',
+		'topLevelNodes'
 	],
 	#category : #'Rita-Navigator'
 }
@@ -45,9 +45,9 @@ HiMNavigator class >> openExampleWith: aHiMNavigator [
 	nodes := HiMPackageDependenciesExample new
 		packageNames: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. 'Random-Core'". 'Athens-Cairo'. 'Growl'. 'Iceberg'"};
 		build;
-		initialNodes.
+		topLevelNodes.
 
-	aHiMNavigator addElementsFor: nodes.
+	aHiMNavigator topLevelNodes: nodes; build.
 
 	view := aHiMNavigator view.
 	view camera scale: 6.
@@ -56,30 +56,32 @@ HiMNavigator class >> openExampleWith: aHiMNavigator [
 ]
 
 { #category : #visualization }
-HiMNavigator >> addEdgesFor: elements [
+HiMNavigator >> addEdgesFor: someRSElements [
 
 	| edgeBuilder edges |
 	edgeBuilder := RSEdgeBuilder line
 		view: view;
 		color: (self currentTheme caretColor alpha: 0.25);
-		interactionDo: [ :i |
-			i 	popupText: [:model | model key model object asString, '->', model value model object asString ];
-				addInteraction: highlightable ];
+		interactionDo: [ :interactionBuilder |
+			interactionBuilder
+				popupText: [:model | model key model object asString, '->', model value model object asString ];
+				addInteraction: self highlightableForEdges ];
 		onElement;
 		when: TSMouseDoubleClick do: [ :each | [:evt | self toggleEdge: each ] ];
 		yourself.
 
 	"Dependencies"
 	edges := OrderedCollection new.
-	elements do: [ :targetElement |
+	someRSElements do: [ :targetElement |
 		| sourceNodes |
 		sourceNodes := targetElement model allIncomingNodes flatCollect: #withAllParents.
 		sourceNodes do: [ :incomingModel |
-			| incomingElementOrNil |
-			incomingElementOrNil := view elementFromModel: incomingModel.
-			incomingElementOrNil ifNotNil: [
-				(incomingElementOrNil isDirectlyConnectedTo:	 targetElement) ifFalse: [
-					edges add: (edgeBuilder edgeFrom: incomingElementOrNil to: targetElement).
+			"If it is present..."
+			(view elementFromModel: incomingModel) ifNotNil: [ :incomingElement |
+				"If it is not already there..."
+				(incomingElement isDirectlyConnectedTo: targetElement) ifFalse: [
+					"Add it"
+					edges add: (edgeBuilder edgeFrom: incomingElement to: targetElement).
 		] ] ] ].
 
 	layout addEdges: edges.
@@ -88,7 +90,7 @@ HiMNavigator >> addEdgesFor: elements [
 ]
 
 { #category : #visualization }
-HiMNavigator >> addElementsFor: models [
+HiMNavigator >> addElementsFor: someHiMNodes [
 
 	| shapeBuilder elements |
 	shapeBuilder := RSShapeBuilder composite
@@ -96,7 +98,7 @@ HiMNavigator >> addElementsFor: models [
 			interactionBuilder 
 				draggable; 
 				popupText: #object; 
-				addInteraction: highlightable ];
+				addInteraction: self highlightableForShapes ];
 		color: [ :each | self colorFor: each ];
 		size: [ :each | self sizeFor: each ];
 		onElement;
@@ -109,7 +111,7 @@ HiMNavigator >> addElementsFor: models [
 		
 	labelStrategy applyBeforeCreatingElementsWith: shapeBuilder.
 	
-	elements := shapeBuilder elementsOn: models.
+	elements := shapeBuilder elementsOn: someHiMNodes.
 
 	view addAll: elements.
 	layout addNodes: elements.
@@ -122,16 +124,32 @@ HiMNavigator >> addElementsFor: models [
 { #category : #visualization }
 HiMNavigator >> addNestedElementsFor: aRSElement [
 
-	| elements |
-	elements := RSShapeBuilder composite
-		interactionDo: [ :i | i popupText: #object ];
-		color: [ :each | Color black ];
-		size: [ :each | self sizeFor: each ];
-		elementsOn: aRSElement model children.
+	| elements builder |
+	builder := RSUMLClassBuilder new.
+	builder classDescriptor
+		classname: #object;
+		instVars: #();
+		methods: #children;
+		methodSelector: #object.
+	builder shape: (RSShapeBuilder composite 
+		interactionDo: [ :i | i popupText: #object];
+		shapes: [ :m | builder createShapesFor: m ]).
+	builder shape scaleBy: 0.08.
+	builder renderer classBoxShape
+		color: [ :node | (self currentTheme backgroundColor) alpha: 0.8 ].
+	builder renderer classBoxShape cornerRadius: 3.
+
+	elements := builder shape elementsOn: aRSElement model children.
 
 	RSRectanglePackLayout on: elements. 
 
 	aRSElement addAll: elements.
+
+]
+
+{ #category : #accessing }
+HiMNavigator >> build [
+	self addElementsFor: topLevelNodes.
 
 ]
 
@@ -159,8 +177,8 @@ HiMNavigator >> collapse: aRSElement [
 ]
 
 { #category : #visualization }
-HiMNavigator >> colorFor: aModel [
-	^ colors scale: aModel topParent
+HiMNavigator >> colorFor: aHiMNode [
+	^ colors scale: aHiMNode topParent
 ]
 
 { #category : #accessing }
@@ -240,6 +258,29 @@ HiMNavigator >> expandDuration [
 	^ 150 milliSeconds
 ]
 
+{ #category : #visualization }
+HiMNavigator >> highlightableForEdges [
+	| aHighlightable |
+	aHighlightable := RSHighlightable new.
+	aHighlightable highlightShape
+		color: self currentTheme caretColor.
+	^ aHighlightable 
+]
+
+{ #category : #visualization }
+HiMNavigator >> highlightableForShapes [
+	| aHighlightable |
+	aHighlightable := RSHighlightable new.
+	aHighlightable highlightShape
+		onElement;
+		color: [ :e | e color adjustBrightness: 0.16 ];
+		border: [ :e | 
+			TSBorder new
+				color: self currentTheme textColor;
+				width: 0.1 ].
+	^ aHighlightable
+]
+
 { #category : #initialization }
 HiMNavigator >> initializeOn: aRSView [
 	self initialize.
@@ -251,7 +292,7 @@ HiMNavigator >> initializeOn: aRSView [
 	colors := TSScale category20.
 	view := aRSView.
 	view color: self currentTheme backgroundColor.
-	highlightable := RSHighlightable new.
+
 	layout := RSRectangleForceLayout new
 		start: #();
 		friction: 0.25;
@@ -277,7 +318,7 @@ HiMNavigator >> initializeOn: aRSView [
 		when: TSKeyDown
 		do: [ :evt | self processKeyDown: evt ].
 		
-	view addInteraction: RSMonitorView.
+	view addInteraction: RSActivityMonitorView.
 ]
 
 { #category : #'expanding-collapsing' }
@@ -318,8 +359,8 @@ HiMNavigator >> processKeyDown: evt [
 ]
 
 { #category : #visualization }
-HiMNavigator >> sizeFor: aModel [
-	^ (8 * (aModel children size + 1)) sqrt
+HiMNavigator >> sizeFor: aHiMNode [
+	^ (8 * (aHiMNode children size + 1)) sqrt
 ]
 
 { #category : #'expanding-collapsing' }
@@ -344,6 +385,12 @@ HiMNavigator >> toggleNode: aRSElement [
 	(self isMarkedAsExpanded: aRSElement)
 		ifTrue: [ self executeAndRegisterCollapseIfPossible: aRSElement ]
 		ifFalse: [ self executeAndRegisterExpandIfPossible: aRSElement ]
+]
+
+{ #category : #accessing }
+HiMNavigator >> topLevelNodes: someHiMNodes [
+	topLevelNodes := someHiMNodes.
+
 ]
 
 { #category : #accessing }
