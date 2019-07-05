@@ -45,7 +45,7 @@ RiRepository >> process [
 	elementMarks := OrderedCollection new.
 	elements := OrderedCollection new.
 	elementByCommit := Dictionary new.
-	marks := iceRepository tags, iceRepository localBranches, iceRepository remoteTrackedBranches.
+	marks := iceRepository tags, iceRepository localBranches", iceRepository remoteTrackedBranches".
 
 	"Determine the commits in the proper order via Libgit's revwalk."
 	walk := iceRepository newCommitWalk.
