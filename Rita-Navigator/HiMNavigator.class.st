@@ -170,7 +170,7 @@ HiMNavigator >> collapse: aRSElement [
 
 	self startForceAnimationFinitely.
 
-	aRSElement animation
+	aRSElement newAnimation
 		duration: self expandDuration;
 		from: 1@1;
 		to: endSize/aRSElement extent;
@@ -247,7 +247,7 @@ HiMNavigator >> expand: aRSElement [
 
 	self startForceAnimationFinitely.
 
-	aRSElement animation
+	aRSElement newAnimation
 		duration: self expandDuration;
 		from: (self sizeFor: aRSElement model) / aRSElement extent;
 		to: 1@1;
@@ -386,7 +386,7 @@ HiMNavigator >> sizeFor: aHiMNode [
 HiMNavigator >> startForceAnimationFinitely [
 	
 	self stopForceAnimation.
-	forceAnimation := view animation
+	forceAnimation := view newAnimation
 		easing: TSEasing cubicOut;
 		from: 0.1;
 		to: 0;
@@ -401,7 +401,7 @@ HiMNavigator >> startForceAnimationInfinitely [
 	layout alpha: 0.1.
 	
 	self stopForceAnimation.
-	forceAnimation := view animation
+	forceAnimation := view newAnimation
 		repeat;
 		onStepDo: [ :t | layout step ];
 		yourself.
