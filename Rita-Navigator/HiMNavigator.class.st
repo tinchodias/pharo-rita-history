@@ -289,6 +289,11 @@ HiMNavigator >> expandDuration [
 	^ 150 milliSeconds
 ]
 
+{ #category : #animations }
+HiMNavigator >> forceAlphaRangeAsArray [
+	^ #(0 0.1)
+]
+
 { #category : #visualization }
 HiMNavigator >> highlightableForEdges [
 	| aHighlightable |
@@ -326,11 +331,9 @@ HiMNavigator >> initializeOn: aRSView [
 
 	layout := RSRectangleForceLayout new
 		start: #();
+		charge: -40;
 		friction: 0.25;
-"		charge: -20;
-		strength: 0.3;
-		gravity: 0.05;"
-		enclosingForce: 0.1;
+		enclosingForce: 1;
 		enclosingThreshold: 20;
 		yourself.
 
@@ -398,11 +401,11 @@ HiMNavigator >> sizeFor: aHiMNode [
 HiMNavigator >> startForceAnimationFinitely [
 	
 	self stopForceAnimation.
+
 	forceAnimation := view newAnimation
-		easing: TSEasing cubicOut;
-		from: 0.1;
-		to: 0;
-		duration: 2.5 seconds;
+		easing: TSEasing cubicInOut;
+		range: self forceAlphaRangeAsArray reversed;
+		duration: 2 seconds;
 		onStepDo: [ :t | layout alpha: t; step ];
 		yourself
 ]
@@ -410,13 +413,23 @@ HiMNavigator >> startForceAnimationFinitely [
 { #category : #animations }
 HiMNavigator >> startForceAnimationInfinitely [
 	
-	layout alpha: 0.1.
-	
 	self stopForceAnimation.
-	forceAnimation := view newAnimation
-		repeat;
-		onStepDo: [ :t | layout step ];
-		yourself.
+	
+	"Composed animation"
+	forceAnimation :=  view animationFrom: {
+
+		"Start smoothly"
+		view tAnimation
+			easing: TSEasing cubicOut;
+			duration: 500 milliSeconds;
+			range: self forceAlphaRangeAsArray;
+			onStepDo: [ :t | layout alpha: t; step ].
+
+		"Continue on max alpha undefinitely"
+		view tAnimation
+			repeat;
+			onStepDo: [ :t | layout step ] }.
+
 ]
 
 { #category : #animations }
