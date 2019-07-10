@@ -13,8 +13,9 @@ Metacello new
   load.
 ~~~
 
-## Execute it
+## Execute experiments
 
 * Code dependencies: See examples in class side of `HiMNavigator`.
 * Code changes: `Open Iceberg -> Select a repository -> Right click -> Repository (Cmd+R)`.
-* Unified repository view (all local branches and tags together): `RiRepositoryPresenter hiedraExample` and other examples in this class.
+* Unified repository view (all local branches and tags together): Run `RiRepositoryPresenter hiedraExample` and other examples in this class.
+* Extension to Roassal3 layout where rectangles repulse others: Run `RSRectangleRepulsionForceLayout` class side examples.
