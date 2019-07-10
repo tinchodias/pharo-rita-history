@@ -21,6 +21,13 @@ RiRepositoryPresenter class >> defaultSpec [
 ]
 
 { #category : #examples }
+RiRepositoryPresenter class >> hiedraExample [
+	<example>
+
+	^ self openOnRepositoryNamed: 'Hiedra'
+]
+
+{ #category : #examples }
 RiRepositoryPresenter class >> openOnRepositoryNamed: aName [
 	| aRiRepository anIceRepository |
 	anIceRepository := IceRepository registry
@@ -36,6 +43,13 @@ RiRepositoryPresenter class >> openOnRepositoryNamed: aName [
 			window
 				extent: 1000 @ 900;
 				title: aName ]
+]
+
+{ #category : #examples }
+RiRepositoryPresenter class >> roassal3Example [
+	<example>
+
+	^ self openOnRepositoryNamed: 'Roassal3'
 ]
 
 { #category : #examples }
