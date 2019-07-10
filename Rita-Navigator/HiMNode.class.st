@@ -87,6 +87,13 @@ HiMNode >> incomingLinks [
 ]
 
 { #category : #accessing }
+HiMNode >> incomingNodes [
+	^ Array streamContents: [ :stream |
+		incomingLinks do: [ :link |
+			stream nextPut: link from ] ]
+]
+
+{ #category : #accessing }
 HiMNode >> initialize [
 	super initialize.
 	
@@ -108,6 +115,13 @@ HiMNode >> object: anObject [
 { #category : #accessing }
 HiMNode >> outgoingLinks [
 	^ outgoingLinks
+]
+
+{ #category : #accessing }
+HiMNode >> outgoingNodes [
+	^ Array streamContents: [ :stream |
+		outgoingLinks do: [ :link |
+			stream nextPut: link to ] ]
 ]
 
 { #category : #accessing }

@@ -39,6 +39,16 @@ HiMNodeTest >> testChildrenLevelLink [
 	self assert: root2 allIncomingLinks size equals: 1.
 	self assert: root2 allOutgoingLinks size equals: 0.
 
+	self assert: child1 incomingLinks size equals: 0.
+	self assert: child1 outgoingLinks size equals: 1.
+	self assert: child1 incomingNodes asArray equals: {}.
+	self assert: child1 outgoingNodes asArray equals: { child2 }.
+
+	self assert: child2 incomingLinks size equals: 1.
+	self assert: child2 outgoingLinks size equals: 0.
+	self assert: child2 incomingNodes asArray equals: { child1 }.
+	self assert: child2 outgoingNodes asArray equals: {}.
+
 ]
 
 { #category : #tests }
@@ -78,11 +88,16 @@ HiMNodeTest >> testRootLevelLink [
 	self assert: root1 outgoingLinks size equals: 1.
 	self assert: root1 allIncomingLinks size equals: 0.
 	self assert: root1 allOutgoingLinks size equals: 1.
+	self assert: root1 incomingNodes asArray equals: {}.
+	self assert: root1 outgoingNodes asArray equals: { root2 }.
 	
 	self assert: root2 incomingLinks size equals: 1.
 	self assert: root2 outgoingLinks size equals: 0.
 	self assert: root2 allIncomingLinks size equals: 1.
 	self assert: root2 allOutgoingLinks size equals: 0.
+	self assert: root2 incomingNodes asArray equals: { root1 }.
+	self assert: root2 outgoingNodes asArray equals: {}.
+
 
 ]
 
