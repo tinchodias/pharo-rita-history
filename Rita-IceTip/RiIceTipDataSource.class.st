@@ -18,7 +18,7 @@ RiIceTipDataSource class >> beCurrentDataSourceClass [
 
 { #category : #accessing }
 RiIceTipDataSource class >> currentDataSourceClass [
-	^ CurrentDataSourceClass ifNil: [ IceTipHiedraDataSource ]
+	^ CurrentDataSourceClass ifNil: [ RiIceTipAvatarsInHiedraDataSource ]
 ]
 
 { #category : #accessing }
