@@ -46,6 +46,13 @@ RiRepositoryPresenter class >> openOnRepositoryNamed: aName [
 ]
 
 { #category : #examples }
+RiRepositoryPresenter class >> ritaExample [
+	<example>
+
+	^ self openOnRepositoryNamed: 'pharo-rita-history'
+]
+
+{ #category : #examples }
 RiRepositoryPresenter class >> roassal3Example [
 	<example>
 
