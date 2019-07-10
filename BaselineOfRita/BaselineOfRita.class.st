@@ -10,12 +10,12 @@ BaselineOfRita >> baseline: spec [
 	spec
 		for: #pharo
 		do: [
-			spec baseline: 'HiedraRS3' with: [
+			spec baseline: 'Hiedra' with: [
 				spec repository: 'github://tinchodias/Hiedra:roassal3/src' ].
 			spec
 				package: 'Rita';
 				package: 'Rita-Navigator';
-				package: 'Rita-IceTip' with: [ spec requires: #('HiedraRS3' 'Rita-Navigator') ].
+				package: 'Rita-IceTip' with: [ spec requires: #('Hiedra' 'Rita-Navigator') ].
 			spec
 				group: 'default' with: #('Rita' 'Rita-IceTip') ]
 ]
