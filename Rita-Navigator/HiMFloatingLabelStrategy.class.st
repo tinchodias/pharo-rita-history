@@ -13,13 +13,14 @@ HiMFloatingLabelStrategy >> applyAfterAddingElements: elements [
 	elements do: [ :each |
 		| label edge |
 		label := self shapeBuilder elementOn: each model object.
-		edge := self edgeBuilder from: each; to: label; edge.
+		edge := self edgeBuilder "withBorderAttachPoint" from: each; to: label; edge.
 		navigator view add: label; add: edge.
 		navigator layout
 			addNodes: { label };
 			addEdge: edge;
-			set: edge length: 1;
-			set: edge strength: 3 ]
+			set: edge charge: -1;
+			set: edge length: (navigator edgeLengthFor: edge)"each encompassingRectangle halfPerimeter * 0.75";
+			set: edge strength: 5 ]
 
 	
 ]

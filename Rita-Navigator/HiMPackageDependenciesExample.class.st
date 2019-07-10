@@ -3,15 +3,43 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'packageNames',
+		'navigator',
 		'relationGraph',
 		'nodeByDAPackage',
-		'nodeByBehavior'
+		'nodeByBehavior',
+		'colorScale'
 	],
 	#category : #'Rita-Navigator-Model'
 }
 
 { #category : #accessing }
 HiMPackageDependenciesExample >> build [
+	self buildTopLevelNodes.
+	self buildColorScale.
+	
+	navigator 
+		topLevelNodes: self topLevelNodes;
+		colorScale: self colorScale;
+		build.
+
+]
+
+{ #category : #accessing }
+HiMPackageDependenciesExample >> buildColorScale [
+
+	| tmpScale nodes |
+	tmpScale := TSScale category20.
+	nodes := self topLevelNodes asArray.
+	
+	colorScale := TSScale ordinal
+		domain: nodes;
+		range: (nodes collect: [:each | tmpScale scale: (each object readStream upTo: $-) ]);
+		yourself.
+
+]
+
+{ #category : #accessing }
+HiMPackageDependenciesExample >> buildTopLevelNodes [
 	relationGraph := DAPackageRelationGraph onPackagesNamed: packageNames.
 	relationGraph build.
 
@@ -27,6 +55,11 @@ HiMPackageDependenciesExample >> build [
 "
 		aDAPackage dependencies do: [:each | each accept: self ] ]
 
+]
+
+{ #category : #accessing }
+HiMPackageDependenciesExample >> colorScale [
+	^ colorScale
 ]
 
 { #category : #private }
@@ -72,6 +105,16 @@ HiMPackageDependenciesExample >> initialize [
 	
 	nodeByDAPackage := Dictionary new.
 	nodeByBehavior := Dictionary new.
+]
+
+{ #category : #accessing }
+HiMPackageDependenciesExample >> navigator [
+	^ navigator
+]
+
+{ #category : #accessing }
+HiMPackageDependenciesExample >> navigator: anObject [
+	navigator := anObject
 ]
 
 { #category : #accessing }

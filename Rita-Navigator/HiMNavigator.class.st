@@ -2,13 +2,13 @@ Class {
 	#name : #HiMNavigator,
 	#superclass : #Object,
 	#instVars : [
-		'colors',
 		'layout',
 		'view',
 		'commandHistory',
 		'labelStrategy',
 		'topLevelNodes',
-		'forceAnimation'
+		'forceAnimation',
+		'colorScale'
 	],
 	#category : #'Rita-Navigator-UI'
 }
@@ -40,15 +40,13 @@ HiMNavigator class >> newOn: aRSView [
 { #category : #examples }
 HiMNavigator class >> openExampleWith: aHiMNavigator [
 
-	| nodes view |
+	| view |
 	TSLine delta: 1.	"Note: global effect!"
 
-	nodes := HiMPackageDependenciesExample new
-		packageNames: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. 'Random-Core'". 'Athens-Cairo'. 'Growl'. 'Iceberg'"};
-		build;
-		topLevelNodes.
-
-	aHiMNavigator topLevelNodes: nodes; build.
+	HiMPackageDependenciesExample new
+		navigator: aHiMNavigator;
+		packageNames: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. "'Random-Core'"". 'Athens-Cairo'. 'Growl'. 'Iceberg'"};
+		build.
 
 	view := aHiMNavigator view.
 	view camera scale: 6.
@@ -86,6 +84,9 @@ HiMNavigator >> addEdgesFor: someRSElements [
 		] ] ] ].
 
 	layout addEdges: edges.
+	edges do: [ :anEdge |
+		layout set: anEdge length: (self edgeLengthFor: anEdge) ].
+	
 	edges do: #pushBack.
 
 ]
@@ -158,12 +159,15 @@ HiMNavigator >> addNestedElementsFor: aRSElement [
 		shapes: [ :m | builder createShapesFor: m ]).
 	builder shape scaleBy: 0.08.
 	builder renderer classBoxShape
-		color: [ :node | (self currentTheme backgroundColor) alpha: 0.9 ];
+		color: [ :node | self currentTheme backgroundColor alpha: 0.9 ];
 		cornerRadius: 3.
 
 	elements := builder shape elementsOn: aRSElement model children.
 
-	RSRectanglePackLayout on: elements. 
+	RSRectanglePackLayout new
+		gap: 0.09;
+		preferredAngle: (25@10) angle;
+		on: elements. 
 
 	aRSElement addAll: elements.
 
@@ -193,22 +197,35 @@ HiMNavigator >> collapse: aRSElement [
 			aRSElement matrix
 				loadIdentity;
 				translation: position.
-			aRSElement size: endSize.
-			
-		aRSElement connectedEdges do: [ :anEdge |
-			layout removeLengthAt: anEdge ] ].
+			aRSElement size: endSize ].
 
 	self mark: aRSElement asExpanded: false.
 ]
 
 { #category : #visualization }
 HiMNavigator >> colorFor: aHiMNode [
-	^ colors scale: aHiMNode topParent
+	^ self colorScale scale: aHiMNode topParent
+]
+
+{ #category : #accessing }
+HiMNavigator >> colorScale [
+	^ colorScale ifNil: [ colorScale := TSScale category20 ]
+]
+
+{ #category : #accessing }
+HiMNavigator >> colorScale: aColorScale [
+	colorScale := aColorScale.
 ]
 
 { #category : #accessing }
 HiMNavigator >> currentTheme [
 	^ Smalltalk ui theme
+]
+
+{ #category : #visualization }
+HiMNavigator >> edgeLengthFor: anEdge [
+	^ (anEdge from encompassingRectangle halfPerimeter
+		+ anEdge to encompassingRectangle halfPerimeter) / 2
 ]
 
 { #category : #commands }
@@ -279,9 +296,9 @@ HiMNavigator >> expand: aRSElement step: t [
 		scaleBy: t.
 	aRSElement resetBBox.
 	aRSElement connectedEdges do: [ :anEdge |
-		| newLength |
-		newLength := (anEdge from width max: anEdge from height) + (anEdge to width max: anEdge to height).
-		layout set: anEdge length: newLength ]
+		self flag: #todo. "Distinguish in other way"
+		"anEdge to model isSymbol" false ifFalse: [
+			layout set: anEdge length: (self edgeLengthFor: anEdge)] ]
 ]
 
 { #category : #'expanding-collapsing' }
@@ -324,15 +341,14 @@ HiMNavigator >> initializeOn: aRSView [
 	commandHistory := HiMCommandHistory new.
 	self labelStrategy: HiMFloatingLabelStrategy new.
 
-	
-	colors := TSScale category20.
 	view := aRSView.
 	view color: self currentTheme backgroundColor.
 
 	layout := RSRectangleForceLayout new
 		start: #();
-		charge: -40;
+		charge: -60;
 		friction: 0.25;
+		gravity: 0.1;
 		enclosingForce: 1;
 		enclosingThreshold: 20;
 		yourself.
@@ -394,7 +410,7 @@ HiMNavigator >> processKeyDown: evt [
 
 { #category : #visualization }
 HiMNavigator >> sizeFor: aHiMNode [
-	^ (8 * (aHiMNode children size + 1)) sqrt
+	^ (10 * (aHiMNode children size + 1)) sqrt
 ]
 
 { #category : #animations }
