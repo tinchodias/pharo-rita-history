@@ -21,8 +21,18 @@ RiUncommitedWorkingCopy >> ancestors [
 ]
 
 { #category : #accessing }
+RiUncommitedWorkingCopy >> author [
+	^ '---'
+]
+
+{ #category : #accessing }
 RiUncommitedWorkingCopy >> comment [
-	^ '-----'
+	^ '---'
+]
+
+{ #category : #accessing }
+RiUncommitedWorkingCopy >> date [
+	^ '---'
 ]
 
 { #category : #testing }
@@ -43,4 +53,9 @@ RiUncommitedWorkingCopy >> referenceCommit: aRiCommit [
 { #category : #accessing }
 RiUncommitedWorkingCopy >> repository [
 	^ referenceCommit repository
+]
+
+{ #category : #accessing }
+RiUncommitedWorkingCopy >> shortId [
+	^ '---'
 ]

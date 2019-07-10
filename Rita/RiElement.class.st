@@ -39,17 +39,17 @@ RiElement >> ancestors [
 
 { #category : #accessing }
 RiElement >> author [
-	^ ''
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
 RiElement >> comment [
-	^ ''
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
 RiElement >> date [
-	^ ''
+	^ self subclassResponsibility
 ]
 
 { #category : #testing }
@@ -71,7 +71,7 @@ RiElement >> repository [
 
 { #category : #accessing }
 RiElement >> shortId [
-	^ ''
+	^ self subclassResponsibility
 ]
 
 { #category : #enumeration }
