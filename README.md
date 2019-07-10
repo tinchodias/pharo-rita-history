@@ -1,6 +1,6 @@
 # pharo-rita-history
 
-Several experiments using Roassal3, Iceberg, and Spec2.
+Several experiments with Pharo8, Roassal3, Spec2, Iceberg, and more.
 
 ## Install it
 
