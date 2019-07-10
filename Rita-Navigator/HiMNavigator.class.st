@@ -71,21 +71,21 @@ HiMNavigator >> addEdgesFor: someRSElements [
 
 	"Dependencies"
 	edges := OrderedCollection new.
-	someRSElements do: [ :targetElement |
-		| sourceNodes |
-		sourceNodes := targetElement model allIncomingNodes flatCollect: #withAllParents.
-		sourceNodes do: [ :incomingModel |
+	someRSElements do: [ :toElement |
+		| fromModels |
+		fromModels := toElement model allIncomingNodes flatCollect: #withAllParents.
+		fromModels do: [ :fromModel |
 			"If it is present..."
-			(view elementFromModel: incomingModel) ifNotNil: [ :incomingElement |
+			(view elementFromModel: fromModel) ifNotNil: [ :fromElement |
 				"If it is not already there..."
-				(incomingElement isDirectlyConnectedTo: targetElement) ifFalse: [
+				(fromElement isDirectlyConnectedTo: toElement) ifFalse: [
 					"Add it"
-					edges add: (edgeBuilder edgeFrom: incomingElement to: targetElement).
+					edges add: (edgeBuilder edgeFrom: fromElement to: toElement).
 		] ] ] ].
 
 	layout addEdges: edges.
 	edges do: [ :anEdge |
-		layout set: anEdge length: (self edgeLengthFor: anEdge) ].
+		(layout mockEdgeAt: anEdge) length: (self edgeLengthFor: anEdge) ].
 	
 	edges do: #pushBack.
 
@@ -98,19 +98,14 @@ HiMNavigator >> addElementsFor: someHiMNodes [
 	shapeBuilder := RSShapeBuilder composite
 		interactionDo: [ :interactionBuilder | 
 			interactionBuilder 
-				draggable;
 				popupText: #object; 
+				addInteraction: (RSDraggableForce new layout: layout; yourself);
 				addInteraction: self highlightableForShapes ];
 		color: [ :each | self colorFor: each ];
 		size: [ :each | self sizeFor: each ];
 		onElement;
-		when: TSMouseDragging do: [ :each | [:evt | 
-			layout fix: each at: evt position - (each extent / 2) ]];
-		when: TSMouseDragStart do: [:each | [:evt |
-			self startForceAnimationInfinitely ]];
-		when: TSMouseDragEnd do: [:each | [:evt |
-			layout removeFix: each.
-			self startForceAnimationFinitely ]];
+		when: TSMouseDragStart do: [:each | [:evt | self startForceAnimationInfinitely ]];
+		when: TSMouseDragEnd do: [:each | [:evt | self startForceAnimationFinitely ]];
 		when: TSMouseDoubleClick do: [ :each | [:evt | self toggleNode: each ] ];
 		yourself.
 		
@@ -119,6 +114,7 @@ HiMNavigator >> addElementsFor: someHiMNodes [
 	elements := shapeBuilder elementsOn: someHiMNodes.
 
 	view addAll: elements.
+
 	layout addNodes: elements.
 	
 	self addEdgesFor: elements.
@@ -127,49 +123,32 @@ HiMNavigator >> addElementsFor: someHiMNodes [
 ]
 
 { #category : #visualization }
-HiMNavigator >> addNestedElementsFor: aRSElement [
+HiMNavigator >> addNestedEdgesFor: someRSElements [
 
-	| elements builder renderer color |
-	builder := RSUMLClassBuilder new.
-	renderer := builder renderer.
-	color := self currentTheme textColor.
-	renderer defaultBorder color: color.
-	renderer methodShape color: color.
-	renderer classNameShape color: color.
-		
-	builder classDescriptor
-		classname: #object;
-		instVars: #();
-		methods: [ :aHiMNode |
+	| edgeBuilder |
+	edgeBuilder := RSEdgeBuilder line
+		view: view;
+		color: (self currentTheme caretColor alpha: 0.15);
+		width: 0.5;
+		interactionDo: [ :interactionBuilder |
+			interactionBuilder
+				popupText: [:model | model key model object asString, '->', model value model object asString ] ];
+		yourself.
 
-
-			"TODO: refactor!"
-			| limit methods |
-			limit := 5.
-			methods := aHiMNode children collect: [:each | each object value ].
-			methods size < limit ifFalse: [
-				methods := (methods first: limit) copyWith: '...' ].
-			methods
-
-			
-			];
-		methodSelector: #asString.
-	builder shape: (RSShapeBuilder composite 
-		interactionDo: [ :i | i popupText: #object];
-		shapes: [ :m | builder createShapesFor: m ]).
-	builder shape scaleBy: 0.08.
-	builder renderer classBoxShape
-		color: [ :node | self currentTheme backgroundColor alpha: 0.9 ];
-		cornerRadius: 3.
-
-	elements := builder shape elementsOn: aRSElement model children.
-
-	RSRectanglePackLayout new
-		gap: 0.09;
-		preferredAngle: (25@10) angle;
-		on: elements. 
-
-	aRSElement addAll: elements.
+	"Dependencies"
+	someRSElements do: [ :toElement |
+		| fromModels |
+		fromModels := toElement model incomingNodes.
+		fromModels do: [ :fromModel |
+			"If it is present..."
+			((view elementFromModel: fromModel topParent) ifNotNil: [ :topLevelElement |
+				topLevelElement elementFromModel: fromModel ])
+					ifNotNil: [ :fromElement |
+					"If it is not already there..."
+					(fromElement isDirectlyConnectedTo: toElement) ifFalse: [
+						"Add it"
+						edgeBuilder edgeFrom: fromElement to: toElement.
+			] ] ] ].
 
 ]
 
@@ -192,7 +171,9 @@ HiMNavigator >> collapse: aRSElement [
 		to: endSize/aRSElement extent;
 		onStepDo: [ :t | self expand: aRSElement step: t ];
 		when: TSAnimationEndEvent do: [ | position |
-			aRSElement shapes copy do: #remove.
+			aRSElement children copy do: [ :each |
+				each connectedEdges copy do: #remove.
+				each remove ].
 			position := aRSElement position.
 			aRSElement matrix
 				loadIdentity;
@@ -264,15 +245,20 @@ HiMNavigator >> executeUndoIfPossible [
 
 { #category : #'expanding-collapsing' }
 HiMNavigator >> expand: aRSElement [
-	| initialPosition |
-	initialPosition := aRSElement position.
-	self addNestedElementsFor: aRSElement.
+	| nestedElements |
+	nestedElements := self newNestedElementsForAll: aRSElement model children.
 
+	RSRectanglePackLayout new
+		gap: 0.09;
+		preferredAngle: (25@10) angle;
+		on: nestedElements.
+		
 	aRSElement
-		adjustToChildren;
-		translateTo: initialPosition;
+		shapes: nestedElements;
 		padding: 1;
 		pushFront.
+	
+	self addNestedEdgesFor: nestedElements.
 
 	self startForceAnimationFinitely.
 
@@ -296,9 +282,11 @@ HiMNavigator >> expand: aRSElement step: t [
 		scaleBy: t.
 	aRSElement resetBBox.
 	aRSElement connectedEdges do: [ :anEdge |
-		self flag: #todo. "Distinguish in other way"
-		"anEdge to model isSymbol" false ifFalse: [
-			layout set: anEdge length: (self edgeLengthFor: anEdge)] ]
+		layout edges
+			detect: [ :each | each realEdge == anEdge ]
+			ifFound: [ :mockEdge |
+				mockEdge length: (self edgeLengthFor: anEdge) ]
+		 ]
 ]
 
 { #category : #'expanding-collapsing' }
@@ -345,7 +333,7 @@ HiMNavigator >> initializeOn: aRSView [
 	view color: self currentTheme backgroundColor.
 
 	layout := RSRectangleForceLayout new
-		start: #();
+		start;
 		charge: -60;
 		friction: 0.25;
 		gravity: 0.1;
@@ -395,6 +383,45 @@ HiMNavigator >> layout [
 { #category : #'expanding-collapsing' }
 HiMNavigator >> mark: aRSElement asExpanded: aBoolean [
 	^ aRSElement attributeAt: #expanded put: aBoolean
+]
+
+{ #category : #visualization }
+HiMNavigator >> newNestedElementsForAll: someHiMNodes [
+
+	| builder renderer color |
+	builder := RSUMLClassBuilder new.
+	renderer := builder renderer.
+	color := self currentTheme textColor.
+	renderer defaultBorder color: color.
+	renderer methodShape color: color.
+	renderer classNameShape color: color.
+		
+	builder classDescriptor
+		classname: #object;
+		instVars: #();
+		methods: [ :aHiMNode |
+
+
+			"TODO: refactor!"
+			| limit methods |
+			limit := 5.
+			methods := aHiMNode children collect: [:each | each object value ].
+			methods size < limit ifFalse: [
+				methods := (methods first: limit) copyWith: '...' ].
+			methods
+
+			
+			];
+		methodSelector: #asString.
+	builder shape: (RSShapeBuilder composite 
+		interactionDo: [ :i | i popupText: #object];
+		shapes: [ :m | builder createShapesFor: m ]).
+	builder shape scaleBy: 0.08.
+	builder renderer classBoxShape
+		color: [ :node | self currentTheme backgroundColor alpha: 0.9 ];
+		cornerRadius: 3.
+
+	^ builder shape elementsOn: someHiMNodes
 ]
 
 { #category : #commands }
