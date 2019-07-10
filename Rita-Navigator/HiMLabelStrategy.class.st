@@ -31,8 +31,8 @@ HiMLabelStrategy >> navigator: anObject [
 HiMLabelStrategy >> shapeBuilder [
 	^ shapeBuilder ifNil: [ 
 		shapeBuilder := RSShapeBuilder label
-			fontSize: 2;
 			color: (navigator currentTheme textColor alpha: 0.75);
+			scaleBy: 0.15;
 			yourself ]
 ]
 
