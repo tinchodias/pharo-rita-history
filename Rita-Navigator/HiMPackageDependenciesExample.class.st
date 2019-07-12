@@ -33,7 +33,12 @@ HiMPackageDependenciesExample >> buildColorScale [
 	
 	colorScale := TSScale ordinal
 		domain: nodes;
-		range: (nodes collect: [:each | tmpScale scale: (each object readStream upTo: $-) ]);
+		range: (nodes collect: [:each | 
+			| color |
+			color := tmpScale scale: (each object readStream upTo: $-).
+			(packageNames includes: each object)
+				ifFalse: [ color := color quiteWhiter ].
+			color ]);
 		yourself.
 
 ]
