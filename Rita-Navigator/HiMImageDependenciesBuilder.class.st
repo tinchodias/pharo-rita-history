@@ -35,9 +35,10 @@ HiMImageDependenciesBuilder >> buildColorScale [
 		domain: nodes;
 		range: (nodes collect: [:each | 
 			| color |
-			color := tmpScale scale: (each object readStream upTo: $-).
-			(packageNames includes: each object)
-				ifFalse: [ color := color quiteWhiter ].
+			.
+			color := (packageNames includes: each object)
+				ifTrue: [ navigator currentTheme warningBackgroundColor ]
+				ifFalse: [ (tmpScale scale: (each object readStream upTo: $-)) mixed: 0.75 with: navigator currentTheme backgroundColor ].
 			color ]);
 		yourself.
 
