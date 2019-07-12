@@ -43,9 +43,9 @@ HiMNavigator class >> openExampleWith: aHiMNavigator [
 	| view |
 	TSLine delta: 1.	"Note: global effect!"
 
-	HiMPackageDependenciesExample new
+	HiMImageDependenciesBuilder new
 		navigator: aHiMNavigator;
-		packageNames: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. "'Random-Core'"". 'Athens-Cairo'. 'Growl'. 'Iceberg'"};
+		packageNames: {'FuzzyMatcher'};
 		build.
 
 	view := aHiMNavigator view.

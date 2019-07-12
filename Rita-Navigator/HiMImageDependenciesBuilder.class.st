@@ -1,5 +1,5 @@
 Class {
-	#name : #HiMPackageDependenciesExample,
+	#name : #HiMImageDependenciesBuilder,
 	#superclass : #Object,
 	#instVars : [
 		'packageNames',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> build [
+HiMImageDependenciesBuilder >> build [
 	self buildTopLevelNodes.
 	self buildColorScale.
 	
@@ -25,7 +25,7 @@ HiMPackageDependenciesExample >> build [
 ]
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> buildColorScale [
+HiMImageDependenciesBuilder >> buildColorScale [
 
 	| tmpScale nodes |
 	tmpScale := TSScale category20.
@@ -44,7 +44,7 @@ HiMPackageDependenciesExample >> buildColorScale [
 ]
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> buildTopLevelNodes [
+HiMImageDependenciesBuilder >> buildTopLevelNodes [
 	relationGraph := DAPackageRelationGraph onPackagesNamed: packageNames.
 	relationGraph build.
 
@@ -63,12 +63,12 @@ HiMPackageDependenciesExample >> buildTopLevelNodes [
 ]
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> colorScale [
+HiMImageDependenciesBuilder >> colorScale [
 	^ colorScale
 ]
 
 { #category : #private }
-HiMPackageDependenciesExample >> ensureAddNodeForClassNamed: aString in: aPackage [
+HiMImageDependenciesBuilder >> ensureAddNodeForClassNamed: aString in: aPackage [
 	self assert: [ (aString endsWith: ' class') not ].
 
 	^ nodeByBehavior
@@ -80,7 +80,7 @@ HiMPackageDependenciesExample >> ensureAddNodeForClassNamed: aString in: aPackag
 ]
 
 { #category : #private }
-HiMPackageDependenciesExample >> ensureAddNodeForMethod: aRGMethodDefinition in: aDAPackage [
+HiMImageDependenciesBuilder >> ensureAddNodeForMethod: aRGMethodDefinition in: aDAPackage [
 	| classNode className |
 	className := aRGMethodDefinition className.
 	aRGMethodDefinition classIsMeta ifTrue: [ className := className allButLast: ' class' size ].
@@ -98,14 +98,14 @@ HiMPackageDependenciesExample >> ensureAddNodeForMethod: aRGMethodDefinition in:
 ]
 
 { #category : #private }
-HiMPackageDependenciesExample >> ensureAddNodeForPackage: aDAPackage [
+HiMImageDependenciesBuilder >> ensureAddNodeForPackage: aDAPackage [
 	^ nodeByDAPackage
 		at: aDAPackage
 		ifAbsentPut: [ HiMNode for: aDAPackage packageName ]
 ]
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> initialize [
+HiMImageDependenciesBuilder >> initialize [
 	super initialize.
 	
 	nodeByDAPackage := Dictionary new.
@@ -113,37 +113,37 @@ HiMPackageDependenciesExample >> initialize [
 ]
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> navigator [
+HiMImageDependenciesBuilder >> navigator [
 	^ navigator
 ]
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> navigator: anObject [
+HiMImageDependenciesBuilder >> navigator: anObject [
 	navigator := anObject
 ]
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> packageNames [
+HiMImageDependenciesBuilder >> packageNames [
 	^ packageNames
 ]
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> packageNames: anObject [
+HiMImageDependenciesBuilder >> packageNames: anObject [
 	packageNames := anObject
 ]
 
 { #category : #accessing }
-HiMPackageDependenciesExample >> topLevelNodes [
+HiMImageDependenciesBuilder >> topLevelNodes [
 	^ nodeByDAPackage values
 ]
 
 { #category : #visiting }
-HiMPackageDependenciesExample >> visitDACompositeDependency: aDACompositeDependency [
+HiMImageDependenciesBuilder >> visitDACompositeDependency: aDACompositeDependency [
 	aDACompositeDependency dependencies do: [ :each | each accept: self ]
 ]
 
 { #category : #visiting }
-HiMPackageDependenciesExample >> visitDAExtensionDependency: aDAExtensionDependency [ 
+HiMImageDependenciesBuilder >> visitDAExtensionDependency: aDAExtensionDependency [ 
 
 	| from to |
 	from := self ensureAddNodeForMethod: aDAExtensionDependency method in: aDAExtensionDependency source.
@@ -152,7 +152,7 @@ HiMPackageDependenciesExample >> visitDAExtensionDependency: aDAExtensionDepende
 ]
 
 { #category : #visiting }
-HiMPackageDependenciesExample >> visitDAInheritanceDependency: aDAInheritanceDependency [
+HiMImageDependenciesBuilder >> visitDAInheritanceDependency: aDAInheritanceDependency [
 	
 	| from to |
 	from := self ensureAddNodeForClassNamed: aDAInheritanceDependency theClass name in: aDAInheritanceDependency source.
@@ -161,7 +161,7 @@ HiMPackageDependenciesExample >> visitDAInheritanceDependency: aDAInheritanceDep
 ]
 
 { #category : #visiting }
-HiMPackageDependenciesExample >> visitDAMessageSendDependency: aDAMessageSendDependency [
+HiMImageDependenciesBuilder >> visitDAMessageSendDependency: aDAMessageSendDependency [
 
 	| from to |
 	from := self ensureAddNodeForPackage: aDAMessageSendDependency source.
@@ -175,7 +175,7 @@ HiMPackageDependenciesExample >> visitDAMessageSendDependency: aDAMessageSendDep
 ]
 
 { #category : #visiting }
-HiMPackageDependenciesExample >> visitDAReferenceDependency: aDAReferenceDependency [ 
+HiMImageDependenciesBuilder >> visitDAReferenceDependency: aDAReferenceDependency [ 
 
 	| from to |
 	from := self ensureAddNodeForMethod: aDAReferenceDependency method in: aDAReferenceDependency source.
