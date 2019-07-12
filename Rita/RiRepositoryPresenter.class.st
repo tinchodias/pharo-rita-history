@@ -1,3 +1,6 @@
+"
+I am a Spec2 presenter for RiRepository objects.
+"
 Class {
 	#name : #RiRepositoryPresenter,
 	#superclass : #SpPresenter,
@@ -68,11 +71,16 @@ RiRepositoryPresenter class >> voyageExample [
 
 { #category : #initialization }
 RiRepositoryPresenter >> contextMenuForTable [
-	| menu |
-	self selectedRiElement ifNil: [ 1halt ].
-	
+	| menu selected |
 	menu := UIManager default newMenuIn: self table for: self.
-	menu add: 'Inspect' target: self selectedRiElement selector: #inspect.
+	
+	selected := self selectedRiElement.
+
+	selected isUncommited ifFalse: [
+		menu add: 'Load commit (in IMAGE)' target: self selector: #loadSelectedCommit ].
+
+	menu add: 'Inspect object' target: selected selector: #inspect.
+
 	^ menu
 ]
 
@@ -83,19 +91,30 @@ RiRepositoryPresenter >> initializeWidgets [
 	table
 		showColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
-		addColumn: (ImageTableColumn evaluated: [ :item | hiedraImageBuilder morphAt: item ]) beNotExpandable;
+		addColumn: (SpImageTableColumn evaluated: [ :item | hiedraImageBuilder morphAt: item ]) beNotExpandable;
 		addColumn: ((SpStringTableColumn title: 'Author' evaluated: #author) width: 120);
 		addColumn: (SpImageTableColumn title: 'Comment' evaluated: [:item | commentImageBuilder morphAt: item ]);
 		addColumn: ((SpStringTableColumn title: 'Date' evaluated: #date) width: 120).
 
-	commentImageBuilder := RiCommentImageBuilder new.
-	hiedraImageBuilder := RiHiedraImageBuilder new.
-	hiedraImageBuilder refreshWith: repository elements.
 	table whenBuiltDo: [ :ann |
-		hiedraImageBuilder setTable: ann widget ].
-	
-	table items: repository elements.
+		commentImageBuilder := RiCommentImageBuilder new.
+		hiedraImageBuilder := RiHiedraImageBuilder new.
+		hiedraImageBuilder tableMorph: ann widget.
+		self refresh ].
 
+]
+
+{ #category : #actions }
+RiRepositoryPresenter >> loadSelectedCommit [
+	self selectedRiElement iceCommit checkout.
+	self repository process.
+	self refresh.
+]
+
+{ #category : #initialization }
+RiRepositoryPresenter >> refresh [
+	hiedraImageBuilder refreshWith: repository elements.
+	table items: repository elements.
 ]
 
 { #category : #accessing }

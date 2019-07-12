@@ -1,3 +1,7 @@
+"
+I'm responsible of building the image (a Morph) to show in the comment column of RiRepositoryPresenter.
+
+"
 Class {
 	#name : #RiCommentImageBuilder,
 	#superclass : #Object,

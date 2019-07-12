@@ -1,48 +1,46 @@
+"
+I'm responsible of building the image (a Morph) to show in the Hiedra column of RiRepositoryPresenter.
+
+"
 Class {
 	#name : #RiHiedraImageBuilder,
 	#superclass : #Object,
 	#instVars : [
 		'hiedraColumnController',
-		'table'
+		'morphTable'
 	],
 	#category : #'Rita-UI'
 }
-
-{ #category : #initialization }
-RiHiedraImageBuilder >> initialize [
-	super initialize.
-	
-	hiedraColumnController := HiRS3ColumnController new.
-	hiedraColumnController rowHeight: FTTableMorph defaultRowHeight floor.
-
-]
 
 { #category : #accessing }
 RiHiedraImageBuilder >> morphAt: item [
 	^ hiedraColumnController cellMorphAtValue: item
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #refreshing }
 RiHiedraImageBuilder >> refreshWith: someRiElements [
 
-	"Create a new ruler model with the new elements"
+	"Create a new ruler model with current table elements"
 	hiedraColumnController ruler: (HiRulerBuilder
 		newRulerValues: someRiElements
 		linksBlock: [ :each | each ancestors ]).
 
 	hiedraColumnController reset.
 
+	morphTable columns first width: hiedraColumnController rulerWidth.
+
 ]
 
-{ #category : #'as yet unclassified' }
-RiHiedraImageBuilder >> setTable: aFTTableMorph [
-	table := aFTTableMorph.
+{ #category : #accessing }
+RiHiedraImageBuilder >> tableMorph: aFTTableMorph [
+	"This object isn't completely initialized until this method receives the table where the Hiedra will belong."
+
+	morphTable := aFTTableMorph.
 	
+	hiedraColumnController := HiRS3ColumnController new.
 	hiedraColumnController
-		table: table;
-		onChangeDo: [ table ifNotNil: [ table changed ] ].
-	
-	table columns first width: hiedraColumnController rulerWidth.
-	
-	self refreshWith: aFTTableMorph dataSource elements.
+		table: morphTable;
+		onChangeDo: [ morphTable changed ];
+		rowHeight: morphTable rowHeight "floor".
+
 ]

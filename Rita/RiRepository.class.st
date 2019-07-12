@@ -1,5 +1,5 @@
 "
-This is a model of a IceLibGitRepository.
+I enrich a IceLibGitRepository object with RiElements.
 "
 Class {
 	#name : #RiRepository,
