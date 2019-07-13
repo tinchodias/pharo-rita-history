@@ -37,6 +37,11 @@ HiMSearchResults >> goToPreviousResult [
 	currentIndex < 1 ifTrue: [ currentIndex := nodes size ].
 ]
 
+{ #category : #testing }
+HiMSearchResults >> hasResults [
+	^ nodes notEmpty
+]
+
 { #category : #initialization }
 HiMSearchResults >> initializeWith: someNodes [
 	self initialize.

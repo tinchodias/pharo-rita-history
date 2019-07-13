@@ -11,7 +11,8 @@ Class {
 		'nextButton',
 		'searchModel',
 		'lastResultModel',
-		'newCurrentResultBlock'
+		'newCurrentResultBlock',
+		'newResultsBlock'
 	],
 	#category : #'Rita-Navigator-UI'
 }
@@ -21,66 +22,67 @@ HiMSearchPresenter class >> defaultSpec [
 	<spec>
 	<script: 'self new openWithSpec'>
 	
-	^ SpBoxLayout newVertical 
-		add: (SpBoxLayout newHorizontal
-			add: #textInput withConstraints: [ :constraints | 
-	"			constraints
-					fill: true" ];
+	^ (SpBoxLayout newHorizontal
+			add: #textInput
+				withConstraints: [ :constraints |
+				 	constraints
+						width: 200 ];
 			add: #resultsLabel
 				withConstraints: [ :constraints | 
-				constraints
-					width: 50;
-					padding: 2;
-					expand: false ];
-
+					constraints
+						fill: false];
 			add: #previousButton
 				withConstraints: [ :constraints | 
-				constraints
-					width: 24;
-					padding: 2 ];
+					constraints
+						width: 60 ];
 			add: #nextButton
 				withConstraints: [ :constraints | 
-				constraints
-					width: 24;
-					padding: 2 ];
-			yourself
-		) withConstraints: [ :constraints | 
-				constraints height: self toolbarHeight];
-		yourself.
-				
+					constraints
+						width: 60 ];
+			yourself)
+]
+
+{ #category : #actions }
+HiMSearchPresenter >> goToNextResult [
+	lastResultModel goToNextResult.
+	newCurrentResultBlock value.
+	self refresh
+]
+
+{ #category : #actions }
+HiMSearchPresenter >> goToPreviousResult [
+	lastResultModel goToPreviousResult.
+	newCurrentResultBlock value.
+	self refresh.
 ]
 
 { #category : #initialization }
 HiMSearchPresenter >> initializeWidgets [
 	
-	searchModel := HiMSearch new.
-		
-	textInput := self instantiate: SpTextInputFieldPresenter.
-	textInput
+	textInput := (self instantiate: SpTextInputFieldPresenter)
 		placeholder: 'Search...';
-		whenTextChangedDo: [ :newText |
-			searchModel text: newText.
-			lastResultModel := searchModel execute.
-			newCurrentResultBlock value.
-			self refresh ].
+		whenTextChangedDo: [ :newText | self search: newText ];
+		yourself.
 
 	resultsLabel := self instantiate: SpLabelPresenter. 
+	resultsLabel centered.
 
-	previousButton := self instantiate: SpButtonPresenter.
-	previousButton
-		icon: (self iconNamed: #arrowUp);
-		action: [
-			lastResultModel goToPreviousResult.
-			newCurrentResultBlock value.
-			self refresh. ].
+	previousButton := (self instantiate: SpButtonPresenter)
+		icon: (self iconNamed: #back);
+		label: 'Prev';
+		action: [ self goToPreviousResult ];
+		yourself.
 	
-	nextButton := self instantiate: SpButtonPresenter.
-	nextButton
-		icon: (self iconNamed: #arrowDown);
-		action: [
-			lastResultModel goToNextResult.
-			newCurrentResultBlock value.
-			self refresh. ].
+	nextButton := (self instantiate: SpButtonPresenter)
+		icon: (self iconNamed: #forward);
+		label: 'Next';
+		action: [ self goToNextResult ];
+		yourself.
+
+
+	searchModel := HiMSearch new.
+	self refresh.
+	
 
 ]
 
@@ -94,15 +96,34 @@ HiMSearchPresenter >> newResultIndexBlock: anObject [
 	newCurrentResultBlock := anObject
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
+HiMSearchPresenter >> newResultsBlock: aBlockClosure [ 
+	newResultsBlock := aBlockClosure
+]
+
+{ #category : #actions }
 HiMSearchPresenter >> refresh [
+	| hasResults |
+	hasResults := lastResultModel notNil and: [ lastResultModel hasResults ].
+	previousButton enabled: hasResults.
+	nextButton enabled: hasResults.
+
 	resultsLabel label:
-		(lastResultModel
-			ifNil: [ 'Not found' ]
-			ifNotNil: [
-				'{1}/{2}' format: {
+		(hasResults
+			ifFalse: [ '      ' ]
+			ifTrue: [
+				' {1}/{2} ' format: {
 					lastResultModel currentIndex.
 					lastResultModel nodes size } ])
+]
+
+{ #category : #actions }
+HiMSearchPresenter >> search: newText [
+	searchModel text: newText.
+	lastResultModel := searchModel execute.
+	newResultsBlock value.
+	newCurrentResultBlock value.
+	self refresh
 ]
 
 { #category : #accessing }

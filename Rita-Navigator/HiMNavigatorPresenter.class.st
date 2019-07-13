@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'viewPresenter',
 		'searchPresenter',
-		'lastView'
+		'lastView',
+		'lastNavigator'
 	],
 	#category : #'Rita-Navigator-UI'
 }
@@ -15,6 +16,7 @@ HiMNavigatorPresenter class >> defaultSpec [
 	<script: 'self new openWithSpec'>
 	
 	^ SpBoxLayout newVertical 
+			spacing: 5;
 			add: #viewPresenter;
 			add: #searchPresenter 
 				withConstraints: [ :constraints | 
@@ -24,32 +26,60 @@ HiMNavigatorPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-HiMNavigatorPresenter >> fill: aRSView [
+HiMNavigatorPresenter >> fillLastView [
 
-	| aHiMNavigator builder |
-	aHiMNavigator := HiMNavigator newOn: aRSView.
+	| builder |
+	lastNavigator := HiMNavigator newOn: lastView.
 	builder := HiMImageDependenciesBuilder new
-		navigator: aHiMNavigator;
+		navigator: lastNavigator;
 		packageNames: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. "'Random-Core'"". 'Athens-Cairo'. 'Growl'. 'Iceberg'"};
 		build.
 
 	searchPresenter searchModel topParentNodes: builder topLevelNodes.
 	
-
-
+	lastView camera scale: 5
 ]
 
 { #category : #'as yet unclassified' }
-HiMNavigatorPresenter >> highlightOnly: aHiMNode [
-	| highlightableForCurrentSearchResult |
+HiMNavigatorPresenter >> highlightAllSearchResults [
+	| highlightableForCurrentSearchResult anyNode someHiMNodes |
+	someHiMNodes := searchPresenter lastResultModel nodes.
+	
+	someHiMNodes ifEmpty: [ ^self ].
+	anyNode := someHiMNodes anyOne.
+	
+	highlightableForCurrentSearchResult := RSHighlightable new
+		noDefaultColor;
+		highlightElements: [ :dontCareItsHacking | 
+			someHiMNodes collect: [:each | lastView elementFromModel: each ] thenReject: #isNil ];
+		attributeKey: #allSearchResults;
+		when: TSHighlightEvent
+			do: [ :evt | evt element border: (TSBorder new color: (Color green alpha: 0.5); width: 1; yourself) ];
+		when: TSUnHighlightEvent do: [ :evt | evt element border: nil ].
+
+	highlightableForCurrentSearchResult doHighlight: (lastView elementFromModel: anyNode topParent).
+	
+	lastView signalUpdate
+]
+
+{ #category : #'as yet unclassified' }
+HiMNavigatorPresenter >> highlightCurrentSearchResult [
+	| highlightableForCurrentSearchResult topLevelElement aHiMNode |
+	searchPresenter lastResultModel hasResults ifFalse: [ ^self ].
+	
+	aHiMNode := searchPresenter lastResultModel currentNode.
+
 	highlightableForCurrentSearchResult := RSHighlightable new
 		noDefaultColor;
 		attributeKey: #searchResult;
 		when: TSHighlightEvent
 			do: [ :evt | evt element border: (TSBorder new color: Color green; width: 1; yourself) ];
-		when: TSUnHighlightEvent do: [ :evt | evt element border: nil ].
+		when: TSUnHighlightEvent do: [ :evt | self highlightAllSearchResults ].
 
-	((lastView elementFromModel: aHiMNode topParent) elementFromModel: aHiMNode)
+	topLevelElement := lastView elementFromModel: aHiMNode topParent.
+	lastNavigator executeAndRegisterExpandIfPossible: topLevelElement.
+
+	(topLevelElement elementFromModel: aHiMNode)
 		ifNotNil: [ :element | 
 			highlightableForCurrentSearchResult doHighlight: element ]
 		ifNil: [
@@ -64,12 +94,12 @@ HiMNavigatorPresenter >> initializeWidgets [
 	viewPresenter := self instantiate: RoassalPresenter.
 	viewPresenter script: [ :view |
 		lastView := view.
-		self fill: view.
-		view camera scale: 5 ].
-		
+		self fillLastView ].
 
 	searchPresenter := self instantiate: HiMSearchPresenter.
-	
-	searchPresenter newResultIndexBlock: [ 
-		self highlightOnly: searchPresenter lastResultModel currentNode ]
+	searchPresenter
+		newResultIndexBlock: [ self highlightCurrentSearchResult ];
+		newResultsBlock: [ self highlightAllSearchResults ].
+
+
 ]
