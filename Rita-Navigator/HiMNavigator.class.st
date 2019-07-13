@@ -314,11 +314,10 @@ HiMNavigator >> highlightableForShapes [
 	aHighlightable := RSHighlightable new.
 	aHighlightable highlightShape
 		onElement;
-		color: [ :e | e color adjustBrightness: 0.16 ];
-		border: [ :e | 
+		color: [ :e | e color adjustBrightness: 0.16 ]";		border: [ :e | 
 			TSBorder new
 				color: self currentTheme textColor;
-				width: 0.1 ].
+				width: 0.1 ]".
 	^ aHighlightable
 ]
 
