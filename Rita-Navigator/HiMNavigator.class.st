@@ -16,7 +16,7 @@ Class {
 { #category : #examples }
 HiMNavigator class >> exampleFloatingLabels [
 
-	^ self openExampleWith: self new
+	^ self openExampleWith:  (self new labelStrategy: HiMFloatingLabelStrategy new; yourself)
 ]
 
 { #category : #examples }
@@ -326,7 +326,7 @@ HiMNavigator >> initializeOn: aRSView [
 	self initialize.
 	
 	commandHistory := HiMCommandHistory new.
-	self labelStrategy: HiMFloatingLabelStrategy new.
+	self labelStrategy: HiMTopLabelStrategy new.
 
 	view := aRSView.
 	view color: self currentTheme backgroundColor.
