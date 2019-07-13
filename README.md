@@ -16,6 +16,7 @@ Metacello new
 ## Execute experiments
 
 * Code dependencies: See examples in class side of `HiMNavigator`.
+* Code dependencies in Spec2 + Search: `HiMNavigatorPresenter defaultSpec`.
 * Code changes: `Open Iceberg -> Select a repository -> Right click -> Repository (Cmd+R)`.
 * Unified repository view (all local branches and tags together): Run `RiRepositoryPresenter hiedraExample` and other examples in this class.
 * Extension to Roassal3 layout where rectangles repulse others: Run `RSRectangleRepulsionForceLayout` class side examples.
