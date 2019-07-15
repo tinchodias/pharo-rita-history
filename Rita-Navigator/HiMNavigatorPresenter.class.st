@@ -25,7 +25,7 @@ HiMNavigatorPresenter class >> defaultSpec [
 				
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 HiMNavigatorPresenter >> fillLastView [
 
 	| builder |
@@ -40,12 +40,14 @@ HiMNavigatorPresenter >> fillLastView [
 	lastView camera scale: 5
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - searching' }
 HiMNavigatorPresenter >> highlightAllSearchResults [
 	| highlightableForCurrentSearchResult anyNode someHiMNodes |
+	searchPresenter isHighlightAllEnabled ifFalse: [ ^self ].
+
 	someHiMNodes := searchPresenter lastResultModel nodes.
-	
 	someHiMNodes ifEmpty: [ ^self ].
+
 	anyNode := someHiMNodes anyOne.
 	
 	highlightableForCurrentSearchResult := RSHighlightable new
@@ -62,7 +64,7 @@ HiMNavigatorPresenter >> highlightAllSearchResults [
 	lastView signalUpdate
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - searching' }
 HiMNavigatorPresenter >> highlightCurrentSearchResult [
 	| highlightableForCurrentSearchResult topLevelElement aHiMNode |
 	searchPresenter lastResultModel hasResults ifFalse: [ ^self ].
@@ -91,15 +93,15 @@ HiMNavigatorPresenter >> highlightCurrentSearchResult [
 
 { #category : #initialization }
 HiMNavigatorPresenter >> initializeWidgets [
-	viewPresenter := self instantiate: RoassalPresenter.
-	viewPresenter script: [ :view |
-		lastView := view.
-		self fillLastView ].
+	viewPresenter := (self instantiate: RoassalPresenter)
+		script: [ :newView |
+			lastView := newView.
+			self fillLastView ];
+		yourself.
 
-	searchPresenter := self instantiate: HiMSearchPresenter.
-	searchPresenter
+	searchPresenter := (self instantiate: HiMSearchPresenter)
 		newResultIndexBlock: [ self highlightCurrentSearchResult ];
-		newResultsBlock: [ self highlightAllSearchResults ].
-
+		newResultsBlock: [ self highlightAllSearchResults ];
+		yourself.
 
 ]

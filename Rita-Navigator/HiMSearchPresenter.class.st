@@ -9,10 +9,12 @@ Class {
 		'resultsLabel',
 		'previousButton',
 		'nextButton',
+		'highlightAllButton',
 		'searchModel',
 		'lastResultModel',
 		'newCurrentResultBlock',
-		'newResultsBlock'
+		'newResultsBlock',
+		'highlightAllEnabled'
 	],
 	#category : #'Rita-Navigator-UI'
 }
@@ -31,6 +33,10 @@ HiMSearchPresenter class >> defaultSpec [
 				withConstraints: [ :constraints | 
 					constraints
 						fill: false];
+			add: #highlightAllButton
+				withConstraints: [ :constraints | 
+					constraints
+						width: 90 ];
 			add: #previousButton
 				withConstraints: [ :constraints | 
 					constraints
@@ -56,6 +62,11 @@ HiMSearchPresenter >> goToPreviousResult [
 	self refresh.
 ]
 
+{ #category : #accessing }
+HiMSearchPresenter >> highlightAllEnabled: aBoolean [
+	highlightAllEnabled := aBoolean
+]
+
 { #category : #initialization }
 HiMSearchPresenter >> initializeWidgets [
 	
@@ -66,6 +77,11 @@ HiMSearchPresenter >> initializeWidgets [
 
 	resultsLabel := self instantiate: SpLabelPresenter. 
 	resultsLabel centered.
+
+	highlightAllButton := (self instantiate: SpToggleButtonPresenter)
+		label: 'Highlight all';
+		whenChangedDo: [ :newValue | self highlightAllEnabled: newValue ];
+		yourself.
 
 	previousButton := (self instantiate: SpButtonPresenter)
 		icon: (self iconNamed: #back);
@@ -79,11 +95,18 @@ HiMSearchPresenter >> initializeWidgets [
 		action: [ self goToNextResult ];
 		yourself.
 
-
+	"Model initialization. TODO: move elsewhere"
 	searchModel := HiMSearch new.
+	highlightAllEnabled := true.
+
 	self refresh.
 	
 
+]
+
+{ #category : #accessing }
+HiMSearchPresenter >> isHighlightAllEnabled [
+	^ highlightAllEnabled
 ]
 
 { #category : #accessing }
@@ -107,6 +130,7 @@ HiMSearchPresenter >> refresh [
 	hasResults := lastResultModel notNil and: [ lastResultModel hasResults ].
 	previousButton enabled: hasResults.
 	nextButton enabled: hasResults.
+	highlightAllButton state: self isHighlightAllEnabled.
 
 	resultsLabel label:
 		(hasResults
