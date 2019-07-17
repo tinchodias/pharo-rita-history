@@ -37,7 +37,9 @@ HiMNavigatorPresenter >> fillLastView [
 
 	searchPresenter searchModel topParentNodes: builder topLevelNodes.
 	
-	lastView camera scale: 5
+	lastView camera scale: 5.
+	
+	lastView when: TSMouseClick do: [ lastView morph takeKeyboardFocus ]
 ]
 
 { #category : #'private - searching' }
