@@ -1,6 +1,6 @@
 Class {
 	#name : #HiMSearchResults,
-	#superclass : #Object,
+	#superclass : #HiMAbstractSearchResults,
 	#instVars : [
 		'nodes',
 		'currentIndex'
@@ -39,15 +39,15 @@ HiMSearchResults >> goToPreviousResult [
 
 { #category : #testing }
 HiMSearchResults >> hasResults [
-	^ nodes notEmpty
+	^ true
 ]
 
 { #category : #initialization }
-HiMSearchResults >> initializeWith: someNodes [
+HiMSearchResults >> initializeWith: aNonEmptyCollection [
 	self initialize.
 	
-	nodes := someNodes.
-	currentIndex := 1 min: nodes size.
+	nodes := aNonEmptyCollection.
+	currentIndex := 1.
 ]
 
 { #category : #accessing }

@@ -26,6 +26,16 @@ HiMNavigatorPresenter class >> defaultSpec [
 				
 ]
 
+{ #category : #examples }
+HiMNavigatorPresenter class >> example1 [ 
+	^ self new
+		openWithSpec
+		withWindowDo: [ :window | 
+			window
+				extent: 1000 @ 800;
+				title: self name, ' - Roassal3 in Spec2' ]
+]
+
 { #category : #private }
 HiMNavigatorPresenter >> fillLastView [
 
@@ -45,10 +55,7 @@ HiMNavigatorPresenter >> fillLastView [
 HiMNavigatorPresenter >> highlightAllSearchResults [
 	| highlightableForCurrentSearchResult allSearchResults elementsForAllSearchResults |
 
-	searchPresenter isHighlightAllEnabled ifFalse: [ ^self ].
-
 	allSearchResults := searchPresenter lastResultModel nodes.
-"	allSearchResults ifEmpty: [ ^self ]."
 
 	highlightableForCurrentSearchResult := RSHighlightable new
 		noDefaultColor;
@@ -63,11 +70,11 @@ HiMNavigatorPresenter >> highlightAllSearchResults [
 		collect: [:each | lastView elementFromModel: each ]
 		thenReject: #isNil.
 	
-	allSearchResults
-		ifEmpty: [ 
-			highlightableForCurrentSearchResult unhighlightRecordedElements: lastView ]
-		ifNotEmpty: [
-			highlightableForCurrentSearchResult doHighlightElements: elementsForAllSearchResults ].
+	self shouldHighlightAll
+		ifTrue: [
+			highlightableForCurrentSearchResult doHighlightElements: elementsForAllSearchResults ]
+		ifFalse: [ 
+			highlightableForCurrentSearchResult unhighlightRecordedElements: lastView ].
 	
 	lastView signalUpdate
 ]
@@ -121,7 +128,8 @@ HiMNavigatorPresenter >> highlightCurrentSearchResult [
 			self highlightCompositeElementWithLabel: evt element intensity: 1 ];
 		when: TSUnHighlightEvent do: [ :evt |
 			self unhighlightCompositeElementWithLabel: evt element.
-			self highlightCompositeElementWithLabel: evt element intensity: 0.5 ].
+			self shouldHighlightAll 
+				ifTrue: [ self highlightCompositeElementWithLabel: evt element intensity: 0.5 ] ].
 
 	topLevelElement := lastView elementFromModel: aHiMNode topParent.
 "	lastNavigator executeAndRegisterExpandIfPossible: topLevelElement."
@@ -147,11 +155,18 @@ HiMNavigatorPresenter >> initializeWidgets [
 	searchPresenter := (self instantiate: HiMSearchPresenter)
 		newResultIndexBlock: [ self highlightCurrentSearchResult ];
 		newResultsBlock: [ self highlightAllSearchResults ];
+		toggledHighlightAllBlock: [ 
+			self highlightAllSearchResults; highlightCurrentSearchResult ];
 		yourself.
 
 	self focusOrder
 		add: searchPresenter;
 		add: viewPresenter
+]
+
+{ #category : #'private - searching' }
+HiMNavigatorPresenter >> shouldHighlightAll [
+	^ searchPresenter isHighlightAllEnabled and: [ searchPresenter lastResultModel hasResults ]
 ]
 
 { #category : #'private - searching' }

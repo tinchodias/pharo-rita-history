@@ -19,7 +19,14 @@ HiMSearch >> execute [
 					node object includesSubstring: text caseSensitive: true]) ifTrue: [ 
 					stream nextPut: node ] ] ] ].
 
-	^ HiMSearchResults newWith: matchingNodes
+	^ matchingNodes
+		ifEmpty: [ HiMNoResults new ] 
+		ifNotEmpty: [ HiMSearchResults newWith: matchingNodes ]
+]
+
+{ #category : #accessing }
+HiMSearch >> includeBlock [
+	^ includeBlock
 ]
 
 { #category : #accessing }

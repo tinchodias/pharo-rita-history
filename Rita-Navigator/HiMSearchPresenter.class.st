@@ -14,7 +14,8 @@ Class {
 		'lastResultModel',
 		'newCurrentResultBlock',
 		'newResultsBlock',
-		'highlightAllEnabled'
+		'highlightAllEnabled',
+		'toggledHighlightAllBlock'
 	],
 	#category : #'Rita-Navigator-UI'
 }
@@ -34,10 +35,6 @@ HiMSearchPresenter class >> defaultSpec [
 				withConstraints: [ :constraints | 
 					constraints
 						fill: false];
-			add: #highlightAllButton
-				withConstraints: [ :constraints | 
-					constraints
-						width: 90 ];
 			add: #previousButton
 				withConstraints: [ :constraints | 
 					constraints
@@ -46,6 +43,10 @@ HiMSearchPresenter class >> defaultSpec [
 				withConstraints: [ :constraints | 
 					constraints
 						width: 60 ];
+			add: #highlightAllButton
+				withConstraints: [ :constraints | 
+					constraints
+						width: 90 ];
 			yourself)
 ]
 
@@ -65,7 +66,10 @@ HiMSearchPresenter >> goToPreviousResult [
 
 { #category : #accessing }
 HiMSearchPresenter >> highlightAllEnabled: aBoolean [
-	highlightAllEnabled := aBoolean
+	highlightAllEnabled := aBoolean.
+	toggledHighlightAllBlock ifNotNil: [
+		toggledHighlightAllBlock value ].
+
 ]
 
 { #category : #initialization }
@@ -79,11 +83,6 @@ HiMSearchPresenter >> initializeWidgets [
 
 	resultsLabel := self instantiate: SpLabelPresenter. 
 
-	highlightAllButton := (self instantiate: SpToggleButtonPresenter)
-		label: 'Highlight all';
-		whenChangedDo: [ :newValue | self highlightAllEnabled: newValue ];
-		yourself.
-
 	previousButton := (self instantiate: SpButtonPresenter)
 		icon: (self iconNamed: #back);
 		label: 'Prev';
@@ -96,9 +95,21 @@ HiMSearchPresenter >> initializeWidgets [
 		action: [ self goToNextResult ];
 		yourself.
 
+	highlightAllButton := (self instantiate: SpToggleButtonPresenter)
+		label: 'Highlight all';
+		whenChangedDo: [ :newValue | self highlightAllEnabled: newValue ];
+		yourself.
+
+	self focusOrder
+		add: textInput;
+		add: previousButton;
+		add: nextButton;
+		add: highlightAllButton.
+
 	"Model initialization. TODO: move elsewhere"
 	searchModel := HiMSearch new.
 	searchModel includeBlock: #isTopParent.
+	lastResultModel := HiMNoResults new.
 	highlightAllEnabled := true.
 
 	self refresh.
@@ -155,4 +166,9 @@ HiMSearchPresenter >> search: newText [
 { #category : #accessing }
 HiMSearchPresenter >> searchModel [
 	^ searchModel
+]
+
+{ #category : #accessing }
+HiMSearchPresenter >> toggledHighlightAllBlock: aBlockClosure [ 
+	toggledHighlightAllBlock := aBlockClosure
 ]

@@ -34,7 +34,7 @@ HiMSearchModelTest >> testSearchEmptyText [
 	results := search execute.
 	
 	self assertEmpty: results nodes.
-	self assert: results currentIndex equals: 0.
+	self deny: results hasResults.
 ]
 
 { #category : #tests }
