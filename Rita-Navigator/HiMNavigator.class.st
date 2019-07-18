@@ -104,7 +104,7 @@ HiMNavigator >> addElementsFor: someHiMNodes [
 		color: [ :each | self colorFor: each ];
 		size: [ :each | self sizeFor: each ];
 		onElement;
-		when: TSMouseDragStart do: [:each | [:evt | self startForceAnimationInfinitely ]];
+		when: TSMouseDragStart do: [:each | [:evt | each pushFront. self startForceAnimationInfinitely ]];
 		when: TSMouseDragEnd do: [:each | [:evt | self startForceAnimationFinitely ]];
 		when: TSMouseDoubleClick do: [ :each | [:evt | self toggleNode: each ] ];
 		yourself.
@@ -312,12 +312,14 @@ HiMNavigator >> highlightableForEdges [
 HiMNavigator >> highlightableForShapes [
 	| aHighlightable |
 	aHighlightable := RSHighlightable new.
+	aHighlightable noDefaultColor.
 	aHighlightable highlightShape
 		onElement;
-		color: [ :e | e color adjustBrightness: 0.16 ]";		border: [ :e | 
+		color: [ :e | e color adjustBrightness: 0.16 ];
+		border: [ :e | 
 			TSBorder new
 				color: self currentTheme textColor;
-				width: 0.1 ]".
+				width: 0.3 ].
 	^ aHighlightable
 ]
 
