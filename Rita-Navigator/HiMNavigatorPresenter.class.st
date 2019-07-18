@@ -5,7 +5,8 @@ Class {
 		'viewPresenter',
 		'searchPresenter',
 		'lastView',
-		'lastNavigator'
+		'lastNavigator',
+		'builder'
 	],
 	#category : #'Rita-Navigator-UI'
 }
@@ -81,7 +82,7 @@ HiMNavigatorPresenter >> highlightCompositeElementWithLabel: element intensity: 
 	ranges := label text allRangesOfSubstring: searchedText.
 
 	"visualize"
-	highlightColor := lastNavigator currentTheme menuKeyboardFocusColor.
+	highlightColor := lastNavigator currentTheme "successTextColor" warningTextColor.
 	backgroundColor := lastNavigator currentTheme backgroundColor alpha: 0.5.
 	element color: backgroundColor.
 	element border: (TSBorder new color: (highlightColor alpha: k); width: 3 * k; yourself).
@@ -156,7 +157,7 @@ HiMNavigatorPresenter >> initializeWidgets [
 { #category : #'private - searching' }
 HiMNavigatorPresenter >> unhighlightCompositeElementWithLabel: element [
 	| label normalColor |
-	normalColor := Color white.
+	normalColor := lastNavigator currentTheme textColor.
 	label := element shapes last.
 	label color: normalColor.
 	
