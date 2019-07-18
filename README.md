@@ -20,3 +20,10 @@ Metacello new
 * Code changes: `Open Iceberg -> Select a repository -> Right click -> Repository (Cmd+R)`.
 * Unified repository view (all local branches and tags together): Run `RiRepositoryPresenter hiedraExample` and other examples in this class.
 * Extension to Roassal3 layout where rectangles repulse others: Run `RSRectangleRepulsionForceLayout` class side examples.
+
+
+## What's rita?
+
+It comes from Santa Rita, the name of this plant in Argentina:
+
+![Plant](https://live.staticflickr.com/115/309565575_0945045e03_m_d.jpg)
