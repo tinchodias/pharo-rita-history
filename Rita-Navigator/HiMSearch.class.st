@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'text',
-		'topParentNodes'
+		'topParentNodes',
+		'includeBlock'
 	],
 	#category : #'Rita-Navigator-Model'
 }
@@ -14,10 +15,22 @@ HiMSearch >> execute [
 	matchingNodes := Array streamContents: [ :stream |
 		topParentNodes do: [ :each |
 			each withAllChildrenDo: [ :node |
-				(node object includesSubstring: text caseSensitive: true) ifTrue: [ 
+				((includeBlock cull: node) and: [
+					node object includesSubstring: text caseSensitive: true]) ifTrue: [ 
 					stream nextPut: node ] ] ] ].
 
 	^ HiMSearchResults newWith: matchingNodes
+]
+
+{ #category : #accessing }
+HiMSearch >> includeBlock: aBlockClosure [
+	includeBlock:= aBlockClosure
+]
+
+{ #category : #initialization }
+HiMSearch >> initialize [
+	super initialize.
+	includeBlock := [ true ]
 ]
 
 { #category : #accessing }

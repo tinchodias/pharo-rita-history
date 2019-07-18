@@ -102,6 +102,11 @@ HiMNode >> initialize [
 	children := OrderedCollection new.
 ]
 
+{ #category : #testing }
+HiMNode >> isTopParent [
+	^ parent isNil
+]
+
 { #category : #accessing }
 HiMNode >> object [
 	^ object

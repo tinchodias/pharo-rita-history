@@ -28,6 +28,7 @@ HiMSearchPresenter class >> defaultSpec [
 			add: #textInput
 				withConstraints: [ :constraints |
 				 	constraints
+					fill: true; expand: true;
 						width: 200 ];
 			add: #resultsLabel
 				withConstraints: [ :constraints | 
@@ -71,12 +72,12 @@ HiMSearchPresenter >> highlightAllEnabled: aBoolean [
 HiMSearchPresenter >> initializeWidgets [
 	
 	textInput := (self instantiate: SpTextInputFieldPresenter)
+"		autoAccept: true;"
 		placeholder: 'Search...';
 		whenTextChangedDo: [ :newText | self search: newText ];
 		yourself.
 
 	resultsLabel := self instantiate: SpLabelPresenter. 
-	resultsLabel centered.
 
 	highlightAllButton := (self instantiate: SpToggleButtonPresenter)
 		label: 'Highlight all';
@@ -97,6 +98,7 @@ HiMSearchPresenter >> initializeWidgets [
 
 	"Model initialization. TODO: move elsewhere"
 	searchModel := HiMSearch new.
+	searchModel includeBlock: #isTopParent.
 	highlightAllEnabled := true.
 
 	self refresh.

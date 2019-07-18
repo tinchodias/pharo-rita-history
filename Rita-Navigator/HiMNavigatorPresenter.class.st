@@ -20,7 +20,7 @@ HiMNavigatorPresenter class >> defaultSpec [
 			add: #viewPresenter;
 			add: #searchPresenter 
 				withConstraints: [ :constraints | 
-					constraints height: self toolbarHeight];
+					constraints height: self labelHeight + 5 ];
 		yourself.
 				
 ]
@@ -36,10 +36,8 @@ HiMNavigatorPresenter >> fillLastView [
 		build.
 
 	searchPresenter searchModel topParentNodes: builder topLevelNodes.
-	
-	lastView camera scale: 5.
-	
-	lastView when: TSMouseClick do: [ lastView morph takeKeyboardFocus ]
+	lastView camera scale: 6.
+	lastView when: TSMouseClick do: [ lastView morph takeKeyboardFocus ].
 ]
 
 { #category : #'private - searching' }
@@ -49,14 +47,14 @@ HiMNavigatorPresenter >> highlightAllSearchResults [
 	searchPresenter isHighlightAllEnabled ifFalse: [ ^self ].
 
 	allSearchResults := searchPresenter lastResultModel nodes.
-	allSearchResults ifEmpty: [ ^self ].
+"	allSearchResults ifEmpty: [ ^self ]."
 
 	highlightableForCurrentSearchResult := RSHighlightable new
 		noDefaultColor;
 		highlightElements: [ :each | {each attributeAt: #RSLabeled} ];
 		attributeKey: #allSearchResults;
 		when: TSHighlightEvent do: [ :evt |
-			self highlightCompositeElementWithLabel: evt element k: 0.5 ];
+			self highlightCompositeElementWithLabel: evt element intensity: 0.5 ];
 		when: TSUnHighlightEvent do: [ :evt |
 			self unhighlightCompositeElementWithLabel: evt element ].
 	
@@ -64,33 +62,41 @@ HiMNavigatorPresenter >> highlightAllSearchResults [
 		collect: [:each | lastView elementFromModel: each ]
 		thenReject: #isNil.
 	
-	highlightableForCurrentSearchResult doHighlightElements: elementsForAllSearchResults.
+	allSearchResults
+		ifEmpty: [ 
+			highlightableForCurrentSearchResult unhighlightRecordedElements: lastView ]
+		ifNotEmpty: [
+			highlightableForCurrentSearchResult doHighlightElements: elementsForAllSearchResults ].
 	
 	lastView signalUpdate
 ]
 
 { #category : #'private - searching' }
-HiMNavigatorPresenter >> highlightCompositeElementWithLabel: element k: k [
+HiMNavigatorPresenter >> highlightCompositeElementWithLabel: element intensity: k [
 
-	| ranges font label searchResultColor searchedText highlightShapeBuidler highlightBorder |
-	searchResultColor := Color yellow.
-	searchedText := searchPresenter searchModel text.
-	highlightShapeBuidler := RSShapeBuilder box
-		color: (searchResultColor alpha: 0.15 * k);
-		yourself.
-	highlightBorder := TSBorder new color: (searchResultColor alpha: 0.5 * k); width: 2 * k.
-
-
-	element pushFront.
+	| ranges font label highlightColor searchedText highlightShapeBuilder backgroundColor |
+	"search result model"
 	label := element shapes last.
-	font := label font.
-	label color: (searchResultColor alpha: k).
+	searchedText := searchPresenter searchModel text.
 	ranges := label text allRangesOfSubstring: searchedText.
+
+	"visualize"
+	highlightColor := lastNavigator currentTheme menuKeyboardFocusColor.
+	backgroundColor := lastNavigator currentTheme backgroundColor alpha: 0.5.
+	element color: backgroundColor.
+	element border: (TSBorder new color: (highlightColor alpha: k); width: 3 * k; yourself).
+	element pushFront.
+
+	highlightShapeBuilder := RSShapeBuilder box
+		color: (highlightColor alpha: k * 0.5);
+"		border: (TSBorder new color: (highlightColor alpha: k * 0.5); width: 2 * k; yourself);"
+		yourself.
+
+	font := label font.
 	ranges do: [ :interval |
 		| boxElement x partial |
-		boxElement := highlightShapeBuidler element
+		boxElement := highlightShapeBuilder element
 			extent: (font widthOfString: searchedText)@font height;
-			border: highlightBorder;
 			yourself.
 		partial := font widthOfString: (label text copyFrom: 1 to: (interval first - 1)).
 		x := partial + ((boxElement width - label width) / 2) - 2.
@@ -111,10 +117,10 @@ HiMNavigatorPresenter >> highlightCurrentSearchResult [
 		attributeKey: #searchResult;
 		highlightElements: [ :each | {each attributeAt: #RSLabeled} ];
 		when: TSHighlightEvent do: [ :evt |
-			self highlightCompositeElementWithLabel: evt element k: 1 ];
+			self highlightCompositeElementWithLabel: evt element intensity: 1 ];
 		when: TSUnHighlightEvent do: [ :evt |
 			self unhighlightCompositeElementWithLabel: evt element.
-			self highlightCompositeElementWithLabel: evt element k: 0.5 ].
+			self highlightCompositeElementWithLabel: evt element intensity: 0.5 ].
 
 	topLevelElement := lastView elementFromModel: aHiMNode topParent.
 "	lastNavigator executeAndRegisterExpandIfPossible: topLevelElement."
@@ -142,6 +148,9 @@ HiMNavigatorPresenter >> initializeWidgets [
 		newResultsBlock: [ self highlightAllSearchResults ];
 		yourself.
 
+	self focusOrder
+		add: searchPresenter;
+		add: viewPresenter
 ]
 
 { #category : #'private - searching' }
@@ -150,5 +159,10 @@ HiMNavigatorPresenter >> unhighlightCompositeElementWithLabel: element [
 	normalColor := Color white.
 	label := element shapes last.
 	label color: normalColor.
+	
+	element
+		border: nil;
+		color: nil.
+	
 	element shapes removeFirst: element shapes size - 1
 ]
