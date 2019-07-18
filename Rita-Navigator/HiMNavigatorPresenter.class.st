@@ -44,26 +44,59 @@ HiMNavigatorPresenter >> fillLastView [
 
 { #category : #'private - searching' }
 HiMNavigatorPresenter >> highlightAllSearchResults [
-	| highlightableForCurrentSearchResult anyNode someHiMNodes |
+	| highlightableForCurrentSearchResult allSearchResults elementsForAllSearchResults |
+
 	searchPresenter isHighlightAllEnabled ifFalse: [ ^self ].
 
-	someHiMNodes := searchPresenter lastResultModel nodes.
-	someHiMNodes ifEmpty: [ ^self ].
+	allSearchResults := searchPresenter lastResultModel nodes.
+	allSearchResults ifEmpty: [ ^self ].
 
-	anyNode := someHiMNodes anyOne.
-	
 	highlightableForCurrentSearchResult := RSHighlightable new
 		noDefaultColor;
-		highlightElements: [ :dontCareItsHacking | 
-			someHiMNodes collect: [:each | lastView elementFromModel: each ] thenReject: #isNil ];
+		highlightElements: [ :each | {each attributeAt: #RSLabeled} ];
 		attributeKey: #allSearchResults;
-		when: TSHighlightEvent
-			do: [ :evt | evt element border: (TSBorder new color: (Color green alpha: 0.5); width: 1; yourself) ];
-		when: TSUnHighlightEvent do: [ :evt | evt element border: nil ].
-
-	highlightableForCurrentSearchResult doHighlight: (lastView elementFromModel: anyNode topParent).
+		when: TSHighlightEvent do: [ :evt |
+			self highlightCompositeElementWithLabel: evt element k: 0.5 ];
+		when: TSUnHighlightEvent do: [ :evt |
+			self unhighlightCompositeElementWithLabel: evt element ].
+	
+	elementsForAllSearchResults := allSearchResults
+		collect: [:each | lastView elementFromModel: each ]
+		thenReject: #isNil.
+	
+	highlightableForCurrentSearchResult doHighlightElements: elementsForAllSearchResults.
 	
 	lastView signalUpdate
+]
+
+{ #category : #'private - searching' }
+HiMNavigatorPresenter >> highlightCompositeElementWithLabel: element k: k [
+
+	| ranges font label searchResultColor searchedText highlightShapeBuidler highlightBorder |
+	searchResultColor := Color yellow.
+	searchedText := searchPresenter searchModel text.
+	highlightShapeBuidler := RSShapeBuilder box
+		color: (searchResultColor alpha: 0.15 * k);
+		yourself.
+	highlightBorder := TSBorder new color: (searchResultColor alpha: 0.5 * k); width: 2 * k.
+
+
+	element pushFront.
+	label := element shapes last.
+	font := label font.
+	label color: (searchResultColor alpha: k).
+	ranges := label text allRangesOfSubstring: searchedText.
+	ranges do: [ :interval |
+		| boxElement x partial |
+		boxElement := highlightShapeBuidler element
+			extent: (font widthOfString: searchedText)@font height;
+			border: highlightBorder;
+			yourself.
+		partial := font widthOfString: (label text copyFrom: 1 to: (interval first - 1)).
+		x := partial + ((boxElement width - label width) / 2) - 2.
+		boxElement position: x@0.
+		element shapes addFirst: boxElement ]
+
 ]
 
 { #category : #'private - searching' }
@@ -76,12 +109,15 @@ HiMNavigatorPresenter >> highlightCurrentSearchResult [
 	highlightableForCurrentSearchResult := RSHighlightable new
 		noDefaultColor;
 		attributeKey: #searchResult;
-		when: TSHighlightEvent
-			do: [ :evt | evt element border: (TSBorder new color: Color green; width: 1; yourself) ];
-		when: TSUnHighlightEvent do: [ :evt | self highlightAllSearchResults ].
+		highlightElements: [ :each | {each attributeAt: #RSLabeled} ];
+		when: TSHighlightEvent do: [ :evt |
+			self highlightCompositeElementWithLabel: evt element k: 1 ];
+		when: TSUnHighlightEvent do: [ :evt |
+			self unhighlightCompositeElementWithLabel: evt element.
+			self highlightCompositeElementWithLabel: evt element k: 0.5 ].
 
 	topLevelElement := lastView elementFromModel: aHiMNode topParent.
-	lastNavigator executeAndRegisterExpandIfPossible: topLevelElement.
+"	lastNavigator executeAndRegisterExpandIfPossible: topLevelElement."
 
 	(topLevelElement elementFromModel: aHiMNode)
 		ifNotNil: [ :element | 
@@ -106,4 +142,13 @@ HiMNavigatorPresenter >> initializeWidgets [
 		newResultsBlock: [ self highlightAllSearchResults ];
 		yourself.
 
+]
+
+{ #category : #'private - searching' }
+HiMNavigatorPresenter >> unhighlightCompositeElementWithLabel: element [
+	| label normalColor |
+	normalColor := Color white.
+	label := element shapes last.
+	label color: normalColor.
+	element shapes removeFirst: element shapes size - 1
 ]

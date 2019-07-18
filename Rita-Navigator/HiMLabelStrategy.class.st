@@ -29,9 +29,14 @@ HiMLabelStrategy >> navigator: anObject [
 
 { #category : #accessing }
 HiMLabelStrategy >> shapeBuilder [
-	^ shapeBuilder ifNil: [ 
-		shapeBuilder := RSShapeBuilder label
-			color: (navigator currentTheme textColor alpha: 0.75);
+	^ shapeBuilder ifNil: [
+		shapeBuilder := RSShapeBuilder composite
+			shapes: [ :m | 
+				TSGroup with:
+					(TSLabel new
+						text: m asString;
+						color: (navigator currentTheme textColor alpha: 0.75);
+						yourself) ];
 			scaleBy: 0.15;
 			yourself ]
 ]
