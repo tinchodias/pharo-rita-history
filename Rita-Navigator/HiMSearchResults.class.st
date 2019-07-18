@@ -32,7 +32,6 @@ HiMSearchResults >> goToNextResult [
 
 { #category : #accessing }
 HiMSearchResults >> goToPreviousResult [
-	"currentIndex := currentIndex % nodes size"
 	currentIndex := currentIndex - 1.
 	currentIndex < 1 ifTrue: [ currentIndex := nodes size ].
 ]

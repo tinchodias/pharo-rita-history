@@ -14,7 +14,6 @@ Class {
 { #category : #specs }
 HiMNavigatorPresenter class >> defaultSpec [
 	<spec>
-	<script: 'self new openWithSpec'>
 	
 	^ SpBoxLayout newVertical 
 			spacing: 5;
