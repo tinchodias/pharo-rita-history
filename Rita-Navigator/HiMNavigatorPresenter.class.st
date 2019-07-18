@@ -5,8 +5,7 @@ Class {
 		'viewPresenter',
 		'searchPresenter',
 		'lastView',
-		'lastNavigator',
-		'builder'
+		'lastNavigator'
 	],
 	#category : #'Rita-Navigator-UI'
 }
@@ -42,7 +41,7 @@ HiMNavigatorPresenter >> fillLastView [
 	lastNavigator := HiMNavigator newOn: lastView.
 	builder := HiMImageDependenciesBuilder new
 		navigator: lastNavigator;
-		packageNames: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. "'Random-Core'"". 'Athens-Cairo'. 'Growl'. 'Iceberg'"};
+		packageNames: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. 'Random-Core'. 'Athens-Cairo'. 'Growl'. 'Iceberg'};
 		build.
 
 	searchPresenter searchModel topParentNodes: builder topLevelNodes.
@@ -88,7 +87,7 @@ HiMNavigatorPresenter >> highlightCompositeElementWithLabel: element intensity: 
 	ranges := label text allRangesOfSubstring: searchedText.
 
 	"visualize"
-	highlightColor := lastNavigator currentTheme "successTextColor" warningTextColor.
+	highlightColor := lastNavigator currentTheme warningTextColor.
 	backgroundColor := lastNavigator currentTheme backgroundColor alpha: 0.5.
 	element color: backgroundColor.
 	element border: (TSBorder new color: (highlightColor alpha: k); width: 3 * k; yourself).

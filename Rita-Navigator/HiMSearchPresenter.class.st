@@ -108,7 +108,9 @@ HiMSearchPresenter >> initializeWidgets [
 
 	"Model initialization. TODO: move elsewhere"
 	searchModel := HiMSearch new.
-	searchModel includeBlock: #isTopParent.
+	searchModel includeBlock: [ :node :text |
+		node isTopParent and: [
+		node object includesSubstring: text caseSensitive: true] ].
 	lastResultModel := HiMNoResults new.
 	highlightAllEnabled := true.
 

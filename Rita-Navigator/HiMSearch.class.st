@@ -15,8 +15,7 @@ HiMSearch >> execute [
 	matchingNodes := Array streamContents: [ :stream |
 		topParentNodes do: [ :each |
 			each withAllChildrenDo: [ :node |
-				((includeBlock cull: node) and: [
-					node object includesSubstring: text caseSensitive: true]) ifTrue: [ 
+				(includeBlock cull: node cull: text) ifTrue: [
 					stream nextPut: node ] ] ] ].
 
 	^ matchingNodes
@@ -37,7 +36,9 @@ HiMSearch >> includeBlock: aBlockClosure [
 { #category : #initialization }
 HiMSearch >> initialize [
 	super initialize.
-	includeBlock := [ true ]
+	
+	includeBlock := [ :aHiMNode :aString |
+		aHiMNode object includesSubstring: aString caseSensitive: true ].
 ]
 
 { #category : #accessing }
