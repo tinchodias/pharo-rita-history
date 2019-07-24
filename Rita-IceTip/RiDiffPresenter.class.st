@@ -7,7 +7,7 @@ Class {
 		'iceDiffModel',
 		'packageColorScale'
 	],
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-DiffView'
 }
 
 { #category : #specs }

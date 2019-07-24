@@ -6,7 +6,7 @@ Class {
 		'visualDiffToHeadPage',
 		'packageColorScale'
 	],
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-DiffView'
 }
 
 { #category : #initialization }

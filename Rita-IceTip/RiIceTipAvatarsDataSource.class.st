@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'avatarByEmail'
 	],
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-HiedraCommits'
 }
 
 { #category : #accessing }

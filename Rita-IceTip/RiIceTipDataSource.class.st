@@ -8,7 +8,7 @@ Class {
 	#classVars : [
 		'CurrentDataSourceClass'
 	],
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-HiedraCommits'
 }
 
 { #category : #accessing }

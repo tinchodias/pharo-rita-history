@@ -10,7 +10,7 @@ And open the Iceberg repository view.
 Class {
 	#name : #RiIceTipAvatarsInColumnDataSource,
 	#superclass : #RiIceTipAvatarsDataSource,
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-HiedraCommits'
 }
 
 { #category : #accessing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #RiUMLDiffUtils,
 	#superclass : #Object,
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-DiffView'
 }
 
 { #category : #accessing }

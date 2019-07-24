@@ -9,7 +9,7 @@ Class {
 		'avatarUrlByEmail',
 		'avatarByEmail'
 	],
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-HiedraCommits'
 }
 
 { #category : #'accessing - response' }

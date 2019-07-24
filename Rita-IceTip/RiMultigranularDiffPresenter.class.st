@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'labelStrategy'
 	],
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-DiffView'
 }
 
 { #category : #private }

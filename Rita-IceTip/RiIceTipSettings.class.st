@@ -1,7 +1,7 @@
 Class {
 	#name : #RiIceTipSettings,
 	#superclass : #Object,
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-HiedraCommits'
 }
 
 { #category : #settings }

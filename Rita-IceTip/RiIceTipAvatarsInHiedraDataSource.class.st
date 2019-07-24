@@ -11,7 +11,7 @@ And open the Iceberg repository view.
 Class {
 	#name : #RiIceTipAvatarsInHiedraDataSource,
 	#superclass : #RiIceTipAvatarsDataSource,
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-HiedraCommits'
 }
 
 { #category : #accessing }
