@@ -31,14 +31,8 @@ RiIceTipCommitInfoPresenter >> initializeCommitPanel [
 
 	notebookPanel
 		addPage: (self newDiffPage 
-			title: 'Multi (Floating)';
-			presenterProvider: [ self multigranularFloatingLabelsDiffFromHeadPresenter ];
-			yourself).
-
-	notebookPanel
-		addPage: (self newDiffPage 
-			title: 'Multi (Top)';
-			presenterProvider: [ self multigranularTopLabelDiffFromHeadPresenter ];
+			title: 'Multi';
+			presenterProvider: [ self multigranularDiffFromHeadPresenter ];
 			yourself).
 
 ]
@@ -51,21 +45,7 @@ RiIceTipCommitInfoPresenter >> labelShapeBuilder [
 ]
 
 { #category : #initialization }
-RiIceTipCommitInfoPresenter >> multigranularFloatingLabelsDiffFromHeadPresenter [
-
-	selectedModel ifNil: [ ^ self newEmpty ].
-	
-	^ (self instantiate: RiMultigranularDiffPresenter)
-			labelStrategy: (HiMFloatingLabelStrategy new shapeBuilder: self labelShapeBuilder; yourself);
-			diffPresenter: self diffFromHead;
-			packageColorScale: packageColorScale;
-			iceDiffModel: (headTabContainer diffFor: selectedModel);
-			yourself
-
-]
-
-{ #category : #initialization }
-RiIceTipCommitInfoPresenter >> multigranularTopLabelDiffFromHeadPresenter [
+RiIceTipCommitInfoPresenter >> multigranularDiffFromHeadPresenter [
 
 	selectedModel ifNil: [ ^ self newEmpty ].
 	
