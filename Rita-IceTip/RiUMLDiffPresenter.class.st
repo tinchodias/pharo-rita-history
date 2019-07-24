@@ -7,9 +7,7 @@ Class {
 { #category : #private }
 RiUMLDiffPresenter >> addInteractions: view [
 	| elements connectedClasses singleClasses foo hierElements |
-	view 
-		addInteraction: RSLightShapesView;
-		addInteraction: RSControlsView.
+	view addInteraction: RSControlsView.
 	foo := RSTreeLayout new
 		edges: view edges.
 	elements := view elements.
