@@ -19,6 +19,13 @@ RiIceTipCommitInfoPresenter >> initializeCommitPanel [
 
 	notebookPanel
 		addPage: (self newDiffPage 
+			title: 'Mini thermite';
+			presenterProvider: [ self thermiteDiffFromHeadPresenter ];
+			yourself).
+
+
+	notebookPanel
+		addPage: (self newDiffPage 
 			title: 'Classes';
 			presenterProvider: [ self umlDiffFromHeadPresenter ];
 			yourself).
@@ -64,6 +71,19 @@ RiIceTipCommitInfoPresenter >> packageDiffFromHeadPresenter [
 	selectedModel ifNil: [ ^ self newEmpty ].
 	
 	^ (self instantiate: RiPackageDiffPresenter)
+			diffPresenter: self diffFromHead;
+			packageColorScale: packageColorScale;
+			iceDiffModel: (headTabContainer diffFor: selectedModel);
+			yourself
+
+]
+
+{ #category : #initialization }
+RiIceTipCommitInfoPresenter >> thermiteDiffFromHeadPresenter [
+
+	selectedModel ifNil: [ ^ self newEmpty ].
+	
+	^ (self instantiate: RiThermiteDiffPresenter)
 			diffPresenter: self diffFromHead;
 			packageColorScale: packageColorScale;
 			iceDiffModel: (headTabContainer diffFor: selectedModel);

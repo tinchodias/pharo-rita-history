@@ -6,8 +6,12 @@ Class {
 
 { #category : #private }
 RiUMLDiffPresenter >> addInteractions: view [
-	| elements connectedClasses singleClasses foo hierElements |
-	view addInteraction: RSControlsView.
+	| elements connectedClasses singleClasses foo hierElements controlsView |
+	controlsView := RSControlsView new.
+	controlsView configuration 
+		useBasicZoom;
+		maxScale: 1.
+	view addInteraction: controlsView.
 	foo := RSTreeLayout new
 		edges: view edges.
 	elements := view elements.
@@ -59,8 +63,6 @@ RiUMLDiffPresenter >> setupRendererOn: builder [
 			when: TSMouseClick do: [ :anIceNode | [ self onMouseClickFor: anIceNode ] ];
 			yourself).
 	renderer classBoxShape cornerRadius: 3.
-	renderer marker offset: 8.
-	renderer marker shape size: 16.
 	renderer classBoxShape
 		color: [ :node | (self packageColorScale scale: node parent key) alpha: 0.2 ].
 
