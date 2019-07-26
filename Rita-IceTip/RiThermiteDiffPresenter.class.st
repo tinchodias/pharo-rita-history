@@ -133,11 +133,10 @@ RiThermiteDiffPresenter >> setupRendererOn: builder [
 			title := shapes second.
 			title extent: shapes width @ 40.
 
-			"Increase and push front the border"
+			"Increase and push front the border, and maybe add dashes."
 			shapes first border width: self classBorderWidth.
 			m value ritaIsNoModification ifTrue: [ shapes first border dashArray: { self classBorderWidth. self classBorderWidth/2 } ].
 			shapes swap: 1 with: shapes size.
-
 
 
 			shapes ]).
