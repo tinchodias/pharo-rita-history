@@ -79,16 +79,21 @@ RiThermiteDiffPresenter >> builderForMethods [
 		height: [ :node | node value ritaChangeSize * self methodScale ];
 		when: TSMouseClick do: [ :node | [ :evt | self onMouseClickFor: node ] ];
 		yourself.
-	
+
 	^ RSShapeBuilder composite shapes: [ :nodeClass |
-		| methods |
-		methods := methodBuilder elementsOn: nodeClass children.
+		| methodElements methods |
+		methods := nodeClass children sorted: [ :a :b |
+			a value class = b value class
+				ifTrue: [ a value ritaChangeSize > b value ritaChangeSize ]
+				ifFalse: [ a value class name < b value class name ] ].
+		
+		methodElements := methodBuilder elementsOn: methods.
 
 		RSFlowLayout new 
 			maxWidth: self maxClassWidth;
 			gapSize: self methodsGap;
-			on: methods.
-		methods ];
+			on: methodElements.
+		methodElements ];
 		padding: (Margin 
 			left: 2
 			right: 2
