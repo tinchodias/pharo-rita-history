@@ -19,7 +19,7 @@ RiIceTipCommitInfoPresenter >> initializeCommitPanel [
 
 	notebookPanel
 		addPage: (self newDiffPage 
-			title: 'Mini thermite';
+			title: 'Torch-like';
 			presenterProvider: [ self thermiteDiffFromHeadPresenter ];
 			yourself).
 
@@ -83,7 +83,7 @@ RiIceTipCommitInfoPresenter >> thermiteDiffFromHeadPresenter [
 
 	selectedModel ifNil: [ ^ self newEmpty ].
 	
-	^ (self instantiate: RiThermiteDiffPresenter)
+	^ (self instantiate: RiTorchLikeDiffPresenter)
 			diffPresenter: self diffFromHead;
 			packageColorScale: packageColorScale;
 			iceDiffModel: (headTabContainer diffFor: selectedModel);

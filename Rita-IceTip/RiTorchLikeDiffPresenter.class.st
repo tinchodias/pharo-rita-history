@@ -1,16 +1,16 @@
 Class {
-	#name : #RiThermiteDiffPresenter,
+	#name : #RiTorchLikeDiffPresenter,
 	#superclass : #RiUMLDiffPresenter,
 	#category : #'Rita-IceTip-DiffView'
 }
 
 { #category : #private }
-RiThermiteDiffPresenter >> backgroundColorFor: node [
+RiTorchLikeDiffPresenter >> backgroundColorFor: node [
 	^ node value ritaColor alphaMixed: 0.25 with: Smalltalk ui theme backgroundColor
 ]
 
 { #category : #private }
-RiThermiteDiffPresenter >> buildDiffOn: view [
+RiTorchLikeDiffPresenter >> buildDiffOn: view [
 	| visitor builder classesByName metaclassesByName |
 	visitor := RiIceDiffEntityCollector new.
 	iceDiffModel tree accept: visitor.
@@ -46,7 +46,7 @@ RiThermiteDiffPresenter >> buildDiffOn: view [
 ]
 
 { #category : #private }
-RiThermiteDiffPresenter >> builderForClassName [
+RiTorchLikeDiffPresenter >> builderForClassName [
 
 	| labelShape |
 	labelShape := RSShapeBuilder label
@@ -71,7 +71,7 @@ RiThermiteDiffPresenter >> builderForClassName [
 ]
 
 { #category : #private }
-RiThermiteDiffPresenter >> builderForMethods [
+RiTorchLikeDiffPresenter >> builderForMethods [
 	| methodBuilder |
 	methodBuilder := RSShapeBuilder box 
 		color: [ :node | self foregroundColorFor: node ];
@@ -102,32 +102,32 @@ RiThermiteDiffPresenter >> builderForMethods [
 ]
 
 { #category : #private }
-RiThermiteDiffPresenter >> classBorderWidth [
+RiTorchLikeDiffPresenter >> classBorderWidth [
 	^ 4
 ]
 
 { #category : #private }
-RiThermiteDiffPresenter >> foregroundColorFor: node [
+RiTorchLikeDiffPresenter >> foregroundColorFor: node [
 	^ node value ritaColor mixed: 0.8 with: Smalltalk ui theme textColor
 ]
 
 { #category : #private }
-RiThermiteDiffPresenter >> maxClassWidth [
+RiTorchLikeDiffPresenter >> maxClassWidth [
 	^ 400
 ]
 
 { #category : #private }
-RiThermiteDiffPresenter >> methodScale [
+RiTorchLikeDiffPresenter >> methodScale [
 	^ 30
 ]
 
 { #category : #private }
-RiThermiteDiffPresenter >> methodsGap [
+RiTorchLikeDiffPresenter >> methodsGap [
 	^ 5
 ]
 
 { #category : #private }
-RiThermiteDiffPresenter >> setupRendererOn: builder [
+RiTorchLikeDiffPresenter >> setupRendererOn: builder [
 	| renderer |
 	builder shape: (RSShapeBuilder composite 
 		interactionDo: [ :i | i popupText: #key ];
