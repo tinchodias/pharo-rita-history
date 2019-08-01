@@ -29,16 +29,15 @@ RiUMLDiffUtils >> shapeForNodeEmulatingCondensedFont: isCondensed bold: isBold [
 	iconShape := RSShapeBuilder bitmap form: #icon.
 	labelShape := RSShapeBuilder label
 		color: Smalltalk ui theme textColor;
+		if: [:node | node value definition isMethodDefinition and: [ node value definition classIsMeta ] ]
+			then: [:s | s underline ];
+		if: [ isBold ] then: [ :s | s bold ];
 		onElement; 
 		text: [ :e | RiTextWidthKeeper
 			stringFor: e model key
 			font: e font
 			maxSize: self maxLabelSize * (1/widthScale) ];
-		onModel;
-		if: [:node | node value definition isMethodDefinition and: [ node value definition classIsMeta ] ]
-		then: [:s | s underline ].
-		
-	isBold ifTrue: [ labelShape bold ].
+		yourself.
 
 	^ RSShapeBuilder composite 
 		shapes: [:node | 

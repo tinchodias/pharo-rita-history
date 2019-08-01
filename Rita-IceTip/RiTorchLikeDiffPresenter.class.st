@@ -6,7 +6,9 @@ Class {
 
 { #category : #private }
 RiTorchLikeDiffPresenter >> backgroundColorFor: node [
-	^ node value ritaColor alphaMixed: 0.25 with: Smalltalk ui theme backgroundColor
+	^ node value ritaColor
+		alphaMixed: 0.25
+		with: Smalltalk ui theme backgroundColor
 ]
 
 { #category : #private }
@@ -108,7 +110,9 @@ RiTorchLikeDiffPresenter >> classBorderWidth [
 
 { #category : #private }
 RiTorchLikeDiffPresenter >> foregroundColorFor: node [
-	^ node value ritaColor mixed: 0.8 with: Smalltalk ui theme textColor
+	^ node value ritaColor
+		mixed: 0.8
+		with: Smalltalk ui theme textColor
 ]
 
 { #category : #private }
