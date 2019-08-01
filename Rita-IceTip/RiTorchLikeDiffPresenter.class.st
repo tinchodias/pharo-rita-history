@@ -1,7 +1,7 @@
 Class {
 	#name : #RiTorchLikeDiffPresenter,
 	#superclass : #RiUMLDiffPresenter,
-	#category : #'Rita-IceTip-DiffView'
+	#category : #'Rita-IceTip-DiffView-TorchLike'
 }
 
 { #category : #private }
@@ -14,7 +14,7 @@ RiTorchLikeDiffPresenter >> buildDiffOn: view [
 	| visitor builder classesByName metaclassesByName |
 	visitor := RiIceDiffEntityCollector new.
 	iceDiffModel tree accept: visitor.
-	
+			
 	classesByName := Dictionary new.
 	metaclassesByName := Dictionary new.
 	visitor nodesWithClasses do: [ :node |
@@ -43,6 +43,32 @@ RiTorchLikeDiffPresenter >> buildDiffOn: view [
 	builder classes: classesByName values.
 	builder build.
 	self addInteractions: view.
+]
+
+{ #category : #private }
+RiTorchLikeDiffPresenter >> buildSettingsOn: aView [
+
+	| icon |
+	icon := RSShapeBuilder bitmap
+		form: (self iconNamed: #configuration);
+		element.
+	icon isFixed: true.
+	aView addShape: icon trachelShape.
+
+"	update := [ 
+		RSHorizontalLineLayout on: legendLabels.
+		RSLocate new
+			inner; top; right;
+			move: legendLabels 
+				on: aView basicRectangle.
+	].
+	legendLabels := aView attributes 
+		at: #legendLabels
+		ifAbsentPut: [ 
+			aView when: TSExtentChangedEvent do: update.
+			TSGroup new: 5 ].
+	legendLabels add: label.
+	update value."
 ]
 
 { #category : #private }
