@@ -76,6 +76,7 @@ RiTorchLikeDiffPresenter >> builderForClassName [
 RiTorchLikeDiffPresenter >> builderForMethods [
 	| methodBuilder |
 	methodBuilder := RSShapeBuilder box 
+		interactionDo: [:i | i popupText: [ :node | node key ] ];
 		color: [ :node | self foregroundColorFor: node ];
 		width: self methodScale * 0.5;
 		height: [ :node | node value ritaChangeSize * self methodScale ];
