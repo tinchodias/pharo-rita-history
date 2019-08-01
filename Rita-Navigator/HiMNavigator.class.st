@@ -312,7 +312,6 @@ HiMNavigator >> highlightableForEdges [
 HiMNavigator >> highlightableForShapes [
 	| aHighlightable |
 	aHighlightable := RSHighlightable new.
-	aHighlightable noDefaultColor.
 	aHighlightable highlightShape
 		onElement;
 		color: [ :e | e color adjustBrightness: 0.16 ];

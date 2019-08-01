@@ -6,7 +6,9 @@ Class {
 
 { #category : #private }
 RiTorchLikeDiffPresenter >> backgroundColorFor: node [
-	^ node value ritaColor alphaMixed: 0.25 with: Smalltalk ui theme backgroundColor
+	^ node value ritaColor
+		alphaMixed: 0.25
+		with: Smalltalk ui theme backgroundColor
 ]
 
 { #category : #private }
@@ -100,6 +102,7 @@ RiTorchLikeDiffPresenter >> builderForClassName [
 RiTorchLikeDiffPresenter >> builderForMethods [
 	| methodBuilder |
 	methodBuilder := RSShapeBuilder box 
+		interactionDo: [:i | i popupText: [ :node | node key ] ];
 		color: [ :node | self foregroundColorFor: node ];
 		width: self methodScale * 0.5;
 		height: [ :node | node value ritaChangeSize * self methodScale ];
@@ -134,7 +137,9 @@ RiTorchLikeDiffPresenter >> classBorderWidth [
 
 { #category : #private }
 RiTorchLikeDiffPresenter >> foregroundColorFor: node [
-	^ node value ritaColor mixed: 0.8 with: Smalltalk ui theme textColor
+	^ node value ritaColor
+		mixed: 0.8
+		with: Smalltalk ui theme textColor
 ]
 
 { #category : #private }
