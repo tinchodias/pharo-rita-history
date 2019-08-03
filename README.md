@@ -20,6 +20,7 @@ Metacello new
 * Code changes: `Open Iceberg -> Select a repository -> Right click -> Repository (Cmd+R)`.
 * Unified repository view (all local branches and tags together): Run `RiRepositoryPresenter hiedraExample` and other examples in this class.
 * Extension to Roassal3 layout where rectangles repulse others: Run `RSRectangleRepulsionForceLayout` class side examples.
+* UML-like view of a commit: RiUMLClassBuilder
 
 
 ## What's rita?
