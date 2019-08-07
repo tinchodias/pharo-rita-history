@@ -133,36 +133,6 @@ RiUMLClassBuilder >> builderForSlotName [
 ]
 
 { #category : #initialization }
-RiUMLClassBuilder >> createShapesFor: cls [
-	| g boxElement titleLabel rec line |
-	g := TSGroup new.
-	boxElement := renderer classBoxShape elementOn: cls.
-	titleLabel := renderer classNameShape elementOn: cls.
-	g add: titleLabel.
-	g add: (renderer varsShape elementOn: cls).
-	g add: (renderer methodsShape elementOn: cls).
-"	RSVerticalLineLayout new gapSize: 0; on: g."
-	rec := g encompassingRectangle.
-	boxElement
-		extent: rec extent + 10;
-		position: rec rsCenter.
-	titleLabel position: rec rsCenter x @ titleLabel position y.
-	rec := boxElement encompassingRectangle.
-	g addFirst: boxElement.
-
-"	line := renderer classInnerLine.
-	g add: (line
-		from: rec origin x @ titleLabel height;
-		to: rec corner x @ titleLabel height;
-		edge).
-	g add: (line
-		from: rec origin x @ (titleLabel height + g third height);
-		to: rec corner x @ (titleLabel height + g third height);
-		edge)."
-	^ g
-]
-
-{ #category : #initialization }
 RiUMLClassBuilder >> disablePackageColoring [
 	packageColoring := false
 ]
