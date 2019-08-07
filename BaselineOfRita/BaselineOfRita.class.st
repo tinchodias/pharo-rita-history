@@ -12,10 +12,13 @@ BaselineOfRita >> baseline: spec [
 		do: [
 			spec baseline: 'Hiedra' with: [
 				spec repository: 'github://tinchodias/Hiedra:roassal3/src' ].
+			spec baseline: 'Ring2' with: [
+				spec repository: 'github://pavel-krivanek/Ring2:RGPackageRenamed/src' ].
+
 			spec
 				package: 'Rita';
 				package: 'Rita-Navigator';
-				package: 'Rita-IceTip' with: [ spec requires: #('Hiedra' 'Rita-Navigator') ].
+				package: 'Rita-IceTip' with: [ spec requires: #('Hiedra' 'Ring2' 'Rita-Navigator') ].
 			spec
-				group: 'default' with: #('Rita' 'Rita-IceTip') ]
+				group: 'default' with: #('Rita' 'Rita-Navigator' 'Rita-IceTip') ]
 ]
