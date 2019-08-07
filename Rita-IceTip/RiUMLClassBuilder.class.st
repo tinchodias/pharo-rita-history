@@ -238,7 +238,7 @@ RiUMLClassBuilder >> renderIn: aView [
 
 	super renderIn: aView.
 
-	RSHierarchyPacker new applyto: aView.
+	aView addInteraction: RSHierarchyPacker.
 
 	packageColoring ifTrue: [ self addPackageOutlinesTo: aView ].
 
