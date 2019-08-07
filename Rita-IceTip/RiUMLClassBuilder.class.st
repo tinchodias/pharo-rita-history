@@ -44,7 +44,7 @@ RiUMLClassBuilder class >> openTorchLikeForRepositoryNamed: aString [
 		yourself
 ]
 
-{ #category : #hooks }
+{ #category : #private }
 RiUMLClassBuilder >> addPackageOutlinesTo: aView [
 	| packageShapeBuilder packageShapes |
 	packageShapeBuilder := RSShapeBuilder box
@@ -62,7 +62,7 @@ RiUMLClassBuilder >> addPackageOutlinesTo: aView [
 
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiUMLClassBuilder >> applyCurrentUITheme [
 	
 	| theme |
@@ -73,22 +73,25 @@ RiUMLClassBuilder >> applyCurrentUITheme [
 
 ]
 
-{ #category : #initialization }
+{ #category : #options }
 RiUMLClassBuilder >> beHorizontal [
-	self renderer edgeBuilder: (RSEdgeBuilder orthoHorizontal
-		attachPoint: (RSHorizontalAttachPoint new startOffset: 20);
-		markerStart: self renderer marker).
+	self renderer
+		edgeBuilder:
+			(RSEdgeBuilder orthoHorizontal
+				attachPoint: (RSHorizontalAttachPoint new startOffset: 20);
+				markerStart: self renderer marker;
+				yourself).
 	self layout horizontalTree
 		verticalGap: 50;
-		horizontalGap: 100.
+		horizontalGap: 100
 ]
 
-{ #category : #initialization }
+{ #category : #options }
 RiUMLClassBuilder >> beVertical [
 	self shouldBeImplemented
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiUMLClassBuilder >> builderForClassName [
 
 	^ (self builderForLabel: #yourself widthScale: 1)
@@ -97,7 +100,7 @@ RiUMLClassBuilder >> builderForClassName [
 
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiUMLClassBuilder >> builderForLabel: textBlock widthScale: widthScale [
 
 	^ RSShapeBuilder label
@@ -113,54 +116,54 @@ RiUMLClassBuilder >> builderForLabel: textBlock widthScale: widthScale [
 
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiUMLClassBuilder >> builderForMethodName [
 
 	^ (self builderForLabel: #selector widthScale: 0.8)
-		if: [:aRGMethod | aRGMethod isExtension or: [aRGMethod isMetaSide ] ] then: [:s | s underline ];
+		if: [:aRGMethod | aRGMethod isExtension or: [ aRGMethod isMetaSide ] ] then: [:s | s underline ];
 		yourself
 
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiUMLClassBuilder >> builderForSlotName [
 	^ (self builderForLabel: #name widthScale: 1)
-		if: [:m | m isVariableDefinition and: [ m isClassVariable ] ] then: [ :s | s bold ];
-		if: [:m | m isVariableDefinition and: [ m isPoolVariable ] ] then: [ :s | s bold; underline ];
+		if: [:m | m isVariableDefinition and: [ m isClassVariable ] ] then: [ :s | s underline; bold ];
+		if: [:m | m isVariableDefinition and: [ m isPoolVariable ] ] then: [ :s | s bold ];
 		if: [:m | m isVariableDefinition and: [ m isClassInstanceVariable ] ] then: [ :s | self shouldBeImplemented ]
 		yourself
 
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 RiUMLClassBuilder >> colorForPackage: aRGPackage [
 	^ (self packageColorScale scale: aRGPackage name)
 		mixed: 0.25
 		with: Smalltalk ui theme backgroundColor
 ]
 
-{ #category : #initialization }
+{ #category : #options }
 RiUMLClassBuilder >> disablePackageColoring [
 	packageColoring := false
 ]
 
-{ #category : #initialization }
+{ #category : #options }
 RiUMLClassBuilder >> disableSelectors [
 	self renderer: RSTorchUMLClassRenderer new.
 	self renderer classShape interactionDo: [ :i | i clear; inspectable ].
 	self renderer methodShape: (RSShapeBuilder box 
 		width: 10;
 		height: [ :met | (met sourceCode lines size * 5) log + 10 ];
-		interactionDo: [:i | i popup multiline]).
+		interactionDo: [:i | i popup multiline ]).
 
 ]
 
-{ #category : #initialization }
+{ #category : #options }
 RiUMLClassBuilder >> enablePackageColoring [
 	packageColoring := true
 ]
 
-{ #category : #initialization }
+{ #category : #options }
 RiUMLClassBuilder >> enableSelectors [
 	self renderer: RSBasicUMLClassRenderer new.
 
@@ -190,7 +193,7 @@ RiUMLClassBuilder >> environment: aRGEnvironment [
 
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 RiUMLClassBuilder >> foregroundColor [
 	^ Smalltalk ui theme textColor
 ]
@@ -229,23 +232,26 @@ RiUMLClassBuilder >> initialize [
 		methods: [ :cls | cls theMetaClass methods, cls methods ]
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiUMLClassBuilder >> maxClassWidth [
 	^ 400
 ]
 
-{ #category : #hooks }
+{ #category : #private }
 RiUMLClassBuilder >> packageColorScale [
 	^ packageColorScale ifNil: [ packageColorScale := TSScale google20 ]
 ]
 
 { #category : #hooks }
 RiUMLClassBuilder >> renderIn: aView [
+	| interaction |
 	self applyCurrentUITheme.
 
 	super renderIn: aView.
 
-	aView addInteraction: RSHierarchyPacker.
+	interaction := RSHierarchyPacker new.
+	interaction rectanglePackLayout gap: 0.3.
+	aView addInteraction: interaction.
 
 	packageColoring ifTrue: [ self addPackageOutlinesTo: aView ].
 
@@ -258,7 +264,7 @@ RiUMLClassBuilder >> view [
 	^ container ifNil: [
 		| controlsView |
 		container := RSView new.
-		
+
 		controlsView := RSControlsView new.
 		controlsView configuration
 			useBasicZoom;
