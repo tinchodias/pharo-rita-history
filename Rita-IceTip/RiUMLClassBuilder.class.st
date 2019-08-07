@@ -173,7 +173,7 @@ RiUMLClassBuilder >> disableSelectors [
 	self renderer classShape interactionDo: [ :i | i clear; inspectable ].
 	self renderer methodShape: (RSShapeBuilder box 
 		width: 10;
-		height: [ :met | met sourceCode lines size * 5 log + 10 ];
+		height: [ :met | (met sourceCode lines size * 5) log + 10 ];
 		interactionDo: [:i | i popup multiline]).
 
 ]
