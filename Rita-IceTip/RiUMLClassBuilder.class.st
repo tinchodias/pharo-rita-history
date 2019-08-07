@@ -49,8 +49,8 @@ RiUMLClassBuilder >> addPackageOutlinesTo: aView [
 	| packageShapeBuilder packageShapes |
 	packageShapeBuilder := RSShapeBuilder box
 		noPaint;
-		border: [:each | (TSBorder new 
-			color: ((self packageColorScale scale: each model package name) mixed: 0.25 with: Smalltalk ui theme backgroundColor) )
+		border: [:each | TSBorder new 
+			color: (self colorForPackage: each model package);
 			joinMiter;
 			width: 20];
 		extent: [ :each | each extent + 20 ];
@@ -132,6 +132,13 @@ RiUMLClassBuilder >> builderForSlotName [
 
 ]
 
+{ #category : #accessing }
+RiUMLClassBuilder >> colorForPackage: aRGPackage [
+	^ (self packageColorScale scale: aRGPackage name)
+		mixed: 0.25
+		with: Smalltalk ui theme backgroundColor
+]
+
 { #category : #initialization }
 RiUMLClassBuilder >> disablePackageColoring [
 	packageColoring := false
@@ -183,7 +190,7 @@ RiUMLClassBuilder >> environment: aRGEnvironment [
 
 ]
 
-{ #category : #hooks }
+{ #category : #accessing }
 RiUMLClassBuilder >> foregroundColor [
 	^ Smalltalk ui theme textColor
 ]
