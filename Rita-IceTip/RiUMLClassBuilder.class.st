@@ -98,11 +98,20 @@ RiUMLClassBuilder >> beVertical [
 
 { #category : #private }
 RiUMLClassBuilder >> builderForClassName [
+	| builderForName builderForStereotype theLayout |
+	builderForName := self builderForLabel: #yourself widthScale: 1.
+	builderForStereotype := self builderForStereotype.
+	theLayout := RSVerticalLineLayout new gapSize: 0; center.
 
-	^ (self builderForLabel: #yourself widthScale: 1)
-		bold;
-		yourself
-
+	^ RSShapeBuilder composite shapes: [ :aBehavior | 
+		| group |
+		group := TSGroup new.
+		self
+			stereotypeFor: aBehavior
+			ifPresent: [:stereotype | group add: (builderForStereotype elementOn: stereotype) ].
+		group add: (builderForName elementOn: aBehavior).
+		theLayout on: group.
+		group ].
 ]
 
 { #category : #private }
@@ -138,6 +147,25 @@ RiUMLClassBuilder >> builderForSlotName [
 		if: [:m | m isVariableDefinition and: [ m isClassInstanceVariable ] ] then: [ :s | self shouldBeImplemented ]
 		yourself
 
+]
+
+{ #category : #private }
+RiUMLClassBuilder >> builderForStereotype [
+
+	| scale |
+	scale := 0.7.
+	
+	^ RSShapeBuilder label
+		color: Color cyan;
+		italic;
+		onElement; 
+		text: [ :e | RiTextWidthKeeper
+			stringFor: '<<', e model, '>>'
+			font: e font
+			maxSize: self maxClassWidth * (1/scale) ];
+		scaleBy: scale;
+		onModel;
+		yourself
 ]
 
 { #category : #private }
@@ -227,15 +255,17 @@ RiUMLClassBuilder >> iceRepository: anIceRepository [
 { #category : #initialization }
 RiUMLClassBuilder >> initialize [
 	super initialize.
-	
 	self enableSelectors.
 	self enablePackageColoring.
 
-	
 	"TODO: sorted:[ :a :b | a selector < b selector ]"
 	self classDescriptor
-		instVars: [:cls | cls sharedPools, cls classVariables, cls theMetaClass slots, cls slots ];
+		instVars: [ :cls | 
+			cls sharedPools, (cls isTrait
+				ifTrue: [ #() ]
+				ifFalse: [ cls classVariables, cls theMetaClass slots, cls slots ]) ];
 		methods: [ :cls | cls theMetaClass methods, cls methods ]
+
 ]
 
 { #category : #private }
@@ -263,6 +293,15 @@ RiUMLClassBuilder >> renderIn: aView [
 
 
 
+]
+
+{ #category : #private }
+RiUMLClassBuilder >> stereotypeFor: aBehavior ifPresent: aBlock [
+	aBehavior isTrait
+		ifTrue: [ ^ aBlock cull: 'trait' ].
+	(aBehavior methods isNotEmpty
+		and: [ aBehavior methods anyOne isExtension ])
+		ifTrue: [ ^ aBlock cull: 'extension' ]
 ]
 
 { #category : #hooks }
