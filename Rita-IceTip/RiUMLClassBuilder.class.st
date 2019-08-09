@@ -193,7 +193,7 @@ RiUMLClassBuilder >> environment: aRGEnvironment [
 	environment clean.
 	all := environment ask allClassesAndTraits.
 	resolved := all select: [:each | each isRingResolved ].
-	toDraw := resolved reject: [ :each | #(Object Metaclass) includes: each name ].
+	toDraw := resolved reject: [ :each | #(Object Metaclass Trait ClassTrait) includes: each name ].
 	self classes: toDraw.
 
 ]
