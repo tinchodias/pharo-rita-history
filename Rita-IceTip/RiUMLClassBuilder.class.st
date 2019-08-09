@@ -15,6 +15,11 @@ RiUMLClassBuilder class >> exampleHiedra [
 ]
 
 { #category : #examples }
+RiUMLClassBuilder class >> exampleRoassal3 [
+	self openForRepositoryNamed: 'Roassal3'
+]
+
+{ #category : #examples }
 RiUMLClassBuilder class >> exampleTorchLikeHiedra [
 	self openTorchLikeForRepositoryNamed: 'Hiedra'
 ]
