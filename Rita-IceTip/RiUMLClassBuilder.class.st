@@ -6,7 +6,7 @@ Class {
 		'packageColoring',
 		'packageColorScale'
 	],
-	#category : #'Rita-IceTip'
+	#category : #'Rita-IceTip-UMLBuilder'
 }
 
 { #category : #examples }
@@ -259,7 +259,7 @@ RiUMLClassBuilder >> initialize [
 	self enablePackageColoring.
 
 	"TODO: sorted:[ :a :b | a selector < b selector ]"
-	self classDescriptor
+	self modelDescriptor
 		instVars: [ :cls | 
 			cls sharedPools, (cls isTrait
 				ifTrue: [ #() ]
