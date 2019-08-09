@@ -179,9 +179,10 @@ RiUMLClassBuilder >> enableSelectors [
 			then: [:each | each border: (TSBorder new dashArray: #(5 5); color: self foregroundColor; yourself) ].
 
 	self renderer classShape interactionDo: [ :i | i clear; inspectable ].
-	self renderer classNameShape: self builderForClassName.
-	self renderer methodShape: self builderForMethodName.
-	self renderer varShape: self builderForSlotName.
+	self renderer 
+		classNameShape: self builderForClassName;
+		methodShape: self builderForMethodName;
+		varShape: self builderForSlotName.
 
 ]
 
