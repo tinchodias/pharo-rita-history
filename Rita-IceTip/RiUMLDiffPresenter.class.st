@@ -76,7 +76,7 @@ RiUMLDiffPresenter >> setupSystemThemeOn: builder [
 	| theme |
 	theme := Smalltalk ui theme.
 	builder view color: theme backgroundColor.
-	builder renderer defaultBorder color: theme textColor.
+	builder renderer border color: theme textColor.
 	builder renderer marker shape color: theme backgroundColor.
 
 ]
