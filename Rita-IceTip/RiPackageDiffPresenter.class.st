@@ -29,7 +29,7 @@ RiPackageDiffPresenter >> buildDiffOn: view [
 		].
 	
 	uml shape: classShape.
-	uml classDescriptor
+	uml modelDescriptor
 		superclass: nil.
 	uml layout grid lineItemsCount: 3.
 	

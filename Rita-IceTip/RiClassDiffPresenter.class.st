@@ -20,7 +20,7 @@ RiClassDiffPresenter >> buildDiffOn: view [
 	builder := RSUMLClassBuilder new.
 	builder view: view.
 
-	builder classDescriptor
+	builder modelDescriptor
 		classname: [ :node | node key asString ];
 		instVars: [ :node | #() ];
 		methods: [ :node |

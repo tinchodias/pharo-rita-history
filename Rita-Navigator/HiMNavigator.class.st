@@ -392,11 +392,11 @@ HiMNavigator >> newNestedElementsForAll: someHiMNodes [
 	builder := RSUMLClassBuilder new.
 	renderer := builder renderer.
 	color := self currentTheme textColor.
-	renderer defaultBorder color: color.
+	renderer border color: color.
 	renderer methodShape color: color.
 	renderer classNameShape color: color.
 		
-	builder classDescriptor
+	builder modelDescriptor
 		classname: #object;
 		instVars: #();
 		methods: [ :aHiMNode |
