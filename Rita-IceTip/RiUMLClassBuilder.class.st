@@ -19,14 +19,15 @@ RiUMLClassBuilder class >> exampleHiedra [
 { #category : #examples }
 RiUMLClassBuilder class >> exampleHiedraHorizontal [
 	(self forRepositoryNamed: 'Hiedra')
-		beHorizontal;
+		setLayoutHorizontalWithMarkers: false;
 		build;
 		open
 ]
 
 { #category : #examples }
-RiUMLClassBuilder class >> exampleHiedraWithoutSelectors [
+RiUMLClassBuilder class >> exampleHiedraTorchLike [
 	(self forRepositoryNamed: 'Hiedra')
+		setLayoutVerticalWithMarkers: false;
 		disableSelectors;
 		build;
 		open
@@ -75,38 +76,6 @@ RiUMLClassBuilder >> addPackageOutlines [
 { #category : #settings }
 RiUMLClassBuilder >> backgroundColor [
 	^ self currentTheme backgroundColor
-]
-
-{ #category : #options }
-RiUMLClassBuilder >> beHorizontal [
-	self renderer
-		edgeBuilder:
-			(RSEdgeBuilder orthoHorizontal
-				attachPoint: RSHorizontalAttachPoint new;
-				border: self renderer border;
-				markerStart: self renderer marker;
-				yourself).
-
-	self layout horizontalTree
-		horizontalGap: self gapFromClassToSubclass;
-		verticalGap: self gapFromSubclassToSibling.
-]
-
-{ #category : #options }
-RiUMLClassBuilder >> beVertical [
-
-	self renderer
-		edgeBuilder:
-			(RSEdgeBuilder orthoVertical
-				attachPoint: RSVerticalAttachPoint new;
-				border: self renderer border;
-				markerStart: self renderer marker;
-				yourself).
-
-	self layout tree
-		verticalGap: self gapFromClassToSubclass;
-		horizontalGap: self gapFromSubclassToSibling.
-
 ]
 
 { #category : #private }
@@ -162,7 +131,7 @@ RiUMLClassBuilder >> builderForMethodName [
 { #category : #private }
 RiUMLClassBuilder >> builderForSlotName [
 	^ (self builderForLabel: #name widthScale: self widthScaleForNarrowFontStyle)
-		if: [:m | m isVariableDefinition and: [ m isClassVariable ] ] then: [ :s | s underline ];
+"		if: [:m | m isVariableDefinition and: [ m isClassVariable ] ] then: [ :s | s underline ];"
 		if: [:m | m isVariableDefinition and: [ m isPoolVariable ] ] then: [ :s | s underline ];
 		if: [:m | m isVariableDefinition and: [ m isClassInstanceVariable ] ] then: [ :s | s underline ];
 		yourself
@@ -229,8 +198,6 @@ RiUMLClassBuilder >> enablePackageColoring [
 { #category : #options }
 RiUMLClassBuilder >> enableSelectors [
 	self renderer: RSBasicUMLClassRenderer new.
-
-	self beVertical.
 
 	self renderer classBoxShape
 		noPaint;
@@ -306,6 +273,7 @@ RiUMLClassBuilder >> iceRepository: anIceRepository [
 RiUMLClassBuilder >> initialize [
 	super initialize.
 
+	self setLayoutVerticalWithMarkers: true.
 	self enableSelectors.
 	self enablePackageColoring.
 
@@ -351,6 +319,43 @@ RiUMLClassBuilder >> renderIn: aView [
 	aView addInteraction: interaction.
 
 	packageColoring ifTrue: [ self addPackageOutlines ].
+
+]
+
+{ #category : #options }
+RiUMLClassBuilder >> setLayoutHorizontalWithMarkers: useMarkers [
+	| hierarchyEdgeBuilder |
+	hierarchyEdgeBuilder := RSEdgeBuilder orthoHorizontal
+		attachPoint: RSHorizontalAttachPoint new;
+		border: self renderer border;
+		yourself.
+
+	useMarkers ifTrue: [
+		hierarchyEdgeBuilder markerStart: self renderer marker ].
+				
+	self renderer edgeBuilder: hierarchyEdgeBuilder.
+
+	self layout horizontalTree
+		horizontalGap: self gapFromClassToSubclass;
+		verticalGap: self gapFromSubclassToSibling.
+]
+
+{ #category : #options }
+RiUMLClassBuilder >> setLayoutVerticalWithMarkers: useMarkers [
+	| hierarchyEdgeBuilder |
+	hierarchyEdgeBuilder := RSEdgeBuilder orthoVertical
+		attachPoint: RSVerticalAttachPoint new;
+		border: self renderer border;
+		yourself.
+
+	useMarkers ifTrue: [
+		hierarchyEdgeBuilder markerStart: self renderer marker ].
+				
+	self renderer edgeBuilder: hierarchyEdgeBuilder.
+
+	self layout tree
+		verticalGap: self gapFromClassToSubclass;
+		horizontalGap: self gapFromSubclassToSibling.
 
 ]
 
