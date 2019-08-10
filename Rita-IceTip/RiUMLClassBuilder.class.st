@@ -11,71 +11,70 @@ Class {
 
 { #category : #examples }
 RiUMLClassBuilder class >> exampleHiedra [
-	self openForRepositoryNamed: 'Hiedra'
+	(self forRepositoryNamed: 'Hiedra')
+		build;
+		open
+]
+
+{ #category : #examples }
+RiUMLClassBuilder class >> exampleHiedraHorizontal [
+	(self forRepositoryNamed: 'Hiedra')
+		beHorizontal;
+		build;
+		open
+]
+
+{ #category : #examples }
+RiUMLClassBuilder class >> exampleHiedraWithoutSelectors [
+	(self forRepositoryNamed: 'Hiedra')
+		disableSelectors;
+		build;
+		open
 ]
 
 { #category : #examples }
 RiUMLClassBuilder class >> exampleRoassal3 [
-	self openForRepositoryNamed: 'Roassal3'
-]
-
-{ #category : #examples }
-RiUMLClassBuilder class >> exampleTorchLikeHiedra [
-	self openTorchLikeForRepositoryNamed: 'Hiedra'
-]
-
-{ #category : #convenience }
-RiUMLClassBuilder class >> openForRepositoryNamed: aString [
-	| repo |
-	repo := IceRepository registry detect: [ :each| each name = aString ].
-	
-	^ self new
-		iceRepository: repo;
-		build;
-		open;
-		yourself
-]
-
-{ #category : #convenience }
-RiUMLClassBuilder class >> openTorchLikeForRepositoryNamed: aString [
-	| repo |
-	repo := IceRepository registry detect: [ :each| each name = aString ].
-	
-	^ self new
-		iceRepository: repo;
+	(self forRepositoryNamed: 'Roassal3')
 		disableSelectors;
 		build;
-		open;
+		open
+]
+
+{ #category : #convenience }
+RiUMLClassBuilder class >> forRepositoryNamed: aString [
+	| repo |
+	repo := IceRepository registry detect: [ :each| each name = aString ].
+	
+	^ self new
+		iceRepository: repo;
 		yourself
 ]
 
 { #category : #private }
-RiUMLClassBuilder >> addPackageOutlinesTo: aView [
-	| packageShapeBuilder packageShapes |
+RiUMLClassBuilder >> addPackageOutlines [
+	| packageShapeBuilder packageElements |
 	packageShapeBuilder := RSShapeBuilder box
+		border: [:behaviorElement |
+			TSBorder new 
+				joinMiter;
+				color: (self colorForPackage: behaviorElement model package);
+				width: self outlineSize ];
 		noPaint;
-		border: [:each | TSBorder new 
-			color: (self colorForPackage: each model package);
-			joinMiter;
-			width: 20];
-		extent: [ :each | each extent + 20 ];
-		onMyselfDo: [:each | [ :el |
-			each when: TSPositionChangedEvent do: [ el position: each position ]  ] ].
-	packageShapes := packageShapeBuilder elementsOn: (aView elements select: [:el | el model package isRingResolved ]).
-	aView addAll: packageShapes.
-	packageShapes pushBack.
+		extent: [ :behaviorElement | behaviorElement extent + self outlineSize ];
+		onMyselfDo: [:behaviorElement | [ :me |
+			behaviorElement
+				when: TSPositionChangedEvent
+				do: [ me position: behaviorElement position ] ] ].
+
+	packageElements := packageShapeBuilder elementsOn: self behaviorElementsToOutline.
+	self view addAll: packageElements.
+	packageElements pushBack.
 
 ]
 
-{ #category : #private }
-RiUMLClassBuilder >> applyCurrentUITheme [
-	
-	| theme |
-	theme := Smalltalk ui theme.
-	self view color: theme backgroundColor.
-	self renderer defaultBorder color: theme textColor.
-	self renderer marker shape color: theme backgroundColor.
-
+{ #category : #settings }
+RiUMLClassBuilder >> backgroundColor [
+	^ self currentTheme backgroundColor
 ]
 
 { #category : #options }
@@ -83,17 +82,36 @@ RiUMLClassBuilder >> beHorizontal [
 	self renderer
 		edgeBuilder:
 			(RSEdgeBuilder orthoHorizontal
-				attachPoint: (RSHorizontalAttachPoint new startOffset: 20);
+				attachPoint: RSHorizontalAttachPoint new;
+				border: self renderer border;
 				markerStart: self renderer marker;
 				yourself).
+
 	self layout horizontalTree
-		verticalGap: 50;
-		horizontalGap: 100
+		horizontalGap: self gapFromClassToSubclass;
+		verticalGap: self gapFromSubclassToSibling.
 ]
 
 { #category : #options }
 RiUMLClassBuilder >> beVertical [
-	self shouldBeImplemented
+
+	self renderer
+		edgeBuilder:
+			(RSEdgeBuilder orthoVertical
+				attachPoint: RSVerticalAttachPoint new;
+				border: self renderer border;
+				markerStart: self renderer marker;
+				yourself).
+
+	self layout tree
+		verticalGap: self gapFromClassToSubclass;
+		horizontalGap: self gapFromSubclassToSibling.
+
+]
+
+{ #category : #private }
+RiUMLClassBuilder >> behaviorElementsToOutline [
+	^ self view elements select: [:aRSElement | aRSElement model package isRingResolved ]
 ]
 
 { #category : #private }
@@ -101,14 +119,16 @@ RiUMLClassBuilder >> builderForClassName [
 	| builderForName builderForStereotype theLayout |
 	builderForName := self builderForLabel: #yourself widthScale: 1.
 	builderForStereotype := self builderForStereotype.
-	theLayout := RSVerticalLineLayout new gapSize: 0; center.
+	theLayout := RSVerticalLineLayout new gapSize: -1; center.
 
 	^ RSShapeBuilder composite shapes: [ :aBehavior | 
 		| group |
 		group := TSGroup new.
 		self
 			stereotypeFor: aBehavior
-			ifPresent: [:stereotype | group add: (builderForStereotype elementOn: stereotype) ].
+			ifPresent: [:stereotype |
+				group add: (builderForStereotype elementOn: stereotype) ].
+
 		group add: (builderForName elementOn: aBehavior).
 		theLayout on: group.
 		group ].
@@ -133,18 +153,18 @@ RiUMLClassBuilder >> builderForLabel: textBlock widthScale: widthScale [
 { #category : #private }
 RiUMLClassBuilder >> builderForMethodName [
 
-	^ (self builderForLabel: #selector widthScale: 0.8)
-		if: [:aRGMethod | aRGMethod isExtension or: [ aRGMethod isMetaSide ] ] then: [:s | s underline ];
+	^ (self builderForLabel: #selector widthScale: self widthScaleForNarrowFontStyle)
+		if: [:aRGMethod | aRGMethod isMetaSide ] then: [:s | s underline ];
 		yourself
 
 ]
 
 { #category : #private }
 RiUMLClassBuilder >> builderForSlotName [
-	^ (self builderForLabel: #name widthScale: 1)
-		if: [:m | m isVariableDefinition and: [ m isClassVariable ] ] then: [ :s | s underline; bold ];
-		if: [:m | m isVariableDefinition and: [ m isPoolVariable ] ] then: [ :s | s bold ];
-		if: [:m | m isVariableDefinition and: [ m isClassInstanceVariable ] ] then: [ :s | self shouldBeImplemented ]
+	^ (self builderForLabel: #name widthScale: self widthScaleForNarrowFontStyle)
+		if: [:m | m isVariableDefinition and: [ m isClassVariable ] ] then: [ :s | s underline ];
+		if: [:m | m isVariableDefinition and: [ m isPoolVariable ] ] then: [ :s | s underline ];
+		if: [:m | m isVariableDefinition and: [ m isClassInstanceVariable ] ] then: [ :s | s underline ];
 		yourself
 
 ]
@@ -152,18 +172,18 @@ RiUMLClassBuilder >> builderForSlotName [
 { #category : #private }
 RiUMLClassBuilder >> builderForStereotype [
 
-	| scale |
-	scale := 0.7.
+	| widthScale |
+	widthScale := self widthScaleForNarrowFontStyle.
 	
 	^ RSShapeBuilder label
-		color: Color cyan;
+		color: self stereotypeColor;
 		italic;
 		onElement; 
 		text: [ :e | RiTextWidthKeeper
-			stringFor: '<<', e model, '>>'
+			stringFor: '« ', e model, ' »'
 			font: e font
-			maxSize: self maxClassWidth * (1/scale) ];
-		scaleBy: scale;
+			maxSize: self maxClassWidth * (1/widthScale) ];
+		scaleBy: widthScale;
 		onModel;
 		yourself
 ]
@@ -172,7 +192,12 @@ RiUMLClassBuilder >> builderForStereotype [
 RiUMLClassBuilder >> colorForPackage: aRGPackage [
 	^ (self packageColorScale scale: aRGPackage name)
 		mixed: 0.25
-		with: Smalltalk ui theme backgroundColor
+		with: self backgroundColor
+]
+
+{ #category : #settings }
+RiUMLClassBuilder >> currentTheme [
+	^ Smalltalk ui theme
 ]
 
 { #category : #options }
@@ -182,12 +207,17 @@ RiUMLClassBuilder >> disablePackageColoring [
 
 { #category : #options }
 RiUMLClassBuilder >> disableSelectors [
-	self renderer: RSTorchUMLClassRenderer new.
-	self renderer classShape interactionDo: [ :i | i clear; inspectable ].
-	self renderer methodShape: (RSShapeBuilder box 
+	| tmpRenderer |
+	tmpRenderer := RSTorchUMLClassRenderer new.
+	tmpRenderer classShape interactionDo: [ :i | i clear; inspectable ].
+	tmpRenderer modelDescriptor: self renderer modelDescriptor.
+	tmpRenderer methodShape: (RSShapeBuilder box 
 		width: 10;
-		height: [ :met | (met sourceCode lines size * 5) log + 10 ];
-		interactionDo: [:i | i popup multiline ]).
+		height: [ :met | (met sourceCode lines size * 10) sqrt + 10 ] ";
+		interactionDo: [:i | i popup multiline ]").
+
+	#(classShape varShape varsShape methodsShape methodShape) do: [ :each |
+		self renderer perform: (each asMutator) with: (tmpRenderer perform: each) ].
 
 ]
 
@@ -200,6 +230,8 @@ RiUMLClassBuilder >> enablePackageColoring [
 RiUMLClassBuilder >> enableSelectors [
 	self renderer: RSBasicUMLClassRenderer new.
 
+	self beVertical.
+
 	self renderer classBoxShape
 		noPaint;
 		cornerRadius: 3;
@@ -208,6 +240,7 @@ RiUMLClassBuilder >> enableSelectors [
 
 	self renderer classShape interactionDo: [ :i | i clear; inspectable ].
 	self renderer 
+		classBoxPadding: 5@5;
 		classNameShape: self builderForClassName;
 		methodShape: self builderForMethodName;
 		varShape: self builderForSlotName.
@@ -227,9 +260,26 @@ RiUMLClassBuilder >> environment: aRGEnvironment [
 
 ]
 
-{ #category : #private }
+{ #category : #settings }
 RiUMLClassBuilder >> foregroundColor [
-	^ Smalltalk ui theme textColor
+	^ self currentTheme textColor
+]
+
+{ #category : #settings }
+RiUMLClassBuilder >> gapBetweenHierarchies [
+	"Tricky: This gap is expressed as a ratio of the average size of elements. See RSRectanglePackLayout."
+
+	^ 0.1
+]
+
+{ #category : #settings }
+RiUMLClassBuilder >> gapFromClassToSubclass [
+	^ 30
+]
+
+{ #category : #settings }
+RiUMLClassBuilder >> gapFromSubclassToSibling [
+	^ self gapFromClassToSubclass / 2
 ]
 
 { #category : #convenience }
@@ -255,8 +305,14 @@ RiUMLClassBuilder >> iceRepository: anIceRepository [
 { #category : #initialization }
 RiUMLClassBuilder >> initialize [
 	super initialize.
+
 	self enableSelectors.
 	self enablePackageColoring.
+
+	self renderer marker shape color: self backgroundColor.
+	self renderer marker shape size: self gapFromClassToSubclass / 3.
+	self renderer marker offset: self gapFromClassToSubclass / 6.
+	self renderer border color: self foregroundColor.
 
 	"TODO: sorted:[ :a :b | a selector < b selector ]"
 	self modelDescriptor
@@ -268,12 +324,17 @@ RiUMLClassBuilder >> initialize [
 
 ]
 
-{ #category : #private }
+{ #category : #settings }
 RiUMLClassBuilder >> maxClassWidth [
 	^ 400
 ]
 
-{ #category : #private }
+{ #category : #settings }
+RiUMLClassBuilder >> outlineSize [
+	^ self gapFromSubclassToSibling / 2
+]
+
+{ #category : #settings }
 RiUMLClassBuilder >> packageColorScale [
 	^ packageColorScale ifNil: [ packageColorScale := TSScale google20 ]
 ]
@@ -281,18 +342,21 @@ RiUMLClassBuilder >> packageColorScale [
 { #category : #hooks }
 RiUMLClassBuilder >> renderIn: aView [
 	| interaction |
-	self applyCurrentUITheme.
-
 	super renderIn: aView.
 
+	aView color: self backgroundColor.
+
 	interaction := RSHierarchyPacker new.
-	interaction rectanglePackLayout gap: 0.3.
+	interaction rectanglePackLayout gap: self gapBetweenHierarchies.
 	aView addInteraction: interaction.
 
-	packageColoring ifTrue: [ self addPackageOutlinesTo: aView ].
+	packageColoring ifTrue: [ self addPackageOutlines ].
 
+]
 
-
+{ #category : #settings }
+RiUMLClassBuilder >> stereotypeColor [
+	^ self currentTheme caretColor
 ]
 
 { #category : #private }
@@ -317,4 +381,9 @@ RiUMLClassBuilder >> view [
 		container addInteraction: controlsView.
 
 		container ]
+]
+
+{ #category : #settings }
+RiUMLClassBuilder >> widthScaleForNarrowFontStyle [
+	^ 0.8
 ]
