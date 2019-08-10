@@ -294,7 +294,7 @@ RiUMLClassBuilder >> initialize [
 
 { #category : #settings }
 RiUMLClassBuilder >> maxClassWidth [
-	^ 400
+	^ 200
 ]
 
 { #category : #settings }
