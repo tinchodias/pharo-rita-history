@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'environment',
 		'packageColoring',
-		'packageColorScale'
+		'packageColorScale',
+		'extensions',
+		'mustGroupExtensions'
 	],
 	#category : #'Rita-IceTip-UMLBuilder'
 }
@@ -41,6 +43,15 @@ RiUMLClassBuilder class >> exampleRoassal3 [
 		open
 ]
 
+{ #category : #examples }
+RiUMLClassBuilder class >> exampleRoassal3Horizontal [
+	(self forRepositoryNamed: 'Roassal3')
+		disableSelectors;
+		setLayoutHorizontalWithMarkers: false;		
+		build;
+		open
+]
+
 { #category : #convenience }
 RiUMLClassBuilder class >> forRepositoryNamed: aString [
 	| repo |
@@ -49,6 +60,31 @@ RiUMLClassBuilder class >> forRepositoryNamed: aString [
 	^ self new
 		iceRepository: repo;
 		yourself
+]
+
+{ #category : #convenience }
+RiUMLClassBuilder class >> forView: aRSView [
+	^ self basicNew
+		initializeWith: aRSView;
+		yourself
+]
+
+{ #category : #convenience }
+RiUMLClassBuilder class >> new [ 
+	^ self forView: nil
+]
+
+{ #category : #private }
+RiUMLClassBuilder >> addPackInteraction [
+	"Interaction to pack hierarachies."
+
+	| packer |
+	self mustGroupExtensions ifTrue: [ self groupExtensions ].
+	
+	packer := RSHierarchyPacker new.
+	packer rectanglePackLayout gap: self gapBetweenHierarchies.
+	self view addInteraction: packer.
+
 ]
 
 { #category : #private }
@@ -73,6 +109,19 @@ RiUMLClassBuilder >> addPackageOutlines [
 
 ]
 
+{ #category : #private }
+RiUMLClassBuilder >> addZoomingInteraction [
+	"Interaction for zooming."
+
+	| controls |
+	controls := RSControlsView new.
+	controls configuration
+		useBasicZoom;
+		maxScale: 1.
+	self view addInteraction: controls.
+
+]
+
 { #category : #settings }
 RiUMLClassBuilder >> backgroundColor [
 	^ self currentTheme backgroundColor
@@ -88,7 +137,7 @@ RiUMLClassBuilder >> builderForClassName [
 	| builderForName builderForStereotype theLayout |
 	builderForName := self builderForLabel: #yourself widthScale: 1.
 	builderForStereotype := self builderForStereotype.
-	theLayout := RSVerticalLineLayout new gapSize: -1; center.
+	theLayout := RSVerticalLineLayout new gapSize: -1; center; yourself.
 
 	^ RSShapeBuilder composite shapes: [ :aBehavior | 
 		| group |
@@ -181,12 +230,15 @@ RiUMLClassBuilder >> disableSelectors [
 	tmpRenderer classShape interactionDo: [ :i | i clear; inspectable ].
 	tmpRenderer modelDescriptor: self renderer modelDescriptor.
 	tmpRenderer methodShape: (RSShapeBuilder box 
-		width: 10;
-		height: [ :met | (met sourceCode lines size * 10) sqrt + 10 ] ";
+		width: self scaleForMethods;
+		height: [ :met | self scaleForMethods + (met sourceCode lines size * self scaleForMethods) sqrt ] ";
 		interactionDo: [:i | i popup multiline ]").
+	tmpRenderer varShape: (RSShapeBuilder triangle size: self scaleForMethods; yourself).
 
 	#(classShape varShape varsShape methodsShape methodShape) do: [ :each |
-		self renderer perform: (each asMutator) with: (tmpRenderer perform: each) ].
+		self renderer
+			perform: each asMutator
+			with: (tmpRenderer perform: each) ].
 
 ]
 
@@ -222,7 +274,11 @@ RiUMLClassBuilder >> environment: aRGEnvironment [
 	environment clean.
 	all := environment ask allClassesAndTraits.
 	resolved := all select: [:each | each isRingResolved ].
-	toDraw := resolved reject: [ :each | #(Object Metaclass Trait ClassTrait) includes: each name ].
+	toDraw := resolved reject: [ :each |
+		#(Object Metaclass Trait ClassTrait) includes: each name ].
+	extensions := toDraw select: [ :each |
+		each hasMethodExtensions or: [ each theMetaClass hasMethodExtensions ] ].
+	
 	self classes: toDraw.
 
 ]
@@ -249,6 +305,18 @@ RiUMLClassBuilder >> gapFromSubclassToSibling [
 	^ self gapFromClassToSubclass / 2
 ]
 
+{ #category : #private }
+RiUMLClassBuilder >> groupExtensions [
+
+	| fakeEdgeBuilder extensionElements |
+	extensionElements := self view elementsFromModels: extensions.
+	fakeEdgeBuilder := RSEdgeBuilder line border: nil.
+	fakeEdgeBuilder linkElements: extensionElements.
+	
+	RSGridLayout on: extensionElements.
+
+]
+
 { #category : #convenience }
 RiUMLClassBuilder >> iceCommit: anIceCommit [
 	"Import an environment from an commit: Iceberg + Ring2/Monticello"
@@ -273,6 +341,15 @@ RiUMLClassBuilder >> iceRepository: anIceRepository [
 RiUMLClassBuilder >> initialize [
 	super initialize.
 
+	"TODO: sorted:[ :a :b | a selector < b selector ]?"
+	self modelDescriptor
+		instVars: [ :cls | 
+			cls sharedPools, (cls isTrait
+				ifTrue: [ #() ]
+				ifFalse: [ cls classVariables, cls theMetaClass slots, cls slots ]) ];
+		methods: [ :cls | cls theMetaClass methods, cls methods ].
+
+
 	self setLayoutVerticalWithMarkers: true.
 	self enableSelectors.
 	self enablePackageColoring.
@@ -282,19 +359,25 @@ RiUMLClassBuilder >> initialize [
 	self renderer marker offset: self gapFromClassToSubclass / 6.
 	self renderer border color: self foregroundColor.
 
-	"TODO: sorted:[ :a :b | a selector < b selector ]"
-	self modelDescriptor
-		instVars: [ :cls | 
-			cls sharedPools, (cls isTrait
-				ifTrue: [ #() ]
-				ifFalse: [ cls classVariables, cls theMetaClass slots, cls slots ]) ];
-		methods: [ :cls | cls theMetaClass methods, cls methods ]
+
+]
+
+{ #category : #initialization }
+RiUMLClassBuilder >> initializeWith: aView [
+	container := aView.
+
+	self initialize.
 
 ]
 
 { #category : #settings }
 RiUMLClassBuilder >> maxClassWidth [
 	^ 200
+]
+
+{ #category : #private }
+RiUMLClassBuilder >> mustGroupExtensions [
+	^ false
 ]
 
 { #category : #settings }
@@ -307,19 +390,28 @@ RiUMLClassBuilder >> packageColorScale [
 	^ packageColorScale ifNil: [ packageColorScale := TSScale google20 ]
 ]
 
+{ #category : #settings }
+RiUMLClassBuilder >> packageColorScale: aTSScale [
+	packageColorScale := aTSScale
+
+]
+
 { #category : #hooks }
 RiUMLClassBuilder >> renderIn: aView [
-	| interaction |
 	super renderIn: aView.
+
+	self addZoomingInteraction.
+	self addPackInteraction.
 
 	aView color: self backgroundColor.
 
-	interaction := RSHierarchyPacker new.
-	interaction rectanglePackLayout gap: self gapBetweenHierarchies.
-	aView addInteraction: interaction.
-
 	packageColoring ifTrue: [ self addPackageOutlines ].
 
+]
+
+{ #category : #settings }
+RiUMLClassBuilder >> scaleForMethods [
+	^ 8
 ]
 
 { #category : #options }
@@ -368,24 +460,8 @@ RiUMLClassBuilder >> stereotypeColor [
 RiUMLClassBuilder >> stereotypeFor: aBehavior ifPresent: aBlock [
 	aBehavior isTrait
 		ifTrue: [ ^ aBlock cull: 'trait' ].
-	(aBehavior methods isNotEmpty
-		and: [ aBehavior methods anyOne isExtension ])
+	aBehavior hasMethodExtensions
 		ifTrue: [ ^ aBlock cull: 'extension' ]
-]
-
-{ #category : #hooks }
-RiUMLClassBuilder >> view [
-	^ container ifNil: [
-		| controlsView |
-		container := RSView new.
-
-		controlsView := RSControlsView new.
-		controlsView configuration
-			useBasicZoom;
-			maxScale: 1.
-		container addInteraction: controlsView.
-
-		container ]
 ]
 
 { #category : #settings }
