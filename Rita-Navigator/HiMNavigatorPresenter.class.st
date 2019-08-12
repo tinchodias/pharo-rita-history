@@ -5,7 +5,8 @@ Class {
 		'viewPresenter',
 		'searchPresenter',
 		'lastView',
-		'lastNavigator'
+		'lastNavigator',
+		'packageNames'
 	],
 	#category : #'Rita-Navigator-UI'
 }
@@ -26,8 +27,9 @@ HiMNavigatorPresenter class >> defaultSpec [
 
 { #category : #examples }
 HiMNavigatorPresenter class >> example1 [ 
-	^ self new
-		openWithSpec
+	^ (self new
+		setModelBeforeInitialization: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. 'Random-Core'. 'Athens-Cairo'. "'Growl'. 'Iceberg'"};
+		openWithSpec)
 		withWindowDo: [ :window | 
 			window
 				extent: 1000 @ 800;
@@ -41,7 +43,7 @@ HiMNavigatorPresenter >> fillLastView [
 	lastNavigator := HiMNavigator newOn: lastView.
 	builder := HiMImageDependenciesBuilder new
 		navigator: lastNavigator;
-		packageNames: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. 'Random-Core'. 'Athens-Cairo'. 'Growl'. 'Iceberg'};
+		packageNames: packageNames;
 		build.
 
 	searchPresenter searchModel topParentNodes: builder topLevelNodes.
@@ -56,7 +58,6 @@ HiMNavigatorPresenter >> highlightAllSearchResults [
 	allSearchResults := searchPresenter lastResultModel nodes.
 
 	highlightableForCurrentSearchResult := RSHighlightable new
-		noDefaultColor;
 		highlightElements: [ :each | {each attributeAt: #RSLabeled} ];
 		attributeKey: #allSearchResults;
 		when: TSHighlightEvent do: [ :evt |
@@ -119,7 +120,6 @@ HiMNavigatorPresenter >> highlightCurrentSearchResult [
 	aHiMNode := searchPresenter lastResultModel currentNode.
 
 	highlightableForCurrentSearchResult := RSHighlightable new
-		noDefaultColor;
 		attributeKey: #searchResult;
 		highlightElements: [ :each | {each attributeAt: #RSLabeled} ];
 		when: TSHighlightEvent do: [ :evt |
@@ -129,8 +129,10 @@ HiMNavigatorPresenter >> highlightCurrentSearchResult [
 			self shouldHighlightAll 
 				ifTrue: [ self highlightCompositeElementWithLabel: evt element intensity: 0.5 ] ].
 
+	highlightableForCurrentSearchResult highlightShape. "TODO: Needed to ensure a slot has been initialized."
+
 	topLevelElement := lastView elementFromModel: aHiMNode topParent.
-"	lastNavigator executeAndRegisterExpandIfPossible: topLevelElement."
+	lastNavigator executeAndRegisterExpandIfPossible: topLevelElement.
 
 	(topLevelElement elementFromModel: aHiMNode)
 		ifNotNil: [ :element | 
@@ -160,6 +162,11 @@ HiMNavigatorPresenter >> initializeWidgets [
 	self focusOrder
 		add: searchPresenter;
 		add: viewPresenter
+]
+
+{ #category : #private }
+HiMNavigatorPresenter >> setModelBeforeInitialization: somePackageNames [
+	packageNames := somePackageNames
 ]
 
 { #category : #'private - searching' }

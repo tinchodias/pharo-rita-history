@@ -63,7 +63,7 @@ HiMNavigator >> addEdgesFor: someRSElements [
 		color: (self currentTheme caretColor alpha: 0.25);
 		interactionDo: [ :interactionBuilder |
 			interactionBuilder
-				popupText: [:model | model key model object asString, '->', model value model object asString ];
+				popupText: [:model | model key object asString, '->', model value object asString ];
 				addInteraction: self highlightableForEdges ];
 		onElement;
 		when: TSMouseDoubleClick do: [ :each | [:evt | self toggleEdge: each ] ];
