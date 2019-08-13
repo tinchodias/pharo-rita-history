@@ -6,7 +6,8 @@ Class {
 		'packageColoring',
 		'packageColorScale',
 		'extensions',
-		'mustGroupExtensions'
+		'mustGroupExtensions',
+		'limitForMethodCount'
 	],
 	#category : #'Rita-IceTip-UMLBuilder'
 }
@@ -240,6 +241,7 @@ RiUMLClassBuilder >> disableSelectors [
 			perform: each asMutator
 			with: (tmpRenderer perform: each) ].
 
+	self limitForMethodCount: SmallInteger maxVal.
 ]
 
 { #category : #options }
@@ -264,6 +266,7 @@ RiUMLClassBuilder >> enableSelectors [
 		methodShape: self builderForMethodName;
 		varShape: self builderForSlotName.
 
+	self limitForMethodCount: 20.
 ]
 
 { #category : #convenience }
@@ -347,7 +350,7 @@ RiUMLClassBuilder >> initialize [
 			cls sharedPools, (cls isTrait
 				ifTrue: [ #() ]
 				ifFalse: [ cls classVariables, cls theMetaClass slots, cls slots ]) ];
-		methods: [ :cls | cls theMetaClass methods, cls methods ].
+		methods: [ :cls | self methodsToShowFor: cls ].
 
 
 	self setLayoutVerticalWithMarkers: true.
@@ -371,8 +374,32 @@ RiUMLClassBuilder >> initializeWith: aView [
 ]
 
 { #category : #settings }
+RiUMLClassBuilder >> limitForMethodCount [
+	^ limitForMethodCount ifNil: [ ^ SmallInteger maxVal ]
+]
+
+{ #category : #settings }
+RiUMLClassBuilder >> limitForMethodCount: anInteger [
+	limitForMethodCount := anInteger
+]
+
+{ #category : #settings }
 RiUMLClassBuilder >> maxClassWidth [
 	^ 200
+]
+
+{ #category : #initialization }
+RiUMLClassBuilder >> methodsToShowFor: aBehavior [
+
+	| limit methods mockAbbrMethod |
+	limit := self limitForMethodCount.
+	methods := aBehavior theMetaClass methods, aBehavior methods.
+	methods size < limit ifFalse: [
+		self flag: #todo.
+		mockAbbrMethod := RGMethod named: ((methods size - limit) asString, ' more...') parent: aBehavior.
+		methods := (methods first: limit) copyWith: mockAbbrMethod ].
+	^ methods
+
 ]
 
 { #category : #private }
