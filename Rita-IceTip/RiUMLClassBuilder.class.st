@@ -388,7 +388,7 @@ RiUMLClassBuilder >> maxClassWidth [
 	^ 200
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiUMLClassBuilder >> methodsToShowFor: aBehavior [
 
 	| limit methods mockAbbrMethod |
@@ -402,7 +402,7 @@ RiUMLClassBuilder >> methodsToShowFor: aBehavior [
 
 ]
 
-{ #category : #private }
+{ #category : #options }
 RiUMLClassBuilder >> mustGroupExtensions [
 	^ false
 ]
@@ -487,7 +487,7 @@ RiUMLClassBuilder >> stereotypeColor [
 RiUMLClassBuilder >> stereotypeFor: aBehavior ifPresent: aBlock [
 	aBehavior isTrait
 		ifTrue: [ ^ aBlock cull: 'trait' ].
-	aBehavior hasMethodExtensions
+	(aBehavior isRingResolved not and: [aBehavior hasMethodExtensions])
 		ifTrue: [ ^ aBlock cull: 'extension' ]
 ]
 

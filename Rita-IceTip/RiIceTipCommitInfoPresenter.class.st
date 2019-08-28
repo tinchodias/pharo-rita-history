@@ -17,14 +17,21 @@ RiIceTipCommitInfoPresenter >> initializeCommitPanel [
 
 	notebookPanel addPage: self newUMLStateInfoPage.
 
-	super initializeCommitPanel.
+	notebookPanel
+		addPage: (self newDiffPage 
+			title: 'Visual Diff';
+			icon: (self iconNamed: #objects);
+			presenterProvider: [ self torchLikeDiffFromAncestorPresenter ];
+			yourself).
 
 	notebookPanel
 		addPage: (self newDiffPage 
-			title: 'Diff Class Diagram';
+			title: 'Visual Diff (from HEAD)';
 			icon: (self iconNamed: #objects);
 			presenterProvider: [ self torchLikeDiffFromHeadPresenter ];
 			yourself).
+
+	super initializeCommitPanel.
 
 
 "	notebookPanel
@@ -91,6 +98,19 @@ RiIceTipCommitInfoPresenter >> packageDiffFromHeadPresenter [
 ]
 
 { #category : #initialization }
+RiIceTipCommitInfoPresenter >> torchLikeDiffFromAncestorPresenter [
+
+	selectedModel ifNil: [ ^ self newEmpty ].
+	
+	^ (self instantiate: RiTorchLikeDiffPresenter)
+			diffPresenter: self diffFromAncestor;
+			packageColorScale: packageColorScale;
+			iceDiffModel: (ancestorTabContainer diffFor: selectedModel);
+			yourself
+
+]
+
+{ #category : #initialization }
 RiIceTipCommitInfoPresenter >> torchLikeDiffFromHeadPresenter [
 
 	selectedModel ifNil: [ ^ self newEmpty ].
@@ -136,6 +156,9 @@ RiIceTipCommitInfoPresenter >> umlStateInfoPresenter [
 	^ (self instantiate: RoassalPresenter)
 		script: [ :view | 
 			(RiUMLClassBuilder forView: view)
+				setLayoutVerticalWithMarkers: false;
+				disablePackageColoring;
+				disableSelectors;
 				packageColorScale: packageColorScale;
 				iceCommit: selectedModel commit;
 				build;
