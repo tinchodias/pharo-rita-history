@@ -234,7 +234,8 @@ RiUMLClassBuilder >> disableSelectors [
 		width: self scaleForMethods;
 		height: [ :met | self scaleForMethods + (met sourceCode lines size * self scaleForMethods) sqrt ] ";
 		interactionDo: [:i | i popup multiline ]").
-	tmpRenderer varShape: (RSShapeBuilder triangle size: self scaleForMethods; yourself).
+	tmpRenderer varShape: (RSShapeBuilder triangle size: self scaleForMethods * 1.3; yourself).
+	tmpRenderer varsShape padding: (self scaleForMethods / 2) asMargin.
 
 	#(classShape varShape varsShape methodsShape methodShape) do: [ :each |
 		self renderer
