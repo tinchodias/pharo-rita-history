@@ -4,6 +4,35 @@ Class {
 	#category : #'Rita-IceTip-DiffView-TorchLike'
 }
 
+{ #category : #'as yet unclassified' }
+RiTorchLikeDiffPresenter class >> example [
+	| diff repositoryModel aCommit anotherCommit |
+	repositoryModel := IceRepository registry detect: [ :each | each name = 'Roassal3' ].
+
+	aCommit := repositoryModel commitAt: 'd7da358e65baf43331559601442f8a9c270c5cad'.
+	anotherCommit := repositoryModel commitAt: 'c2b411fd459423b2920cb08613c2cfd2633ebf2b'.
+
+	diff := IceTipCommitDiffModel
+		repositoryModel: repositoryModel 
+		on: (aCommit diffTo: anotherCommit).
+		
+	^ self exampleFor: diff
+]
+
+{ #category : #'as yet unclassified' }
+RiTorchLikeDiffPresenter class >> exampleFor: iceDiffModel [
+
+	| diffPresenter |
+	diffPresenter := IceTipDiffPanel on: iceDiffModel.
+
+	^ self new
+		diffPresenter: diffPresenter;
+		iceDiffModel: iceDiffModel;
+"		packageColorScale: packageColorScale;"
+		openWithSpec;
+		yourself
+]
+
 { #category : #private }
 RiTorchLikeDiffPresenter >> backgroundColorFor: node [
 	^ node value ritaColor
