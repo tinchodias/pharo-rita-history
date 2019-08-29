@@ -8,34 +8,6 @@ Class {
 	#category : #'Rita-UI'
 }
 
-{ #category : #examples }
-RiCommentImageBuilder class >> defaultSpec [
-	^ SpBoxLayout newVertical
-"		add: #menuBar
-			withConstraints: [ :constraints | constraints height: self toolbarHeight ];"
-		add: #table;
-		yourself
-]
-
-{ #category : #examples }
-RiCommentImageBuilder class >> openOnRepositoryNamed: aName [
-	| aRiRepository anIceRepository |
-	anIceRepository := IceRepository registry
-		detect: [ :each | each name beginsWith: aName ].
-	aRiRepository := RiRepository new
-		iceRepository: anIceRepository;
-		process;
-		yourself.
-	^ (self on: aRiRepository) openWithSpec
-]
-
-{ #category : #examples }
-RiCommentImageBuilder class >> voyageExample [
-	<example>
-
-	^ self openOnRepositoryNamed: 'voyage'
-]
-
 { #category : #visiting }
 RiCommentImageBuilder >> colorForAlreadyPushed [
 	^ Color green
