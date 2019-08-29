@@ -4,7 +4,7 @@ Class {
 	#category : #'Rita-IceTip-DiffView-TorchLike'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 RiTorchLikeDiffPresenter class >> example [
 	| diff repositoryModel aCommit anotherCommit |
 	repositoryModel := IceRepository registry detect: [ :each | each name = 'Roassal3' ].
@@ -19,7 +19,7 @@ RiTorchLikeDiffPresenter class >> example [
 	^ self exampleFor: diff
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 RiTorchLikeDiffPresenter class >> exampleFor: iceDiffModel [
 
 	| diffPresenter |
