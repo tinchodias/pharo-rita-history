@@ -84,7 +84,7 @@ RiTorchLikeDiffPresenter >> buildSettingsOn: aView [
 		form: (self iconNamed: #configuration);
 		element.
 	icon isFixed: true.
-	aView addShape: icon trachelShape.
+	aView addShape: icon shape.
 
 "	update := [ 
 		RSHorizontalLineLayout on: legendLabels.
