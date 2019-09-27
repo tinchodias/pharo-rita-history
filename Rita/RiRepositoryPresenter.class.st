@@ -31,6 +31,13 @@ RiRepositoryPresenter class >> hiedraExample [
 ]
 
 { #category : #examples }
+RiRepositoryPresenter class >> mongotalkExample [
+	<example>
+
+	^ self openOnRepositoryNamed: 'mongotalk'
+]
+
+{ #category : #examples }
 RiRepositoryPresenter class >> openOnRepositoryNamed: aName [
 	| aRiRepository anIceRepository |
 	anIceRepository := IceRepository registry
