@@ -1,7 +1,7 @@
 Class {
 	#name : #RiUMLDiffPresenter,
 	#superclass : #RiDiffPresenter,
-	#category : #'Rita-IceTip-DiffView'
+	#category : #'Rita-Torch-Presenters'
 }
 
 { #category : #private }

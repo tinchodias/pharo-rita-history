@@ -1,7 +1,7 @@
 Class {
 	#name : #LinesDiffBuilder,
 	#superclass : #TextDiffBuilder,
-	#category : #'Rita-Torch'
+	#category : #'Rita-Torch-Utilities'
 }
 
 { #category : #examples }
