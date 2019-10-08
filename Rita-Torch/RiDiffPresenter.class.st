@@ -1,6 +1,6 @@
 Class {
 	#name : #RiDiffPresenter,
-	#superclass : #ComposablePresenter,
+	#superclass : #SpPresenter,
 	#instVars : [
 		'diffPresenter',
 		'viewPresenter',
