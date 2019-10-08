@@ -1,7 +1,7 @@
 Class {
 	#name : #RiTorchLikeDiffPresenter,
 	#superclass : #RiUMLDiffPresenter,
-	#category : #'Rita-Torch'
+	#category : #'Rita-Torch-Presenters'
 }
 
 { #category : #examples }

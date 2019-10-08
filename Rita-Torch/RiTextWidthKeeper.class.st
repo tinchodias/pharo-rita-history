@@ -1,7 +1,7 @@
 Class {
 	#name : #RiTextWidthKeeper,
 	#superclass : #Object,
-	#category : #'Rita-Torch'
+	#category : #'Rita-Torch-Utilities'
 }
 
 { #category : #convenience }

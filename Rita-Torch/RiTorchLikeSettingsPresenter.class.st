@@ -6,7 +6,7 @@ Class {
 		'draggableCheckBox',
 		'onChangeBlock'
 	],
-	#category : #'Rita-Torch'
+	#category : #'Rita-Torch-Settings'
 }
 
 { #category : #specs }

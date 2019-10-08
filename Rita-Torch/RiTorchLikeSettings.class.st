@@ -5,7 +5,7 @@ Class {
 		'colorByPackage',
 		'draggable'
 	],
-	#category : #'Rita-Torch'
+	#category : #'Rita-Torch-Settings'
 }
 
 { #category : #accessing }
