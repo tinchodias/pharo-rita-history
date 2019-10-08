@@ -9,7 +9,7 @@ Class {
 		'nodesWithPackages',
 		'nodesWithFiles'
 	],
-	#category : #'Rita-IceTip-DiffView'
+	#category : #'Rita-Torch'
 }
 
 { #category : #initialization }

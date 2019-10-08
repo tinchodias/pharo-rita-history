@@ -1,7 +1,7 @@
 Class {
 	#name : #RiTextWidthKeeper,
 	#superclass : #Object,
-	#category : #'Rita-IceTip-DiffView'
+	#category : #'Rita-Torch'
 }
 
 { #category : #convenience }

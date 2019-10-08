@@ -1,6 +1,6 @@
 Extension { #name : #IceRemoval }
 
-{ #category : #'*Rita-IceTip' }
+{ #category : #'*Rita-Torch' }
 IceRemoval >> ritaColor [
 	^ Color red
 ]

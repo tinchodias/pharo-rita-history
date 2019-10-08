@@ -9,7 +9,7 @@ Class {
 		'mustGroupExtensions',
 		'limitForMethodCount'
 	],
-	#category : #'Rita-IceTip-UMLBuilder'
+	#category : #'Rita-Torch'
 }
 
 { #category : #examples }

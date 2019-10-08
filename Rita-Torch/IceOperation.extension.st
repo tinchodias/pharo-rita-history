@@ -1,16 +1,16 @@
 Extension { #name : #IceOperation }
 
-{ #category : #'*Rita-IceTip' }
+{ #category : #'*Rita-Torch' }
 IceOperation >> ritaChangeSize [
 	^ definition sourceCode lines size log
 ]
 
-{ #category : #'*Rita-IceTip' }
+{ #category : #'*Rita-Torch' }
 IceOperation >> ritaColor [
 	^ Color cyan muchDarker mixed: 0.5 with: Color blue
 ]
 
-{ #category : #'*Rita-IceTip' }
+{ #category : #'*Rita-Torch' }
 IceOperation >> ritaIsNoModification [
 	^ false
 ]

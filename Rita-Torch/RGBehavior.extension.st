@@ -1,6 +1,6 @@
 Extension { #name : #RGBehavior }
 
-{ #category : #'*Rita-IceTip' }
+{ #category : #'*Rita-Torch' }
 RGBehavior >> hasMethodExtensions [
 	^ self methods anySatisfy: #isExtension
 ]

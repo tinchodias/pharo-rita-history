@@ -6,7 +6,7 @@ Class {
 		'draggableCheckBox',
 		'onChangeBlock'
 	],
-	#category : #'Rita-IceTip-DiffView-TorchLike'
+	#category : #'Rita-Torch'
 }
 
 { #category : #specs }

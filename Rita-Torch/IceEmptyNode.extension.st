@@ -1,6 +1,6 @@
 Extension { #name : #IceEmptyNode }
 
-{ #category : #'*Rita-IceTip' }
+{ #category : #'*Rita-Torch' }
 IceEmptyNode >> allChildrenDo: aBlockClosure [ 
 	"Nothing to do"
 ]

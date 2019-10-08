@@ -1,6 +1,6 @@
 Extension { #name : #IceNoModification }
 
-{ #category : #'*Rita-IceTip' }
+{ #category : #'*Rita-Torch' }
 IceNoModification >> ritaIsNoModification [
 	^ true
 ]
