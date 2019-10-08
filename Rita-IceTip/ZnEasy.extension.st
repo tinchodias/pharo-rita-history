@@ -1,6 +1,6 @@
 Extension { #name : #ZnEasy }
 
-{ #category : #'*Rita-Navigator' }
+{ #category : #'*Rita-IceTip' }
 ZnEasy class >> getImage: urlObject [
 	| client |
 	(client := self client)

@@ -1,6 +1,6 @@
 Extension { #name : #IceTipRepositoryBrowser }
 
-{ #category : #'*Rita-Navigator' }
+{ #category : #'*Rita-IceTip' }
 IceTipRepositoryBrowser class >> defaultSpec [
 	<spec: #default>
 	
