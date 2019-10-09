@@ -1,7 +1,7 @@
 Class {
 	#name : #RiTorchLikeDiffPresenter,
 	#superclass : #RiUMLDiffPresenter,
-	#category : #'Rita-Torch-Presenters'
+	#category : #'Rita-Torch-Diff'
 }
 
 { #category : #examples }
@@ -69,7 +69,7 @@ RiTorchLikeDiffPresenter >> buildDiffOn: view [
 		metaclassesByName at: (node key allButLast: ' class' size) put: node ].
 
 	builder := RSUMLClassBuilder new.
-	builder view: view.
+	builder container: view.
 
 	builder modelDescriptor
 		classname: [ :node | node key asString ];
