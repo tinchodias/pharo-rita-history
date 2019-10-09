@@ -41,7 +41,7 @@ RiRepositoryPresenter class >> mongotalkExample [
 RiRepositoryPresenter class >> openOnRepositoryNamed: aName [
 	| aRiRepository anIceRepository |
 	anIceRepository := IceRepository registry
-		detect: [ :each | each name beginsWith: aName ].
+		detect: [ :each | each name asLowercase beginsWith: aName asLowercase ].
 	aRiRepository := RiRepository new
 		iceRepository: anIceRepository;
 		process;

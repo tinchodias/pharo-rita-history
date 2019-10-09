@@ -56,7 +56,7 @@ RiUMLClassBuilder class >> exampleRoassal3Horizontal [
 { #category : #convenience }
 RiUMLClassBuilder class >> forRepositoryNamed: aString [
 	| repo |
-	repo := IceRepository registry detect: [ :each| each name = aString ].
+	repo := IceRepository registry detect: [ :each| each name asLowercase = aString asLowercase ].
 	
 	^ self new
 		iceRepository: repo;
