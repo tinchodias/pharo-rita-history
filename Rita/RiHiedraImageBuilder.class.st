@@ -37,10 +37,12 @@ RiHiedraImageBuilder >> tableMorph: aFTTableMorph [
 
 	morphTable := aFTTableMorph.
 	
-	hiedraColumnController := HiRS3ColumnController new.
-	hiedraColumnController
-		table: morphTable;
-		onChangeDo: [ morphTable changed ];
-		rowHeight: morphTable rowHeight "floor".
-
+	hiedraColumnController := HiColumnController new.
+	hiedraColumnController renderer
+		rowHeight: morphTable rowHeight floor;
+		nodeRadius: 1.5;
+		nodeBorderWidth: 3.0;
+		arrowSize: 0;
+		nodeConnectionOffset: 3;
+		cellWidth: 8.
 ]
