@@ -1,22 +1,24 @@
 Class {
 	#name : #RiDiffPresenter,
-	#superclass : #SpPresenter,
+	#superclass : #ComposablePresenter,
 	#instVars : [
 		'diffPresenter',
 		'viewPresenter',
 		'iceDiffModel',
 		'packageColorScale'
 	],
-	#category : #'Rita-Torch-Presenters'
+	#category : #'Rita-Torch-Diff'
 }
 
 { #category : #specs }
 RiDiffPresenter class >> defaultSpec [
-	^ SpecBoxLayout newVertical
-		add: #viewPresenter;
-		spacing: 5;
-		add: #diffPresenter;
-		yourself
+	^ SpecLayout composed
+		newColumn: [ :col | 
+			col
+				add: #viewPresenter;
+				addSplitter;
+				add: #diffPresenter;
+				yourself ]
 ]
 
 { #category : #private }
@@ -25,9 +27,19 @@ RiDiffPresenter >> buildDiffOn: view [
 ]
 
 { #category : #accessing }
+RiDiffPresenter >> diffPresenter [
+	^ diffPresenter
+]
+
+{ #category : #accessing }
 RiDiffPresenter >> diffPresenter: aPresenter [
 	diffPresenter := aPresenter
 
+]
+
+{ #category : #accessing }
+RiDiffPresenter >> iceDiffModel [
+	^ iceDiffModel
 ]
 
 { #category : #accessing }
@@ -39,7 +51,7 @@ RiDiffPresenter >> iceDiffModel: anIceDiffModel [
 
 { #category : #initialization }
 RiDiffPresenter >> initializeWidgets [
-	viewPresenter := self instantiate: RoassalPresenter.
+	viewPresenter := self instantiate: Spec1RoassalPresenter.
 	viewPresenter script: [ :view | self buildDiffOn: view ].
 ]
 
@@ -51,4 +63,9 @@ RiDiffPresenter >> packageColorScale [
 { #category : #private }
 RiDiffPresenter >> packageColorScale: aScale [
 	packageColorScale := aScale
+]
+
+{ #category : #accessing }
+RiDiffPresenter >> viewPresenter [
+	^ viewPresenter
 ]
