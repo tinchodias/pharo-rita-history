@@ -5,32 +5,47 @@ Class {
 }
 
 { #category : #examples }
-RiTorchLikeDiffPresenter class >> example [
-	| diff repositoryModel aCommit anotherCommit |
-	repositoryModel := IceRepository registry detect: [ :each | each name = 'Roassal3' ].
+RiTorchLikeDiffPresenter class >> example1 [
+	self exampleRepositoryNamed: 'Roassal3'
+		target: 'd7da358'
+		base: 'c2b411f'
 
-	aCommit := repositoryModel commitAt: 'd7da358e65baf43331559601442f8a9c270c5cad'.
-	anotherCommit := repositoryModel commitAt: 'c2b411fd459423b2920cb08613c2cfd2633ebf2b'.
-
-	diff := IceTipCommitDiffModel
-		repositoryModel: repositoryModel 
-		on: (aCommit diffTo: anotherCommit).
-		
-	^ self exampleFor: diff
 ]
 
 { #category : #examples }
-RiTorchLikeDiffPresenter class >> exampleFor: iceDiffModel [
+RiTorchLikeDiffPresenter class >> example2 [
+	self
+		exampleRepositoryNamed: 'Roassal3'
+		target: 'dceb4a2'
+		base: '29e9476'
+]
 
-	| diffPresenter |
+{ #category : #examples }
+RiTorchLikeDiffPresenter class >> exampleForDiff: diff [
+
+	| iceDiffModel diffPresenter |
+	iceDiffModel := IceTipCommitDiffModel
+		repositoryModel: diff repository 
+		on: diff.
 	diffPresenter := IceTipDiffPanel on: iceDiffModel.
 
 	^ self new
 		diffPresenter: diffPresenter;
 		iceDiffModel: iceDiffModel;
-"		packageColorScale: packageColorScale;"
 		openWithSpec;
 		yourself
+]
+
+{ #category : #examples }
+RiTorchLikeDiffPresenter class >> exampleRepositoryNamed: aName target: fromRevparsableString base: toRevparsableString [
+
+	| repositoryModel commitFrom commitTo |
+	repositoryModel := IceRepository registry detect: [ :each | each name = aName ].
+
+	commitFrom := repositoryModel commitAt: fromRevparsableString.
+	commitTo := repositoryModel commitAt: toRevparsableString.
+		
+	^ self exampleForDiff: (commitFrom diffTo: commitTo)
 ]
 
 { #category : #private }
