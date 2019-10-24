@@ -3,11 +3,10 @@ I am a Spec2 presenter for RiRepository objects.
 "
 Class {
 	#name : #RiRepositoryPresenter,
-	#superclass : #SpPresenter,
+	#superclass : #RiPresenter,
 	#instVars : [
 		'table',
 		'menuBar',
-		'repository',
 		'commentImageBuilder',
 		'hiedraImageBuilder'
 	],
@@ -47,7 +46,8 @@ RiRepositoryPresenter class >> openOnRepositoryNamed: aName [
 		process;
 		yourself.
 
-	(self on: aRiRepository)
+	self new
+		model: aRiRepository;
 		openWithSpec;
 		withWindowDo: [ :window | 
 			window
@@ -58,7 +58,6 @@ RiRepositoryPresenter class >> openOnRepositoryNamed: aName [
 { #category : #examples }
 RiRepositoryPresenter class >> ritaExample [
 	<example>
-
 	^ self openOnRepositoryNamed: 'pharo-rita-history'
 ]
 
@@ -79,7 +78,7 @@ RiRepositoryPresenter class >> voyageExample [
 { #category : #initialization }
 RiRepositoryPresenter >> contextMenuForTable [
 	| menu selected |
-	menu := UIManager default newMenuIn: self table for: self.
+	menu := UIManager default newMenuIn: table for: self.
 	
 	selected := self selectedRiElement.
 
@@ -114,34 +113,17 @@ RiRepositoryPresenter >> initializeWidgets [
 { #category : #actions }
 RiRepositoryPresenter >> loadSelectedCommit [
 	self selectedRiElement iceCommit checkout.
-	self repository process.
+	model process.
 	self refresh.
 ]
 
 { #category : #initialization }
 RiRepositoryPresenter >> refresh [
-	hiedraImageBuilder refreshWith: repository elements.
-	table items: repository elements.
-]
-
-{ #category : #accessing }
-RiRepositoryPresenter >> repository [
-	^ repository
+	hiedraImageBuilder refreshWith: model elements.
+	table items: model elements.
 ]
 
 { #category : #accessing }
 RiRepositoryPresenter >> selectedRiElement [
 	^ table selection selectedItem
-]
-
-{ #category : #initialization }
-RiRepositoryPresenter >> setModelBeforeInitialization: aRiRepository [
-	super setModelBeforeInitialization: aRiRepository.
-	repository := aRiRepository.
-
-]
-
-{ #category : #accessing }
-RiRepositoryPresenter >> table [
-	^ table
 ]
