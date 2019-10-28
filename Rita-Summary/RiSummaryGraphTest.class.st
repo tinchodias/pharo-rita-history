@@ -5,9 +5,10 @@ Class {
 	#name : #RiSummaryGraphTest,
 	#superclass : #RiTestCase,
 	#instVars : [
+		'summaryGraph',
 		'summaryGraph'
 	],
-	#category : #'Rita-Tests'
+	#category : #'Rita-Summary-Tests'
 }
 
 { #category : #running }
