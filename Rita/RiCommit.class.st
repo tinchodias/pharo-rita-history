@@ -5,10 +5,10 @@ Class {
 	#name : #RiCommit,
 	#superclass : #RiElement,
 	#instVars : [
-		'commit',
 		'ancestors',
 		'children',
-		'repository'
+		'repository',
+		'iceCommit'
 	],
 	#category : #'Rita-Core'
 }
@@ -34,13 +34,13 @@ RiCommit >> addChildren: aRiElement [
 { #category : #accessing }
 RiCommit >> ancestors [
 	^ ancestors ifNil: [ 
-		ancestors := commit ancestors
+		ancestors := iceCommit ancestors
 			collect: [ :each | repository elementByCommit at: each ] ]
 ]
 
 { #category : #accessing }
 RiCommit >> author [
-	^ commit author
+	^ iceCommit author
 ]
 
 { #category : #accessing }
@@ -51,22 +51,22 @@ RiCommit >> children [
 
 { #category : #accessing }
 RiCommit >> comment [
-	^ commit comment
+	^ iceCommit comment
 ]
 
 { #category : #accessing }
 RiCommit >> date [
-	^ commit datetime asDate
+	^ iceCommit datetime asDate
 ]
 
 { #category : #accessing }
 RiCommit >> iceCommit [
-	^ commit
+	^ iceCommit
 ]
 
 { #category : #accessing }
 RiCommit >> iceCommit: anObject [
-	commit := anObject
+	iceCommit := anObject
 ]
 
 { #category : #printing }
@@ -91,5 +91,5 @@ RiCommit >> repository: anObject [
 
 { #category : #accessing }
 RiCommit >> shortId [
-	^ commit shortId
+	^ iceCommit shortId
 ]
