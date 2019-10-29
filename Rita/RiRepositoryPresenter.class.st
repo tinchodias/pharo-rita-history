@@ -5,11 +5,6 @@ I am a Spec2 presenter for RiRepository objects.
 Class {
 	#name : #RiRepositoryPresenter,
 	#superclass : #RiPresenter,
-	#instVars : [
-		'table',
-		'commentImageBuilder',
-		'hiedraImageBuilder'
-	],
 	#category : #'Rita-UI'
 }
 
@@ -75,6 +70,20 @@ RiRepositoryPresenter class >> voyageExample [
 	^ self openOnRepositoryNamed: 'voyage'
 ]
 
+{ #category : #actions }
+RiRepositoryPresenter >> actionLoadBranch: aRiBranchMark [
+	aRiBranchMark local checkout.
+	model process.
+	self refreshOnModelUpdate.
+]
+
+{ #category : #actions }
+RiRepositoryPresenter >> actionLoadCommit: aRiCommit [
+	aRiCommit iceCommit checkout.
+	model process.
+	self refreshOnModelUpdate.
+]
+
 { #category : #initialization }
 RiRepositoryPresenter >> blockForElementSelected: aBlock [
 	table whenSelectionChangedDo: [:selection |
@@ -84,14 +93,26 @@ RiRepositoryPresenter >> blockForElementSelected: aBlock [
 { #category : #initialization }
 RiRepositoryPresenter >> contextMenuForTable [
 	| menu selected |
-	menu := UIManager default newMenuIn: table for: self.
+	menu := self newMenu.
 	
 	selected := self selectedRiElement.
 
-	selected isUncommited ifFalse: [
-		menu add: 'Load commit (in IMAGE)' target: self selector: #loadSelectedCommit ].
+	selected marks select: #isBranchMark thenDo: [ :mark |
+		menu addItem: [ :item | 
+			item
+				name: ('Checkout (in IMAGE) branch {1}' format: { mark shortname }); 
+				action: [ self actionLoadBranch: mark ] ] ].
 
-	menu add: 'Inspect object' target: selected selector: #inspect.
+	selected isUncommited ifFalse: [
+		menu addItem: [ :item | 
+			item
+				name: ('Checkout (in IMAGE) commit {1}' format: { selected shortId });
+				action: [ self actionLoadCommit: selected ] ] ].
+
+	menu addItem: [ :item | 
+		item
+			name: 'Inspect object';
+			action: [ selected inspect ] ].
 
 	^ menu
 ]
@@ -114,13 +135,6 @@ RiRepositoryPresenter >> initializePresenters [
 		hiedraImageBuilder tableMorph: ann widget.
 		self refreshOnModelUpdate ].
 
-]
-
-{ #category : #actions }
-RiRepositoryPresenter >> loadSelectedCommit [
-	self selectedRiElement iceCommit checkout.
-	model process.
-	self refreshOnModelUpdate.
 ]
 
 { #category : #initialization }
