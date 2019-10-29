@@ -15,5 +15,11 @@ RiPresenter >> model [
 
 { #category : #accessing }
 RiPresenter >> model: anObject [
-	model := anObject
+	model := anObject.
+	self refreshOnModelUpdate
+]
+
+{ #category : #accessing }
+RiPresenter >> refreshOnModelUpdate [
+	"Refresh the presenter after model was (possibly) updated. Assumes widgets are already built."
 ]

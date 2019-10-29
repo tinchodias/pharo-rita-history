@@ -1,12 +1,12 @@
 "
 I am a Spec2 presenter for RiRepository objects.
+
 "
 Class {
 	#name : #RiRepositoryPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
 		'table',
-		'menuBar',
 		'commentImageBuilder',
 		'hiedraImageBuilder'
 	],
@@ -76,6 +76,12 @@ RiRepositoryPresenter class >> voyageExample [
 ]
 
 { #category : #initialization }
+RiRepositoryPresenter >> blockForElementSelected: aBlock [
+	table whenSelectionChangedDo: [:selection |
+		aBlock value: selection selectedItem ]
+]
+
+{ #category : #initialization }
 RiRepositoryPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := UIManager default newMenuIn: table for: self.
@@ -91,7 +97,7 @@ RiRepositoryPresenter >> contextMenuForTable [
 ]
 
 { #category : #initialization }
-RiRepositoryPresenter >> initializeWidgets [
+RiRepositoryPresenter >> initializePresenters [
 
 	table := self newTable.
 	table
@@ -106,7 +112,7 @@ RiRepositoryPresenter >> initializeWidgets [
 		commentImageBuilder := RiCommentImageBuilder new.
 		hiedraImageBuilder := RiHiedraImageBuilder new.
 		hiedraImageBuilder tableMorph: ann widget.
-		self refresh ].
+		self refreshOnModelUpdate ].
 
 ]
 
@@ -114,13 +120,14 @@ RiRepositoryPresenter >> initializeWidgets [
 RiRepositoryPresenter >> loadSelectedCommit [
 	self selectedRiElement iceCommit checkout.
 	model process.
-	self refresh.
+	self refreshOnModelUpdate.
 ]
 
 { #category : #initialization }
-RiRepositoryPresenter >> refresh [
-	hiedraImageBuilder refreshWith: model elements.
-	table items: model elements.
+RiRepositoryPresenter >> refreshOnModelUpdate [
+	self isBuilt ifTrue: [
+		hiedraImageBuilder refreshWith: model elements.
+		table items: model elements ]
 ]
 
 { #category : #accessing }

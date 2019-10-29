@@ -4,8 +4,19 @@ I enrich a IceLibGitRepository object with RiElements.
 Class {
 	#name : #RiRepository,
 	#superclass : #Object,
+	#instVars : [
+		'elementByCommit',
+		'elementMarks',
+		'elements',
+		'iceRepository'
+	],
 	#category : #'Rita-Core'
 }
+
+{ #category : #accessing }
+RiRepository >> description [
+	^ iceRepository description
+]
 
 { #category : #accessing }
 RiRepository >> elementByCommit [
@@ -30,6 +41,16 @@ RiRepository >> iceRepository [
 { #category : #accessing }
 RiRepository >> iceRepository: anIceLibgitRepository [
 	iceRepository := anIceLibgitRepository
+]
+
+{ #category : #accessing }
+RiRepository >> name [
+	^ iceRepository name
+]
+
+{ #category : #actions }
+RiRepository >> openInNativeBrowser [
+	iceRepository location openInNativeBrowser
 ]
 
 { #category : #processing }
