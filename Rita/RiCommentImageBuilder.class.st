@@ -79,10 +79,7 @@ RiCommentImageBuilder >> visitImageMark: aRiMark [
 	^ self
 		markMorphText: 'IMAGE'
 		icon: self iconForWorkingCopy
-		color:
-			(aRiMark element isUncommited
-				ifTrue: [ self colorForOnlyLocal ]
-				ifFalse: [ self colorForAlreadyPushed ])
+		color: self colorForOnlyLocal
 ]
 
 { #category : #visiting }
@@ -91,4 +88,12 @@ RiCommentImageBuilder >> visitTagMark: aRiTagMark [
 		markMorphText: aRiTagMark name
 		icon: self iconForTag
 		color: self colorForAlreadyPushed
+]
+
+{ #category : #visiting }
+RiCommentImageBuilder >> visitWorkdirMark: aRiMark [
+	^ self
+		markMorphText: 'WORKDIR'
+		icon: self iconForWorkingCopy
+		color: self colorForOnlyLocal
 ]

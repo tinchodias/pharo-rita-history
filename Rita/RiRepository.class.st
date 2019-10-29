@@ -4,12 +4,6 @@ I enrich a IceLibGitRepository object with RiElements.
 Class {
 	#name : #RiRepository,
 	#superclass : #Object,
-	#instVars : [
-		'elements',
-		'elementByCommit',
-		'elementMarks',
-		'iceRepository'
-	],
 	#category : #'Rita-Core'
 }
 
@@ -65,7 +59,7 @@ RiRepository >> process [
 
 	"Add new non-commit elements to the list, if needed."
 	self processImageMark.
-	self processDiskMark.
+	self processWorkdirMark.
 
 ]
 
@@ -75,16 +69,6 @@ RiRepository >> processCommitChildren [
 	elementByCommit valuesDo: [ :each | 
 		each ancestors do: [ :ancestor |
 			ancestor addChildren: each ] ]
-]
-
-{ #category : #accessing }
-RiRepository >> processDiskMark [
-
-"	| aRiCommit |
-	aRiCommit := elementByCommit at: iceRepository headCommit.
-	aRiCommit addMark: (RiImageMark new element: aRiCommit; yourself).
-"
-	self flag: #todo. "(1) It's not IMAGE, and (2) it can be dirty on disk"
 ]
 
 { #category : #accessing }
@@ -129,5 +113,27 @@ RiRepository >> processMark: anIceCommitish [
 		ifFalse: [ mark remote: anIceCommitish ].
 		
 	elementMarks add: mark.
+
+]
+
+{ #category : #accessing }
+RiRepository >> processWorkdirMark [
+
+	| aRiCommit diff |
+	aRiCommit := elementByCommit at: iceRepository headCommit.
+	
+	diff := (LGitDiff of: iceRepository repositoryHandle)
+		diffIndexToWorkDir;
+		yourself.
+
+	diff numberOfDeltas > 0 ifTrue: [
+		| tmp |
+		tmp := RiUncommitedWorkingCopy new referenceCommit: aRiCommit.
+		elements
+			add: tmp
+			before: aRiCommit.
+		aRiCommit := tmp ].
+
+	aRiCommit addMark: (RiWorkdirMark new element: aRiCommit; yourself).
 
 ]
