@@ -5,6 +5,11 @@ I am a Spec2 presenter for RiRepository objects.
 Class {
 	#name : #RiRepositoryPresenter,
 	#superclass : #RiPresenter,
+	#instVars : [
+		'table',
+		'commentImageBuilder',
+		'hiedraImageBuilder'
+	],
 	#category : #'Rita-UI'
 }
 
