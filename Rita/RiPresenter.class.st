@@ -2,7 +2,6 @@ Class {
 	#name : #RiPresenter,
 	#superclass : #SpPresenter,
 	#instVars : [
-		'model',
 		'model'
 	],
 	#category : #'Rita-UI'
