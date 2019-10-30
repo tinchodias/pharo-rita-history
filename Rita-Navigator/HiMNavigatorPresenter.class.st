@@ -28,7 +28,7 @@ HiMNavigatorPresenter class >> defaultSpec [
 { #category : #examples }
 HiMNavigatorPresenter class >> example1 [ 
 	^ (self new
-		setModelBeforeInitialization: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. 'Random-Core'. 'Athens-Cairo'. "'Growl'. 'Iceberg'"};
+		setModelBeforeInitialization: {'Hiedra'. 'Hiedra-Tests'. 'Athens-Cairo'. "'Growl'. 'Iceberg'"};
 		openWithSpec)
 		withWindowDo: [ :window | 
 			window

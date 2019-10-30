@@ -45,7 +45,7 @@ HiMNavigator class >> openExampleWith: aHiMNavigator [
 
 	HiMImageDependenciesBuilder new
 		navigator: aHiMNavigator;
-		packageNames: {'Hiedra'. 'Hiedra-Tests'. 'Hiedra-Roassal3'. "'Random-Core'"". 'Athens-Cairo'. 'Growl'. 'Iceberg'"};
+		packageNames: {'Hiedra'. 'Hiedra-Tests'." 'Hiedra-Roassal3'." "'Random-Core'"". 'Athens-Cairo'. 'Growl'. 'Iceberg'"};
 		build.
 
 	view := aHiMNavigator view.

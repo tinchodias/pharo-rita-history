@@ -65,6 +65,7 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 		provider: [
 			RiRepositoryAndElementPresenter new
 				model: aRiRepository;
+				blockForSpawn: [ :modelToSpawn | self openSpawnFor: modelToSpawn ]
 				yourself ]
 ]
 
@@ -74,6 +75,22 @@ RiRootPresenter >> openRepository: aRiRepository [
 	aRiRepository process.
 	
 	page := self newRepositoryPageFor: aRiRepository.
+	notebook
+		addPage: page;
+		selectPage: page
+]
+
+{ #category : #initialization }
+RiRootPresenter >> openSpawnFor: modelToSpawn [
+	| page |
+	page := SpNotebookPage
+		title: 'Diff'
+		icon: (self iconNamed: #objects)
+		provider: [
+			RiElementPresenter new
+				model: modelToSpawn;
+				yourself ].
+
 	notebook
 		addPage: page;
 		selectPage: page

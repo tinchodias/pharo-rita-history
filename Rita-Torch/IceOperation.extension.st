@@ -2,12 +2,12 @@ Extension { #name : #IceOperation }
 
 { #category : #'*Rita-Torch' }
 IceOperation >> ritaChangeSize [
-	^ definition sourceCode lines size log
+	^ definition sourceCode lines size sqrt
 ]
 
 { #category : #'*Rita-Torch' }
 IceOperation >> ritaColor [
-	^ Color cyan muchDarker mixed: 0.5 with: Color blue
+	^ Color white
 ]
 
 { #category : #'*Rita-Torch' }

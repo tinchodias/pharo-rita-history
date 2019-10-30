@@ -35,6 +35,16 @@ RiDiffQuery >> nodesForBehaviors [
 						ifTrue: [ stream nextPut: node ] ] ]
 ]
 
+{ #category : #accessing }
+RiDiffQuery >> nodesForMethodExtensions [
+	^ Array
+		streamContents: [ :stream | 
+			self treeToQuery
+				allChildrenDo: [ :node | 
+					node value definition isExtensionDefinition
+						ifTrue: [ stream nextPut: node ] ] ]
+]
+
 { #category : #'as yet unclassified' }
 RiDiffQuery >> onlyConsiderChanged [
 	^ onlyConsiderChanged

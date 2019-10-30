@@ -16,6 +16,11 @@ RiRepositoryAndElementPresenter class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+RiRepositoryAndElementPresenter >> blockForSpawn: aBlock [
+	elementPresenter blockForSpawn: [ aBlock cull: elementPresenter model ]
+]
+
 { #category : #initialization }
 RiRepositoryAndElementPresenter >> initializePresenters [
 	repositoryPresenter := self instantiate: RiRepositoryPresenter.
