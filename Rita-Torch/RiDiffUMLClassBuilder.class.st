@@ -3,8 +3,6 @@ Class {
 	#superclass : #RSUMLClassBuilder,
 	#instVars : [
 		'packageColoring',
-		'packageColorScale',
-		'packageColoring',
 		'packageColorScale'
 	],
 	#category : #'Rita-Torch-Diff'
