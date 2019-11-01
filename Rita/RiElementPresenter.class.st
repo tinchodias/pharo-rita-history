@@ -3,10 +3,7 @@ Class {
 	#superclass : #RiPresenter,
 	#instVars : [
 		'summaryLabel',
-		'diffPresenter',
-		'lastView',
-		'onlyChangedCheckbox',
-		'spawnButton'
+		'diffPresenter'
 	],
 	#category : #'Rita-UI'
 }
@@ -15,59 +12,30 @@ Class {
 RiElementPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #summaryLabel withConstraints: [ :constraints | constraints height: self labelHeight ];
-		add: #onlyChangedCheckbox withConstraints: [ :constraints | constraints height: self labelHeight ];
 		add: #diffPresenter;
-		add: #spawnButton withConstraints: [ :constraints | constraints height: self buttonHeight ];
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
-RiElementPresenter >> blockForSpawn: aBlock [
-	spawnButton action: aBlock
-]
-
 { #category : #initialization }
-RiElementPresenter >> fillLastView [
-
-	| query umlBuilder |
-	model isUncommited ifTrue: [ ^ self "TODO" ].
-	
-	query := RiDiffQuery new
-		diff: model iceCommit diffToParent;
-		onlyConsiderChanged: onlyChangedCheckbox state;
-		yourself. 
-
-	umlBuilder := RiDiffUMLClassBuilder forView: lastView.
-	umlBuilder
-		setLayoutVerticalWithMarkers: false;
-		disableSelectors;
-		classes: query nodesForBehaviors, query nodesForMethodExtensions;
-		build.
-
+RiElementPresenter >> blockForSpawn: aBlock [
+	diffPresenter blockForSpawn: aBlock
 ]
 
 { #category : #initialization }
 RiElementPresenter >> initializePresenters [
 	summaryLabel := self newLabel.
 
-	spawnButton := self newButton.
-	spawnButton icon: (self iconNamed: #smallRemoteOpen).
-	
-	onlyChangedCheckbox := self newCheckBox.
-	onlyChangedCheckbox
-		label: 'Only changed';
-		state: true;
-		whenChangedDo: [ self refreshOnModelUpdate ].
-		
-	diffPresenter := self instantiate: RoassalPresenter.
-	diffPresenter script: [ :newView | 
-		lastView := newView.
-			model ifNotNil: [ self fillLastView ] ].
+	diffPresenter := self instantiate: RiElementDiffPresenter.
+
 ]
 
 { #category : #initialization }
 RiElementPresenter >> refreshOnModelUpdate [
 	summaryLabel label: 'SHA: ', model shortId.
-	diffPresenter refresh.
 
+	diffPresenter
+		model:
+			(model isUncommited
+				ifTrue: [ nil ]
+				ifFalse: [ model iceCommit diffToParent ])
 ]
