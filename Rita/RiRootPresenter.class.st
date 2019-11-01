@@ -65,7 +65,7 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 		provider: [
 			RiRepositoryAndElementPresenter new
 				model: aRiRepository;
-				blockForSpawn: [ :modelToSpawn | self openSpawnFor: modelToSpawn ]
+				blockForSpawn: [ :modelToSpawn | self openSpawnFor: modelToSpawn ];
 				yourself ]
 ]
 

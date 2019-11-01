@@ -48,7 +48,7 @@ RiRepositoriesPresenter >> contextMenuForTable [
 	
 	selected := table selection selectedItem.
 
-	menu add: 'Open in Finder' target: selected selector: #openInNativeBrowser.
+	menu add: 'Open folder' target: selected selector: #openInNativeBrowser.
 	menu add: 'Inspect object' target: selected selector: #inspect.
 
 	^ menu

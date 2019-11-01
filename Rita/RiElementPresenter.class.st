@@ -3,7 +3,9 @@ Class {
 	#superclass : #RiPresenter,
 	#instVars : [
 		'summaryLabel',
-		'diffPresenter'
+		'diffPresenter',
+		'notebook',
+		'blockForSpawn'
 	],
 	#category : #'Rita-UI'
 }
@@ -12,30 +14,48 @@ Class {
 RiElementPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #summaryLabel withConstraints: [ :constraints | constraints height: self labelHeight ];
-		add: #diffPresenter;
+		add: #notebook;
 		yourself
 ]
 
 { #category : #initialization }
+RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
+
+	| page |
+	page := SpNotebookPage
+		title: aRiDiffModel title
+		provider: [
+			RiIceDiffPresenter new
+				model: (aRiDiffModel iceDiffTo: targetRiCommit);
+				blockForSpawn: blockForSpawn;
+				yourself ].
+
+	notebook addPage: page
+]
+
+{ #category : #initialization }
 RiElementPresenter >> blockForSpawn: aBlock [
-	diffPresenter blockForSpawn: aBlock
+	blockForSpawn := aBlock 
 ]
 
 { #category : #initialization }
 RiElementPresenter >> initializePresenters [
 	summaryLabel := self newLabel.
+	notebook := self newNotebook
+]
 
-	diffPresenter := self instantiate: RiElementDiffPresenter.
-
+{ #category : #initialization }
+RiElementPresenter >> model: anObject [
+	notebook removeAll.
+	super model: anObject.
+	notebook pages
+		ifNotEmpty: [ notebook selectPage: notebook pages last ]
 ]
 
 { #category : #initialization }
 RiElementPresenter >> refreshOnModelUpdate [
-	summaryLabel label: 'SHA: ', model shortId.
+	summaryLabel label: 'SHA: ', (model at: #element) shortId.
 
-	diffPresenter
-		model:
-			(model isUncommited
-				ifTrue: [ nil ]
-				ifFalse: [ model iceCommit diffToParent ])
+	(model at: #diffModels) do: [ :each |
+		self addPageFor: each to: (model at: #element) ]
 ]

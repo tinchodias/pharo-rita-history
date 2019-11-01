@@ -1,5 +1,5 @@
 Class {
-	#name : #RiElementDiffPresenter,
+	#name : #RiIceDiffPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
 		'lastView',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #specs }
-RiElementDiffPresenter class >> defaultSpec [
+RiIceDiffPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #onlyChangedCheckbox withConstraints: [ :constraints | constraints height: self labelHeight ];
 		add: #roassalPresenter;
@@ -20,12 +20,12 @@ RiElementDiffPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RiElementDiffPresenter >> blockForSpawn: aBlock [
+RiIceDiffPresenter >> blockForSpawn: aBlock [
 	spawnButton action: aBlock
 ]
 
 { #category : #initialization }
-RiElementDiffPresenter >> fillLastView [
+RiIceDiffPresenter >> fillLastView [
 
 	| query umlBuilder |
 	query := RiDiffQuery new
@@ -43,7 +43,7 @@ RiElementDiffPresenter >> fillLastView [
 ]
 
 { #category : #initialization }
-RiElementDiffPresenter >> initializePresenters [
+RiIceDiffPresenter >> initializePresenters [
 	spawnButton := self newButton.
 	spawnButton icon: (self iconNamed: #smallRemoteOpen).
 	
@@ -60,7 +60,7 @@ RiElementDiffPresenter >> initializePresenters [
 ]
 
 { #category : #initialization }
-RiElementDiffPresenter >> refreshOnModelUpdate [
+RiIceDiffPresenter >> refreshOnModelUpdate [
 	roassalPresenter refresh.
 
 ]

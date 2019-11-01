@@ -8,7 +8,8 @@ Class {
 	#instVars : [
 		'table',
 		'commentImageBuilder',
-		'hiedraImageBuilder'
+		'hiedraImageBuilder',
+		'blockForPinToCompareFrom'
 	],
 	#category : #'Rita-UI'
 }
@@ -78,14 +79,14 @@ RiRepositoryPresenter class >> voyageExample [
 { #category : #actions }
 RiRepositoryPresenter >> actionLoadBranch: aRiBranchMark [
 	aRiBranchMark local checkout.
-	model process.
+	self riRepository process.
 	self refreshOnModelUpdate.
 ]
 
 { #category : #actions }
 RiRepositoryPresenter >> actionLoadCommit: aRiCommit [
 	aRiCommit iceCommit checkout.
-	model process.
+	self riRepository process.
 	self refreshOnModelUpdate.
 ]
 
@@ -96,11 +97,21 @@ RiRepositoryPresenter >> blockForElementSelected: aBlock [
 ]
 
 { #category : #initialization }
+RiRepositoryPresenter >> blockForPinToCompareFrom: aBlock [
+	blockForPinToCompareFrom := aBlock
+]
+
+{ #category : #initialization }
 RiRepositoryPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := self newMenu.
 	
 	selected := self selectedRiElement.
+
+	menu addItem: [ :item | 
+		item
+			name: 'Pin to compare from';
+			action: [ blockForPinToCompareFrom value: selected ] ].
 
 	selected marks select: #isBranchMark thenDo: [ :mark |
 		menu addItem: [ :item | 
@@ -142,11 +153,25 @@ RiRepositoryPresenter >> initializePresenters [
 
 ]
 
+{ #category : #accessing }
+RiRepositoryPresenter >> pinDiffModels [
+	^ model at: #pinDiffModels
+]
+
 { #category : #initialization }
 RiRepositoryPresenter >> refreshOnModelUpdate [
 	self isBuilt ifTrue: [
-		hiedraImageBuilder refreshWith: model elements.
-		table items: model elements ]
+		hiedraImageBuilder refreshWith: self riRepository elements.
+		table items: self riRepository elements.
+		
+		self pinDiffModels ifNotEmpty: [
+			self inform: 'show hihglight a pined element' ]
+		 ]
+]
+
+{ #category : #accessing }
+RiRepositoryPresenter >> riRepository [
+	^ model at: #repository
 ]
 
 { #category : #accessing }
