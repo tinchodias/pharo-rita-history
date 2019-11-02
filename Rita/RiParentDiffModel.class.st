@@ -8,9 +8,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-RiParentDiffModel class >> parentRiElement: anObject [
+RiParentDiffModel class >> parentRiElement: aRiCommit [
 	^ self basicNew
-		initializeWithParentRiElement: anObject;
+		initializeWithParentRiElement: aRiCommit;
 		yourself
 ]
 
@@ -20,8 +20,9 @@ RiParentDiffModel >> iceDiffTo: targetRiElement [
 ]
 
 { #category : #accessing }
-RiParentDiffModel >> initializeWithParentRiElement: anObject [
-	parentRiElement := anObject
+RiParentDiffModel >> initializeWithParentRiElement: aRiCommit [
+	self initialize.
+	parentRiElement := aRiCommit
 ]
 
 { #category : #accessing }

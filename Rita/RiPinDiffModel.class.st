@@ -2,27 +2,30 @@ Class {
 	#name : #RiPinDiffModel,
 	#superclass : #RiDiffModel,
 	#instVars : [
-		'sourceIceCommit'
+		'sourceRiCommit'
 	],
 	#category : #'Rita-UI'
 }
 
+{ #category : #'instance creation' }
+RiPinDiffModel class >> sourceRiCommit: aRiCommit [
+	^ self basicNew
+		initializeWithSourceRiCommit: aRiCommit;
+		yourself
+]
+
 { #category : #accessing }
 RiPinDiffModel >> iceDiffTo: targetRiCommit [
-	^ targetRiCommit iceCommit diffTo: sourceIceCommit
+	^ targetRiCommit iceCommit diffTo: sourceRiCommit iceCommit
 ]
 
 { #category : #accessing }
-RiPinDiffModel >> sourceIceCommit [
-	^ sourceIceCommit
-]
-
-{ #category : #accessing }
-RiPinDiffModel >> sourceIceCommit: anObject [
-	sourceIceCommit := anObject
+RiPinDiffModel >> initializeWithSourceRiCommit: aRiCommit [
+	self initialize.
+	sourceRiCommit := aRiCommit
 ]
 
 { #category : #accessing }
 RiPinDiffModel >> title [
-	^ 'Pin (', sourceIceCommit shortId, ')'
+	^ 'Pin (', sourceRiCommit shortId, ')'
 ]

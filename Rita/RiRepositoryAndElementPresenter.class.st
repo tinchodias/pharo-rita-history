@@ -42,7 +42,7 @@ RiRepositoryAndElementPresenter >> initializeRepositoryPresenter [
 			} asDictionary ].
 	
 	repositoryPresenter blockForPinToCompareFrom: [ :sourceRiElement |
-		pinDiffModels add: (RiPinDiffModel new sourceIceCommit: sourceRiElement iceCommit; yourself).
+		pinDiffModels add: (RiPinDiffModel sourceRiCommit: sourceRiElement).
 		
 		"Refresh only table to show the pin: the detail will refresh on next table selection."
 		repositoryPresenter refreshOnModelUpdate ]
