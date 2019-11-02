@@ -33,9 +33,12 @@ RiRepositoryAndElementPresenter >> initializePresenters [
 RiRepositoryAndElementPresenter >> initializeRepositoryPresenter [
 
 	repositoryPresenter blockForElementSelected: [ :targetRiElement |
+		| parentDiffModels |
+		parentDiffModels := targetRiElement ancestors collect: [:each | 
+			RiParentDiffModel parentRiElement: each ].
 		elementPresenter model: {
 			#element -> targetRiElement. 
-			#diffModels -> ({ RiParentDiffModel new }, pinDiffModels) asOrderedCollection
+			#diffModels -> (parentDiffModels, pinDiffModels) asOrderedCollection
 			} asDictionary ].
 	
 	repositoryPresenter blockForPinToCompareFrom: [ :sourceRiElement |
