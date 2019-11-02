@@ -24,5 +24,5 @@ RiPinDiffModel >> sourceIceCommit: anObject [
 
 { #category : #accessing }
 RiPinDiffModel >> title [
-	^ 'Diff to ', sourceIceCommit shortId, ' (pin)'
+	^ 'Pin (', sourceIceCommit shortId, ')'
 ]

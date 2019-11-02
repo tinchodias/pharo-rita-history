@@ -11,5 +11,5 @@ RiParentDiffModel >> iceDiffTo: targetRiCommit [
 
 { #category : #accessing }
 RiParentDiffModel >> title [
-	^ 'Diff to parent'
+	^ 'Parent'
 ]

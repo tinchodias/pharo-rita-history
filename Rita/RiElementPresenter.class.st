@@ -24,6 +24,7 @@ RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 	| page |
 	page := SpNotebookPage
 		title: aRiDiffModel title
+		icon: (self iconNamed: #diff)
 		provider: [
 			RiIceDiffPresenter new
 				model: (aRiDiffModel iceDiffTo: targetRiCommit);
