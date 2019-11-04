@@ -16,13 +16,18 @@ RiParentDiffModel class >> parentRiElement: aRiCommit [
 
 { #category : #accessing }
 RiParentDiffModel >> iceDiffTo: targetRiElement [
-	^ targetRiElement iceCommit diffTo: parentRiElement iceCommit
+	^ targetRiElement diffTo: parentRiElement
 ]
 
 { #category : #accessing }
 RiParentDiffModel >> initializeWithParentRiElement: aRiCommit [
 	self initialize.
 	parentRiElement := aRiCommit
+]
+
+{ #category : #testing }
+RiParentDiffModel >> shouldCompareTo: aRiCommit [ 
+	^ true
 ]
 
 { #category : #accessing }

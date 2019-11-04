@@ -20,6 +20,11 @@ RiUncommitedWorkingCopy >> ancestors [
 	^ { referenceCommit }
 ]
 
+{ #category : #converting }
+RiUncommitedWorkingCopy >> asIceObject [
+	^ self repository iceRepository workingCopy
+]
+
 { #category : #accessing }
 RiUncommitedWorkingCopy >> author [
 	^ '---'
@@ -33,6 +38,11 @@ RiUncommitedWorkingCopy >> comment [
 { #category : #accessing }
 RiUncommitedWorkingCopy >> date [
 	^ '---'
+]
+
+{ #category : #diff }
+RiUncommitedWorkingCopy >> diffTo: aRiCommit [ 
+	^ self repository iceRepository workingCopy diffTo: aRiCommit iceCommit
 ]
 
 { #category : #testing }

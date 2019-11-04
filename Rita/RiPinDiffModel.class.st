@@ -16,13 +16,18 @@ RiPinDiffModel class >> sourceRiCommit: aRiCommit [
 
 { #category : #accessing }
 RiPinDiffModel >> iceDiffTo: targetRiCommit [
-	^ targetRiCommit iceCommit diffTo: sourceRiCommit iceCommit
+	^ targetRiCommit asIceObject diffTo: sourceRiCommit asIceObject
 ]
 
 { #category : #accessing }
 RiPinDiffModel >> initializeWithSourceRiCommit: aRiCommit [
 	self initialize.
 	sourceRiCommit := aRiCommit
+]
+
+{ #category : #testing }
+RiPinDiffModel >> shouldCompareTo: aRiElement [
+	^ sourceRiCommit ~= aRiElement
 ]
 
 { #category : #accessing }

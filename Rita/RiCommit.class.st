@@ -38,6 +38,11 @@ RiCommit >> ancestors [
 			collect: [ :each | repository elementByCommit at: each ] ]
 ]
 
+{ #category : #converting }
+RiCommit >> asIceObject [
+	^ iceCommit
+]
+
 { #category : #accessing }
 RiCommit >> author [
 	^ iceCommit author
@@ -57,6 +62,11 @@ RiCommit >> comment [
 { #category : #accessing }
 RiCommit >> date [
 	^ iceCommit datetime asDate
+]
+
+{ #category : #diff }
+RiCommit >> diffTo: aRiCommit [ 
+	^ iceCommit diffTo: aRiCommit iceCommit
 ]
 
 { #category : #accessing }
