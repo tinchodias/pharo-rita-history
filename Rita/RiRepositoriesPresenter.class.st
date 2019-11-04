@@ -44,12 +44,22 @@ RiRepositoriesPresenter >> blockForOpenRepository: aBlock [
 { #category : #initialization }
 RiRepositoriesPresenter >> contextMenuForTable [
 	| menu selected |
-	menu := UIManager default newMenuIn: table for: self.
+	menu := self newMenu.
 	
 	selected := table selection selectedItem.
 
-	menu add: 'Open folder' target: selected selector: #openInNativeBrowser.
-	menu add: 'Inspect object' target: selected selector: #inspect.
+	menu addItem: [ :item | 
+		item
+			name: 'Open folder';
+			action: [ selected openInNativeBrowser ] ].
+	menu addItem: [ :item | 
+		item
+			name: 'Inspect object';
+			action: [ selected inspect ] ].
+	menu addItem: [ :item | 
+		item
+			name: 'Refresh';
+			action: [ self refreshOnModelUpdate ] ].
 
 	^ menu
 ]

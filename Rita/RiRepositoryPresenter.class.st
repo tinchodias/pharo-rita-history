@@ -127,6 +127,11 @@ RiRepositoryPresenter >> contextMenuForTable [
 
 	menu addItem: [ :item | 
 		item
+			name: 'Refresh';
+			action: [ self refreshOnModelUpdate ] ].
+
+	menu addItem: [ :item | 
+		item
 			name: 'Inspect object';
 			action: [ selected inspect ] ].
 
@@ -162,11 +167,7 @@ RiRepositoryPresenter >> pinDiffModels [
 RiRepositoryPresenter >> refreshOnModelUpdate [
 	self isBuilt ifTrue: [
 		hiedraImageBuilder refreshWith: self riRepository elements.
-		table items: self riRepository elements.
-		
-		self pinDiffModels ifNotEmpty: [
-			self inform: 'show hihglight a pined element' ]
-		 ]
+		table items: self riRepository elements ]
 ]
 
 { #category : #accessing }
