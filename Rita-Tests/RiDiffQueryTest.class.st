@@ -53,3 +53,28 @@ RiDiffQueryTest >> test03ConsiderUnchangedWorks [
 		detect: [ :node | node value definition name = #B ]
 		ifFound: [ :node | self assert: node value hasChanges ]
 ]
+
+{ #category : #tests }
+RiDiffQueryTest >> test04ConsiderUnchangedWithFileChanged [
+	| query nodes |
+	query := RiDiffQuery new
+		diff: fixture commit5 diffToParent;
+		onlyConsiderChanged: false;
+		yourself.
+	nodes := query nodesForBehaviors.
+	self assert: nodes size equals: 1.
+
+]
+
+{ #category : #tests }
+RiDiffQueryTest >> test05ConsiderUnchangedWithAnotherPackage [
+
+	| query nodes |
+	query := RiDiffQuery new
+		diff: fixture commit6 diffToParent;
+		onlyConsiderChanged: false;
+		yourself.
+	nodes := query nodesForBehaviors.
+	self assert: nodes size equals: 2.
+
+]

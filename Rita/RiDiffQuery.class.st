@@ -59,7 +59,13 @@ RiDiffQuery >> onlyConsiderChanged: anObject [
 RiDiffQuery >> treeToQuery [
 	^ self onlyConsiderChanged
 		ifTrue: [ diff tree ]
-		ifFalse: [ diff mergedTree ]
+		ifFalse: [
+			"FIX"
+			IceDiff new
+				sourceVersion: diff sourceVersion;
+				targetVersion: diff targetVersion;
+				buildForAllFiles;
+				mergedTree ]
 ]
 
 { #category : #'as yet unclassified' }
