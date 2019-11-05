@@ -20,19 +20,13 @@ RiRootPresenter class >> defaultSpec [
 ]
 
 { #category : #examples }
-RiRootPresenter class >> newWithDefaultModel [
-	^ self new
-		model: RiRootModel new;
-		yourself
-]
-
-{ #category : #examples }
 RiRootPresenter class >> open [
 	<script>
 
-	self newWithDefaultModel
+	self new
+		model: RiRootModel newWithRegisteredRepositories;
 		openWithSpec;
-		withWindowDo: [ :window | 
+		withWindowDo: [ :window |
 			window
 				extent: 1000 @ 800;
 				title: 'History Explorer' ]
@@ -64,7 +58,7 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 		icon: (self iconNamed: #git)
 		provider: [
 			RiRepositoryAndElementPresenter new
-				model: aRiRepository;
+				model: { #repository -> aRiRepository. #root -> model } asDictionary;
 				blockForSpawn: [ :modelToSpawn | self openSpawnFor: modelToSpawn ];
 				yourself ]
 ]
@@ -87,7 +81,7 @@ RiRootPresenter >> openSpawnFor: modelToSpawn [
 		title: 'Diff'
 		icon: (self iconNamed: #objects)
 		provider: [
-			RiElementPresenter new
+			RiIceDiffPresenter new
 				model: modelToSpawn;
 				yourself ].
 

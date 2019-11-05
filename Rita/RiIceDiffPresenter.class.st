@@ -21,7 +21,7 @@ RiIceDiffPresenter class >> defaultSpec [
 
 { #category : #initialization }
 RiIceDiffPresenter >> blockForSpawn: aBlock [
-	spawnButton action: aBlock
+	spawnButton action: [ aBlock cull: model ]
 ]
 
 { #category : #initialization }
@@ -29,9 +29,9 @@ RiIceDiffPresenter >> fillLastView [
 
 	| query umlBuilder |
 	query := RiDiffQuery new
-		diff: model;
-		onlyConsiderChanged: onlyChangedCheckbox state;
-		yourself. 
+		diff: (model at: #iceDiff);
+		onlyConsiderChanged: (model at: #root) considerOnlyChanged;
+		yourself.
 
 	umlBuilder := RiDiffUMLClassBuilder forView: lastView.
 	umlBuilder
@@ -50,17 +50,18 @@ RiIceDiffPresenter >> initializePresenters [
 	onlyChangedCheckbox := self newCheckBox.
 	onlyChangedCheckbox
 		label: 'Only changed';
-		state: true;
-		whenChangedDo: [ self refreshOnModelUpdate ].
+		whenChangedDo: [:new |
+			(model at: #root) considerOnlyChanged: new.
+			self refreshOnModelUpdate ].
 		
 	roassalPresenter := self instantiate: RoassalPresenter.
 	roassalPresenter script: [ :newView | 
 		lastView := newView.
-		model ifNotNil: [ self fillLastView ] ].
+		self fillLastView ].
 ]
 
 { #category : #initialization }
 RiIceDiffPresenter >> refreshOnModelUpdate [
-	roassalPresenter refresh.
-
+	onlyChangedCheckbox state: (model at: #root) considerOnlyChanged.
+	roassalPresenter refresh
 ]

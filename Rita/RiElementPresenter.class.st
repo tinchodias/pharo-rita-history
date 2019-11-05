@@ -26,8 +26,12 @@ RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 		title: aRiDiffModel title
 		icon: (self iconNamed: #diff)
 		provider: [
+			| diffModel |
+			diffModel := model copy
+				add: #iceDiff -> (aRiDiffModel iceDiffTo: targetRiCommit);
+				yourself.
 			RiIceDiffPresenter new
-				model: (aRiDiffModel iceDiffTo: targetRiCommit);
+				model: diffModel;
 				blockForSpawn: blockForSpawn;
 				yourself ].
 

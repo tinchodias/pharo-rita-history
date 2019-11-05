@@ -19,7 +19,7 @@ RiRepositoryAndElementPresenter class >> defaultSpec [
 
 { #category : #initialization }
 RiRepositoryAndElementPresenter >> blockForSpawn: aBlock [
-	elementPresenter blockForSpawn: [ aBlock cull: elementPresenter model ]
+	elementPresenter blockForSpawn: aBlock
 ]
 
 { #category : #initialization }
@@ -38,10 +38,11 @@ RiRepositoryAndElementPresenter >> initializeRepositoryPresenter [
 			RiParentDiffModel parentRiElement: each ].
 		diffModels := (parentDiffModels, pinDiffModels) select: [:each |
 			each shouldCompareTo: targetRiElement ].
-		elementPresenter model: {
-			#element -> targetRiElement. 
-			#diffModels -> diffModels
-			} asDictionary ].
+		elementPresenter model: 
+			(model copy 
+				add: #element -> targetRiElement;
+				add: #diffModels -> diffModels;
+				yourself) ].
 	
 	repositoryPresenter blockForPinToCompareFrom: [ :sourceRiElement |
 		pinDiffModels add: (RiPinDiffModel sourceRiCommit: sourceRiElement).
@@ -52,12 +53,12 @@ RiRepositoryAndElementPresenter >> initializeRepositoryPresenter [
 ]
 
 { #category : #initialization }
-RiRepositoryAndElementPresenter >> model: anObject [
+RiRepositoryAndElementPresenter >> model: aDictionary [
 	pinDiffModels := OrderedCollection new.
-	repositoryPresenter model: {
-		(#repository -> anObject).
-		(#pinDiffModels -> pinDiffModels)
-	} asDictionary.
+	repositoryPresenter model: 
+		(aDictionary copy
+			add: #pinDiffModels -> pinDiffModels;
+			yourself).
 
-	super model: anObject
+	super model: aDictionary
 ]
