@@ -10,12 +10,10 @@ BaselineOfRita >> baseline: spec [
 	spec
 		for: #pharo
 		do: [
-			spec project: 'Hiedra' with: [
-				spec baseline: 'Hiedra' with: [
-					spec repository: 'github://tinchodias/Hiedra:roassal3/src' ] ].
-			spec project: 'Roassal3' with: [
-				spec baseline: 'Roassal3' with: [
-					spec repository: 'github://ObjectProfile/Roassal3:4c5619d2a499ed3da24d33b53c7273dcd46eb110/src' ] ].
+			spec baseline: 'Hiedra' with: [
+					spec repository: 'github://tinchodias/Hiedra:roassal3/src' ].
+			spec baseline: 'Roassal3' with: [
+					spec repository: 'github://ObjectProfile/Roassal3:4c5619d2a499ed3da24d33b53c7273dcd46eb110/src' ].
 
 			spec
 				package: 'Rita';
