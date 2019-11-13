@@ -30,12 +30,12 @@ RiLinesDiffBuilder class >> example1 [
 { #category : #accessing }
 RiLinesDiffBuilder >> coolresult [
 
-	^ Array streamContents: [ :stream |
+	^ (Array streamContents: [ :stream |
 		self 
-			patchSequenceDoIfMatch: [ :string :position | stream nextPut: $m ]
-			ifInsert: [ :string :position | stream nextPut: $i ]
-			ifRemove: [ :string :position | stream nextPut: $d ] 
-		]
+			patchSequenceDoIfMatch: [ :string :position | "stream nextPut: $m" ]
+			ifInsert: [ :string :position | stream nextPut: $i -> position ]
+			ifRemove: [ :string :position | stream nextPut: $d -> position ] 
+		]) groupByRuns: [:e | e key].
 ]
 
 { #category : #accessing }

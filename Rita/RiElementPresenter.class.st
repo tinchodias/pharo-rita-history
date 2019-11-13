@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'summaryLabel',
 		'diffPresenter',
-		'notebook',
-		'blockForSpawn'
+		'notebook'
 	],
 	#category : #'Rita-UI'
 }
@@ -30,23 +29,17 @@ RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 			diffModel := model copy
 				add: #iceDiff -> (aRiDiffModel iceDiffTo: targetRiCommit);
 				yourself.
-			RiIceDiffPresenter new
+			RiFullDiffPresenter new
 				model: diffModel;
-				blockForSpawn: blockForSpawn;
 				yourself ].
 
 	notebook addPage: page
 ]
 
 { #category : #initialization }
-RiElementPresenter >> blockForSpawn: aBlock [
-	blockForSpawn := aBlock 
-]
-
-{ #category : #initialization }
 RiElementPresenter >> initializePresenters [
 	summaryLabel := self newLabel.
-	notebook := self newNotebook
+	notebook := self newNotebook.
 ]
 
 { #category : #initialization }

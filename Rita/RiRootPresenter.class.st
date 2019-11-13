@@ -58,9 +58,13 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 		icon: (self iconNamed: #git)
 		provider: [
 			RiRepositoryAndElementPresenter new
-				model: { #repository -> aRiRepository. #root -> model } asDictionary;
-				blockForSpawn: [ :modelToSpawn | self openSpawnFor: modelToSpawn ];
+				model: { 
+					#repository -> aRiRepository. 
+					#root -> model. 
+					#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ]
+					} asDictionary;
 				yourself ]
+
 ]
 
 { #category : #initialization }
@@ -81,7 +85,7 @@ RiRootPresenter >> openSpawnFor: modelToSpawn [
 		title: 'Diff'
 		icon: (self iconNamed: #objects)
 		provider: [
-			RiIceDiffPresenter new
+			RiFullDiffPresenter new
 				model: modelToSpawn;
 				yourself ].
 

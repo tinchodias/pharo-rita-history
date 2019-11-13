@@ -12,14 +12,10 @@ Class {
 { #category : #specs }
 RiRepositoryAndElementPresenter class >> defaultSpec [
 	^ SpPanedLayout newHorizontal
+		position: 40 percent;
 		add: #repositoryPresenter;
 		add: #elementPresenter;
 		yourself
-]
-
-{ #category : #initialization }
-RiRepositoryAndElementPresenter >> blockForSpawn: aBlock [
-	elementPresenter blockForSpawn: aBlock
 ]
 
 { #category : #initialization }
