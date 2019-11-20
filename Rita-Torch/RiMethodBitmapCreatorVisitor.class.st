@@ -58,8 +58,8 @@ RiMethodBitmapCreatorVisitor >> visitModification: anIceModification [
 	^ self
 		formForPatchSequence:
 			(TextDiffBuilder
-				from: anIceModification leftDefinition sourceCode
-				to: anIceModification rightDefinition sourceCode)
+				from: anIceModification rightDefinition sourceCode
+				to: anIceModification leftDefinition sourceCode)
 				buildPatchSequence
 ]
 
