@@ -33,6 +33,8 @@ RiTorchDiffPresenter >> fillLastView [
 		setLayoutVerticalWithMarkers: false;
 		disableSelectors;
 		classes: query nodesForBehaviors, query nodesForMethodExtensions;
+		blockWhenNodeSelected: [ :anIceNode |
+			(model at: #blockWhenNodeSelected) value: anIceNode ];
 		build.
 
 ]

@@ -89,3 +89,20 @@ RiTreeDiffPresenter >> resetDiffContents [
 		leftText: '';
 		rightText: ''
 ]
+
+{ #category : #accessing }
+RiTreeDiffPresenter >> selectIceNode: anIceNode [
+
+	| nodesPath indexPath currentNodes |
+	nodesPath := anIceNode withAllParentNodes.
+	
+	currentNodes := treeTable roots.
+	indexPath := Array streamContents: [ :stream |
+		nodesPath do: [ :each |
+			| index |
+			index := currentNodes indexOf: each.
+			stream nextPut: index.
+			currentNodes := (currentNodes at: index) children ]].
+
+	treeTable selectPath: indexPath.
+]

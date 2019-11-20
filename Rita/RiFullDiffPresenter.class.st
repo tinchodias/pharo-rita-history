@@ -24,6 +24,10 @@ RiFullDiffPresenter >> initializePresenters [
 
 { #category : #initialization }
 RiFullDiffPresenter >> refreshOnModelUpdate [
-	torchDiffPresenter model: model.
+	torchDiffPresenter model: (
+		model copy
+			add: #blockWhenNodeSelected -> [ :iceNode |
+				treeDiffPresenter selectIceNode: iceNode ];
+			yourself).
 	treeDiffPresenter model: model.
 ]
