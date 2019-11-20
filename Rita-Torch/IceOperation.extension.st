@@ -7,7 +7,7 @@ IceOperation >> ritaChangeSize [
 
 { #category : #'*Rita-Torch' }
 IceOperation >> ritaColor [
-	^ Color white
+	^ Color transparent
 ]
 
 { #category : #'*Rita-Torch' }
