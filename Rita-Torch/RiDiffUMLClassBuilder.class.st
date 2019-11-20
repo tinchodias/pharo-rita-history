@@ -3,7 +3,9 @@ Class {
 	#superclass : #RSUMLClassBuilder,
 	#instVars : [
 		'packageColoring',
-		'packageColorScale'
+		'packageColorScale',
+		'blockWhenNodeSelected',
+		'methodBitmapCreatorVisitor'
 	],
 	#category : #'Rita-Torch-Diff'
 }
@@ -83,6 +85,16 @@ RiDiffUMLClassBuilder >> behaviorElementsToOutline [
 	^ self view elements
 		reject:
 			[ :aRSElement | aRSElement model value definition isExtensionDefinition ]
+]
+
+{ #category : #options }
+RiDiffUMLClassBuilder >> blockForMouseClickOnIceNode [
+	^ [ :node | [ :clickEvent | blockWhenNodeSelected value: node ] ]
+]
+
+{ #category : #options }
+RiDiffUMLClassBuilder >> blockWhenNodeSelected: anObject [
+	blockWhenNodeSelected := anObject
 ]
 
 { #category : #private }
@@ -184,18 +196,25 @@ RiDiffUMLClassBuilder >> disableSelectors [
 	tmpRenderer := RSTorchUMLClassRenderer new.
 	tmpRenderer modelDescriptor: self renderer modelDescriptor.
 
-	tmpRenderer classNameShape color: [ :node | self backgroundColorFor: node ].
-	tmpRenderer classShape interactionDo: [ :i | i clear; inspectable ].
+	tmpRenderer classNameShape
+		color: [ :node | self backgroundColorFor: node ];
+		when: TSMouseClick do: self blockForMouseClickOnIceNode.
 
-	tmpRenderer methodShape: (RSShapeBuilder box 
-		color: [ :node | self foregroundColorFor: node ];
-		width: self scaleForMethods;
-		height: [ :node | 2 + (node value ritaChangeSize * self scaleForMethods) ];
-		interactionDo: [:i | i popup multiline ]).
+	tmpRenderer classShape
+		when: TSMouseClick do: self blockForMouseClickOnIceNode.
 
+	tmpRenderer methodShape: (RSShapeBuilder bitmap
+		border: (TSBorder new);
+		form: [ :each | self formForMethod: each ];
+"		width: [ :each | self widthForMethod: each];
+		height: [ :each | self heightForMethod: each ];"
+		when: TSMouseClick do: self blockForMouseClickOnIceNode;
+		yourself).
+		
 	tmpRenderer varShape: (RSShapeBuilder triangle
 		size: self scaleForMethods * 1.3; 
 		color: [ :node | self foregroundColorFor: node ];
+		when: TSMouseClick do: self blockForMouseClickOnIceNode;
 		yourself).
 	tmpRenderer varsShape padding: (self scaleForMethods / 2) asMargin.
 
@@ -241,6 +260,11 @@ RiDiffUMLClassBuilder >> foregroundColorFor: node [
 		with: self foregroundColor
 ]
 
+{ #category : #options }
+RiDiffUMLClassBuilder >> formForMethod: each [
+	^ each accept: methodBitmapCreatorVisitor
+]
+
 { #category : #settings }
 RiDiffUMLClassBuilder >> gapBetweenHierarchies [
 	"Tricky: This gap is expressed as a ratio of the average size of elements. See RSRectanglePackLayout."
@@ -263,9 +287,17 @@ RiDiffUMLClassBuilder >> gapFromSubclassToSibling [
 	^ self gapFromClassToSubclass / 2
 ]
 
+{ #category : #options }
+RiDiffUMLClassBuilder >> heightForMethod: node [
+	^ 2 + (node value ritaChangeSize * self scaleForMethods)
+]
+
 { #category : #initialization }
 RiDiffUMLClassBuilder >> initialize [
 	super initialize.
+
+	blockWhenNodeSelected := [ :anIceNode | ].
+	methodBitmapCreatorVisitor := RiMethodBitmapCreatorVisitor builder: self.
 
 	self modelDescriptor
 		instVars: [ :cls | 
@@ -399,6 +431,11 @@ RiDiffUMLClassBuilder >> stereotypeFor: aBehavior ifPresent: aBlock [
 		ifTrue: [ ^ aBlock cull: 'trait' ].
 	(aBehavior isRingResolved not and: [aBehavior hasMethodExtensions])
 		ifTrue: [ ^ aBlock cull: 'extension' ]
+]
+
+{ #category : #options }
+RiDiffUMLClassBuilder >> widthForMethod: m [
+	^ self scaleForMethods
 ]
 
 { #category : #settings }
