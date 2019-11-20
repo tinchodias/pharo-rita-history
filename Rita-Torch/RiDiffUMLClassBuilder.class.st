@@ -192,7 +192,9 @@ RiDiffUMLClassBuilder >> disablePackageColoring [
 { #category : #options }
 RiDiffUMLClassBuilder >> disableSelectors [
 
-	| tmpRenderer |
+	| tmpRenderer innerBorder |
+	innerBorder := TSBorder new color: self foregroundColor; width: 0.5; yourself.
+	
 	tmpRenderer := RSTorchUMLClassRenderer new.
 	tmpRenderer modelDescriptor: self renderer modelDescriptor.
 
@@ -204,7 +206,7 @@ RiDiffUMLClassBuilder >> disableSelectors [
 		when: TSMouseClick do: self blockForMouseClickOnIceNode.
 
 	tmpRenderer methodShape: (RSShapeBuilder bitmap
-		border: (TSBorder new);
+		border: innerBorder;
 		form: [ :each | self formForMethod: each ];
 "		width: [ :each | self widthForMethod: each];
 		height: [ :each | self heightForMethod: each ];"
@@ -212,7 +214,8 @@ RiDiffUMLClassBuilder >> disableSelectors [
 		yourself).
 		
 	tmpRenderer varShape: (RSShapeBuilder triangle
-		size: self scaleForMethods * 1.3; 
+		size: self scaleForMethods * 1.3;
+		border: innerBorder;
 		color: [ :node | self foregroundColorFor: node ];
 		when: TSMouseClick do: self blockForMouseClickOnIceNode;
 		yourself).
