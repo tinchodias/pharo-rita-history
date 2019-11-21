@@ -37,18 +37,12 @@ RiTreeDiffPresenter >> changeSelected [
 	^ treeTable selectedItem
 ]
 
-{ #category : #initialization }
-RiTreeDiffPresenter >> initializeDiffPanel [
-	diffPanel showOptions: false
-]
-
 { #category : #accessing }
 RiTreeDiffPresenter >> initializePresenters [
 	treeTable := self newTreeTable.
-	diffPanel := self newDiff.
+	diffPanel := self instantiate: RiUnifiedDiffPresenter.
 
 	self initializeTree.
-	self initializeDiffPanel.
 
 	self focusOrder
 		add: treeTable;
@@ -66,7 +60,7 @@ RiTreeDiffPresenter >> initializeTree [
 
 { #category : #accessing }
 RiTreeDiffPresenter >> refreshOnModelUpdate [
-	self resetDiffContents.
+	diffPanel reset.
 	treeTable roots: (model at: #iceDiff) tree children.
 	treeTable whenBuiltDo: [ :ann |
 		ann widget dataSource expandAll ].
@@ -77,17 +71,10 @@ RiTreeDiffPresenter >> refreshOnSelectionChanged [
 	| itemValue |
 	itemValue := treeTable selectedItem value.
 	itemValue ifNotNil: [
-		diffPanel
-			leftText: itemValue rightContents;
-			rightText: itemValue leftContents ]
+		diffPanel model: { 
+			#from -> itemValue rightContents.
+			#to -> itemValue leftContents } asDictionary ]
 
-]
-
-{ #category : #private }
-RiTreeDiffPresenter >> resetDiffContents [
-	diffPanel
-		leftText: '';
-		rightText: ''
 ]
 
 { #category : #accessing }
