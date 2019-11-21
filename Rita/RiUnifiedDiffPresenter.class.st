@@ -34,7 +34,8 @@ Class {
 	#superclass : #RiPresenter,
 	#instVars : [
 		'presenter',
-		'colorMap'
+		'colorMap',
+		'inlinecolorMap'
 	],
 	#category : #'Rita-UI'
 }
@@ -47,21 +48,17 @@ RiUnifiedDiffPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RiUnifiedDiffPresenter >> colorForInsert [
-	^ Color green muchLighter alpha: 0.75
-]
-
-{ #category : #initialization }
-RiUnifiedDiffPresenter >> colorForRemove [
-	^ Color red muchLighter alpha: 0.75
-]
-
-{ #category : #initialization }
 RiUnifiedDiffPresenter >> initialize [
 	super initialize.
+	
 	colorMap := {
-		#insert -> self colorForInsert.
-		#remove -> self colorForRemove
+		#insert -> self theme diffAdditionalLineBackgroundColor.
+		#remove -> self theme diffRemovedLinesBackgroundColor.
+		} asDictionary.
+		
+	inlinecolorMap := {
+		#insert -> self theme diffAdditionalTextInLineBackgroundColor.
+		#remove -> self theme diffRemovalHighlightColor.
 		} asDictionary 
 ]
 
@@ -79,23 +76,30 @@ RiUnifiedDiffPresenter >> initializePresenters [
 
 { #category : #accessing }
 RiUnifiedDiffPresenter >> refreshOnModelUpdate [
-	| diffBuilder text segments |
-	text := ''.
+	| text segments diff |
+
+	diff := RiUnifiedStringDiff new
+		oldString: (model at: #from);
+		newString: (model at: #to);
+		build;
+		yourself.
+	text := diff unifiedString.
 	segments := OrderedCollection new.
 
-	diffBuilder := TextDiffBuilder from: (model at: #from) to: (model at: #to).
-	diffBuilder buildPatchSequence do: [ :patch |
-		| start end |
-		start := text size + 1.
-		text := text, patch value, String cr.
-		end := text size.
-
-		colorMap at: patch key ifPresent: [ :color |
-			segments add: ((RubPlainSegmentMorph from: start to: end)
+	diff lineJoins do: [:each |
+		colorMap at: each rawkind ifPresent: [ :color |
+			segments add: ((RubPlainSegmentMorph from: each rawfrom to: each rawto)
 				color: color;
 				yourself).
 		] ].
 
+"	diff inlineJoins do: [:each |
+		inlinecolorMap at: each rawkind ifPresent: [ :color |
+			segments add: ((RubPlainSegmentMorph from: each rawfrom to: each rawto)
+				color: color;
+				yourself).
+		] ].
+"	
  	presenter textArea removeAllSegments.
 	presenter text: text.
 	presenter textArea font: StandardFonts codeFont.
