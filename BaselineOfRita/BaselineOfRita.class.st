@@ -13,7 +13,7 @@ BaselineOfRita >> baseline: spec [
 			spec baseline: 'Hiedra' with: [
 					spec repository: 'github://tinchodias/Hiedra:roassal3/src' ].
 			spec baseline: 'Roassal3' with: [
-					spec repository: 'github://ObjectProfile/Roassal3/src' ].
+					spec repository: 'github://ObjectProfile/Roassal3:master/src' ].
 
 			spec
 				package: 'Rita';
