@@ -37,27 +37,32 @@ RiUnifiedStringDiff >> buildInlineJoins [
 	runs := lineJoins groupByRuns: [ :e | e rawkind ].
 	runsStream := runs readStream.
 	[ runsStream atEnd ] whileFalse: [
-		| current following inlinePatches removedString insertedString inlineString offset |
+		| current following inlinePatches removedPart insertedPart |
 		current := runsStream next.
 		following := runsStream peek.
-		(current first rawkind = #insert and: [ following first rawkind = #remove ]) ifTrue: [
-			removedString := following flatCollect: [ :each | each rawstring, String cr ] as: String.
-			insertedString := current  flatCollect: [ :each | each rawstring, String cr ] as: String.
+		(current first rawkind = #insert and: [ following isNotNil and: [following first rawkind = #remove] ]) ifTrue: [
+			removedPart := following flatCollect: [ :each | each rawstring, String cr ] as: String.
+			insertedPart := current  flatCollect: [ :each | each rawstring, String cr ] as: String.
+			inlinePatches := (InlineTextDiffBuilder from: removedPart to: insertedPart) buildPatchSequence.
 
-			offset := current first rawfrom.
-			
-			inlineString := ''.
-			inlinePatches := (InlineTextDiffBuilder from: removedString to: insertedString) buildPatchSequence.
-			inlinePatches do: [ :patch |
-				| start end |
-				start := inlineString size + 1.
-				inlineString := inlineString, patch value, String space.
-				end := inlineString size.
+			self buildInlineJoins: inlinePatches offset: current first rawfrom reject: #remove add: #insert.
+			self buildInlineJoins: inlinePatches offset: following first rawfrom reject: #insert add: #remove.
+		]]
 
-				inlineJoins add: (RiLinesJoin new rawfrom: offset+start; rawto: offset+end; rawpatch: patch; yourself) ].
-			]
-		
-		]
+]
+
+{ #category : #building }
+RiUnifiedStringDiff >> buildInlineJoins: inlinePatches offset: offset reject: aSymbol add: anotherSymbol [ 
+	| inlineString |
+	inlineString := ''.
+	inlinePatches reject: [:patch | patch key = aSymbol ] thenDo: [ :patch |
+		| start end |
+		start := inlineString size.
+		inlineString := inlineString, patch value.
+		end := inlineString size.
+
+		patch key = anotherSymbol ifTrue: [
+			inlineJoins add: (RiLinesJoin new rawfrom: offset+start; rawto: offset+end; rawpatch: patch; yourself)] ].
 
 ]
 

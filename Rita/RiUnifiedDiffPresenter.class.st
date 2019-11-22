@@ -93,13 +93,13 @@ RiUnifiedDiffPresenter >> refreshOnModelUpdate [
 				yourself).
 		] ].
 
-"	diff inlineJoins do: [:each |
+	diff inlineJoins do: [:each |
 		inlinecolorMap at: each rawkind ifPresent: [ :color |
 			segments add: ((RubPlainSegmentMorph from: each rawfrom to: each rawto)
 				color: color;
 				yourself).
 		] ].
-"	
+	
  	presenter textArea removeAllSegments.
 	presenter text: text.
 	presenter textArea font: StandardFonts codeFont.
