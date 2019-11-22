@@ -1,6 +1,6 @@
 Extension { #name : #IceAddition }
 
-{ #category : #'*Rita-Torch' }
+{ #category : #'*Rita' }
 IceAddition >> ritaColor [
 	^ Color green
 ]

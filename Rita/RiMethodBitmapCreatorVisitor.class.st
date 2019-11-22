@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'builder'
 	],
-	#category : #'Rita-Torch-Diff'
+	#category : #'Rita-Roassal3'
 }
 
 { #category : #accessing }

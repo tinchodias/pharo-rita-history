@@ -5,7 +5,7 @@ Class {
 		'blockWhenNodeSelected',
 		'methodBitmapCreatorVisitor'
 	],
-	#category : #'Rita-Torch-Diff'
+	#category : #'Rita-Roassal3'
 }
 
 { #category : #private }
@@ -182,6 +182,9 @@ RiTorchUMLClassRenderer >> heightForMethod: node [
 RiTorchUMLClassRenderer >> initialize [
 	super initialize.
 
+	"Hack... still need?"
+	currentTitleWidth := 0.
+	
 	blockWhenNodeSelected := [ :anIceNode | ].
 	methodBitmapCreatorVisitor := RiMethodBitmapCreatorVisitor builder: self.
 
