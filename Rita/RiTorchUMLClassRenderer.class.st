@@ -130,16 +130,34 @@ RiTorchUMLClassRenderer >> builderForStereotype [
 		yourself
 ]
 
+{ #category : #settings }
+RiTorchUMLClassRenderer >> classBoxShapeFor: iceNode [
+	^ RSBox new
+		noPaint;
+		border: (self boxBorder copy color: (self foregroundColorFor: iceNode));
+		yourself
+]
+
 { #category : #hooks }
 RiTorchUMLClassRenderer >> classNameBoxFor: aClass [ 
 	^ RSBox new
+		model: aClass;
 		color: (self backgroundColorFor: aClass);
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		yourself
 ]
 
 { #category : #settings }
 RiTorchUMLClassRenderer >> currentTheme [
 	^ Smalltalk ui theme
+]
+
+{ #category : #defaults }
+RiTorchUMLClassRenderer >> defaultBoxBorder [
+	^ RSBorder new
+		width: 2;
+		joinMiter; 
+		yourself 
 ]
 
 { #category : #initialization }
@@ -257,9 +275,17 @@ RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 
 
 	self addZoomingInteractionOn: aCanvas.
-"	self addPackInteractionOn: aCanvas."
+	self addPackInteractionOn: aCanvas.
 
 	aCanvas color: self backgroundColor.
+
+]
+
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> shapeFor: aClass [
+	^ (super shapeFor: aClass)
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		yourself
 
 ]
 
