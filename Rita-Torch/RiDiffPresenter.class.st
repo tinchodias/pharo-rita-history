@@ -7,7 +7,7 @@ Class {
 		'iceDiffModel',
 		'packageColorScale'
 	],
-	#category : #'Rita-Torch-Diff'
+	#category : #'Rita-Torch-Old'
 }
 
 { #category : #specs }

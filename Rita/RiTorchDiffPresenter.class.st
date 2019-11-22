@@ -2,11 +2,11 @@ Class {
 	#name : #RiTorchDiffPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
-		'lastView',
 		'spawnButton',
 		'roassalPresenter',
 		'toolBar',
-		'onlyChangedButton'
+		'onlyChangedButton',
+		'lastCanvas'
 	],
 	#category : #'Rita-UI'
 }
@@ -20,22 +20,39 @@ RiTorchDiffPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RiTorchDiffPresenter >> fillLastView [
+RiTorchDiffPresenter >> fillLastCanvas [
 
-	| query umlBuilder |
+	| query classes renderer builder |
 	query := RiDiffQuery new
 		diff: (model at: #iceDiff);
 		onlyConsiderChanged: (model at: #root) considerOnlyChanged;
 		yourself.
+	classes := query nodesForBehaviors, query nodesForMethodExtensions.
 
-	umlBuilder := RiDiffUMLClassBuilder forView: lastView.
-	umlBuilder
-		setLayoutVerticalWithMarkers: false;
-		disableSelectors;
-		classes: query nodesForBehaviors, query nodesForMethodExtensions;
-		blockWhenNodeSelected: [ :anIceNode |
-			(model at: #blockWhenNodeSelected) value: anIceNode ];
-		build.
+	renderer := RiTorchUMLClassRenderer new.
+	renderer blockWhenNodeSelected: [ :anIceNode |
+		(model at: #blockWhenNodeSelected) value: anIceNode ].
+	
+	builder := RSUMLClassBuilder new
+		container: lastCanvas;
+		classes: classes;
+		renderer: renderer;
+		yourself.
+
+	builder modelDescriptor
+		classname: [ :node | node value name ];
+		instVars: [ :cls | 
+			cls children select: [ :each | each value definition isKindOf: IceVariableDefinition ] ];
+		methods: [ :node | self methodsToShowFor: node ];
+		superclass: [ :node |
+			node value definition isExtensionDefinition
+				ifTrue: [ nil ]
+				ifFalse: [
+					| superclassName |
+					superclassName := node value definition asMCDefinition superclassName.
+					classes detect: [:each | each value definition name = superclassName ] ifNone: [ nil ]] ].
+
+	builder build.
 
 ]
 
@@ -61,10 +78,23 @@ RiTorchDiffPresenter >> initializePresenters [
 		addItem: spawnButton;
 		yourself.
 		
-	roassalPresenter := self instantiate: RoassalPresenter.
+	roassalPresenter := self instantiate: SpRoassalPresenter.
 	roassalPresenter script: [ :newView | 
-		lastView := newView.
-		model ifNotNil: [ self fillLastView ] ].
+		lastCanvas := newView.
+		model ifNotNil: [ self fillLastCanvas ] ].
+]
+
+{ #category : #initialization }
+RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
+	| methodNodes |
+	methodNodes := iceNodeWithBehavior children
+		select: [ :each | each value definition isMethodDefinition ].
+	methodNodes := methodNodes
+		sorted: [ :a :b | 
+			a value class = b value class
+				ifTrue: [ a value ritaChangeSize > b value ritaChangeSize ]
+				ifFalse: [ a value class name < b value class name ] ].
+	^ methodNodes
 ]
 
 { #category : #initialization }

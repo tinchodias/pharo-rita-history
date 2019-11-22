@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'script'
 	],
-	#category : #'Rita-Torch-Utilities'
+	#category : #'Rita-Torch-Old'
 }
 
 { #category : #specs }

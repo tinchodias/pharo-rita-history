@@ -9,7 +9,7 @@ Class {
 		'nodesWithPackages',
 		'nodesWithFiles'
 	],
-	#category : #'Rita-Torch-Utilities'
+	#category : #'Rita-Torch-Old'
 }
 
 { #category : #initialization }

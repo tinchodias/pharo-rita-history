@@ -1,7 +1,7 @@
 Class {
 	#name : #RiUMLDiffUtils,
 	#superclass : #Object,
-	#category : #'Rita-Torch-Utilities'
+	#category : #'Rita-Torch-Old'
 }
 
 { #category : #accessing }
@@ -42,7 +42,7 @@ RiUMLDiffUtils >> shapeForNodeEmulatingCondensedFont: isCondensed bold: isBold [
 	^ RSShapeBuilder composite 
 		shapes: [:node | 
 			| g icon text |
-			g := TSGroup new.
+			g := RSGroup new.
 			icon := iconShape elementOn: node value.
 			text := labelShape elementOn: node.
 			text scaleBy: widthScale@1.

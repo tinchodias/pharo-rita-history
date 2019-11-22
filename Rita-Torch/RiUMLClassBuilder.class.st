@@ -9,7 +9,7 @@ Class {
 		'mustGroupExtensions',
 		'limitForMethodCount'
 	],
-	#category : #'Rita-Torch-State'
+	#category : #'Rita-Torch-Old'
 }
 
 { #category : #examples }
