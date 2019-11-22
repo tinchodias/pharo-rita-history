@@ -11,8 +11,9 @@ Class {
 { #category : #specs }
 RiTreeDiffPresenter class >> defaultSpec [
 	<spec: #default>
-	^ SpBoxLayout newHorizontal
-		add: #treeTable width: 200;
+	^ SpPanedLayout newHorizontal
+		position: 33 percent;
+		add: #treeTable;
 		add: #diffPanel;
 		yourself
 ]
