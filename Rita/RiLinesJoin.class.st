@@ -6,7 +6,7 @@ Class {
 		'rawto',
 		'rawpatch'
 	],
-	#category : #'Rita-Diffmodel'
+	#category : #'Rita-Diff'
 }
 
 { #category : #printing }

@@ -8,7 +8,7 @@ Class {
 		'newString',
 		'inlineJoins'
 	],
-	#category : #'Rita-Diffmodel'
+	#category : #'Rita-Diff'
 }
 
 { #category : #building }

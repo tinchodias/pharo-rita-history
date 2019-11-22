@@ -5,7 +5,7 @@ I extend my superclass with the sole purpose of showing line removals before lin
 Class {
 	#name : #RiTextDiffBuilder,
 	#superclass : #TextDiffBuilder,
-	#category : #'Rita-Torch-Diff'
+	#category : #'Rita-Diff'
 }
 
 { #category : #'creating patches' }
