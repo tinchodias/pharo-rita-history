@@ -3,7 +3,8 @@ Class {
 	#superclass : #RSTorchUMLClassRenderer,
 	#instVars : [
 		'blockWhenNodeSelected',
-		'methodBitmapCreatorVisitor'
+		'methodBitmapCreatorVisitor',
+		'innerBorder'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -24,7 +25,7 @@ RiTorchUMLClassRenderer >> addZoomingInteractionOn: aCanvas [
 	"Interaction for zooming."
 
 	| controls |
-	controls := RSControlsCanvas new.
+	controls := RSCanvasController new.
 	controls configuration
 		useBasicZoom;
 		maxScale: 1.
@@ -46,7 +47,7 @@ RiTorchUMLClassRenderer >> backgroundColorFor: node [
 
 { #category : #options }
 RiTorchUMLClassRenderer >> blockForMouseClickOnIceNode [
-	^ [ :node | [ :clickEvent | blockWhenNodeSelected value: node ] ]
+	^ [ :clickEvent | blockWhenNodeSelected value: clickEvent shape model ]
 ]
 
 { #category : #options }
@@ -129,9 +130,21 @@ RiTorchUMLClassRenderer >> builderForStereotype [
 		yourself
 ]
 
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> classNameBoxFor: aClass [ 
+	^ RSBox new
+		color: (self backgroundColorFor: aClass);
+		yourself
+]
+
 { #category : #settings }
 RiTorchUMLClassRenderer >> currentTheme [
 	^ Smalltalk ui theme
+]
+
+{ #category : #initialization }
+RiTorchUMLClassRenderer >> defaultTextColor [
+	^ self foregroundColor
 ]
 
 { #category : #settings }
@@ -182,20 +195,15 @@ RiTorchUMLClassRenderer >> heightForMethod: node [
 RiTorchUMLClassRenderer >> initialize [
 	super initialize.
 
-	"Hack... still need?"
-	currentTitleWidth := 0.
-	
 	blockWhenNodeSelected := [ :anIceNode | ].
 	methodBitmapCreatorVisitor := RiMethodBitmapCreatorVisitor builder: self.
+
+	innerBorder := RSBorder new color: self foregroundColor; width: 0.5; yourself.
 
 "	self setLayoutVerticalWithMarkers: true."
 	self marker shape color: self backgroundColor.
 	self marker shape size: self gapFromClassToSubclass / 3.
 	self marker offset: self gapFromClassToSubclass / 6.
-
-	self border color: self foregroundColor.
-	self boxBorder color: self foregroundColor.
-
 
 ]
 
@@ -207,7 +215,10 @@ RiTorchUMLClassRenderer >> maxClassWidth [
 { #category : #initialization }
 RiTorchUMLClassRenderer >> methodFor: aMethod [
 	^ RSBitmap new
+		model: aMethod;
 		form: (self formForMethod: aMethod);
+		border: innerBorder;
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		popup;
 		yourself
 ]
@@ -246,7 +257,7 @@ RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 
 
 	self addZoomingInteractionOn: aCanvas.
-"	self addPackInteractionOn: ."
+"	self addPackInteractionOn: aCanvas."
 
 	aCanvas color: self backgroundColor.
 
@@ -263,6 +274,18 @@ RiTorchUMLClassRenderer >> stereotypeFor: aBehavior ifPresent: aBlock [
 		ifTrue: [ ^ aBlock cull: 'trait' ].
 	(aBehavior isRingResolved not and: [aBehavior hasMethodExtensions])
 		ifTrue: [ ^ aBlock cull: 'extension' ]
+]
+
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> varFor: model [
+	^ RSPolygon triangle
+		model: model;
+		size: self scaleForMethods * 1.3;
+		border: innerBorder;
+		color: (self foregroundColorFor: model);
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		popup;
+		yourself
 ]
 
 { #category : #options }

@@ -79,8 +79,8 @@ RiTorchDiffPresenter >> initializePresenters [
 		yourself.
 		
 	roassalPresenter := self instantiate: SpRoassalPresenter.
-	roassalPresenter script: [ :newView | 
-		lastCanvas := newView.
+	roassalPresenter script: [ :newCanvas | 
+		lastCanvas := newCanvas.
 		model ifNotNil: [ self fillLastCanvas ] ].
 ]
 
