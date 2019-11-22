@@ -25,15 +25,27 @@ RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 		title: aRiDiffModel title
 		icon: (self iconNamed: #diff)
 		provider: [
-			| diffModel |
-			diffModel := model copy
-				add: #iceDiff -> (aRiDiffModel iceDiffTo: targetRiCommit);
-				yourself.
-			RiFullDiffPresenter new
-				model: diffModel;
-				yourself ].
+			self diffPresenterFor: aRiDiffModel to: targetRiCommit ].
 
 	notebook addPage: page
+]
+
+{ #category : #initialization }
+RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
+	
+	| iceDiff |
+	[ 	iceDiff := aRiDiffModel iceDiffTo: targetRiCommit ]
+		on: Error do: [:e |
+			self reportWarning: e.
+			^ self newLabel
+				label: 'Failed to calculate diff';
+				yourself ].
+
+	^ RiFullDiffPresenter new
+		model: (model copy
+			add: #iceDiff -> iceDiff;
+			yourself);
+		yourself
 ]
 
 { #category : #initialization }

@@ -22,3 +22,11 @@ RiPresenter >> model: anObject [
 RiPresenter >> refreshOnModelUpdate [
 	"Refresh the presenter after model was (possibly) updated. Assumes widgets are already built."
 ]
+
+{ #category : #'error handling' }
+RiPresenter >> reportWarning: anException [
+	self
+		traceCrTab: DateAndTime now;
+		traceCrTab: self;
+		traceCr: anException.
+]
