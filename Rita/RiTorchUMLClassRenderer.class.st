@@ -130,7 +130,7 @@ RiTorchUMLClassRenderer >> builderForStereotype [
 		yourself
 ]
 
-{ #category : #settings }
+{ #category : #hooks }
 RiTorchUMLClassRenderer >> classBoxShapeFor: iceNode [
 	^ RSBox new
 		noPaint;
@@ -144,6 +144,7 @@ RiTorchUMLClassRenderer >> classNameBoxFor: aClass [
 		model: aClass;
 		color: (self backgroundColorFor: aClass);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		addInteraction: self popupForIceNodeShapes;
 		yourself
 ]
 
@@ -152,7 +153,7 @@ RiTorchUMLClassRenderer >> currentTheme [
 	^ Smalltalk ui theme
 ]
 
-{ #category : #defaults }
+{ #category : #hooks }
 RiTorchUMLClassRenderer >> defaultBoxBorder [
 	^ RSBorder new
 		width: 2;
@@ -160,7 +161,7 @@ RiTorchUMLClassRenderer >> defaultBoxBorder [
 		yourself 
 ]
 
-{ #category : #initialization }
+{ #category : #hooks }
 RiTorchUMLClassRenderer >> defaultTextColor [
 	^ self foregroundColor
 ]
@@ -175,11 +176,6 @@ RiTorchUMLClassRenderer >> foregroundColorFor: node [
 	^ node value ritaColor
 		mixed: 0.8
 		with: self foregroundColor
-]
-
-{ #category : #options }
-RiTorchUMLClassRenderer >> formForMethod: each [
-	^ each accept: methodBitmapCreatorVisitor 
 ]
 
 { #category : #settings }
@@ -204,11 +200,6 @@ RiTorchUMLClassRenderer >> gapFromSubclassToSibling [
 	^ self gapFromClassToSubclass / 2
 ]
 
-{ #category : #options }
-RiTorchUMLClassRenderer >> heightForMethod: node [
-	^ 2 + (node value ritaChangeSize * self scaleForMethods)
-]
-
 { #category : #initialization }
 RiTorchUMLClassRenderer >> initialize [
 	super initialize.
@@ -230,14 +221,13 @@ RiTorchUMLClassRenderer >> maxClassWidth [
 	^ 200
 ]
 
-{ #category : #initialization }
+{ #category : #hooks }
 RiTorchUMLClassRenderer >> methodFor: aMethod [
-	^ RSBitmap new
+	^ (aMethod accept: methodBitmapCreatorVisitor)
 		model: aMethod;
-		form: (self formForMethod: aMethod);
 		border: innerBorder;
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		popup;
+		addInteraction: self popupForIceNodeShapes;
 		yourself
 ]
 
@@ -246,9 +236,14 @@ RiTorchUMLClassRenderer >> outlineSize [
 	^ self gapFromSubclassToSibling / 2
 ]
 
+{ #category : #private }
+RiTorchUMLClassRenderer >> popupForIceNodeShapes [
+	^ RSPopup text: [ :node | node value definition name ]
+]
+
 { #category : #settings }
 RiTorchUMLClassRenderer >> scaleForMethods [
-	^ 8
+	^ 10
 ]
 
 { #category : #options }
@@ -273,7 +268,6 @@ RiTorchUMLClassRenderer >> setLayoutVerticalWithMarkers: useMarkers [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 
-
 	self addZoomingInteractionOn: aCanvas.
 	self addPackInteractionOn: aCanvas.
 
@@ -282,11 +276,15 @@ RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 ]
 
 { #category : #hooks }
-RiTorchUMLClassRenderer >> shapeFor: aClass [
-	^ (super shapeFor: aClass)
-		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		yourself
-
+RiTorchUMLClassRenderer >> shapeFor: iceNode [
+	^ iceNode hasChanges
+		ifTrue:[ 
+			(super shapeFor: iceNode)
+				when: RSMouseClick do: self blockForMouseClickOnIceNode;
+				removeInteractionIfPresent: RSPopup;
+				addInteraction: self popupForIceNodeShapes;
+				yourself ]
+		ifFalse: [ self tinyClassShapeFor: iceNode ]
 ]
 
 { #category : #settings }
@@ -302,6 +300,17 @@ RiTorchUMLClassRenderer >> stereotypeFor: aBehavior ifPresent: aBlock [
 		ifTrue: [ ^ aBlock cull: 'extension' ]
 ]
 
+{ #category : #private }
+RiTorchUMLClassRenderer >> tinyClassShapeFor: iceNode [
+	^ RSBox new
+		noPaint;
+		size: 20;
+		model: iceNode;
+		border: (self boxBorder copy dashArray: #());
+		addInteraction: self popupForIceNodeShapes;
+		yourself
+]
+
 { #category : #hooks }
 RiTorchUMLClassRenderer >> varFor: model [
 	^ RSPolygon triangle
@@ -310,13 +319,8 @@ RiTorchUMLClassRenderer >> varFor: model [
 		border: innerBorder;
 		color: (self foregroundColorFor: model);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		popup;
+		addInteraction: self popupForIceNodeShapes;
 		yourself
-]
-
-{ #category : #options }
-RiTorchUMLClassRenderer >> widthForMethod: m [
-	^ self scaleForMethods
 ]
 
 { #category : #settings }

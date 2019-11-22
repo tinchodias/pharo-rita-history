@@ -14,15 +14,15 @@ RiMethodBitmapCreatorVisitor class >> builder: aBuilder [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RiMethodBitmapCreatorVisitor >> formForJust: anIceChange [
-	| canvas |
-	canvas := FormCanvas extent:  (builder widthForMethod: anIceChange) @ (builder heightForMethod: anIceChange).
-	canvas fillColor: (builder foregroundColorFor: anIceChange).
-	^ canvas finish; form
+	^ RSBox new
+		extent: self widthForMethod @ (self heightForMethod: anIceChange);
+		color: (builder foregroundColorFor: anIceChange);
+		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RiMethodBitmapCreatorVisitor >> formForPatchSequence: patchSequence [
 
 	| colorMap scale canvas |
@@ -31,7 +31,7 @@ RiMethodBitmapCreatorVisitor >> formForPatchSequence: patchSequence [
 		#remove -> Color red darker.
 		} asDictionary.
 
-	scale := (builder widthForMethod: nil)@3.
+	scale := (self widthForMethod)@(self heightScale).
  	canvas := FormCanvas extent: (1@patchSequence size)*scale.
 	patchSequence withIndexDo: [ :each :index |
 		colorMap at: each key ifPresent: [ :color |
@@ -39,21 +39,31 @@ RiMethodBitmapCreatorVisitor >> formForPatchSequence: patchSequence [
 			rect := 0@(index-1) corner: 1@index.
 			canvas fillRectangle: (rect scaleBy: scale) color: color ] ].
 
-	^ canvas finish; form
+	^ RSBitmap new form: (canvas finish; form); yourself
 ]
 
 { #category : #accessing }
+RiMethodBitmapCreatorVisitor >> heightForMethod: node [
+	^ node definition linesOfCode * self heightScale
+]
+
+{ #category : #accessing }
+RiMethodBitmapCreatorVisitor >> heightScale [
+	^ 3
+]
+
+{ #category : #initialization }
 RiMethodBitmapCreatorVisitor >> initialize: aBuilder [
 	self initialize.
 	builder := aBuilder
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 RiMethodBitmapCreatorVisitor >> visitAddition: anIceAddition [ 
 	^ self formForJust: anIceAddition
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 RiMethodBitmapCreatorVisitor >> visitModification: anIceModification [
 	^ self
 		formForPatchSequence:
@@ -63,12 +73,17 @@ RiMethodBitmapCreatorVisitor >> visitModification: anIceModification [
 				buildPatchSequence
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 RiMethodBitmapCreatorVisitor >> visitNoModification: anIceNoModification [ 
 	^ self formForJust: anIceNoModification
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 RiMethodBitmapCreatorVisitor >> visitRemoval: anIceRemoval [ 
 	^ self formForJust: anIceRemoval
+]
+
+{ #category : #accessing }
+RiMethodBitmapCreatorVisitor >> widthForMethod [
+	^ builder scaleForMethods
 ]

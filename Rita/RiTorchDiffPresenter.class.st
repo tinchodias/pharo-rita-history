@@ -22,12 +22,12 @@ RiTorchDiffPresenter class >> defaultSpec [
 { #category : #initialization }
 RiTorchDiffPresenter >> fillLastCanvas [
 
-	| query classes renderer builder |
+	| query nodesWithClassesTraitsAndExtensions renderer builder |
 	query := RiDiffQuery new
 		diff: (model at: #iceDiff);
 		onlyConsiderChanged: (model at: #root) considerOnlyChanged;
 		yourself.
-	classes := query nodesForBehaviors, query nodesForMethodExtensions.
+	nodesWithClassesTraitsAndExtensions := query nodesForBehaviors, query nodesForMethodExtensions.
 
 	renderer := RiTorchUMLClassRenderer new.
 	renderer blockWhenNodeSelected: [ :anIceNode |
@@ -35,14 +35,14 @@ RiTorchDiffPresenter >> fillLastCanvas [
 	
 	builder := RSUMLClassBuilder new
 		container: lastCanvas;
-		classes: classes;
+		classes: nodesWithClassesTraitsAndExtensions;
 		renderer: renderer;
 		yourself.
 
 	builder modelDescriptor
 		classname: [ :node | node value name ];
-		instVars: [ :cls | 
-			cls children select: [ :each | each value definition isKindOf: IceVariableDefinition ] ];
+		instVars: [ :node | 
+			node children select: [ :each | each value definition className = #IceVariableDefinition ] ];
 		methods: [ :node | self methodsToShowFor: node ];
 		superclass: [ :node |
 			node value definition isExtensionDefinition
@@ -50,7 +50,9 @@ RiTorchDiffPresenter >> fillLastCanvas [
 				ifFalse: [
 					| superclassName |
 					superclassName := node value definition asMCDefinition superclassName.
-					classes detect: [:each | each value definition name = superclassName ] ifNone: [ nil ]] ].
+					nodesWithClassesTraitsAndExtensions
+						detect: [:each | each value definition name = superclassName ]
+						ifNone: [ nil ] ] ].
 
 	builder build.
 
@@ -92,7 +94,7 @@ RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
 	methodNodes := methodNodes
 		sorted: [ :a :b | 
 			a value class = b value class
-				ifTrue: [ a value ritaChangeSize > b value ritaChangeSize ]
+				ifTrue: [ a value definition linesOfCode > b value definition linesOfCode ]
 				ifFalse: [ a value class name < b value class name ] ].
 	^ methodNodes
 ]
