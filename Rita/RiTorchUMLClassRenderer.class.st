@@ -358,6 +358,18 @@ RiTorchUMLClassRenderer >> varFor: model [
 		yourself
 ]
 
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> varsFor: model [
+	^ (super varsFor: model)
+		padding:
+			(Margin
+				left: 0
+				right: 0
+				top: 3
+				bottom: 0);
+		yourself
+]
+
 { #category : #settings }
 RiTorchUMLClassRenderer >> widthScaleForNarrowFontStyle [
 	^ 0.8
