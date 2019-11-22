@@ -35,7 +35,8 @@ Class {
 	#instVars : [
 		'presenter',
 		'colorMap',
-		'inlinecolorMap'
+		'inlinecolorMap',
+		'theWidget'
 	],
 	#category : #'Rita-UI'
 }
@@ -70,7 +71,8 @@ RiUnifiedDiffPresenter >> initializePresenters [
 
 	"Note: this assumes Morphic backend"
 	presenter whenBuiltDo: [ :ann |
-		ann widget font: StandardFonts codeFont ].
+		ann widget font: StandardFonts codeFont.
+		theWidget := ann widget. ].
 
 ]
 
@@ -113,4 +115,9 @@ RiUnifiedDiffPresenter >> reset [
 	presenter textArea removeAllSegments.
 	presenter text: ''.
 
+]
+
+{ #category : #initialization }
+RiUnifiedDiffPresenter >> theWidget [
+	^ theWidget
 ]

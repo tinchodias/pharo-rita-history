@@ -3,8 +3,8 @@ Class {
 	#superclass : #RSTorchUMLClassRenderer,
 	#instVars : [
 		'blockWhenNodeSelected',
-		'methodBitmapCreatorVisitor',
-		'innerBorder'
+		'innerBorder',
+		'methodShapeCreatorVisitor'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -178,6 +178,26 @@ RiTorchUMLClassRenderer >> foregroundColorFor: node [
 		with: self foregroundColor
 ]
 
+{ #category : #private }
+RiTorchUMLClassRenderer >> formFrom: from to: to [ 
+
+| presenter font |
+presenter := RiUnifiedDiffPresenter new
+		buildWithSpec;
+		model: { #from -> from. #to -> to } asDictionary;
+		yourself.
+		
+font := LogicalFont 
+		familyName: StandardFonts codeFont familyName
+		pointSize: 7.
+
+^ presenter theWidget
+	font: font;
+	extent: 300@350;
+	scrollbarsShowNever;
+	imageForm.
+]
+
 { #category : #settings }
 RiTorchUMLClassRenderer >> gapBetweenHierarchies [
 	"Tricky: This gap is expressed as a ratio of the average size of elements. See RSRectanglePackLayout."
@@ -205,7 +225,7 @@ RiTorchUMLClassRenderer >> initialize [
 	super initialize.
 
 	blockWhenNodeSelected := [ :anIceNode | ].
-	methodBitmapCreatorVisitor := RiMethodBitmapCreatorVisitor builder: self.
+	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor builder: self.
 
 	innerBorder := RSBorder new color: self foregroundColor; width: 0.5; yourself.
 
@@ -223,11 +243,11 @@ RiTorchUMLClassRenderer >> maxClassWidth [
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> methodFor: aMethod [
-	^ (aMethod accept: methodBitmapCreatorVisitor)
+	^ (aMethod accept: methodShapeCreatorVisitor)
 		model: aMethod;
 		border: innerBorder;
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		addInteraction: self popupForIceNodeShapes;
+		addInteraction: self popupForMethodIceNodeShape;
 		yourself
 ]
 
@@ -239,6 +259,21 @@ RiTorchUMLClassRenderer >> outlineSize [
 { #category : #private }
 RiTorchUMLClassRenderer >> popupForIceNodeShapes [
 	^ RSPopup text: [ :node | node value definition name ]
+]
+
+{ #category : #private }
+RiTorchUMLClassRenderer >> popupForMethodIceNodeShape [
+	^ RSPopup new
+		shapeBuilder: [ :node | 
+			| form |
+			form := self
+				formFrom: node value rightContents
+				to: node value leftContents.
+			RSBitmap new
+				form: form;
+				border: innerBorder;
+				yourself ];
+		yourself
 ]
 
 { #category : #settings }
