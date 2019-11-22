@@ -18,7 +18,7 @@ RiUnifiedStringDiff >> build [
 	unifiedString := ''.
 	lineJoins := OrderedCollection new.
 	
-	diffBuilder := TextDiffBuilder from: oldString to: newString.
+	diffBuilder := RiTextDiffBuilder from: oldString to: newString.
 	diffBuilder buildPatchSequence do: [ :patch |
 		| start end |
 		start := unifiedString size + 1.
@@ -40,13 +40,13 @@ RiUnifiedStringDiff >> buildInlineJoins [
 		| current following inlinePatches removedPart insertedPart |
 		current := runsStream next.
 		following := runsStream peek.
-		(current first rawkind = #insert and: [ following isNotNil and: [following first rawkind = #remove] ]) ifTrue: [
-			removedPart := following flatCollect: [ :each | each rawstring, String cr ] as: String.
-			insertedPart := current  flatCollect: [ :each | each rawstring, String cr ] as: String.
+		(current first rawkind = #remove and: [ following isNotNil and: [following first rawkind = #insert] ]) ifTrue: [
+			removedPart := current flatCollect: [ :each | each rawstring, String cr ] as: String.
+			insertedPart := following flatCollect: [ :each | each rawstring, String cr ] as: String.
 			inlinePatches := (InlineTextDiffBuilder from: removedPart to: insertedPart) buildPatchSequence.
 
-			self buildInlineJoins: inlinePatches offset: current first rawfrom reject: #remove add: #insert.
-			self buildInlineJoins: inlinePatches offset: following first rawfrom reject: #insert add: #remove.
+			self buildInlineJoins: inlinePatches offset: following first rawfrom reject: #remove add: #insert.
+			self buildInlineJoins: inlinePatches offset: current first rawfrom reject: #insert add: #remove.
 		]]
 
 ]
