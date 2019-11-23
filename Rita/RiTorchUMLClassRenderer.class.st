@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'blockWhenNodeSelected',
 		'innerBorder',
-		'methodShapeCreatorVisitor'
+		'methodShapeCreatorVisitor',
+		'tinyBoxBorder'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -156,9 +157,42 @@ RiTorchUMLClassRenderer >> currentTheme [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> defaultBoxBorder [
 	^ RSBorder new
-		width: 1;
+		width: 1.5;
 		joinMiter; 
 		yourself 
+]
+
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> defaultEdgeBuilder [
+	^ RSEdgeBuilder orthoVertical
+		attachPoint: RSVerticalAttachPoint new;
+		border: innerBorder;
+		"markerStart: self marker;"
+		yourself
+]
+
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> defaultLayout [
+	| defaultLayout |
+	defaultLayout := RSLayoutBuilder new.
+	defaultLayout tree 
+		verticalGap: self gapFromClassToSubclass;
+		horizontalGap: self gapFromSubclassToSibling.
+	^ defaultLayout
+
+]
+
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> defaultMarker [
+	^ RSMarker new
+		shape: (RSPolygon triangle
+			color: self backgroundColor;
+			border: self border;
+			size: self gapFromClassToSubclass / 6;
+			yourself);
+		offset: self gapFromClassToSubclass / 12;
+		yourself
+
 ]
 
 { #category : #hooks }
@@ -217,11 +251,11 @@ RiTorchUMLClassRenderer >> initialize [
 	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor builder: self.
 
 	innerBorder := RSBorder new color: self foregroundColor; width: 0.5; yourself.
-
-"	self setLayoutVerticalWithMarkers: true."
-	self marker shape color: self backgroundColor.
-	self marker shape size: self gapFromClassToSubclass / 3.
-	self marker offset: -1.
+	tinyBoxBorder := RSBorder new
+		width: 1;
+		color: self foregroundColor;
+		joinMiter; 
+		yourself.
 
 ]
 
@@ -290,25 +324,6 @@ RiTorchUMLClassRenderer >> scaleForMethods [
 	^ 10
 ]
 
-{ #category : #options }
-RiTorchUMLClassRenderer >> setLayoutVerticalWithMarkers: useMarkers [
-	| hierarchyEdgeBuilder |
-	hierarchyEdgeBuilder := RSEdgeBuilder orthoVertical
-		attachPoint: RSVerticalAttachPoint new;
-		border: self border;
-		yourself.
-
-	useMarkers ifTrue: [
-		hierarchyEdgeBuilder markerStart: self marker ].
-				
-	self edgeBuilder: hierarchyEdgeBuilder.
-
-	self layout tree
-		verticalGap: self gapFromClassToSubclass;
-		horizontalGap: self gapFromSubclassToSibling.
-
-]
-
 { #category : #hooks }
 RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 
@@ -350,7 +365,7 @@ RiTorchUMLClassRenderer >> tinyClassShapeFor: iceNode [
 		noPaint;
 		size: 10;
 		model: iceNode;
-		border: self boxBorder"(self boxBorder copy dashArray: #())";
+		border: tinyBoxBorder;
 		addInteraction: self popupForIceNodeShapes;
 		yourself
 ]
