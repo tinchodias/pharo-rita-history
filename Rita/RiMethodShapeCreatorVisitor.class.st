@@ -56,7 +56,7 @@ RiMethodShapeCreatorVisitor >> newForPatchSequence: patchSequence [
 RiMethodShapeCreatorVisitor >> newForPlain: anIceChange [
 	^ RSBox new
 		extent: self widthForMethod @ (self heightForMethod: anIceChange);
-		color: (builder foregroundColorFor: anIceChange);
+		color: (builder fillColorFor: anIceChange);
 		yourself
 ]
 

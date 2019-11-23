@@ -41,7 +41,7 @@ RiTorchUMLClassRenderer >> backgroundColor [
 { #category : #settings }
 RiTorchUMLClassRenderer >> backgroundColorFor: node [
 	^ node value ritaColor
-		alphaMixed: 0.25
+		alphaMixed: 0.1
 		with: self backgroundColor
 ]
 
@@ -156,7 +156,7 @@ RiTorchUMLClassRenderer >> currentTheme [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> defaultBoxBorder [
 	^ RSBorder new
-		width: 2;
+		width: 1;
 		joinMiter; 
 		yourself 
 ]
@@ -164,6 +164,15 @@ RiTorchUMLClassRenderer >> defaultBoxBorder [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> defaultTextColor [
 	^ self foregroundColor
+]
+
+{ #category : #settings }
+RiTorchUMLClassRenderer >> fillColorFor: node [
+	| color |
+	color := node value ritaColor.
+	^ color isTransparent
+		ifTrue: [ color ]
+		ifFalse: [ color mixed: 0.8 with: self foregroundColor ]
 ]
 
 { #category : #settings }
@@ -212,7 +221,7 @@ RiTorchUMLClassRenderer >> initialize [
 "	self setLayoutVerticalWithMarkers: true."
 	self marker shape color: self backgroundColor.
 	self marker shape size: self gapFromClassToSubclass / 3.
-	self marker offset: self gapFromClassToSubclass / 6.
+	self marker offset: -1.
 
 ]
 
@@ -339,11 +348,24 @@ RiTorchUMLClassRenderer >> stereotypeFor: aBehavior ifPresent: aBlock [
 RiTorchUMLClassRenderer >> tinyClassShapeFor: iceNode [
 	^ RSBox new
 		noPaint;
-		size: 20;
+		size: 10;
 		model: iceNode;
-		border: (self boxBorder copy dashArray: #());
+		border: self boxBorder"(self boxBorder copy dashArray: #())";
 		addInteraction: self popupForIceNodeShapes;
 		yourself
+]
+
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> titleFor: model [
+	| label |
+	label := RSLabel new
+		color: self textColor;
+		text: (modelDescriptor classname rsValue: model) asString;
+		scaleBy: 0.7@0.8
+		yourself.
+	"label fontSize: label fontSize * 0.8".
+	currentTitleWidth := label textWidth.
+	^ label
 ]
 
 { #category : #hooks }
@@ -352,7 +374,7 @@ RiTorchUMLClassRenderer >> varFor: model [
 		model: model;
 		size: self scaleForMethods * 1.3;
 		border: innerBorder;
-		color: (self foregroundColorFor: model);
+		color: (self fillColorFor: model);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		yourself
