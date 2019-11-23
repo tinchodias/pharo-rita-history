@@ -178,26 +178,6 @@ RiTorchUMLClassRenderer >> foregroundColorFor: node [
 		with: self foregroundColor
 ]
 
-{ #category : #private }
-RiTorchUMLClassRenderer >> formFrom: from to: to [ 
-
-| presenter font |
-presenter := RiUnifiedDiffPresenter new
-		buildWithSpec;
-		model: { #from -> from. #to -> to } asDictionary;
-		yourself.
-		
-font := LogicalFont 
-		familyName: StandardFonts codeFont familyName
-		pointSize: 7.
-
-^ presenter theWidget
-	font: font;
-	extent: 300@350;
-	scrollbarsShowNever;
-	imageForm.
-]
-
 { #category : #settings }
 RiTorchUMLClassRenderer >> gapBetweenHierarchies [
 	"Tricky: This gap is expressed as a ratio of the average size of elements. See RSRectanglePackLayout."
@@ -241,6 +221,26 @@ RiTorchUMLClassRenderer >> maxClassWidth [
 	^ 200
 ]
 
+{ #category : #private }
+RiTorchUMLClassRenderer >> methodDiffFormFrom: from to: to [ 
+
+	| presenter font |
+	presenter := RiUnifiedDiffPresenter new
+		buildWithSpec;
+		model: { #from -> from. #to -> to } asDictionary;
+		yourself.
+			
+	font := LogicalFont 
+		familyName: StandardFonts codeFont familyName
+		pointSize: 7.
+
+	^ presenter theWidget
+		font: font;
+		extent: 300@350;
+		scrollbarsShowNever;
+		imageForm.
+]
+
 { #category : #hooks }
 RiTorchUMLClassRenderer >> methodFor: aMethod [
 	^ (aMethod accept: methodShapeCreatorVisitor)
@@ -267,7 +267,7 @@ RiTorchUMLClassRenderer >> popupForMethodIceNodeShape [
 		shapeBuilder: [ :node | 
 			| form |
 			form := self
-				formFrom: node value rightContents
+				methodDiffFormFrom: node value rightContents
 				to: node value leftContents.
 			RSBitmap new
 				form: form;

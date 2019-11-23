@@ -9,7 +9,8 @@ Class {
 		'table',
 		'commentImageBuilder',
 		'hiedraImageBuilder',
-		'blockForPinToCompareFrom'
+		'blockForPinToCompareFrom',
+		'avatarDatabase'
 	],
 	#category : #'Rita-UI'
 }
@@ -102,6 +103,17 @@ RiRepositoryPresenter >> blockForPinToCompareFrom: aBlock [
 ]
 
 { #category : #initialization }
+RiRepositoryPresenter >> columnForAuthor [
+	^ SpCompositeTableColumn
+		title: 'Author'
+		withAll: { 
+			SpImageTableColumn evaluated: [ :each | avatarDatabase avatarFor: each ].
+			(SpStringTableColumn evaluated: [ :each | ' ', each author ]) width: 100.
+		}
+
+]
+
+{ #category : #initialization }
 RiRepositoryPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := self newMenu.
@@ -146,11 +158,12 @@ RiRepositoryPresenter >> initializePresenters [
 		showColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
 		addColumn: (SpImageTableColumn evaluated: [ :item | hiedraImageBuilder morphAt: item ]) beNotExpandable;
-		addColumn: ((SpStringTableColumn title: 'Author' evaluated: #author) width: 120);
+		addColumn: self columnForAuthor;
 		addColumn: (SpImageTableColumn title: 'Comment' evaluated: [:item | commentImageBuilder morphAt: item ]);
 		addColumn: ((SpStringTableColumn title: 'Date' evaluated: #date) width: 120).
 
 	table whenBuiltDo: [ :ann |
+		avatarDatabase := RiAvatarsDatabase new.
 		commentImageBuilder := RiCommentImageBuilder new.
 		hiedraImageBuilder := RiHiedraImageBuilder new.
 		hiedraImageBuilder tableMorph: ann widget.
@@ -166,6 +179,7 @@ RiRepositoryPresenter >> pinDiffModels [
 { #category : #initialization }
 RiRepositoryPresenter >> refreshOnModelUpdate [
 	self isBuilt ifTrue: [
+		avatarDatabase refreshWith: self riRepository.
 		hiedraImageBuilder refreshWith: self riRepository elements.
 		table items: self riRepository elements ]
 ]

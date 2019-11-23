@@ -49,6 +49,11 @@ RiCommit >> author [
 ]
 
 { #category : #accessing }
+RiCommit >> authorEmail [
+	^ iceCommit libgitCommit author email
+]
+
+{ #category : #accessing }
 RiCommit >> children [
 	^ children ifNil: [ 
 		children := OrderedCollection new ]
@@ -77,6 +82,11 @@ RiCommit >> iceCommit [
 { #category : #accessing }
 RiCommit >> iceCommit: anObject [
 	iceCommit := anObject
+]
+
+{ #category : #accessing }
+RiCommit >> id [
+	^ iceCommit id
 ]
 
 { #category : #printing }
