@@ -37,11 +37,6 @@ RiGithubAvatarClient >> avatarSize: anObject [
 	avatarSize := anObject
 ]
 
-{ #category : #'accessing - response' }
-RiGithubAvatarClient >> avatarUrlByEmail [
-	^ avatarUrlByEmail
-]
-
 { #category : #'accessing - request' }
 RiGithubAvatarClient >> commitsIds [
 	^ commitsIds
@@ -64,37 +59,22 @@ RiGithubAvatarClient >> credentials: anObject [
 
 { #category : #action }
 RiGithubAvatarClient >> get [
-	| response |
-	"Query Github"
-	([ response := IceGitHubAPI new
-		credentials: self credentials;
-		graphql: self graphQL ] timeToRun asMilliSeconds asString
-		, ' - to query github') traceCr.
+	"Do the HTTP requests"
 
-	"On sucess: Get avatar URLs"
-	avatarUrlByEmail := Dictionary new.
-	((response at: 'data') at: 'repository') values
-		collect: [ :each | each at: 'author' ]
-		thenDo:
-			[ :each | avatarUrlByEmail at: (each at: 'email') put: (each at: 'avatarUrl') ].
-	self flag: #todo.	"On fail!?"
-
-	"Get avatar images"
-	([ self getAvatarsAsync ] timeToRun asMilliSeconds asString
-		, ' - to get ALL avatars') traceCr
+	self getAvatarUrlByEmail.
+	self getAvatarByEmail.
 ]
 
 { #category : #private }
-RiGithubAvatarClient >> getAvatarsAsync [
+RiGithubAvatarClient >> getAvatarByEmail [
+	"HTTP GET avatar images in parallel"
 
 	| sharedQueue semaphore |
 	sharedQueue := SharedQueue new.
 	semaphore := Semaphore new.
 
 	avatarUrlByEmail keysAndValuesDo: [ :email :urlString |
-		[
-		
-		[ | avatar |
+		[[ | avatar |
 		avatar := self avatarFor: urlString.
 		sharedQueue	nextPut: (email -> avatar) ]
 			on: NetworkError, ZnHttpUnsuccessful
@@ -103,9 +83,26 @@ RiGithubAvatarClient >> getAvatarsAsync [
 		] fork ].
 	avatarUrlByEmail size timesRepeat: [ semaphore wait ].
 
-	avatarByEmail := Dictionary new.
-	sharedQueue contents do: [ :association |
-		avatarByEmail at: association key put: association value ].
+	avatarByEmail := sharedQueue contents asDictionary
+
+]
+
+{ #category : #action }
+RiGithubAvatarClient >> getAvatarUrlByEmail [
+	"Get all avatar URLs via Github API v4."
+
+	| response |
+	"Query Github"
+	response := IceGitHubAPI new
+		credentials: self credentials;
+		graphql: self graphQL.
+
+	"On sucess: Get avatar URLs"
+	avatarUrlByEmail := Dictionary new.
+	((response at: 'data') at: 'repository') values
+		collect: [ :each | each at: 'author' ]
+		thenDo: [ :each | 
+			avatarUrlByEmail at: (each at: 'email') put: (each at: 'avatarUrl') ].
 
 ]
 
@@ -133,6 +130,6 @@ RiGithubAvatarClient >> remote [
 ]
 
 { #category : #'accessing - request' }
-RiGithubAvatarClient >> remote: anObject [
-	remote := anObject
+RiGithubAvatarClient >> remote: anIceRemote [
+	remote := anIceRemote
 ]

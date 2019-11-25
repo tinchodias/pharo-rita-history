@@ -13,11 +13,6 @@ Class {
 }
 
 { #category : #accessing }
-RiAvatarsDatabase >> avatarByEmail [
-	^ avatarByEmail
-]
-
-{ #category : #accessing }
 RiAvatarsDatabase >> avatarFor: aRiElement [
 	^ avatarByEmail
 		at: aRiElement authorEmail
@@ -43,9 +38,6 @@ RiAvatarsDatabase >> freshAvatarsByEmail [
 	
 	commitsByEmail := commits groupedBy: #authorEmail.
 
-	self flag: #todo. "Just for demo"	
-	commitsByEmail keys size > 10 ifTrue: [ ^ Dictionary new ].
-	
 	commitsIdsToQuery := commitsByEmail values collect: [:each | each last id ].
 	
 	credentials := IceGitHubAPI ensureCredentials; obtainCredentials.
@@ -57,10 +49,7 @@ RiAvatarsDatabase >> freshAvatarsByEmail [
 		commitsIds: commitsIdsToQuery;
 		yourself.
 
-	^ [ client get.
-		client avatarByEmail ]
-			on: NetworkError, ZnHttpUnsuccessful
-			do: [ :each | Dictionary new ].
+	^ client get; avatarByEmail
 
 ]
 
