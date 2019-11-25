@@ -334,7 +334,7 @@ RiTorchUMLClassRenderer >> popupForTinyClassShapes [
 { #category : #private }
 RiTorchUMLClassRenderer >> popupForVariableShapes [
 	^ RSPopup text: [ :node | 
-		'{1} [{2}]' format: { node value definition name. node value definition class type } ]
+		'{1} [{2}]' format: { node value definition name. node value definition typeToShow } ]
 ]
 
 { #category : #settings }
@@ -409,7 +409,7 @@ RiTorchUMLClassRenderer >> varFor: model [
 		border: innerBorder;
 		color: (self fillColorFor: model);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		addInteraction: self popupForIceNodeShapes;
+		addInteraction: self popupForVariableShapes;
 		yourself
 ]
 
