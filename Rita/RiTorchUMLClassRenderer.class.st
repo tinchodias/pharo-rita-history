@@ -216,7 +216,7 @@ RiTorchUMLClassRenderer >> methodFor: aMethod [
 		model: aMethod;
 		border: innerBorder;
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		addInteraction: self popupForMethodIceNodeShape;
+		addInteraction: self popupForIceNodeShapes;
 		yourself
 ]
 
@@ -227,11 +227,6 @@ RiTorchUMLClassRenderer >> outlineSize [
 
 { #category : #private }
 RiTorchUMLClassRenderer >> popupForIceNodeShapes [
-	^ RSPopup text: [ :node | node value definition name ]
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> popupForMethodIceNodeShape [
 	^ RSPopup new
 		shapeBuilder: [ :node | 
 			| form |
