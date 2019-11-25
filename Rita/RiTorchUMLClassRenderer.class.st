@@ -58,9 +58,15 @@ RiTorchUMLClassRenderer >> blockWhenNodeSelected: anObject [
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> classBoxShapeFor: iceNode [
+	| theBorder |
+	theBorder := self boxBorder copy color: (self foregroundColorFor: iceNode).
+
+	iceNode value definition isTraitDefinition ifTrue: [ 
+		theBorder dashArray: #(2) ].
+
 	^ RSBox new
 		noPaint;
-		border: (self boxBorder copy color: (self foregroundColorFor: iceNode));
+		border: theBorder;
 		yourself
 ]
 
