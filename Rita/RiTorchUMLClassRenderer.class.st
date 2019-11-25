@@ -320,6 +320,23 @@ RiTorchUMLClassRenderer >> popupForMethodIceNodeShape [
 		yourself
 ]
 
+{ #category : #private }
+RiTorchUMLClassRenderer >> popupForTinyClassShapes [
+	self flag: #todo.	"FIX super"
+	^ RSPopup new
+		shapeBuilder: [ :node | 
+			(super shapeFor: node)
+				color: self backgroundColor;
+				yourself ];
+		yourself
+]
+
+{ #category : #private }
+RiTorchUMLClassRenderer >> popupForVariableShapes [
+	^ RSPopup text: [ :node | 
+		'{1} [{2}]' format: { node value definition name. node value definition class type } ]
+]
+
 { #category : #settings }
 RiTorchUMLClassRenderer >> scaleForMethods [
 	^ 10
@@ -338,7 +355,7 @@ RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> shapeFor: iceNode [
 	^ iceNode hasChanges
-		ifTrue:[ 
+		ifTrue:[
 			(super shapeFor: iceNode)
 				when: RSMouseClick do: self blockForMouseClickOnIceNode;
 				removeInteractionIfPresent: RSPopup;
@@ -367,7 +384,7 @@ RiTorchUMLClassRenderer >> tinyClassShapeFor: iceNode [
 		size: 10;
 		model: iceNode;
 		border: tinyBoxBorder;
-		addInteraction: self popupForIceNodeShapes;
+		addInteraction: self popupForTinyClassShapes;
 		yourself
 ]
 
