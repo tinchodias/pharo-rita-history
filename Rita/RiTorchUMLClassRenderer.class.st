@@ -254,7 +254,8 @@ RiTorchUMLClassRenderer >> initialize [
 	tinyBoxBorder := RSBorder new
 		width: 1;
 		color: self foregroundColor;
-		joinMiter; 
+		joinMiter;
+		dashArray: #(1); 
 		yourself.
 
 ]
