@@ -71,6 +71,7 @@ RiRepositoriesPresenter >> initializePresenters [
 	table
 		showColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
+		addColumn: ((SpImageTableColumn evaluated: [ :each | self iconNamed: #git ]) width: 20);
 		addColumn: (SpStringTableColumn title: 'Name' evaluated: #name);
 		addColumn: (SpStringTableColumn title: 'Description' evaluated: #description).
 
