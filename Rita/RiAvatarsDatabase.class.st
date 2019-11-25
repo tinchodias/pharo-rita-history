@@ -42,6 +42,10 @@ RiAvatarsDatabase >> freshAvatarsByEmail [
 			ifNotEmpty: #anyOne.
 	
 	commitsByEmail := commits groupedBy: #authorEmail.
+
+	self flag: #todo. "Just for demo"	
+	commitsByEmail keys size > 10 ifTrue: [ ^ Dictionary new ].
+	
 	commitsIdsToQuery := commitsByEmail values collect: [:each | each last id ].
 	
 	credentials := IceGitHubAPI ensureCredentials; obtainCredentials.
@@ -58,6 +62,13 @@ RiAvatarsDatabase >> freshAvatarsByEmail [
 			on: NetworkError, ZnHttpUnsuccessful
 			do: [ :each | Dictionary new ].
 
+]
+
+{ #category : #refreshing }
+RiAvatarsDatabase >> initialize [
+	super initialize.
+	
+	avatarByEmail := Dictionary new.
 ]
 
 { #category : #refreshing }
