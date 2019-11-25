@@ -56,81 +56,6 @@ RiTorchUMLClassRenderer >> blockWhenNodeSelected: anObject [
 	blockWhenNodeSelected := anObject 
 ]
 
-{ #category : #private }
-RiTorchUMLClassRenderer >> builderForClassName [
-	| builderForName builderForStereotype theLayout |
-	builderForName := self builderForLabel: [:node | node value definition name ] widthScale: 0.9.
-	
-	builderForStereotype := self builderForStereotype.
-	theLayout := RSVerticalLineLayout new gapSize: -1; center; yourself.
-
-	^ RSShapeBuilder composite shapes: [ :aBehavior | 
-		| group |
-		group := RSGroup new.
-		self
-			stereotypeFor: aBehavior
-			ifPresent: [:stereotype |
-				group add: (builderForStereotype elementOn: stereotype) ].
-
-		group add: (builderForName elementOn: aBehavior).
-		theLayout on: group.
-		group ].
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> builderForLabel: textBlock widthScale: widthScale [
-
-	^ RSShapeBuilder label
-		color: self foregroundColor;
-		onElement; 
-		text: [ :e | RiTextWidthKeeper
-			stringFor: (textBlock cull: e model) asString
-			font: e font
-			maxSize: self maxClassWidth * (1/widthScale)  ];
-		scaleBy: widthScale@1;
-		onModel;
-		yourself
-
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> builderForMethodName [
-
-	^ (self builderForLabel: [:node | node value definition selector ] widthScale: self widthScaleForNarrowFontStyle)
-		if: [:node | node value definition classIsMeta ] then: [:s | s underline ];
-		yourself
-
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> builderForSlotName [
-	^ (self builderForLabel:[:node | node value definition name ] widthScale: self widthScaleForNarrowFontStyle)
-"		if: [:m | m isVariableDefinition and: [ m isClassVariable ] ] then: [ :s | s underline ];"
-"		if: [:m | m isVariableDefinition and: [ m isPoolVariable ] ] then: [ :s | s underline ];
-		if: [:m | m isVariableDefinition and: [ m isClassInstanceVariable ] ] then: [ :s | s underline ];"
-		yourself
-
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> builderForStereotype [
-
-	| widthScale |
-	widthScale := self widthScaleForNarrowFontStyle.
-	
-	^ RSShapeBuilder label
-		color: self stereotypeColor;
-		italic;
-		onElement; 
-		text: [ :e | RiTextWidthKeeper
-			stringFor: '« ', e model, ' »'
-			font: e font
-			maxSize: self maxClassWidth * (1/widthScale) ];
-		scaleBy: widthScale;
-		onModel;
-		yourself
-]
-
 { #category : #hooks }
 RiTorchUMLClassRenderer >> classBoxShapeFor: iceNode [
 	^ RSBox new
@@ -423,9 +348,4 @@ RiTorchUMLClassRenderer >> varsFor: model [
 				top: 3
 				bottom: 0);
 		yourself
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> widthScaleForNarrowFontStyle [
-	^ 0.8
 ]
