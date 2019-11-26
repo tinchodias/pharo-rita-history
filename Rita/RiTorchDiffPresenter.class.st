@@ -41,8 +41,7 @@ RiTorchDiffPresenter >> fillLastCanvas [
 
 	builder modelDescriptor
 		classname: [ :node | node value name ];
-		instVars: [ :node | 
-			node children select: [ :each | each value definition className = #IceVariableDefinition ] ];
+		instVars: [ :node | self instVarsToShowFor: node ];
 		methods: [ :node | self methodsToShowFor: node ];
 		superclass: [ :node |
 			node value definition isExtensionDefinition
@@ -84,6 +83,12 @@ RiTorchDiffPresenter >> initializePresenters [
 	roassalPresenter script: [ :newCanvas | 
 		lastCanvas := newCanvas.
 		model ifNotNil: [ self fillLastCanvas ] ].
+]
+
+{ #category : #initialization }
+RiTorchDiffPresenter >> instVarsToShowFor: node [
+	^ (node children reject: [ :each | each value definition isMethodDefinition ])
+		sorted: [ :a :b | a value definition className < b value definition className ]
 ]
 
 { #category : #initialization }

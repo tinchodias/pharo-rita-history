@@ -4,3 +4,8 @@ Extension { #name : #IceOperation }
 IceOperation >> ritaColor [
 	^ Color transparent
 ]
+
+{ #category : #'*Rita' }
+IceOperation >> ritaKey [
+	^ self name
+]

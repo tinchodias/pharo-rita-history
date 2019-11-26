@@ -28,7 +28,7 @@ RiTreeDiffPresenter >> changeListColumn [
 				yourself);
 		addColumn:
 			(SpStringTableColumn new
-				evaluated: [ :each | each value name ];
+				evaluated: [ :each | each value ritaKey ];
 				yourself);
 		yourself
 ]

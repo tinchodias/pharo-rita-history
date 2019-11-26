@@ -34,6 +34,14 @@ RiTorchUMLClassRenderer >> addZoomingInteractionOn: aCanvas [
 
 ]
 
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> applyMLayoutOn: shapes [
+	RSFlowLayout new 
+		gapSize: self gapBetweenMethods;
+		maxWidth: self currentMaxWidth;
+		on: shapes.
+]
+
 { #category : #settings }
 RiTorchUMLClassRenderer >> backgroundColor [
 	^ self currentTheme backgroundColor
@@ -78,6 +86,29 @@ RiTorchUMLClassRenderer >> classNameBoxFor: aClass [
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		yourself
+]
+
+{ #category : #private }
+RiTorchUMLClassRenderer >> contentsDiffFormFor: iceNode [
+
+	| presenter font |
+	presenter := RiUnifiedDiffPresenter new
+		buildWithSpec;
+		model: {
+			#from -> iceNode value rightContents.
+			#to -> iceNode value leftContents
+			} asDictionary;
+		yourself.
+			
+	font := LogicalFont 
+		familyName: StandardFonts codeFont familyName
+		pointSize: 7.
+
+	^ presenter theWidget
+		font: font;
+		extent: 300@350;
+		scrollbarsShowNever;
+		imageForm.
 ]
 
 { #category : #settings }
@@ -160,6 +191,12 @@ RiTorchUMLClassRenderer >> gapBetweenHierarchies [
 ]
 
 { #category : #settings }
+RiTorchUMLClassRenderer >> gapBetweenMethods [
+	^ 4
+
+]
+
+{ #category : #settings }
 RiTorchUMLClassRenderer >> gapFromClassToSubclass [
 	^ 30
 ]
@@ -186,48 +223,41 @@ RiTorchUMLClassRenderer >> initialize [
 
 ]
 
-{ #category : #private }
-RiTorchUMLClassRenderer >> methodDiffFormFrom: from to: to [ 
-
-	| presenter font |
-	presenter := RiUnifiedDiffPresenter new
-		buildWithSpec;
-		model: { #from -> from. #to -> to } asDictionary;
-		yourself.
-			
-	font := LogicalFont 
-		familyName: StandardFonts codeFont familyName
-		pointSize: 7.
-
-	^ presenter theWidget
-		font: font;
-		extent: 300@350;
-		scrollbarsShowNever;
-		imageForm.
-]
-
 { #category : #hooks }
-RiTorchUMLClassRenderer >> methodFor: aMethod [
-	^ (aMethod accept: methodShapeCreatorVisitor)
-		model: aMethod;
-		border: innerBorder;
-		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		addInteraction: self popupForIceNodeShapes;
+RiTorchUMLClassRenderer >> methodFor: iceNode [
+	| shapes |
+	shapes := OrderedCollection new.
+
+	iceNode nextNodeSuchThat: [ :each | each value name = 'category' ]
+		ifFound: [:found | shapes add: (self shapeForMethodProperty: found) ].
+	shapes ifEmpty: [ 
+		shapes add: (RSShape box 
+			width: self scaleForMethods;
+			height: self scaleForMethods / 2;
+			noPaint; 
+			border: innerBorder;
+			yourself) ].
+	
+"	iceNode nextNodeSuchThat: [ :each | each value name = 'source' ] ifFound: [:found |"
+		shapes add: ((iceNode accept: methodShapeCreatorVisitor)
+			model: iceNode;
+			border: innerBorder;
+			when: RSMouseClick do: self blockForMouseClickOnIceNode;
+			addInteraction: self popupForIceNodeShapes;
+			yourself).
+	
+	RSVerticalLineLayout new gapSize: 0; on: shapes.
+	
+	^ RSComposite new
+		shapes: shapes;
 		yourself
 ]
 
 { #category : #private }
 RiTorchUMLClassRenderer >> popupForIceNodeShapes [
 	^ RSPopup new
-		shapeBuilder: [ :node | 
-			| form |
-			form := self
-				methodDiffFormFrom: node value rightContents
-				to: node value leftContents.
-			RSBitmap new
-				form: form;
-				border: innerBorder;
-				yourself ];
+		shapeBuilder: [ :iceNode |
+			self shapeWithContentDiffFor: iceNode ];
 		yourself
 ]
 
@@ -276,6 +306,69 @@ RiTorchUMLClassRenderer >> shapeFor: iceNode [
 ]
 
 { #category : #private }
+RiTorchUMLClassRenderer >> shapeForMethodProperty: iceNode [
+	^ RSShape box
+		width: self scaleForMethods;
+		height: self scaleForMethods/2;
+		model: iceNode;
+		border: innerBorder;
+		color: (self fillColorFor: iceNode);
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		addInteraction: self popupForIceNodeShapes;
+		yourself
+
+]
+
+{ #category : #private }
+RiTorchUMLClassRenderer >> shapeForProperty: iceNode [
+	^ RSPolygon triangle
+"		rotateByDegrees: 180;"
+		model: iceNode;
+		size: self scaleForMethods;
+		border: innerBorder;
+		color: (self fillColorFor: iceNode);
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		addInteraction: self popupForIceNodeShapes;
+		yourself
+
+]
+
+{ #category : #private }
+RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
+	^ RSPolygon circle
+		model: iceNode;
+		size: self scaleForMethods;
+		border: innerBorder;
+		color: (self fillColorFor: iceNode);
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		addInteraction: self popupForVariableShapes;
+		yourself
+
+]
+
+{ #category : #private }
+RiTorchUMLClassRenderer >> shapeWithContentDiffFor: node [
+
+	| label contents |
+	label := RSLabel new
+		color: self textColor;
+		text: node value ritaKey;
+		yourself.
+	label fontSize: label fontSize * 0.7.
+	
+	contents := RSBitmap new
+		form: (self contentsDiffFormFor: node);
+		border: innerBorder;
+		yourself.
+	
+	self applyLayoutOn: {label. contents}.
+	
+	^ RSComposite new
+		shapes: { label. contents };
+		yourself
+]
+
+{ #category : #private }
 RiTorchUMLClassRenderer >> tinyClassShapeFor: iceNode [
 	^ RSBox new
 		noPaint;
@@ -300,15 +393,13 @@ RiTorchUMLClassRenderer >> titleFor: model [
 ]
 
 { #category : #hooks }
-RiTorchUMLClassRenderer >> varFor: model [
-	^ RSPolygon triangle
-		model: model;
-		size: self scaleForMethods * 1.3;
-		border: innerBorder;
-		color: (self fillColorFor: model);
-		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		addInteraction: self popupForVariableShapes;
-		yourself
+RiTorchUMLClassRenderer >> varFor: iceNode [
+	"Hacky: It draws not only variables but also class properties (e.g. superclass change)."
+	
+	^ iceNode value definition className = #IceVariableDefinition
+		ifTrue: [ self shapeForVariable: iceNode ]
+		ifFalse: [ self shapeForProperty: iceNode ]
+
 ]
 
 { #category : #hooks }
@@ -319,6 +410,6 @@ RiTorchUMLClassRenderer >> varsFor: model [
 				left: 0
 				right: 0
 				top: 3
-				bottom: 0);
+				bottom: 3);
 		yourself
 ]
