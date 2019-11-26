@@ -160,11 +160,6 @@ RiTorchUMLClassRenderer >> gapBetweenHierarchies [
 ]
 
 { #category : #settings }
-RiTorchUMLClassRenderer >> gapBetweenMethods [
-	^ 5
-]
-
-{ #category : #settings }
 RiTorchUMLClassRenderer >> gapFromClassToSubclass [
 	^ 30
 ]
@@ -189,11 +184,6 @@ RiTorchUMLClassRenderer >> initialize [
 		dashArray: #(1); 
 		yourself.
 
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> maxClassWidth [
-	^ 200
 ]
 
 { #category : #private }
@@ -224,11 +214,6 @@ RiTorchUMLClassRenderer >> methodFor: aMethod [
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		yourself
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> outlineSize [
-	^ self gapFromSubclassToSibling / 2
 ]
 
 { #category : #private }
@@ -288,19 +273,6 @@ RiTorchUMLClassRenderer >> shapeFor: iceNode [
 				addInteraction: self popupForIceNodeShapes;
 				yourself ]
 		ifFalse: [ self tinyClassShapeFor: iceNode ]
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> stereotypeColor [
-	^ self currentTheme caretColor
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> stereotypeFor: aBehavior ifPresent: aBlock [
-	aBehavior isTrait
-		ifTrue: [ ^ aBlock cull: 'trait' ].
-	(aBehavior isRingResolved not and: [aBehavior hasMethodExtensions])
-		ifTrue: [ ^ aBlock cull: 'extension' ]
 ]
 
 { #category : #private }
