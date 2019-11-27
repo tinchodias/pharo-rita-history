@@ -1,6 +1,6 @@
 Class {
 	#name : #RiTorchUMLClassRenderer,
-	#superclass : #RSTorchUMLClassRenderer,
+	#superclass : #RSAbstractUMLClassRenderer,
 	#instVars : [
 		'blockWhenNodeSelected',
 		'innerBorder',
@@ -40,6 +40,11 @@ RiTorchUMLClassRenderer >> applyMLayoutOn: shapes [
 		gapSize: self gapBetweenMethods;
 		maxWidth: self currentMaxWidth;
 		on: shapes.
+]
+
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> applyVLayoutOn: shapes [
+	self applyMLayoutOn: shapes
 ]
 
 { #category : #settings }
@@ -86,6 +91,11 @@ RiTorchUMLClassRenderer >> classNameBoxFor: aClass [
 		yourself
 ]
 
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> currentMaxWidth [
+	^ 200
+]
+
 { #category : #settings }
 RiTorchUMLClassRenderer >> currentTheme [
 	^ Smalltalk ui theme
@@ -97,6 +107,11 @@ RiTorchUMLClassRenderer >> defaultBoxBorder [
 		width: 1.5;
 		joinMiter; 
 		yourself 
+]
+
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> defaultClassBoxPadding [
+	^ 10@0
 ]
 
 { #category : #hooks }
@@ -181,6 +196,32 @@ RiTorchUMLClassRenderer >> foregroundColorFor: node [
 		with: self foregroundColor
 ]
 
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> fullClassShapeFor: aClass [
+	| shapes box title vars methods boxTitle |
+	title := self titleFor: aClass.
+	vars := self varsFor: aClass.
+	methods := self methodsFor: aClass.
+	shapes := self groupFor: { vars. methods }.
+	shapes addFirst: title.
+	box := self classBoxShapeFor: aClass.
+	boxTitle := self classNameBoxFor: aClass.
+	self applyLayoutOn: shapes.
+	self adjustTitle: title on: shapes.
+	shapes addFirst: boxTitle.
+	shapes addLast: box.
+	self adjustBox: box on: shapes. 
+	boxTitle 
+		position: box position x @ title position y ;
+		extent: (box width @ title height).
+	^ RSComposite new
+		popup;
+		draggable;
+		model: aClass;
+		shapes: shapes;
+		yourself.
+]
+
 { #category : #settings }
 RiTorchUMLClassRenderer >> gapBetweenHierarchies [
 	"Tricky: This gap is expressed as a ratio of the average size of elements. See RSRectanglePackLayout."
@@ -251,6 +292,17 @@ RiTorchUMLClassRenderer >> methodFor: iceNode [
 		yourself
 ]
 
+{ #category : #settings }
+RiTorchUMLClassRenderer >> methodsFor: aClass [
+	^ (super methodsFor: aClass)
+		padding: ( Margin 
+		 	left: 0
+			right: 0
+			top: 5
+			bottom: 5);
+		yourself
+]
+
 { #category : #private }
 RiTorchUMLClassRenderer >> popupForIceNodeShapes [
 	^ RSMorphicPopup new
@@ -295,7 +347,7 @@ RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 RiTorchUMLClassRenderer >> shapeFor: iceNode [
 	^ iceNode hasChanges
 		ifTrue:[
-			(super shapeFor: iceNode)
+			(self fullClassShapeFor: iceNode)
 				when: RSMouseClick do: self blockForMouseClickOnIceNode;
 				removeInteractionIfPresent: RSPopup;
 				addInteraction: self popupForIceNodeShapes;
@@ -364,7 +416,6 @@ RiTorchUMLClassRenderer >> titleFor: model [
 		scaleBy: 0.7@0.8
 		yourself.
 	"label fontSize: label fontSize * 0.8".
-	currentTitleWidth := label textWidth.
 	^ label
 ]
 
