@@ -13,9 +13,9 @@ Class {
 }
 
 { #category : #accessing }
-RiAvatarsDatabase >> avatarFor: aRiElement [
+RiAvatarsDatabase >> avatarFor: emailString [
 	^ avatarByEmail
-		at: aRiElement authorEmail
+		at: emailString
 		ifAbsent: [ self iconNamed: #user ]
 ]
 

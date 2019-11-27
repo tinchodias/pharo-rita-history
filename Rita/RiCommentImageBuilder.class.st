@@ -5,8 +5,25 @@ I'm responsible of building the image (a Morph) to show in the comment column of
 Class {
 	#name : #RiCommentImageBuilder,
 	#superclass : #Object,
+	#instVars : [
+		'presenter'
+	],
 	#category : #'Rita-UI'
 }
+
+{ #category : #accessing }
+RiCommentImageBuilder >> avatarsFor: item [
+	
+	| authorEmail committerEmail |
+	authorEmail := item authorEmail.
+	committerEmail := item committerEmail.
+	
+	^ Array streamContents: [ :stream |
+		stream nextPut: (presenter avatarFor: authorEmail) asMorph.
+		authorEmail ~= committerEmail ifTrue: [
+			stream nextPut: (presenter avatarFor: committerEmail) asMorph
+		] ]
+]
 
 { #category : #visiting }
 RiCommentImageBuilder >> colorForAlreadyPushed [
@@ -20,7 +37,7 @@ RiCommentImageBuilder >> colorForOnlyLocal [
 
 { #category : #visiting }
 RiCommentImageBuilder >> iconForBranch [
-	^ Smalltalk ui iconNamed: #branch
+	^ self iconNamed: #branch
 ]
 
 { #category : #visiting }
@@ -32,7 +49,7 @@ RiCommentImageBuilder >> iconForTag [
 
 { #category : #visiting }
 RiCommentImageBuilder >> iconForWorkingCopy [
-	^ Smalltalk ui iconNamed: #smallSave
+	^ self iconNamed: #smallSave
 ]
 
 { #category : #private }
@@ -56,11 +73,25 @@ RiCommentImageBuilder >> markMorphsAt: aRiElement [
 
 { #category : #accessing }
 RiCommentImageBuilder >> morphAt: item [
-	^ FTCellMorph new
-		cellInset: 5;
-		addAllMorphs: (self markMorphsAt: item);
-		addMorphBack: item comment asMorph;
-		yourself
+	| bar |
+	bar := SpToolBarMorph new.
+	bar leftPanel cellInset: 5@0.
+	bar rightPanel hResizing: #shrinkWrap.
+	((self avatarsFor: item), (self markMorphsAt: item), {item comment asMorph hResizing: #spaceFill})
+		do: [ :each | bar addItemLeft: each ].
+	self flag: #todo. "Why?!?!?!?!"
+	bar addItemRight: (item dateAndTime asString, '       ') asMorph.
+	^ bar
+]
+
+{ #category : #accessing }
+RiCommentImageBuilder >> presenter [
+	^ presenter
+]
+
+{ #category : #accessing }
+RiCommentImageBuilder >> presenter: anObject [
+	presenter := anObject
 ]
 
 { #category : #visiting }

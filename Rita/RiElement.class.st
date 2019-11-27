@@ -48,7 +48,7 @@ RiElement >> comment [
 ]
 
 { #category : #accessing }
-RiElement >> date [
+RiElement >> dateAndTime [
 	^ self subclassResponsibility
 ]
 

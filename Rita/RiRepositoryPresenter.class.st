@@ -91,6 +91,12 @@ RiRepositoryPresenter >> actionLoadCommit: aRiCommit [
 	self refreshOnModelUpdate.
 ]
 
+{ #category : #accessing }
+RiRepositoryPresenter >> avatarFor: emailString [
+	self flag: #todo. "remove this"
+	^ avatarDatabase avatarFor: emailString
+]
+
 { #category : #initialization }
 RiRepositoryPresenter >> blockForElementSelected: aBlock [
 	table whenSelectionChangedDo: [:selection |
@@ -103,14 +109,20 @@ RiRepositoryPresenter >> blockForPinToCompareFrom: aBlock [
 ]
 
 { #category : #initialization }
-RiRepositoryPresenter >> columnForAuthor [
-	^ SpCompositeTableColumn
-		title: 'Author'
-		withAll: { 
-			SpImageTableColumn evaluated: [ :each | avatarDatabase avatarFor: each ].
-			(SpStringTableColumn evaluated: [ :each | ' ', each author ]) width: 100.
-		}
+RiRepositoryPresenter >> columnForComment [
+	"[ :each | avatarDatabase avatarFor: each authorEmail ]"
 
+	^ SpImageTableColumn
+		title: 'Description'
+		evaluated: [ :item | commentImageBuilder morphAt: item ]
+]
+
+{ #category : #initialization }
+RiRepositoryPresenter >> columnForHiedra [
+	^ (SpImageTableColumn
+		evaluated: [ :item | hiedraImageBuilder morphAt: item ])
+		beNotExpandable;
+		yourself
 ]
 
 { #category : #initialization }
@@ -153,19 +165,18 @@ RiRepositoryPresenter >> contextMenuForTable [
 { #category : #initialization }
 RiRepositoryPresenter >> initializePresenters [
 
+	avatarDatabase := RiAvatarsDatabase new.
+	commentImageBuilder := RiCommentImageBuilder new presenter: self; yourself.
+	hiedraImageBuilder := RiHiedraImageBuilder new.
+
 	table := self newTable.
 	table
 		showColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
-		addColumn: (SpImageTableColumn evaluated: [ :item | hiedraImageBuilder morphAt: item ]) beNotExpandable;
-		addColumn: self columnForAuthor;
-		addColumn: (SpImageTableColumn title: 'Comment' evaluated: [:item | commentImageBuilder morphAt: item ]);
-		addColumn: ((SpStringTableColumn title: 'Date' evaluated: #date) width: 120).
+		addColumn: self columnForHiedra;
+		addColumn: self columnForComment.
 
 	table whenBuiltDo: [ :ann |
-		avatarDatabase := RiAvatarsDatabase new.
-		commentImageBuilder := RiCommentImageBuilder new.
-		hiedraImageBuilder := RiHiedraImageBuilder new.
 		hiedraImageBuilder tableMorph: ann widget.
 		self refreshOnModelUpdate ].
 

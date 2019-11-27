@@ -83,32 +83,7 @@ RiTorchUMLClassRenderer >> classNameBoxFor: aClass [
 	^ RSBox new
 		model: aClass;
 		color: (self backgroundColorFor: aClass);
-		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		addInteraction: self popupForIceNodeShapes;
 		yourself
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> contentsDiffFormFor: iceNode [
-
-	| presenter font |
-	presenter := RiUnifiedDiffPresenter new
-		buildWithSpec;
-		model: {
-			#from -> iceNode value rightContents.
-			#to -> iceNode value leftContents
-			} asDictionary;
-		yourself.
-			
-	font := LogicalFont 
-		familyName: StandardFonts codeFont familyName
-		pointSize: 7.
-
-	^ presenter theWidget
-		font: font;
-		extent: 300@350;
-		scrollbarsShowNever;
-		imageForm.
 ]
 
 { #category : #settings }
@@ -160,6 +135,29 @@ RiTorchUMLClassRenderer >> defaultMarker [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> defaultTextColor [
 	^ self foregroundColor
+]
+
+{ #category : #private }
+RiTorchUMLClassRenderer >> diffMorphFor: iceNode [
+
+	| presenter font |
+	presenter := RiUnifiedDiffPresenter new
+		buildWithSpec;
+		model: {
+			#from -> iceNode value rightContents.
+			#to -> iceNode value leftContents
+			} asDictionary;
+		yourself.
+			
+	font := LogicalFont 
+		familyName: StandardFonts codeFont familyName
+		pointSize: 7.
+
+	^ presenter theWidget
+		font: font;
+		extent: 300@250;
+		scrollbarsShowNever;
+		yourself.
 ]
 
 { #category : #settings }
@@ -255,9 +253,9 @@ RiTorchUMLClassRenderer >> methodFor: iceNode [
 
 { #category : #private }
 RiTorchUMLClassRenderer >> popupForIceNodeShapes [
-	^ RSPopup new
-		shapeBuilder: [ :iceNode |
-			self shapeWithContentDiffFor: iceNode ];
+	^ RSMorphicPopup new
+		morphBuilder: [ :iceNode |
+			self diffMorphFor: iceNode ];
 		yourself
 ]
 
@@ -344,28 +342,6 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 		addInteraction: self popupForVariableShapes;
 		yourself
 
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> shapeWithContentDiffFor: node [
-
-	| label contents |
-	label := RSLabel new
-		color: self textColor;
-		text: node value ritaKey;
-		yourself.
-	label fontSize: label fontSize * 0.7.
-	
-	contents := RSBitmap new
-		form: (self contentsDiffFormFor: node);
-		border: innerBorder;
-		yourself.
-	
-	self applyLayoutOn: {label. contents}.
-	
-	^ RSComposite new
-		shapes: { label. contents };
-		yourself
 ]
 
 { #category : #private }

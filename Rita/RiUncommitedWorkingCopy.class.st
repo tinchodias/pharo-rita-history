@@ -41,7 +41,12 @@ RiUncommitedWorkingCopy >> comment [
 ]
 
 { #category : #accessing }
-RiUncommitedWorkingCopy >> date [
+RiUncommitedWorkingCopy >> committerEmail [
+	^ ''
+]
+
+{ #category : #accessing }
+RiUncommitedWorkingCopy >> dateAndTime [
 	^ '---'
 ]
 
