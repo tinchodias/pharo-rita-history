@@ -99,10 +99,9 @@ RiGithubAvatarClient >> getAvatarUrlByEmail [
 
 	"On sucess: Get avatar URLs"
 	avatarUrlByEmail := Dictionary new.
-	((response at: 'data') at: 'repository') values
-		collect: [ :each | each at: 'author' ]
-		thenDo: [ :each | 
-			avatarUrlByEmail at: (each at: 'email') put: (each at: 'avatarUrl') ].
+	((response at: 'data') at: 'repository') valuesDo: [ :each |
+		self registerAvatarUrlByEmail: (each at: 'author').
+		self registerAvatarUrlByEmail: (each at: 'committer') ].
 
 ]
 
@@ -119,9 +118,20 @@ fragment authorFragment on GitObject {
       email
       avatarUrl
     }
+    committer {
+      email
+      avatarUrl
+    }
   }
 }
 ' ].
+]
+
+{ #category : #action }
+RiGithubAvatarClient >> registerAvatarUrlByEmail: aDictionary [
+	avatarUrlByEmail
+		at: (aDictionary at: 'email')
+		ifAbsentPut: [ aDictionary at: 'avatarUrl' ]
 ]
 
 { #category : #'accessing - request' }
