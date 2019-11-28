@@ -92,6 +92,24 @@ RiTorchUMLClassRenderer >> classNameBoxFor: aClass [
 ]
 
 { #category : #hooks }
+RiTorchUMLClassRenderer >> classPropertiesFor: iceNode [
+	| properties shapes |
+	properties := modelDescriptor classProperties rsValue: iceNode.
+	shapes := properties collect: [ :each | self shapeForClassProperty: each ].
+	self applyVLayoutOn: shapes.
+
+	^ RSComposite new
+		shapes: shapes;
+		padding:
+			(Margin
+				left: 0
+				right: 0
+				top: self gapBetweenMethods
+				bottom: self gapBetweenMethods);
+		yourself
+]
+
+{ #category : #hooks }
 RiTorchUMLClassRenderer >> currentMaxWidth [
 	^ 200
 ]
@@ -196,32 +214,6 @@ RiTorchUMLClassRenderer >> foregroundColorFor: node [
 		with: self foregroundColor
 ]
 
-{ #category : #hooks }
-RiTorchUMLClassRenderer >> fullClassShapeFor: aClass [
-	| shapes box title vars methods boxTitle |
-	title := self titleFor: aClass.
-	vars := self varsFor: aClass.
-	methods := self methodsFor: aClass.
-	shapes := self groupFor: { vars. methods }.
-	shapes addFirst: title.
-	box := self classBoxShapeFor: aClass.
-	boxTitle := self classNameBoxFor: aClass.
-	self applyLayoutOn: shapes.
-	self adjustTitle: title on: shapes.
-	shapes addFirst: boxTitle.
-	shapes addLast: box.
-	self adjustBox: box on: shapes. 
-	boxTitle 
-		position: box position x @ title position y ;
-		extent: (box width @ title height).
-	^ RSComposite new
-		popup;
-		draggable;
-		model: aClass;
-		shapes: shapes;
-		yourself.
-]
-
 { #category : #settings }
 RiTorchUMLClassRenderer >> gapBetweenHierarchies [
 	"Tricky: This gap is expressed as a ratio of the average size of elements. See RSRectanglePackLayout."
@@ -231,13 +223,13 @@ RiTorchUMLClassRenderer >> gapBetweenHierarchies [
 
 { #category : #settings }
 RiTorchUMLClassRenderer >> gapBetweenMethods [
-	^ 4
+	^ 3
 
 ]
 
 { #category : #settings }
 RiTorchUMLClassRenderer >> gapFromClassToSubclass [
-	^ 30
+	^ 20
 ]
 
 { #category : #settings }
@@ -295,11 +287,12 @@ RiTorchUMLClassRenderer >> methodFor: iceNode [
 { #category : #settings }
 RiTorchUMLClassRenderer >> methodsFor: aClass [
 	^ (super methodsFor: aClass)
-		padding: ( Margin 
-		 	left: 0
-			right: 0
-			top: 5
-			bottom: 5);
+		padding:
+			(Margin
+				left: 0
+				right: 0
+				top: self gapBetweenMethods
+				bottom: self gapBetweenMethods);
 		yourself
 ]
 
@@ -346,13 +339,50 @@ RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> shapeFor: iceNode [
 	^ iceNode hasChanges
-		ifTrue:[
-			(self fullClassShapeFor: iceNode)
-				when: RSMouseClick do: self blockForMouseClickOnIceNode;
-				removeInteractionIfPresent: RSPopup;
-				addInteraction: self popupForIceNodeShapes;
-				yourself ]
-		ifFalse: [ self tinyClassShapeFor: iceNode ]
+		ifTrue: [ self shapeForFullClass: iceNode ]
+		ifFalse: [ self shapeForTinyClass: iceNode ]
+]
+
+{ #category : #private }
+RiTorchUMLClassRenderer >> shapeForClassProperty: iceNode [
+	^ RSPolygon triangle
+"		rotateByDegrees: 180;"
+		model: iceNode;
+		size: self scaleForMethods;
+		border: innerBorder;
+		color: (self fillColorFor: iceNode);
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		addInteraction: self popupForIceNodeShapes;
+		yourself
+
+]
+
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> shapeForFullClass: iceNode [
+	| shapes box title classProperties vars methods boxTitle |
+	title := self titleFor: iceNode.
+	classProperties := self classPropertiesFor: iceNode.
+	vars := self varsFor: iceNode.
+	methods := self methodsFor: iceNode.
+	shapes := self groupFor: { classProperties. vars. methods }.
+	shapes addFirst: title.
+	box := self classBoxShapeFor: iceNode.
+	boxTitle := self classNameBoxFor: iceNode.
+	self applyLayoutOn: shapes.
+	self adjustTitle: title on: shapes.
+	shapes addFirst: boxTitle.
+	shapes addLast: box.
+	self adjustBox: box on: shapes. 
+	boxTitle
+		position: box position x @ title position y;
+		extent: (box width @ title height).
+
+	^ RSComposite new
+		model: iceNode;
+		shapes: shapes;
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		addInteraction: self popupForIceNodeShapes;
+		yourself
 ]
 
 { #category : #private }
@@ -370,17 +400,14 @@ RiTorchUMLClassRenderer >> shapeForMethodProperty: iceNode [
 ]
 
 { #category : #private }
-RiTorchUMLClassRenderer >> shapeForProperty: iceNode [
-	^ RSPolygon triangle
-"		rotateByDegrees: 180;"
+RiTorchUMLClassRenderer >> shapeForTinyClass: iceNode [
+	^ RSBox new
+		noPaint;
+		size: 10;
 		model: iceNode;
-		size: self scaleForMethods;
-		border: innerBorder;
-		color: (self fillColorFor: iceNode);
-		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		addInteraction: self popupForIceNodeShapes;
+		border: tinyBoxBorder;
+		addInteraction: self popupForTinyClassShapes;
 		yourself
-
 ]
 
 { #category : #private }
@@ -394,17 +421,6 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 		addInteraction: self popupForVariableShapes;
 		yourself
 
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> tinyClassShapeFor: iceNode [
-	^ RSBox new
-		noPaint;
-		size: 10;
-		model: iceNode;
-		border: tinyBoxBorder;
-		addInteraction: self popupForTinyClassShapes;
-		yourself
 ]
 
 { #category : #hooks }
@@ -421,12 +437,7 @@ RiTorchUMLClassRenderer >> titleFor: model [
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> varFor: iceNode [
-	"Hacky: It draws not only variables but also class properties (e.g. superclass change)."
-	
-	^ iceNode value definition className = #IceVariableDefinition
-		ifTrue: [ self shapeForVariable: iceNode ]
-		ifFalse: [ self shapeForProperty: iceNode ]
-
+	^ self shapeForVariable: iceNode
 ]
 
 { #category : #hooks }
@@ -436,7 +447,7 @@ RiTorchUMLClassRenderer >> varsFor: model [
 			(Margin
 				left: 0
 				right: 0
-				top: 3
-				bottom: 3);
+				top: self gapBetweenMethods
+				bottom: self gapBetweenMethods);
 		yourself
 ]

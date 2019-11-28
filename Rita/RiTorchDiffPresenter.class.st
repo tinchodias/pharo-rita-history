@@ -20,6 +20,12 @@ RiTorchDiffPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
+RiTorchDiffPresenter >> childrenToShowFor: node withClassName: aClassName [
+	^ (node children select: [ :each | each value definition className = aClassName ])
+		sorted: [ :a :b | a value definition className < b value definition className ]
+]
+
+{ #category : #initialization }
 RiTorchDiffPresenter >> fillLastCanvas [
 
 	| query nodesWithClassesTraitsAndExtensions renderer builder |
@@ -39,9 +45,10 @@ RiTorchDiffPresenter >> fillLastCanvas [
 		renderer: renderer;
 		yourself.
 
-	builder modelDescriptor
+	builder modelDescriptor: (RiIceNodeUMLModelDescriptor new
 		classname: [ :node | node value name ];
-		instVars: [ :node | self instVarsToShowFor: node ];
+		classProperties: [ :node | self childrenToShowFor: node withClassName: #IcePropertyDefinition ];
+		instVars: [ :node | self childrenToShowFor: node withClassName: #IceVariableDefinition ];
 		methods: [ :node | self methodsToShowFor: node ];
 		superclass: [ :node |
 			node value definition isExtensionDefinition
@@ -51,7 +58,7 @@ RiTorchDiffPresenter >> fillLastCanvas [
 					superclassName := node value definition asMCDefinition superclassName.
 					nodesWithClassesTraitsAndExtensions
 						detect: [:each | each value definition name = superclassName ]
-						ifNone: [ nil ] ] ].
+						ifNone: [ nil ] ] ]).
 
 	builder build.
 
@@ -83,12 +90,6 @@ RiTorchDiffPresenter >> initializePresenters [
 	roassalPresenter script: [ :newCanvas | 
 		lastCanvas := newCanvas.
 		model ifNotNil: [ self fillLastCanvas ] ].
-]
-
-{ #category : #initialization }
-RiTorchDiffPresenter >> instVarsToShowFor: node [
-	^ (node children reject: [ :each | each value definition isMethodDefinition ])
-		sorted: [ :a :b | a value definition className < b value definition className ]
 ]
 
 { #category : #initialization }
