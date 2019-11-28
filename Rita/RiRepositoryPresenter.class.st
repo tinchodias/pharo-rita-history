@@ -110,7 +110,6 @@ RiRepositoryPresenter >> blockForPinToCompareFrom: aBlock [
 
 { #category : #initialization }
 RiRepositoryPresenter >> columnForComment [
-	"[ :each | avatarDatabase avatarFor: each authorEmail ]"
 
 	^ SpImageTableColumn
 		title: 'Description'
