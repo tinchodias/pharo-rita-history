@@ -40,7 +40,7 @@ RiAvatarsDatabase >> freshAvatarsByEmail [
 
 	commitsIdsToQuery := commitsByEmail values collect: [:each | each last id ].
 	
-	credentials := IceGitHubAPI ensureCredentials; obtainCredentials.
+	credentials := IceGitHubAPI "ensureCredentials; "obtainCredentials.
 
 	client := RiGithubAvatarClient new
 		remote: githubRemote;
