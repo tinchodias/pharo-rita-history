@@ -75,6 +75,7 @@ RiCommentImageBuilder >> markMorphsAt: aRiElement [
 RiCommentImageBuilder >> morphAt: item [
 	| bar |
 	bar := SpToolBarMorph new.
+	bar vResizing: #shrinkWrap.
 	bar leftPanel cellInset: 5@0.
 	bar rightPanel hResizing: #shrinkWrap.
 	((self avatarsFor: item), (self markMorphsAt: item), {item comment asMorph hResizing: #spaceFill})
