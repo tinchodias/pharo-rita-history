@@ -52,6 +52,11 @@ RiCommentImageBuilder >> iconForWorkingCopy [
 	^ self iconNamed: #smallSave
 ]
 
+{ #category : #accessing }
+RiCommentImageBuilder >> leftMorphsAt: item [
+	^ { presenter hiedraAt: item. '   ' asMorph }, (self avatarsFor: item), (self markMorphsAt: item), {item comment asMorph hResizing: #spaceFill }
+]
+
 { #category : #private }
 RiCommentImageBuilder >> markMorphText: text icon: icon color: color [
 	^ Morph new
@@ -75,11 +80,10 @@ RiCommentImageBuilder >> markMorphsAt: aRiElement [
 RiCommentImageBuilder >> morphAt: item [
 	| bar |
 	bar := SpToolBarMorph new.
-	bar vResizing: #shrinkWrap.
-	bar leftPanel cellInset: 5@0.
+"	bar vResizing: #shrinkWrap."
+	bar leftPanel vResizing: #shrinkWrap; cellInset: 5@0.
 	bar rightPanel hResizing: #shrinkWrap.
-	((self avatarsFor: item), (self markMorphsAt: item), {item comment asMorph hResizing: #spaceFill})
-		do: [ :each | bar addItemLeft: each ].
+	(self leftMorphsAt: item) do: [ :each | bar addItemLeft: each ].
 	self flag: #todo. "Why?!?!?!?!"
 	bar addItemRight: (item dateAndTime asString, '       ') asMorph.
 	^ bar

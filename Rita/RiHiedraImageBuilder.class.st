@@ -27,8 +27,6 @@ RiHiedraImageBuilder >> refreshWith: someRiElements [
 
 	hiedraColumnController reset.
 
-	morphTable columns first width: hiedraColumnController rulerWidth.
-
 ]
 
 { #category : #accessing }

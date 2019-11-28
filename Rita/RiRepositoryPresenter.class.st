@@ -162,17 +162,19 @@ RiRepositoryPresenter >> contextMenuForTable [
 ]
 
 { #category : #initialization }
+RiRepositoryPresenter >> hiedraAt: item [
+	^ hiedraImageBuilder morphAt: item
+]
+
+{ #category : #initialization }
 RiRepositoryPresenter >> initializePresenters [
 
-	avatarDatabase := RiAvatarsDatabase new.
 	commentImageBuilder := RiCommentImageBuilder new presenter: self; yourself.
 	hiedraImageBuilder := RiHiedraImageBuilder new.
 
 	table := self newTable.
 	table
-		showColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
-		addColumn: self columnForHiedra;
 		addColumn: self columnForComment.
 
 	table whenBuiltDo: [ :ann |
@@ -189,7 +191,9 @@ RiRepositoryPresenter >> pinDiffModels [
 { #category : #initialization }
 RiRepositoryPresenter >> refreshOnModelUpdate [
 	self isBuilt ifTrue: [
+		avatarDatabase := RiAvatarsDatabase new.
 		avatarDatabase refreshWith: self riRepository.
+
 		hiedraImageBuilder refreshWith: self riRepository elements.
 		table items: self riRepository elements ]
 ]
