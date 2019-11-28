@@ -166,6 +166,7 @@ RiRepositoryPresenter >> initializePresenters [
 
 	table := self newTable.
 	table
+		hideColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
 		addColumn: self columnForComment.
 
