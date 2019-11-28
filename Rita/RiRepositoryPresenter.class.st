@@ -117,14 +117,6 @@ RiRepositoryPresenter >> columnForComment [
 ]
 
 { #category : #initialization }
-RiRepositoryPresenter >> columnForHiedra [
-	^ (SpImageTableColumn
-		evaluated: [ :item | hiedraImageBuilder morphAt: item ])
-		beNotExpandable;
-		yourself
-]
-
-{ #category : #initialization }
 RiRepositoryPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := self newMenu.
