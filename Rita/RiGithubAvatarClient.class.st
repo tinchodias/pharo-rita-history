@@ -1,6 +1,6 @@
 Class {
 	#name : #RiGithubAvatarClient,
-	#superclass : #Object,
+	#superclass : #RiAbstractAvatarClient,
 	#instVars : [
 		'remote',
 		'credentials',
@@ -15,6 +15,11 @@ Class {
 { #category : #'accessing - response' }
 RiGithubAvatarClient >> avatarByEmail [
 	^ avatarByEmail
+]
+
+{ #category : #'accessing - response' }
+RiGithubAvatarClient >> avatarByEmailFuture [
+	^ [ self get. avatarByEmail ] future
 ]
 
 { #category : #private }
@@ -75,7 +80,7 @@ RiGithubAvatarClient >> getAvatarByEmail [
 
 	avatarUrlByEmail keysAndValuesDo: [ :email :urlString |
 		[[ | avatar |
-		avatar := self avatarFor: urlString.
+		avatar := self getAvatarForm: urlString.
 		sharedQueue	nextPut: (email -> avatar) ]
 			on: NetworkError, ZnHttpUnsuccessful
 			do: [ :each | ].
@@ -85,6 +90,16 @@ RiGithubAvatarClient >> getAvatarByEmail [
 
 	avatarByEmail := sharedQueue contents asDictionary
 
+]
+
+{ #category : #private }
+RiGithubAvatarClient >> getAvatarForm: urlString [
+
+	| form |
+	form := ZnEasy getImage: urlString, '&s=', self avatarSize asString.
+	
+	"We found some cases where responded image doesn't have the requested size."
+	^ form scaledToSize: self avatarSize asPoint.
 ]
 
 { #category : #action }
