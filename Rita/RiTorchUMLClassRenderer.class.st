@@ -5,7 +5,8 @@ Class {
 		'blockWhenNodeSelected',
 		'innerBorder',
 		'methodShapeCreatorVisitor',
-		'tinyBoxBorder'
+		'tinyBoxBorder',
+		'innerBorderLowImpact'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -244,7 +245,8 @@ RiTorchUMLClassRenderer >> initialize [
 	blockWhenNodeSelected := [ :anIceNode | ].
 	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor builder: self.
 
-	innerBorder := RSBorder new color: self foregroundColor; width: 0.5; yourself.
+	innerBorder := RSBorder new color: self foregroundColor; width: 0.75; yourself.
+	innerBorderLowImpact := innerBorder copy dashArray: #(2); yourself.
 	tinyBoxBorder := RSBorder new
 		width: 1;
 		color: self foregroundColor;
@@ -255,27 +257,34 @@ RiTorchUMLClassRenderer >> initialize [
 ]
 
 { #category : #hooks }
+RiTorchUMLClassRenderer >> innerBorderFor: iceNode [
+	^ iceNode value isOnlyLowImpact
+		ifTrue: [ innerBorderLowImpact ]
+		ifFalse: [ innerBorder ]
+]
+
+{ #category : #hooks }
 RiTorchUMLClassRenderer >> methodFor: iceNode [
 	| shapes |
 	shapes := OrderedCollection new.
 
-	iceNode nextNodeSuchThat: [ :each | each value name = 'category' ]
+	iceNode nextNodeSuchThat: [ :each | each value name = #category ]
 		ifFound: [:found | shapes add: (self shapeForMethodProperty: found) ].
 	shapes ifEmpty: [ 
 		shapes add: (RSShape box 
 			width: self scaleForMethods;
 			height: self scaleForMethods / 2;
-			noPaint; 
-			border: innerBorder;
+			color: self backgroundColor; 
+			border: innerBorderLowImpact;
 			yourself) ].
 	
-"	iceNode nextNodeSuchThat: [ :each | each value name = 'source' ] ifFound: [:found |"
+	iceNode nextNodeSuchThat: [ :each | each value name = #source ] ifFound: [:found |
 		shapes add: ((iceNode accept: methodShapeCreatorVisitor)
-			model: iceNode;
-			border: innerBorder;
+			model: found;
+			border: (self innerBorderFor: found);
 			when: RSMouseClick do: self blockForMouseClickOnIceNode;
 			addInteraction: self popupForIceNodeShapes;
-			yourself).
+			yourself) ].
 	
 	RSVerticalLineLayout new gapSize: 0; on: shapes.
 	
@@ -349,7 +358,7 @@ RiTorchUMLClassRenderer >> shapeForClassProperty: iceNode [
 "		rotateByDegrees: 180;"
 		model: iceNode;
 		size: self scaleForMethods;
-		border: innerBorder;
+		border: (self innerBorderFor: iceNode);
 		color: (self fillColorFor: iceNode);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
@@ -391,7 +400,7 @@ RiTorchUMLClassRenderer >> shapeForMethodProperty: iceNode [
 		width: self scaleForMethods;
 		height: self scaleForMethods/2;
 		model: iceNode;
-		border: innerBorder;
+		border: (self innerBorderFor: iceNode);
 		color: (self fillColorFor: iceNode);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
