@@ -39,6 +39,20 @@ RiTreeDiffPresenter >> changeSelected [
 ]
 
 { #category : #accessing }
+RiTreeDiffPresenter >> indexPathFor: anIceNode [
+	"Answer the sequence of indices of anIceNode in the treeTable"
+
+	^ Array streamContents: [ :stream |
+		| currentNodes |
+		currentNodes := treeTable roots.
+		anIceNode withAllParentNodes do: [ :each |
+			| index |
+			index := currentNodes indexOf: each.
+			stream nextPut: index.
+			currentNodes := (currentNodes at: index) children ]]
+]
+
+{ #category : #accessing }
 RiTreeDiffPresenter >> initializePresenters [
 	treeTable := self newTreeTable.
 	diffPanel := self instantiate: RiUnifiedDiffPresenter.
@@ -55,8 +69,8 @@ RiTreeDiffPresenter >> initializeTree [
 	treeTable
 		addColumn: self changeListColumn;
 		children: [ :each | each children ];
-		whenSelectionChangedDo: [ 
-			self refreshOnSelectionChanged ]
+		whenSelectionChangedDo: [ :selection |
+			self refreshOnSelectionChanged: selection ]
 ]
 
 { #category : #accessing }
@@ -68,29 +82,14 @@ RiTreeDiffPresenter >> refreshOnModelUpdate [
 ]
 
 { #category : #accessing }
-RiTreeDiffPresenter >> refreshOnSelectionChanged [
-	| itemValue |
-	itemValue := treeTable selectedItem value.
-	itemValue ifNotNil: [
+RiTreeDiffPresenter >> refreshOnSelectionChanged: selection [
+	selection selectedItem value ifNotNil: [ :iceOperation |
 		diffPanel model: { 
-			#from -> itemValue rightContents.
-			#to -> itemValue leftContents } asDictionary ]
-
+			#from -> iceOperation rightContents.
+			#to -> iceOperation leftContents } asDictionary ]
 ]
 
 { #category : #accessing }
 RiTreeDiffPresenter >> selectIceNode: anIceNode [
-
-	| nodesPath indexPath currentNodes |
-	nodesPath := anIceNode withAllParentNodes.
-	
-	currentNodes := treeTable roots.
-	indexPath := Array streamContents: [ :stream |
-		nodesPath do: [ :each |
-			| index |
-			index := currentNodes indexOf: each.
-			stream nextPut: index.
-			currentNodes := (currentNodes at: index) children ]].
-
-	treeTable selectPath: indexPath.
+	treeTable selectPath: (self indexPathFor: anIceNode)
 ]

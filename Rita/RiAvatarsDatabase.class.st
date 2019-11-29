@@ -67,7 +67,7 @@ RiAvatarsDatabase >> newGithubAvatarClientFor: githubRemote [
 RiAvatarsDatabase >> newGitlabAvatarClientFor: aRemote [ 
 
 	| commits emails |
-	commits := riRepository elements reject: #isUncommited.
+	commits := riRepository commits.
 	commits ifEmpty: [ ^ self newNullAvatarClient ].
 
 	emails := Array streamContents: [ :stream |
@@ -95,9 +95,4 @@ RiAvatarsDatabase >> refreshWith: aRiRepositoryPresenter [
 	self newAvatarClient avatarByEmailFuture
 		onSuccessDo: [ :result | avatarByEmail := result.
 			aRiRepositoryPresenter refreshOnAvatarsUpdate ]
-]
-
-{ #category : #accessing }
-RiAvatarsDatabase >> timeout [
-	^ 10 seconds
 ]
