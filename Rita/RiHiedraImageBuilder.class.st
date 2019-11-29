@@ -6,8 +6,7 @@ Class {
 	#name : #RiHiedraImageBuilder,
 	#superclass : #Object,
 	#instVars : [
-		'hiedraColumnController',
-		'morphTable'
+		'hiedraColumnController'
 	],
 	#category : #'Rita-UI'
 }
@@ -33,11 +32,9 @@ RiHiedraImageBuilder >> refreshWith: someRiElements [
 RiHiedraImageBuilder >> tableMorph: aFTTableMorph [
 	"This object isn't completely initialized until this method receives the table where the Hiedra will belong."
 
-	morphTable := aFTTableMorph.
-	
 	hiedraColumnController := HiColumnController new.
 	hiedraColumnController renderer
-		rowHeight: morphTable rowHeight floor;
+		rowHeight: aFTTableMorph rowHeight floor;
 		nodeRadius: 1.5;
 		nodeBorderWidth: 3.0;
 		arrowSize: 0;
