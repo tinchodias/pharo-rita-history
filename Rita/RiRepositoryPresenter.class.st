@@ -93,7 +93,6 @@ RiRepositoryPresenter >> actionLoadCommit: aRiCommit [
 
 { #category : #accessing }
 RiRepositoryPresenter >> avatarFor: emailString [
-	self flag: #todo. "remove this"
 	^ avatarDatabase avatarFor: emailString
 ]
 
@@ -109,19 +108,11 @@ RiRepositoryPresenter >> blockForPinToCompareFrom: aBlock [
 ]
 
 { #category : #initialization }
-RiRepositoryPresenter >> columnForComment [
-
-	^ SpImageTableColumn
-		title: 'Description'
-		evaluated: [ :item | commentImageBuilder morphAt: item ]
-]
-
-{ #category : #initialization }
 RiRepositoryPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := self newMenu.
 	
-	selected := self selectedRiElement.
+	selected := table selection selectedItem.
 
 	menu addItem: [ :item | 
 		item
@@ -153,7 +144,7 @@ RiRepositoryPresenter >> contextMenuForTable [
 	^ menu
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 RiRepositoryPresenter >> hiedraAt: item [
 	^ hiedraImageBuilder morphAt: item
 ]
@@ -168,7 +159,8 @@ RiRepositoryPresenter >> initializePresenters [
 	table
 		hideColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
-		addColumn: self columnForComment.
+		addColumn: (SpImageTableColumn
+			evaluated: [ :item | commentImageBuilder morphAt: item ]).
 
 	table whenBuiltDo: [ :ann |
 		hiedraImageBuilder tableMorph: ann widget.
@@ -200,9 +192,4 @@ RiRepositoryPresenter >> refreshOnModelUpdate [
 { #category : #accessing }
 RiRepositoryPresenter >> riRepository [
 	^ model at: #repository
-]
-
-{ #category : #accessing }
-RiRepositoryPresenter >> selectedRiElement [
-	^ table selection selectedItem
 ]

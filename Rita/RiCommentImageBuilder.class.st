@@ -80,7 +80,6 @@ RiCommentImageBuilder >> markMorphsAt: aRiElement [
 RiCommentImageBuilder >> morphAt: item [
 	| bar |
 	bar := SpToolBarMorph new.
-"	bar vResizing: #shrinkWrap."
 	bar leftPanel vResizing: #shrinkWrap; cellInset: 4@0.
 	bar rightPanel hResizing: #shrinkWrap.
 	(self leftMorphsAt: item) do: [ :each | bar addItemLeft: each ].

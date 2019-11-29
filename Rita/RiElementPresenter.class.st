@@ -33,19 +33,19 @@ RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 { #category : #initialization }
 RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 	
-	| iceDiff |
-	[ 	iceDiff := aRiDiffModel iceDiffTo: targetRiCommit ]
+	^ [
+		(self instantiate: RiFullDiffPresenter)
+			model: (model copy
+				add: #iceDiff -> (aRiDiffModel iceDiffTo: targetRiCommit);
+				yourself);
+			yourself
+		]
 		on: Error do: [:e |
 			self reportWarning: e.
-			^ self newLabel
+			self newLabel
 				label: 'Failed to calculate diff';
 				yourself ].
 
-	^ RiFullDiffPresenter new
-		model: (model copy
-			add: #iceDiff -> iceDiff;
-			yourself);
-		yourself
 ]
 
 { #category : #initialization }
@@ -59,12 +59,16 @@ RiElementPresenter >> model: anObject [
 	notebook removeAll.
 	super model: anObject.
 	notebook pages
-		ifNotEmpty: [ notebook selectPage: notebook pages last ]
+		ifNotEmpty: [ notebook selectPage: notebook pages first ]
 ]
 
 { #category : #initialization }
 RiElementPresenter >> refreshOnModelUpdate [
-	summaryLabel label: 'SHA: ', (model at: #element) shortId.
+	| element |
+	element := model at: #element.
+
+	summaryLabel label: ('SHA: {1}, author: {2}, committer: {3}' format: {
+		element shortId. element authorEmail. element committerEmail }).
 
 	(model at: #diffModels) do: [ :each |
 		self addPageFor: each to: (model at: #element) ]

@@ -43,14 +43,15 @@ RiAvatarsDatabase >> newAvatarClient [
 { #category : #private }
 RiAvatarsDatabase >> newGithubAvatarClientFor: githubRemote [ 
 
-	| commits commitsByEmail commitsIdsToQuery credentials |
-	commits := riRepository elements reject: #isUncommited.
+	| commits commitsByEmail credentials |
+	commits := riRepository commits.
 	commits ifEmpty: [ ^ self newNullAvatarClient ].
 
-	self flag: #todo. "Consider commiters too!"
-	commitsByEmail := commits groupedBy: #authorEmail.
-
-	commitsIdsToQuery := commitsByEmail values collect: [:each | each last id ].
+	commitsByEmail := Dictionary new.
+	commits do: [:each |
+		commitsByEmail
+			at: each authorEmail ifAbsentPut: [ each id ];
+			at: each committerEmail ifAbsentPut: [ each id ] ].
 	
 	credentials := IceGitHubAPI "ensureCredentials; "obtainCredentials.
 
@@ -58,7 +59,7 @@ RiAvatarsDatabase >> newGithubAvatarClientFor: githubRemote [
 		remote: githubRemote;
 		credentials: credentials;
 		avatarSize: self avatarSize;
-		commitsIds: commitsIdsToQuery;
+		commitsIds: commitsByEmail values;
 		yourself
 ]
 

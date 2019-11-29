@@ -14,6 +14,11 @@ Class {
 }
 
 { #category : #accessing }
+RiRepository >> commits [
+	^ elements reject: #isUncommited
+]
+
+{ #category : #accessing }
 RiRepository >> description [
 	^ iceRepository description
 ]
