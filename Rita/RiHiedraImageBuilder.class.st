@@ -42,5 +42,5 @@ RiHiedraImageBuilder >> tableMorph: aFTTableMorph [
 		nodeBorderWidth: 3.0;
 		arrowSize: 0;
 		nodeConnectionOffset: 3;
-		cellWidth: 8.
+		cellWidth: 6.75.
 ]
