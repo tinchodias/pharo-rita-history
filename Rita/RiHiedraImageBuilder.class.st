@@ -13,19 +13,24 @@ Class {
 
 { #category : #accessing }
 RiHiedraImageBuilder >> morphAt: item [
-	^ hiedraColumnController cellMorphAtValue: item
+	^ hiedraColumnController isReady
+		ifTrue: [ hiedraColumnController cellMorphAtValue: item ]
+		ifFalse: [ Morph new color: Color transparent; extent: 10@10 ]
 ]
 
 { #category : #refreshing }
-RiHiedraImageBuilder >> refreshWith: someRiElements [
+RiHiedraImageBuilder >> refreshWith: aRiRepositoryPresenter [
 
-	"Create a new ruler model with current table elements"
-	hiedraColumnController ruler: (HiRulerBuilder
-		newRulerValues: someRiElements
-		linksBlock: [ :each | each ancestors ]).
+	[ 	
+		"Create a new ruler model with current table elements"
+		hiedraColumnController ruler: (HiRulerBuilder
+			newRulerValues: aRiRepositoryPresenter riRepository elements
+			linksBlock: [ :each | each ancestors ]).
 
-	hiedraColumnController reset.
-
+		hiedraColumnController reset.
+	
+	] future onSuccessDo: [ :result |
+		aRiRepositoryPresenter refreshOnAvatarsUpdate ]
 ]
 
 { #category : #accessing }

@@ -193,7 +193,7 @@ RiRepositoryPresenter >> refreshOnModelUpdate [
 	avatarDatabase := RiAvatarsDatabase new.
 	avatarDatabase refreshWith: self.
 
-	hiedraImageBuilder refreshWith: self riRepository elements.
+	hiedraImageBuilder refreshWith: self.
 	table items: self riRepository elements
 ]
 
