@@ -6,7 +6,8 @@ Class {
 	#name : #RiCommentImageBuilder,
 	#superclass : #Object,
 	#instVars : [
-		'presenter'
+		'hiedraBuilder',
+		'avatarDatabase'
 	],
 	#category : #'Rita-UI'
 }
@@ -19,9 +20,9 @@ RiCommentImageBuilder >> avatarsFor: item [
 	committerEmail := item committerEmail.
 	
 	^ Array streamContents: [ :stream |
-		stream nextPut: (presenter avatarFor: authorEmail) asMorph.
+		stream nextPut: (avatarDatabase avatarFor: authorEmail) asMorph.
 		authorEmail ~= committerEmail ifTrue: [
-			stream nextPut: (presenter avatarFor: committerEmail) asMorph
+			stream nextPut: (avatarDatabase avatarFor: committerEmail) asMorph
 		] ]
 ]
 
@@ -53,8 +54,19 @@ RiCommentImageBuilder >> iconForWorkingCopy [
 ]
 
 { #category : #accessing }
+RiCommentImageBuilder >> initialize [
+	super initialize.
+	
+	hiedraBuilder := RiHiedraImageBuilder new.
+]
+
+{ #category : #accessing }
 RiCommentImageBuilder >> leftMorphsAt: item [
-	^ { presenter hiedraAt: item. '   ' asMorph }, (self avatarsFor: item), (self markMorphsAt: item), {item comment asMorph hResizing: #spaceFill }
+	^ 	{ hiedraBuilder morphAt: item. '   ' asMorph },
+		(self avatarsFor: item),
+		(self markMorphsAt: item),
+		{ item comment asMorph hResizing: #spaceFill }
+
 ]
 
 { #category : #private }
@@ -89,13 +101,13 @@ RiCommentImageBuilder >> morphAt: item [
 ]
 
 { #category : #accessing }
-RiCommentImageBuilder >> presenter [
-	^ presenter
-]
+RiCommentImageBuilder >> refreshWith: aRiRepositoryPresenter [
+	hiedraBuilder refreshWith: aRiRepositoryPresenter.
 
-{ #category : #accessing }
-RiCommentImageBuilder >> presenter: anObject [
-	presenter := anObject
+	avatarDatabase := RiAvatarsDatabase new.
+	avatarDatabase refreshWith: aRiRepositoryPresenter.
+	
+
 ]
 
 { #category : #visiting }

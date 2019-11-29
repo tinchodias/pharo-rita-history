@@ -11,6 +11,27 @@ Class {
 	#category : #'Rita-UI'
 }
 
+{ #category : #refreshing }
+RiHiedraImageBuilder >> doRefreshWith: aRiRepositoryPresenter [
+
+	hiedraColumnController := HiColumnController new.
+	hiedraColumnController renderer
+		rowHeight: aRiRepositoryPresenter rowHeightForHiedra;
+		nodeRadius: 1.5;
+		nodeBorderWidth: 3.0;
+		arrowSize: 0;
+		nodeConnectionOffset: 3;
+		cellWidth: 6.75.
+	
+	"Create a new ruler model with current table elements"
+	hiedraColumnController ruler: (HiRulerBuilder
+		newRulerValues: aRiRepositoryPresenter riRepository elements
+		linksBlock: [ :each | each ancestors ]).
+
+	hiedraColumnController reset.
+
+]
+
 { #category : #accessing }
 RiHiedraImageBuilder >> morphAt: item [
 	^ hiedraColumnController isReady
@@ -21,28 +42,7 @@ RiHiedraImageBuilder >> morphAt: item [
 { #category : #refreshing }
 RiHiedraImageBuilder >> refreshWith: aRiRepositoryPresenter [
 
-	[ 	
-		"Create a new ruler model with current table elements"
-		hiedraColumnController ruler: (HiRulerBuilder
-			newRulerValues: aRiRepositoryPresenter riRepository elements
-			linksBlock: [ :each | each ancestors ]).
-
-		hiedraColumnController reset.
-	
-	] future onSuccessDo: [ :result |
-		aRiRepositoryPresenter refreshOnAvatarsUpdate ]
-]
-
-{ #category : #accessing }
-RiHiedraImageBuilder >> tableMorph: aFTTableMorph [
-	"This object isn't completely initialized until this method receives the table where the Hiedra will belong."
-
-	hiedraColumnController := HiColumnController new.
-	hiedraColumnController renderer
-		rowHeight: aFTTableMorph rowHeight floor;
-		nodeRadius: 1.5;
-		nodeBorderWidth: 3.0;
-		arrowSize: 0;
-		nodeConnectionOffset: 3;
-		cellWidth: 6.75.
+	[ self doRefreshWith: aRiRepositoryPresenter ] future
+		onSuccessDo: [ :result | aRiRepositoryPresenter refreshOnAvatarsUpdate ];
+		onFailureDo: [ :error | aRiRepositoryPresenter reportWarning: error ]
 ]

@@ -7,10 +7,8 @@ Class {
 	#superclass : #RiPresenter,
 	#instVars : [
 		'table',
-		'commentImageBuilder',
-		'hiedraImageBuilder',
 		'blockForPinToCompareFrom',
-		'avatarDatabase'
+		'imageBuilder'
 	],
 	#category : #'Rita-UI'
 }
@@ -91,11 +89,6 @@ RiRepositoryPresenter >> actionLoadCommit: aRiCommit [
 	self refreshOnModelUpdate.
 ]
 
-{ #category : #accessing }
-RiRepositoryPresenter >> avatarFor: emailString [
-	^ avatarDatabase avatarFor: emailString
-]
-
 { #category : #initialization }
 RiRepositoryPresenter >> blockForElementSelected: aBlock [
 	table whenSelectionChangedDo: [:selection |
@@ -144,26 +137,19 @@ RiRepositoryPresenter >> contextMenuForTable [
 	^ menu
 ]
 
-{ #category : #accessing }
-RiRepositoryPresenter >> hiedraAt: item [
-	^ hiedraImageBuilder morphAt: item
-]
-
 { #category : #initialization }
 RiRepositoryPresenter >> initializePresenters [
 
-	commentImageBuilder := RiCommentImageBuilder new presenter: self; yourself.
-	hiedraImageBuilder := RiHiedraImageBuilder new.
+	imageBuilder := RiCommentImageBuilder new.
 
 	table := self newTable.
 	table
 		hideColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
 		addColumn: (SpImageTableColumn
-			evaluated: [ :item | commentImageBuilder morphAt: item ]).
+			evaluated: [ :item | imageBuilder morphAt: item ]).
 
 	table whenBuiltDo: [ :ann |
-		hiedraImageBuilder tableMorph: ann widget.
 		self refreshOnModelUpdate ].
 
 ]
@@ -182,14 +168,17 @@ RiRepositoryPresenter >> refreshOnAvatarsUpdate [
 RiRepositoryPresenter >> refreshOnModelUpdate [
 	self isBuilt ifFalse: [ ^ self ].
 
-	avatarDatabase := RiAvatarsDatabase new.
-	avatarDatabase refreshWith: self.
+	imageBuilder refreshWith: self.
 
-	hiedraImageBuilder refreshWith: self.
 	table items: self riRepository elements
 ]
 
 { #category : #accessing }
 RiRepositoryPresenter >> riRepository [
 	^ model at: #repository
+]
+
+{ #category : #accessing }
+RiRepositoryPresenter >> rowHeightForHiedra [
+	^ table adapter widget rowHeight floor
 ]

@@ -90,9 +90,10 @@ RiAvatarsDatabase >> newNullAvatarClient [
 { #category : #refreshing }
 RiAvatarsDatabase >> refreshWith: aRiRepositoryPresenter [
 	riRepository := aRiRepositoryPresenter riRepository.
-
 	avatarByEmail := Dictionary new.
 	self newAvatarClient avatarByEmailFuture
-		onSuccessDo: [ :result | avatarByEmail := result.
-			aRiRepositoryPresenter refreshOnAvatarsUpdate ]
+		onSuccessDo: [ :result |
+			avatarByEmail := result.
+			riRepository refreshOnAvatarsUpdate ];
+		onFailureDo: [ :error | riRepository reportWarning: error ]
 ]
