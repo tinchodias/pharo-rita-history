@@ -181,14 +181,20 @@ RiRepositoryPresenter >> pinDiffModels [
 	^ model at: #pinDiffModels
 ]
 
-{ #category : #initialization }
-RiRepositoryPresenter >> refreshOnModelUpdate [
-	self isBuilt ifTrue: [
-		avatarDatabase := RiAvatarsDatabase new.
-		avatarDatabase refreshWith: self riRepository.
+{ #category : #accessing }
+RiRepositoryPresenter >> refreshOnAvatarsUpdate [
+	self defer: [table adapter widget refresh]
+]
 
-		hiedraImageBuilder refreshWith: self riRepository elements.
-		table items: self riRepository elements ]
+{ #category : #accessing }
+RiRepositoryPresenter >> refreshOnModelUpdate [
+	self isBuilt ifFalse: [ ^ self ].
+
+	avatarDatabase := RiAvatarsDatabase new.
+	avatarDatabase refreshWith: self.
+
+	hiedraImageBuilder refreshWith: self riRepository elements.
+	table items: self riRepository elements
 ]
 
 { #category : #accessing }

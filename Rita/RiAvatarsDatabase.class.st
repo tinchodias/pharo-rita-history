@@ -1,5 +1,7 @@
 "
-I'm a FastTable data source that demonstrates how to show avatars in the author column of Iceberg repositories view.
+I provide avatars for the authors and committers of the commits of a repository.
+
+My main collaborator is a Dictionary<String,Form> that caches the avatars.
 
 "
 Class {
@@ -25,23 +27,6 @@ RiAvatarsDatabase >> avatarSize [
 ]
 
 { #category : #private }
-RiAvatarsDatabase >> freshAvatarsByEmail [
-	"Answer a Dictionary<String,Form> ')' expected -> for the authors of all commits. It gets the avatars using internet, and answer an empty dictionary when HTTP connections weren't successful."
-
-	^ [ self newAvatarClient avatarByEmailFuture
-		synchronizeTimeout: self timeout ]
-		on: TKTTimeoutException
-		do: [ :e | Dictionary empty ]
-]
-
-{ #category : #refreshing }
-RiAvatarsDatabase >> initialize [
-	super initialize.
-	
-	avatarByEmail := Dictionary new.
-]
-
-{ #category : #private }
 RiAvatarsDatabase >> newAvatarClient [
 
 	riRepository iceRepository remotes
@@ -58,10 +43,11 @@ RiAvatarsDatabase >> newAvatarClient [
 { #category : #private }
 RiAvatarsDatabase >> newGithubAvatarClientFor: githubRemote [ 
 
-	| commits commitsByEmail commitsIdsToQuery credentials client |
+	| commits commitsByEmail commitsIdsToQuery credentials |
 	commits := riRepository elements reject: #isUncommited.
 	commits ifEmpty: [ ^ self newNullAvatarClient ].
 
+	self flag: #todo. "Consider commiters too!"
 	commitsByEmail := commits groupedBy: #authorEmail.
 
 	commitsIdsToQuery := commitsByEmail values collect: [:each | each last id ].
@@ -101,9 +87,13 @@ RiAvatarsDatabase >> newNullAvatarClient [
 ]
 
 { #category : #refreshing }
-RiAvatarsDatabase >> refreshWith: aRiRepository [ 
-	riRepository := aRiRepository.
-	avatarByEmail := self freshAvatarsByEmail.
+RiAvatarsDatabase >> refreshWith: aRiRepositoryPresenter [
+	riRepository := aRiRepositoryPresenter riRepository.
+
+	avatarByEmail := Dictionary new.
+	self newAvatarClient avatarByEmailFuture
+		onSuccessDo: [ :result | avatarByEmail := result.
+			aRiRepositoryPresenter refreshOnAvatarsUpdate ]
 ]
 
 { #category : #accessing }
