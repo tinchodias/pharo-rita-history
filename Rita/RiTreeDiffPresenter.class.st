@@ -27,6 +27,11 @@ RiTreeDiffPresenter >> changeListColumn [
 				evaluated: [ :each | each value icon ];
 				yourself);
 		addColumn:
+			(SpImageTableColumn new
+				width: 20;
+				evaluated: [ :each | each value definition icon ];
+				yourself);
+		addColumn:
 			(SpStringTableColumn new
 				evaluated: [ :each | each value ritaKey ];
 				yourself);
