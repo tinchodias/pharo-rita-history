@@ -208,7 +208,12 @@ RiTorchUMLClassRenderer >> foregroundColor [
 
 { #category : #settings }
 RiTorchUMLClassRenderer >> foregroundColorFor: iceNode [
-	^ iceNode value ritaColor
+	^ self foregroundColorMixedWith: iceNode value ritaColor
+]
+
+{ #category : #settings }
+RiTorchUMLClassRenderer >> foregroundColorMixedWith: aColor [
+	^ aColor
 		mixed: 0.8
 		with: self foregroundColor
 ]
@@ -222,7 +227,7 @@ RiTorchUMLClassRenderer >> gapBetweenHierarchies [
 
 { #category : #settings }
 RiTorchUMLClassRenderer >> gapBetweenMethods [
-	^ 3
+	^ 4
 
 ]
 
@@ -264,6 +269,11 @@ RiTorchUMLClassRenderer >> innerBorderFor: iceNode [
 	^ iceNode value isOnlyLowImpact
 		ifTrue: [ innerBorderLowImpact ]
 		ifFalse: [ innerBorder ]
+]
+
+{ #category : #settings }
+RiTorchUMLClassRenderer >> insertColor [
+	^ self foregroundColorMixedWith: Color green
 ]
 
 { #category : #hooks }
@@ -322,10 +332,9 @@ RiTorchUMLClassRenderer >> popupForIceNodeShapes [
 
 { #category : #private }
 RiTorchUMLClassRenderer >> popupForTinyClassShapes [
-	self flag: #todo.	"FIX super"
 	^ RSPopup new
 		shapeBuilder: [ :node | 
-			(super shapeFor: node)
+			(self shapeForFullClass: node)
 				color: self backgroundColor;
 				yourself ];
 		yourself
@@ -335,6 +344,11 @@ RiTorchUMLClassRenderer >> popupForTinyClassShapes [
 RiTorchUMLClassRenderer >> popupForVariableShapes [
 	^ RSPopup text: [ :node | 
 		'{1} [{2}]' format: { node value definition name. node value definition typeToShow } ]
+]
+
+{ #category : #settings }
+RiTorchUMLClassRenderer >> removeColor [
+	^ self foregroundColorMixedWith: Color red
 ]
 
 { #category : #settings }
@@ -361,12 +375,32 @@ RiTorchUMLClassRenderer >> shapeFor: iceNode [
 
 { #category : #private }
 RiTorchUMLClassRenderer >> shapeForClassProperty: iceNode [
-	^ RSPolygon triangle
-"		rotateByDegrees: 180;"
+	| mapping shape letter |
+	mapping := {
+		#superclassName -> 'S'.
+		#category -> 'P'.
+		#type -> 'K'.
+		#comment -> 'C'.
+		#traitComposition -> 'T'.
+		#classTraitComposition -> 'T.' 
+		} asDictionary.
+
+	letter := mapping 
+		at: iceNode value definition propertyName
+		ifAbsent: [ iceNode value definition propertyName first: 1 ].
+		
+	shape := RSComposite new.
+
+	RiIconGenerator new
+		container: shape;
+		extent: self scaleForMethods;
+		foregroundColor: (self fillColorFor: iceNode);
+		filled: RSShape square with: letter.
+		
+	^ shape
 		model: iceNode;
 		size: self scaleForMethods;
-		border: (self innerBorderFor: iceNode);
-		color: (self fillColorFor: iceNode);
+"		border: (self innerBorderFor: iceNode);"
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		addInteraction: highlighingController;

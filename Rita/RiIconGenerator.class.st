@@ -2,8 +2,11 @@ Class {
 	#name : #RiIconGenerator,
 	#superclass : #Object,
 	#instVars : [
-		'canvas',
-		'theme'
+		'theme',
+		'extent',
+		'foregroundColor',
+		'backgroundColor',
+		'container'
 	],
 	#category : #'Rita-Utilities'
 }
@@ -27,69 +30,123 @@ RiIconGenerator class >> examples [
 			self new bordered: (RSShape perform: s) with: letter.
 		} ]].
 	
-	(instances collect: #icon) inspect
+	(instances collect: #newForm) inspect
 
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
+RiIconGenerator >> backgroundColor [
+	^ backgroundColor
+]
+
+{ #category : #accessing }
+RiIconGenerator >> backgroundColor: anObject [
+	backgroundColor := anObject
+]
+
+{ #category : #drawing }
 RiIconGenerator >> bordered: shape with: aString [
 
-	canvas add: 
+	container add: 
 		(shape
-			size: self extent;
+			size: extent;
 			noPaint;
-			border: (RSBorder new width: 1.5; color: theme textColor);
+			border: (RSBorder new width: 1.5; color: foregroundColor);
 			yourself).
 
-	canvas add: 
+	container add: 
 		(RSLabel new
 			text: aString;
 			bold;
 			fontSize: 100;
 			position: (0 @ -0.15);
 			scaleBy: 0.08;
-			color: theme textColor;
+			color: foregroundColor;
 			yourself).
 
 ]
 
-{ #category : #initialization }
-RiIconGenerator >> extent [
-	^ 16 @ 16
+{ #category : #accessing }
+RiIconGenerator >> container [
+	^ container
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
+RiIconGenerator >> container: anObject [
+	container := anObject
+]
+
+{ #category : #accessing }
+RiIconGenerator >> extent [
+	^ extent
+]
+
+{ #category : #accessing }
+RiIconGenerator >> extent: anObject [
+	extent := anObject
+]
+
+{ #category : #drawing }
 RiIconGenerator >> filled: shape with: aString [
 
-	canvas add: 
+	container add: 
 		(shape
-			size: self extent;
-			color: theme textColor;
-			border: (RSBorder new width: 1.5; color: theme textColor);
+			size: extent;
+			color: foregroundColor;
+			border: (RSBorder new width: 1.5; color: foregroundColor);
 			yourself).
 
-	canvas add: 
+	container add: 
 		(RSLabel new
 			text: aString;
 			bold;
 			fontSize: 100;
 			position: (0 @ -0.15);
 			scaleBy: 0.08;
-			color: theme backgroundColor;
+			color: backgroundColor;
 			yourself).
 
 ]
 
-{ #category : #initialization }
-RiIconGenerator >> icon [
-	^ canvas createMorph
-		extent: self extent;
-		imageForm
+{ #category : #accessing }
+RiIconGenerator >> foregroundColor [
+	^ foregroundColor
+]
+
+{ #category : #accessing }
+RiIconGenerator >> foregroundColor: anObject [
+	foregroundColor := anObject
 ]
 
 { #category : #initialization }
 RiIconGenerator >> initialize [
+	extent := 16 @ 16.
 	theme := Smalltalk ui theme.
-	canvas := RSCanvas new.
-	canvas color: theme backgroundColor
+	foregroundColor := theme textColor.
+	container := RSCanvas new.
+	backgroundColor := theme backgroundColor
+]
+
+{ #category : #generation }
+RiIconGenerator >> newForm [
+	^ self newMorph imageForm
+]
+
+{ #category : #generation }
+RiIconGenerator >> newMorph [
+	^ (container
+		color: backgroundColor;
+		createMorph)
+			extent: extent;
+			yourself
+]
+
+{ #category : #accessing }
+RiIconGenerator >> theme [
+	^ theme
+]
+
+{ #category : #accessing }
+RiIconGenerator >> theme: anObject [
+	theme := anObject
 ]

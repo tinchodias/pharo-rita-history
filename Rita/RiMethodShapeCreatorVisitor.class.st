@@ -2,8 +2,8 @@ Class {
 	#name : #RiMethodShapeCreatorVisitor,
 	#superclass : #IceTreeVisitor,
 	#instVars : [
-		'builder',
-		'colorMap'
+		'colorMap',
+		'renderer'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -26,12 +26,12 @@ RiMethodShapeCreatorVisitor >> heightScale [
 ]
 
 { #category : #initialization }
-RiMethodShapeCreatorVisitor >> initialize: aBuilder [
+RiMethodShapeCreatorVisitor >> initialize: aRenderer [
 	self initialize.
-	builder := aBuilder.
+	renderer := aRenderer.
 	colorMap := {
-		#insert -> Color green darker darker.
-		#remove -> Color red darker.
+		#insert -> renderer insertColor.
+		#remove -> renderer removeColor.
 		} asDictionary.
 
 
@@ -56,7 +56,7 @@ RiMethodShapeCreatorVisitor >> newForPatchSequence: patchSequence [
 RiMethodShapeCreatorVisitor >> newForPlain: anIceChange [
 	^ RSBox new
 		extent: self widthForMethod @ (self heightForMethod: anIceChange);
-		color: (builder fillColorFor: anIceChange);
+		color: (renderer fillColorFor: anIceChange);
 		yourself
 ]
 
@@ -87,5 +87,5 @@ RiMethodShapeCreatorVisitor >> visitRemoval: anIceRemoval [
 
 { #category : #accessing }
 RiMethodShapeCreatorVisitor >> widthForMethod [
-	^ builder scaleForMethods
+	^ renderer scaleForMethods
 ]
