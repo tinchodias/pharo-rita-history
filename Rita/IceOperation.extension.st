@@ -2,7 +2,7 @@ Extension { #name : #IceOperation }
 
 { #category : #'*Rita' }
 IceOperation >> ritaColor [
-	^ Color transparent
+	^ Smalltalk ui theme textColor
 ]
 
 { #category : #'*Rita' }
