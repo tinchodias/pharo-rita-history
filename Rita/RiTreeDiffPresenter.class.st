@@ -83,6 +83,9 @@ RiTreeDiffPresenter >> refreshOnModelUpdate [
 
 { #category : #accessing }
 RiTreeDiffPresenter >> refreshOnSelectionChanged: selection [
+
+	(model at: #blockWhenNodeSelected) value: selection selectedItem.
+
 	selection selectedItem value ifNotNil: [ :iceOperation |
 		diffPanel model: { 
 			#from -> iceOperation rightContents.
@@ -91,5 +94,6 @@ RiTreeDiffPresenter >> refreshOnSelectionChanged: selection [
 
 { #category : #accessing }
 RiTreeDiffPresenter >> selectIceNode: anIceNode [
+	treeTable selectedItem = anIceNode ifTrue: [ ^ self ].
 	treeTable selectPath: (self indexPathFor: anIceNode)
 ]

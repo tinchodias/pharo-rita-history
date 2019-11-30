@@ -6,7 +6,8 @@ Class {
 		'innerBorder',
 		'methodShapeCreatorVisitor',
 		'tinyBoxBorder',
-		'innerBorderLowImpact'
+		'innerBorderLowImpact',
+		'highlighingController'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -206,8 +207,8 @@ RiTorchUMLClassRenderer >> foregroundColor [
 ]
 
 { #category : #settings }
-RiTorchUMLClassRenderer >> foregroundColorFor: node [
-	^ node value ritaColor
+RiTorchUMLClassRenderer >> foregroundColorFor: iceNode [
+	^ iceNode value ritaColor
 		mixed: 0.8
 		with: self foregroundColor
 ]
@@ -233,6 +234,11 @@ RiTorchUMLClassRenderer >> gapFromClassToSubclass [
 { #category : #settings }
 RiTorchUMLClassRenderer >> gapFromSubclassToSibling [
 	^ self gapFromClassToSubclass / 2
+]
+
+{ #category : #accessing }
+RiTorchUMLClassRenderer >> highlighingController: aRiHighlighingController [
+	highlighingController := aRiHighlighingController
 ]
 
 { #category : #initialization }
@@ -262,7 +268,7 @@ RiTorchUMLClassRenderer >> innerBorderFor: iceNode [
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> methodFor: iceNode [
-	| shapes |
+	| shapes shape |
 	shapes := OrderedCollection new.
 
 	iceNode nextNodeSuchThat: [ :each | each value name = #category ]
@@ -285,9 +291,12 @@ RiTorchUMLClassRenderer >> methodFor: iceNode [
 	
 	RSVerticalLineLayout new gapSize: 0; on: shapes.
 	
-	^ RSComposite new
+	shape := RSComposite new
+		model: iceNode;
 		shapes: shapes;
-		yourself
+		yourself.
+	highlighingController registerShape: shape.
+	^ shape
 ]
 
 { #category : #settings }
@@ -345,7 +354,11 @@ RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> shapeFor: iceNode [
 	^ iceNode hasChanges
-		ifTrue: [ self shapeForFullClass: iceNode ]
+		ifTrue: [
+			| shape |
+			shape := self shapeForFullClass: iceNode.
+			highlighingController registerShape: shape.
+			shape ]
 		ifFalse: [ self shapeForTinyClass: iceNode ]
 ]
 

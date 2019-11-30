@@ -6,7 +6,8 @@ Class {
 		'roassalPresenter',
 		'toolBar',
 		'onlyChangedButton',
-		'lastCanvas'
+		'lastCanvas',
+		'highlighingController'
 	],
 	#category : #'Rita-UI'
 }
@@ -38,6 +39,9 @@ RiTorchDiffPresenter >> fillLastCanvas [
 	renderer := RiTorchUMLClassRenderer new.
 	renderer blockWhenNodeSelected: [ :anIceNode |
 		(model at: #blockWhenNodeSelected) value: anIceNode ].
+
+	highlighingController := RiHighlightingController newFor: lastCanvas.
+	renderer highlighingController: highlighingController.
 	
 	builder := RSUMLClassBuilder new
 		container: lastCanvas;
@@ -109,4 +113,11 @@ RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
 RiTorchDiffPresenter >> refreshOnModelUpdate [
 	roassalPresenter refresh.
 	spawnButton action: [ (model at: #blockForSpawn) value: model ]
+]
+
+{ #category : #accessing }
+RiTorchDiffPresenter >> selectIceNode: anIceNode [
+	highlighingController ifNil: [ ^ self ].
+	highlighingController highlightAsSelected: anIceNode.
+
 ]
