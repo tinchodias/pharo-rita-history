@@ -287,6 +287,7 @@ RiTorchUMLClassRenderer >> methodFor: iceNode [
 			border: (self innerBorderFor: found);
 			when: RSMouseClick do: self blockForMouseClickOnIceNode;
 			addInteraction: self popupForIceNodeShapes;
+			addInteraction: highlighingController;
 			yourself) ].
 	
 	RSVerticalLineLayout new gapSize: 0; on: shapes.
@@ -368,6 +369,7 @@ RiTorchUMLClassRenderer >> shapeForClassProperty: iceNode [
 		color: (self fillColorFor: iceNode);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
+		addInteraction: highlighingController;
 		yourself
 
 ]
@@ -405,12 +407,13 @@ RiTorchUMLClassRenderer >> shapeForFullClass: iceNode [
 RiTorchUMLClassRenderer >> shapeForMethodProperty: iceNode [
 	^ RSShape box
 		width: self scaleForMethods;
-		height: self scaleForMethods/2;
+		height: self scaleForMethods/1.5;
 		model: iceNode;
 		border: (self innerBorderFor: iceNode);
 		color: (self fillColorFor: iceNode);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
+		addInteraction: highlighingController;
 		yourself
 
 ]
@@ -435,6 +438,7 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 		color: (self fillColorFor: iceNode);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForVariableShapes;
+		addInteraction: highlighingController;
 		yourself
 
 ]
