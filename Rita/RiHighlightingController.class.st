@@ -37,6 +37,16 @@ RiHighlightingController >> addOutlineFor: aRSShape [
 	aRSShape parent add: lastOutline.
 	lastOutline pushBack.
 
+"	camera := canvas camera.
+	canvasRect := Rectangle
+		rsCenter: camera position
+		extent: canvas extent / camera scale.
+	(canvasRect intersects: lastOutline encompassingRectangle) ifTrue: [ ^ self].
+	
+	camera translateTo: lastOutline positionInCanvas."
+	
+
+
 ]
 
 { #category : #api }
