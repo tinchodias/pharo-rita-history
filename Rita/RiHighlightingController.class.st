@@ -1,6 +1,6 @@
 Class {
 	#name : #RiHighlightingController,
-	#superclass : #Object,
+	#superclass : #RSInteraction,
 	#instVars : [
 		'canvas',
 		'shapeByModel',
@@ -29,11 +29,10 @@ RiHighlightingController >> addOutlineFor: aRSShape [
 		noPaint;
 		extent: aRSShape extent + self outlineSize;
 		position: aRSShape position;
-"		onMyselfDo: [:behaviorElement | [ :me |
-			behaviorElement
-				when: TSPositionChangedEvent
-				do: [ me position: behaviorElement position ] ] ];"
 		yourself.
+
+	"aRSShape when: TSPositionChangedEvent
+		do: [ lastOutline position: aRSShape position ]"
 
 	aRSShape parent add: lastOutline.
 	lastOutline pushBack.
@@ -58,6 +57,11 @@ RiHighlightingController >> initializeWith: aRSCanvas [
 	shapeByModel := IdentityDictionary new.
 ]
 
+{ #category : #hooks }
+RiHighlightingController >> onShape: aRSShape [
+	^ shapeByModel at: aRSShape model put: aRSShape
+]
+
 { #category : #accessing }
 RiHighlightingController >> outlineColor [
 	^ Smalltalk ui theme selectionColor
@@ -66,11 +70,6 @@ RiHighlightingController >> outlineColor [
 { #category : #accessing }
 RiHighlightingController >> outlineSize [
 	^ 4
-]
-
-{ #category : #api }
-RiHighlightingController >> registerShape: aRSShape [
-	shapeByModel at: aRSShape model put: aRSShape
 ]
 
 { #category : #private }

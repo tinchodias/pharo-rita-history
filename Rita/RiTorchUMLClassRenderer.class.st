@@ -291,12 +291,12 @@ RiTorchUMLClassRenderer >> methodFor: iceNode [
 	
 	RSVerticalLineLayout new gapSize: 0; on: shapes.
 	
-	shape := RSComposite new
+	^ RSComposite new
 		model: iceNode;
 		shapes: shapes;
+		addInteraction: highlighingController;
 		yourself.
-	highlighingController registerShape: shape.
-	^ shape
+
 ]
 
 { #category : #settings }
@@ -354,11 +354,7 @@ RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> shapeFor: iceNode [
 	^ iceNode hasChanges
-		ifTrue: [
-			| shape |
-			shape := self shapeForFullClass: iceNode.
-			highlighingController registerShape: shape.
-			shape ]
+		ifTrue: [ self shapeForFullClass: iceNode ]
 		ifFalse: [ self shapeForTinyClass: iceNode ]
 ]
 
@@ -401,6 +397,7 @@ RiTorchUMLClassRenderer >> shapeForFullClass: iceNode [
 		shapes: shapes;
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
+		addInteraction: highlighingController;
 		yourself
 ]
 
