@@ -75,9 +75,6 @@ RiTorchUMLClassRenderer >> classBoxShapeFor: iceNode [
 	| theBorder |
 	theBorder := self boxBorder copy color: (self foregroundColorFor: iceNode).
 
-	iceNode value definition isTraitDefinition ifTrue: [ 
-		theBorder dashArray: #(2) ].
-
 	^ RSBox new
 		noPaint;
 		border: theBorder;
@@ -434,14 +431,29 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> titleFor: model [
-	| label |
+	| icon label shapes |
+	icon := RSBitmap new
+		form: model value definition icon;
+		scaleBy: 0.7;
+		yourself.
+
 	label := RSLabel new
 		color: self textColor;
 		text: (modelDescriptor classname rsValue: model) asString;
 		scaleBy: 0.7@0.8
 		yourself.
 	"label fontSize: label fontSize * 0.8".
-	^ label
+
+	shapes := { icon. label }.
+
+	RSHorizontalLineLayout new 
+		gapSize: 1;
+		alignCenter;
+		on: shapes.
+		
+	^ RSComposite new
+		shapes: shapes;
+		yourself
 ]
 
 { #category : #hooks }
