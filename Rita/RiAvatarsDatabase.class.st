@@ -94,6 +94,6 @@ RiAvatarsDatabase >> refreshWith: aRiRepositoryPresenter [
 	self newAvatarClient avatarByEmailFuture
 		onSuccessDo: [ :result |
 			avatarByEmail := result.
-			riRepository refreshOnAvatarsUpdate ];
-		onFailureDo: [ :error | riRepository reportWarning: error ]
+			aRiRepositoryPresenter refreshOnAvatarsUpdate ];
+		onFailureDo: [ :error | aRiRepositoryPresenter reportWarning: error ]
 ]
