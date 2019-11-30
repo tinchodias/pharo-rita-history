@@ -39,11 +39,6 @@ RiTreeDiffPresenter >> changeListColumn [
 ]
 
 { #category : #accessing }
-RiTreeDiffPresenter >> changeSelected [
-	^ treeTable selectedItem
-]
-
-{ #category : #accessing }
 RiTreeDiffPresenter >> indexPathFor: anIceNode [
 	"Answer the sequence of indices of anIceNode in the treeTable"
 
