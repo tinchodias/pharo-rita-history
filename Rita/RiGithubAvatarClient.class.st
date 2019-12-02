@@ -72,21 +72,22 @@ RiGithubAvatarClient >> get [
 
 { #category : #private }
 RiGithubAvatarClient >> getAvatarByEmail [
-	"HTTP GET avatar images in parallel"
+	"HTTP GET avatar images asynchronously."
 
-	| sharedQueue semaphore |
+	| sharedQueue pool |
 	sharedQueue := SharedQueue new.
-	semaphore := Semaphore new.
+	pool := TKTCommonQueueWorkerPool new.
+	pool poolMaxSize: 50.
+	pool start.
 
-	avatarUrlByEmail keysAndValuesDo: [ :email :urlString |
-		[[ | avatar |
-		avatar := self getAvatarForm: urlString.
-		sharedQueue	nextPut: (email -> avatar) ]
-			on: NetworkError, ZnHttpUnsuccessful
-			do: [ :each | ].
-		semaphore signal.
-		] fork ].
-	avatarUrlByEmail size timesRepeat: [ semaphore wait ].
+	[ 	((avatarUrlByEmail associations
+			collect: [ :assoc |
+				[ self getAvatarForm: assoc value ] future
+					onSuccessDo: [ :avatar | sharedQueue	nextPut: (assoc key -> avatar) ];
+					yourself ]) 
+			reduce: [ :f1 :f2 | f1 zip: f2 ])
+			waitForCompletion: 15 seconds.
+	] ensure: [ pool stop ].
 
 	avatarByEmail := sharedQueue contents asDictionary
 
