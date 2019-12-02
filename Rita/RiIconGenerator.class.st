@@ -8,7 +8,7 @@ Class {
 		'border',
 		'shapes'
 	],
-	#category : #'Rita-Utilities'
+	#category : #'Rita-Roassal3'
 }
 
 { #category : #'as yet unclassified' }

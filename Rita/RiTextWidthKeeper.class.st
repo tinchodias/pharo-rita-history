@@ -4,7 +4,7 @@ I help to abbreviate text according into a maximum width.
 Class {
 	#name : #RiTextWidthKeeper,
 	#superclass : #Object,
-	#category : #'Rita-Utilities'
+	#category : #'Rita-Roassal3'
 }
 
 { #category : #convenience }
