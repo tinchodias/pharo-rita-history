@@ -2,29 +2,21 @@ Class {
 	#name : #RiIconGenerator,
 	#superclass : #Object,
 	#instVars : [
-		'theme',
 		'extent',
 		'foregroundColor',
 		'backgroundColor',
-		'container'
+		'border',
+		'shapes'
 	],
 	#category : #'Rita-Utilities'
 }
 
 { #category : #'as yet unclassified' }
 RiIconGenerator class >> examples [
-	| shapeSelectors mapping instances |
+	| shapeSelectors instances |
 	shapeSelectors := #(circle diamond square hexagon).
 
-	mapping := {
-		#superclassName -> 'S'.
-		#category -> 'P'.
-		#type -> 'K'.
-		#comment -> 'C'.
-		#traitComposition -> 'T' 
-		} asDictionary.
-	
-	instances := mapping values flatCollect: [ :letter |
+	instances := #(S P T) flatCollect: [ :letter |
 		shapeSelectors flatCollect: [ :s | {
 			self new filled: (RSShape perform: s) with: letter.
 			self new bordered: (RSShape perform: s) with: letter.
@@ -44,36 +36,31 @@ RiIconGenerator >> backgroundColor: anObject [
 	backgroundColor := anObject
 ]
 
+{ #category : #accessing }
+RiIconGenerator >> border [
+	^ border
+]
+
+{ #category : #accessing }
+RiIconGenerator >> border: anObject [
+	border := anObject
+]
+
 { #category : #drawing }
 RiIconGenerator >> bordered: shape with: aString [
 
-	container add: 
+	shapes add: 
 		(shape
 			size: extent;
 			noPaint;
 			border: (RSBorder new width: 1.5; color: foregroundColor);
 			yourself).
 
-	container add: 
-		(RSLabel new
-			text: aString;
-			bold;
-			fontSize: 100;
-			position: (0 @ -0.15);
-			scaleBy: 0.08;
+	shapes add: 
+		((self labelWith: aString)
 			color: foregroundColor;
 			yourself).
 
-]
-
-{ #category : #accessing }
-RiIconGenerator >> container [
-	^ container
-]
-
-{ #category : #accessing }
-RiIconGenerator >> container: anObject [
-	container := anObject
 ]
 
 { #category : #accessing }
@@ -89,20 +76,16 @@ RiIconGenerator >> extent: anObject [
 { #category : #drawing }
 RiIconGenerator >> filled: shape with: aString [
 
-	container add: 
+	shapes add: 
 		(shape
 			size: extent;
 			color: foregroundColor;
-			border: (RSBorder new width: 1.5; color: foregroundColor);
+			border: border;
+"			border: (RSBorder new width: 1.5; color: foregroundColor);"
 			yourself).
 
-	container add: 
-		(RSLabel new
-			text: aString;
-			bold;
-			fontSize: 100;
-			position: (0 @ -0.15);
-			scaleBy: 0.08;
+	shapes add: 
+		((self labelWith: aString)
 			color: backgroundColor;
 			yourself).
 
@@ -120,11 +103,26 @@ RiIconGenerator >> foregroundColor: anObject [
 
 { #category : #initialization }
 RiIconGenerator >> initialize [
-	extent := 16 @ 16.
+	| theme |
 	theme := Smalltalk ui theme.
 	foregroundColor := theme textColor.
-	container := RSCanvas new.
-	backgroundColor := theme backgroundColor
+	backgroundColor := theme backgroundColor.
+	
+	extent := 16 @ 16.
+	shapes := OrderedCollection new.
+
+]
+
+{ #category : #private }
+RiIconGenerator >> labelWith: aString [
+	^ RSLabel new
+		text: aString;
+		bold;
+		fontSize: 100;
+		position: 0 @ -0.15;
+		scaleBy: 0.08;
+		extent: 1@1; "Important: fonts may exceed the height of the icon"
+		yourself
 ]
 
 { #category : #generation }
@@ -134,19 +132,28 @@ RiIconGenerator >> newForm [
 
 { #category : #generation }
 RiIconGenerator >> newMorph [
-	^ (container
+	^ self newRSCanvas createMorph
+		extent: extent;
+		yourself
+]
+
+{ #category : #generation }
+RiIconGenerator >> newRSCanvas [
+	^ RSCanvas new
+		shapes: shapes;
 		color: backgroundColor;
-		createMorph)
-			extent: extent;
-			yourself
+		yourself
+]
+
+{ #category : #generation }
+RiIconGenerator >> newRSComposite [
+	^ RSComposite new
+		shapes: shapes;
+		color: backgroundColor;
+		yourself
 ]
 
 { #category : #accessing }
-RiIconGenerator >> theme [
-	^ theme
-]
-
-{ #category : #accessing }
-RiIconGenerator >> theme: anObject [
-	theme := anObject
+RiIconGenerator >> shapes [
+	^ shapes
 ]

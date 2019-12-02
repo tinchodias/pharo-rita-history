@@ -375,7 +375,7 @@ RiTorchUMLClassRenderer >> shapeFor: iceNode [
 
 { #category : #private }
 RiTorchUMLClassRenderer >> shapeForClassProperty: iceNode [
-	| mapping shape letter |
+	| mapping composite letter |
 	mapping := {
 		#superclassName -> 'S'.
 		#category -> 'P'.
@@ -389,18 +389,17 @@ RiTorchUMLClassRenderer >> shapeForClassProperty: iceNode [
 		at: iceNode value definition propertyName
 		ifAbsent: [ iceNode value definition propertyName first: 1 ].
 		
-	shape := RSComposite new.
-
-	RiIconGenerator new
-		container: shape;
-		extent: self scaleForMethods;
+	composite := RiIconGenerator new
+		extent: self scaleForMethods asPoint;
 		foregroundColor: (self fillColorFor: iceNode);
-		filled: RSShape square with: letter.
-		
-	^ shape
+		backgroundColor: self backgroundColor;
+		border: innerBorder "(self innerBorderFor: iceNode)";
+		filled: RSShape square with: letter;
+		newRSComposite.
+
+	^ composite
 		model: iceNode;
-		size: self scaleForMethods;
-"		border: (self innerBorderFor: iceNode);"
+		adjustToChildren;
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		addInteraction: highlighingController;
