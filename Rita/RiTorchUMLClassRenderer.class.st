@@ -390,7 +390,7 @@ RiTorchUMLClassRenderer >> shapeForClassProperty: iceNode [
 		ifAbsent: [ iceNode value definition propertyName first: 1 ].
 		
 	composite := RiIconGenerator new
-		extent: self scaleForMethods asPoint;
+		extent: self scaleForMethods * 1.5 asPoint;
 		foregroundColor: (self fillColorFor: iceNode);
 		backgroundColor: self backgroundColor;
 		border: innerBorder "(self innerBorderFor: iceNode)";
