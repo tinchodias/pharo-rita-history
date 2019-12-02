@@ -3,15 +3,15 @@ Class {
 	#superclass : #IceTreeVisitor,
 	#instVars : [
 		'colorMap',
-		'renderer'
+		'aesthetics'
 	],
 	#category : #'Rita-Roassal3'
 }
 
-{ #category : #accessing }
-RiMethodShapeCreatorVisitor class >> builder: aBuilder [
+{ #category : #'instance creation' }
+RiMethodShapeCreatorVisitor class >> aesthetics: anObject [
 	^ self basicNew
-		initialize: aBuilder;
+		initialize: anObject;
 		yourself
 ]
 
@@ -26,12 +26,12 @@ RiMethodShapeCreatorVisitor >> heightScale [
 ]
 
 { #category : #initialization }
-RiMethodShapeCreatorVisitor >> initialize: aRenderer [
+RiMethodShapeCreatorVisitor >> initialize: aRiAestheticsModel [
 	self initialize.
-	renderer := aRenderer.
+	aesthetics := aRiAestheticsModel.
 	colorMap := {
-		#insert -> renderer insertColor.
-		#remove -> renderer removeColor.
+		#insert -> aesthetics insertColor.
+		#remove -> aesthetics removeColor.
 		} asDictionary.
 
 
@@ -56,7 +56,7 @@ RiMethodShapeCreatorVisitor >> newForPatchSequence: patchSequence [
 RiMethodShapeCreatorVisitor >> newForPlain: anIceChange [
 	^ RSBox new
 		extent: self widthForMethod @ (self heightForMethod: anIceChange);
-		color: (renderer fillColorFor: anIceChange);
+		color: (aesthetics fillColorFor: anIceChange);
 		yourself
 ]
 
@@ -87,5 +87,5 @@ RiMethodShapeCreatorVisitor >> visitRemoval: anIceRemoval [
 
 { #category : #accessing }
 RiMethodShapeCreatorVisitor >> widthForMethod [
-	^ renderer scaleForMethods
+	^ aesthetics scaleForMethods
 ]

@@ -24,14 +24,15 @@ RiFullDiffPresenter >> initializePresenters [
 
 { #category : #initialization }
 RiFullDiffPresenter >> refreshOnModelUpdate [
-	torchDiffPresenter model: (
-		model copy
-			add: #blockWhenNodeSelected -> [ :iceNode |
-				treeDiffPresenter selectIceNode: iceNode ];
-			yourself).
-	treeDiffPresenter model: (
-		model copy
-			add: #blockWhenNodeSelected -> [ :iceNode |
-				torchDiffPresenter selectIceNode: iceNode ];
-			yourself).
+
+	| modelCopy |
+	modelCopy := model copy
+		add: #aesthetics -> RiAestheticsModel new;
+		add: #blockWhenNodeSelected -> [ :iceNode |
+			treeDiffPresenter selectIceNode: iceNode.
+			torchDiffPresenter selectIceNode: iceNode ];
+		yourself.
+
+	torchDiffPresenter model: modelCopy.
+	treeDiffPresenter model: modelCopy.
 ]

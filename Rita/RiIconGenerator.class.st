@@ -51,9 +51,9 @@ RiIconGenerator >> bordered: shape with: aString [
 
 	shapes add: 
 		(shape
-			size: extent;
+			size: (extent - 1 asPoint);
 			noPaint;
-			border: (RSBorder new width: 1.5; color: foregroundColor);
+			border: (RSBorder new width: 1; color: foregroundColor);
 			yourself).
 
 	shapes add: 
@@ -81,7 +81,6 @@ RiIconGenerator >> filled: shape with: aString [
 			size: extent;
 			color: foregroundColor;
 			border: border;
-"			border: (RSBorder new width: 1.5; color: foregroundColor);"
 			yourself).
 
 	shapes add: 

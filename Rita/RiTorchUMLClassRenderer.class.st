@@ -3,11 +3,9 @@ Class {
 	#superclass : #RSAbstractUMLClassRenderer,
 	#instVars : [
 		'blockWhenNodeSelected',
-		'innerBorder',
 		'methodShapeCreatorVisitor',
-		'tinyBoxBorder',
-		'innerBorderLowImpact',
-		'highlighingController'
+		'highlighingController',
+		'aesthetics'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -18,7 +16,7 @@ RiTorchUMLClassRenderer >> addPackInteractionOn: aCanvas [
 
 	| packer |
 	packer := RSHierarchyPacker new.
-	packer rectanglePackLayout gap: self gapBetweenHierarchies.
+	packer rectanglePackLayout gap: aesthetics gapBetweenHierarchies.
 	aCanvas addInteraction: packer.
 
 ]
@@ -36,10 +34,17 @@ RiTorchUMLClassRenderer >> addZoomingInteractionOn: aCanvas [
 
 ]
 
+{ #category : #accessing }
+RiTorchUMLClassRenderer >> aesthetics: aRiAestheticsModel [
+	aesthetics := aRiAestheticsModel.
+	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor aesthetics: aesthetics.
+
+]
+
 { #category : #hooks }
 RiTorchUMLClassRenderer >> applyMLayoutOn: shapes [
 	RSFlowLayout new 
-		gapSize: self gapBetweenMethods;
+		gapSize: aesthetics gapBetweenMethods;
 		maxWidth: self currentMaxWidth;
 		on: shapes.
 ]
@@ -47,18 +52,6 @@ RiTorchUMLClassRenderer >> applyMLayoutOn: shapes [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> applyVLayoutOn: shapes [
 	self applyMLayoutOn: shapes
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> backgroundColor [
-	^ self currentTheme backgroundColor
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> backgroundColorFor: node [
-	^ node value ritaColor
-		alphaMixed: 0.1
-		with: self backgroundColor
 ]
 
 { #category : #options }
@@ -74,7 +67,7 @@ RiTorchUMLClassRenderer >> blockWhenNodeSelected: anObject [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> classBoxShapeFor: iceNode [
 	| theBorder |
-	theBorder := self boxBorder copy color: (self foregroundColorFor: iceNode).
+	theBorder := self boxBorder copy color: (aesthetics foregroundColorFor: iceNode).
 
 	^ RSBox new
 		noPaint;
@@ -86,7 +79,7 @@ RiTorchUMLClassRenderer >> classBoxShapeFor: iceNode [
 RiTorchUMLClassRenderer >> classNameBoxFor: aClass [ 
 	^ RSBox new
 		model: aClass;
-		color: (self backgroundColorFor: aClass);
+		color: (aesthetics backgroundColorFor: aClass);
 		yourself
 ]
 
@@ -103,19 +96,14 @@ RiTorchUMLClassRenderer >> classPropertiesFor: iceNode [
 			(Margin
 				left: 0
 				right: 0
-				top: self gapBetweenMethods
-				bottom: self gapBetweenMethods);
+				top: aesthetics gapBetweenMethods
+				bottom: aesthetics gapBetweenMethods);
 		yourself
 ]
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> currentMaxWidth [
 	^ 200
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> currentTheme [
-	^ Smalltalk ui theme
 ]
 
 { #category : #hooks }
@@ -135,7 +123,7 @@ RiTorchUMLClassRenderer >> defaultClassBoxPadding [
 RiTorchUMLClassRenderer >> defaultEdgeBuilder [
 	^ RSEdgeBuilder orthoVertical
 		attachPoint: RSVerticalAttachPoint new;
-		border: innerBorder;
+		border: aesthetics innerBorder;
 		"markerStart: self marker;"
 		yourself
 ]
@@ -145,8 +133,8 @@ RiTorchUMLClassRenderer >> defaultLayout [
 	| defaultLayout |
 	defaultLayout := RSLayoutBuilder new.
 	defaultLayout tree 
-		verticalGap: self gapFromClassToSubclass;
-		horizontalGap: self gapFromSubclassToSibling.
+		verticalGap: aesthetics gapFromClassToSubclass;
+		horizontalGap: aesthetics gapFromSubclassToSibling.
 	^ defaultLayout
 
 ]
@@ -155,90 +143,18 @@ RiTorchUMLClassRenderer >> defaultLayout [
 RiTorchUMLClassRenderer >> defaultMarker [
 	^ RSMarker new
 		shape: (RSPolygon triangle
-			color: self backgroundColor;
+			color: aesthetics backgroundColor;
 			border: self border;
-			size: self gapFromClassToSubclass / 6;
+			size: aesthetics gapFromClassToSubclass / 6;
 			yourself);
-		offset: self gapFromClassToSubclass / 12;
+		offset: aesthetics gapFromClassToSubclass / 12;
 		yourself
 
 ]
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> defaultTextColor [
-	^ self foregroundColor
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> diffMorphFor: iceNode [
-
-	| presenter font |
-	presenter := RiUnifiedDiffPresenter new
-		buildWithSpec;
-		model: {
-			#from -> iceNode value rightContents.
-			#to -> iceNode value leftContents
-			} asDictionary;
-		yourself.
-			
-	font := LogicalFont 
-		familyName: StandardFonts codeFont familyName
-		pointSize: 7.
-
-	^ presenter theWidget
-		font: font;
-		extent: 300@250;
-		scrollbarsShowNever;
-		yourself.
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> fillColorFor: node [
-	| color |
-	color := node value ritaColor.
-	^ color isTransparent
-		ifTrue: [ color ]
-		ifFalse: [ color mixed: 0.8 with: self foregroundColor ]
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> foregroundColor [
-	^ self currentTheme textColor
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> foregroundColorFor: iceNode [
-	^ self foregroundColorMixedWith: iceNode value ritaColor
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> foregroundColorMixedWith: aColor [
-	^ aColor
-		mixed: 0.8
-		with: self foregroundColor
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> gapBetweenHierarchies [
-	"Tricky: This gap is expressed as a ratio of the average size of elements. See RSRectanglePackLayout."
-
-	^ 0.3
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> gapBetweenMethods [
-	^ 4
-
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> gapFromClassToSubclass [
-	^ 20
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> gapFromSubclassToSibling [
-	^ self gapFromClassToSubclass / 2
+	^ aesthetics foregroundColor
 ]
 
 { #category : #accessing }
@@ -246,55 +162,25 @@ RiTorchUMLClassRenderer >> highlighingController: aRiHighlighingController [
 	highlighingController := aRiHighlighingController
 ]
 
-{ #category : #initialization }
-RiTorchUMLClassRenderer >> initialize [
-	super initialize.
-
-	blockWhenNodeSelected := [ :anIceNode | ].
-	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor builder: self.
-
-	innerBorder := RSBorder new color: self foregroundColor; width: 0.75; yourself.
-	innerBorderLowImpact := innerBorder copy dashArray: #(2); yourself.
-	tinyBoxBorder := RSBorder new
-		width: 1;
-		color: self foregroundColor;
-		joinMiter;
-		dashArray: #(1); 
-		yourself.
-
-]
-
-{ #category : #hooks }
-RiTorchUMLClassRenderer >> innerBorderFor: iceNode [
-	^ iceNode value isOnlyLowImpact
-		ifTrue: [ innerBorderLowImpact ]
-		ifFalse: [ innerBorder ]
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> insertColor [
-	^ self foregroundColorMixedWith: Color green
-]
-
 { #category : #hooks }
 RiTorchUMLClassRenderer >> methodFor: iceNode [
-	| shapes shape |
+	| shapes |
 	shapes := OrderedCollection new.
 
 	iceNode nextNodeSuchThat: [ :each | each value name = #category ]
 		ifFound: [:found | shapes add: (self shapeForMethodProperty: found) ].
 	shapes ifEmpty: [ 
 		shapes add: (RSShape box 
-			width: self scaleForMethods;
-			height: self scaleForMethods / 2;
-			color: self backgroundColor; 
-			border: innerBorderLowImpact;
+			width: aesthetics scaleForMethods;
+			height: aesthetics scaleForMethods / 2;
+			color: aesthetics backgroundColor; 
+			border: aesthetics innerBorderLowImpact;
 			yourself) ].
 	
 	iceNode nextNodeSuchThat: [ :each | each value name = #source ] ifFound: [:found |
 		shapes add: ((iceNode accept: methodShapeCreatorVisitor)
 			model: found;
-			border: (self innerBorderFor: found);
+			border: (aesthetics innerBorderFor: found);
 			when: RSMouseClick do: self blockForMouseClickOnIceNode;
 			addInteraction: self popupForIceNodeShapes;
 			addInteraction: highlighingController;
@@ -310,15 +196,15 @@ RiTorchUMLClassRenderer >> methodFor: iceNode [
 
 ]
 
-{ #category : #settings }
+{ #category : #hooks }
 RiTorchUMLClassRenderer >> methodsFor: aClass [
 	^ (super methodsFor: aClass)
 		padding:
 			(Margin
 				left: 0
 				right: 0
-				top: self gapBetweenMethods
-				bottom: self gapBetweenMethods);
+				top: aesthetics gapBetweenMethods
+				bottom: aesthetics gapBetweenMethods);
 		yourself
 ]
 
@@ -326,7 +212,7 @@ RiTorchUMLClassRenderer >> methodsFor: aClass [
 RiTorchUMLClassRenderer >> popupForIceNodeShapes [
 	^ RSMorphicPopup new
 		morphBuilder: [ :iceNode |
-			self diffMorphFor: iceNode ];
+			aesthetics diffMorphFor: iceNode ];
 		yourself
 ]
 
@@ -335,7 +221,7 @@ RiTorchUMLClassRenderer >> popupForTinyClassShapes [
 	^ RSPopup new
 		shapeBuilder: [ :node | 
 			(self shapeForFullClass: node)
-				color: self backgroundColor;
+				color: aesthetics backgroundColor;
 				yourself ];
 		yourself
 ]
@@ -346,23 +232,13 @@ RiTorchUMLClassRenderer >> popupForVariableShapes [
 		'{1} [{2}]' format: { node value definition name. node value definition typeToShow } ]
 ]
 
-{ #category : #settings }
-RiTorchUMLClassRenderer >> removeColor [
-	^ self foregroundColorMixedWith: Color red
-]
-
-{ #category : #settings }
-RiTorchUMLClassRenderer >> scaleForMethods [
-	^ 10
-]
-
 { #category : #hooks }
 RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 
 	self addZoomingInteractionOn: aCanvas.
 	self addPackInteractionOn: aCanvas.
 
-	aCanvas color: self backgroundColor.
+	aCanvas color: aesthetics backgroundColor.
 
 ]
 
@@ -375,31 +251,8 @@ RiTorchUMLClassRenderer >> shapeFor: iceNode [
 
 { #category : #private }
 RiTorchUMLClassRenderer >> shapeForClassProperty: iceNode [
-	| mapping composite letter |
-	mapping := {
-		#superclassName -> 'S'.
-		#category -> 'P'.
-		#type -> 'K'.
-		#comment -> 'C'.
-		#traitComposition -> 'T'.
-		#classTraitComposition -> 'T.' 
-		} asDictionary.
-
-	letter := mapping 
-		at: iceNode value definition propertyName
-		ifAbsent: [ iceNode value definition propertyName first: 1 ].
-		
-	composite := RiIconGenerator new
-		extent: self scaleForMethods * 1.5 asPoint;
-		foregroundColor: (self fillColorFor: iceNode);
-		backgroundColor: self backgroundColor;
-		border: innerBorder "(self innerBorderFor: iceNode)";
-		filled: RSShape square with: letter;
-		newRSComposite.
-
-	^ composite
+	^ (aesthetics shapeForClassProperty: iceNode)
 		model: iceNode;
-		adjustToChildren;
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		addInteraction: highlighingController;
@@ -439,11 +292,11 @@ RiTorchUMLClassRenderer >> shapeForFullClass: iceNode [
 { #category : #private }
 RiTorchUMLClassRenderer >> shapeForMethodProperty: iceNode [
 	^ RSShape box
-		width: self scaleForMethods;
-		height: self scaleForMethods/1.5;
+		width: aesthetics scaleForMethods;
+		height: aesthetics scaleForMethods/1.5;
 		model: iceNode;
-		border: (self innerBorderFor: iceNode);
-		color: (self fillColorFor: iceNode);
+		border: (aesthetics innerBorderFor: iceNode);
+		color: (aesthetics fillColorFor: iceNode);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		addInteraction: highlighingController;
@@ -457,18 +310,15 @@ RiTorchUMLClassRenderer >> shapeForTinyClass: iceNode [
 		noPaint;
 		size: 10;
 		model: iceNode;
-		border: tinyBoxBorder;
+		border: aesthetics tinyBoxBorder;
 		addInteraction: self popupForTinyClassShapes;
 		yourself
 ]
 
 { #category : #private }
 RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
-	^ RSPolygon circle
+	^ (aesthetics shapeForClassVariable: iceNode)
 		model: iceNode;
-		size: self scaleForMethods;
-		border: innerBorder;
-		color: (self fillColorFor: iceNode);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		addInteraction: self popupForVariableShapes;
 		addInteraction: highlighingController;
@@ -479,10 +329,7 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> titleFor: model [
 	| icon label shapes |
-	icon := RSBitmap new
-		form: model value definition icon;
-		scaleBy: 0.7;
-		yourself.
+	icon := aesthetics shapeForDefinition: model value definition.
 
 	label := RSLabel new
 		color: self textColor;
@@ -515,7 +362,7 @@ RiTorchUMLClassRenderer >> varsFor: model [
 			(Margin
 				left: 0
 				right: 0
-				top: self gapBetweenMethods
-				bottom: self gapBetweenMethods);
+				top: aesthetics gapBetweenMethods
+				bottom: aesthetics gapBetweenMethods);
 		yourself
 ]

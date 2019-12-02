@@ -23,17 +23,15 @@ RiTreeDiffPresenter >> changeListColumn [
 	^ SpCompositeTableColumn new
 		addColumn:
 			(SpImageTableColumn new
-				width: 20;
-				evaluated: [ :each | each value icon ];
+				evaluated: [ :each | (model at: #aesthetics) iconForChange: each value ];
 				yourself);
 		addColumn:
 			(SpImageTableColumn new
-				width: 20;
-				evaluated: [ :each | each value definition icon ];
+				evaluated: [ :each | (model at: #aesthetics) iconForDefinition: each value definition ];
 				yourself);
 		addColumn:
-			(SpStringTableColumn new
-				evaluated: [ :each | each value ritaKey ];
+			(SpImageTableColumn new
+				evaluated: [ :each | (model at: #aesthetics) rowForChange: each value ];
 				yourself);
 		yourself
 ]

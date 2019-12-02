@@ -43,6 +43,8 @@ RiTorchDiffPresenter >> fillLastCanvas [
 	highlighingController := RiHighlightingController newFor: lastCanvas.
 	renderer highlighingController: highlighingController.
 	
+	renderer aesthetics: (model at: #aesthetics).
+	
 	builder := RSUMLClassBuilder new
 		container: lastCanvas;
 		classes: nodesWithClassesTraitsAndExtensions;
