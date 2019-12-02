@@ -87,7 +87,7 @@ RiGithubAvatarClient >> getAvatarByEmail [
 					onFailureDo: [ :error | error traceCr ];
 					yourself ]) 
 			reduce: [ :f1 :f2 | f1 zip: f2 ])
-			waitForCompletion: 15 seconds.
+			waitForCompletion: self timeoutForAvatars.
 	] ensure: [ pool stop ].
 
 	avatarByEmail := sharedQueue contents asDictionary
