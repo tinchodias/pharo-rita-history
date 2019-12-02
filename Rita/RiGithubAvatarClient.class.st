@@ -74,23 +74,23 @@ RiGithubAvatarClient >> get [
 RiGithubAvatarClient >> getAvatarByEmail [
 	"HTTP GET avatar images asynchronously."
 
-	| sharedQueue pool |
-	sharedQueue := SharedQueue new.
+	| pool associations |
 	pool := TKTCommonQueueWorkerPool new.
 	pool poolMaxSize: 50.
 	pool start.
 
-	[ 	((avatarUrlByEmail associations
+	associations := #().
+	[ 	(((avatarUrlByEmail associations
 			collect: [ :assoc |
-				[ self getAvatarForm: assoc value ] future
-					onSuccessDo: [ :avatar | sharedQueue	nextPut: (assoc key -> avatar) ];
-					yourself ]) 
-			reduce: [ :f1 :f2 | f1 zip: f2 ])
-			waitForCompletion: 15 seconds.
+				pool future: [ assoc key -> (self getAvatarForm: assoc value) ] ]) 
+			reduce: [ :f1 :f2 | f1 zip: f2 ]))
+			onSuccessDo: [ :zippedAssocs |
+				associations := zippedAssocs flattened ];
+			onFailureDo: [ :error | error traceCr ];
+			waitForCompletion: self timeoutForAvatars.
 	] ensure: [ pool stop ].
 
-	avatarByEmail := sharedQueue contents asDictionary
-
+	avatarByEmail := Dictionary newFrom: associations
 ]
 
 { #category : #private }
@@ -158,4 +158,9 @@ RiGithubAvatarClient >> remote [
 { #category : #'accessing - request' }
 RiGithubAvatarClient >> remote: anIceRemote [
 	remote := anIceRemote
+]
+
+{ #category : #private }
+RiGithubAvatarClient >> timeoutForAvatars [
+	^ 15 seconds
 ]
