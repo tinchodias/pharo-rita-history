@@ -2,7 +2,9 @@ Class {
 	#name : #RiTreeDiffPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
-		'treeTable'
+		'treeTable',
+		'highlightDeferrer',
+		'iceNodeCollectionToHighlight'
 	],
 	#category : #'Rita-UI'
 }
@@ -35,16 +37,8 @@ RiTreeDiffPresenter >> changeListColumn [
 
 { #category : #accessing }
 RiTreeDiffPresenter >> highlightIceNode: iceNodeCollection [
-	| table indices |
-	table := treeTable adapter widget.
-
-	indices := iceNodeCollection collect: [ :each |
-		table dataSource indexOfElement: each  ].
-
-	table highlightedIndexes = indices ifTrue: [ ^self ].
-
-	"Do #highlightIndexes: but without auto-scrolling."
-	table basicHighlightIndexes: indices; refresh
+	iceNodeCollectionToHighlight := iceNodeCollection.
+	highlightDeferrer schedule.
 ]
 
 { #category : #accessing }
@@ -65,7 +59,12 @@ RiTreeDiffPresenter >> indexPathFor: anIceNode [
 RiTreeDiffPresenter >> initializePresenters [
 	treeTable := self newTreeTable.
 	self initializeTree.
-	self focusOrder add: treeTable
+
+	highlightDeferrer :=
+		OmDeferrer 
+			send: #refreshHighlight
+			to: self
+			after: 50 milliSeconds
 ]
 
 { #category : #accessing }
@@ -86,6 +85,23 @@ RiTreeDiffPresenter >> initializeTree [
 					table dataSource realElementAt: rowIndex } ];
 			blockForMouseLeave: [ :rowIndex | 
 				(model at: #blockWhenNodesHighlighted) value: #() ] ]
+]
+
+{ #category : #accessing }
+RiTreeDiffPresenter >> refreshHighlight [
+	| table indices |
+	table := treeTable adapter widget.
+
+	indices := iceNodeCollectionToHighlight collect: [ :each |
+		table dataSource indexOfElement: each  ].
+
+	table highlightedIndexes = indices ifTrue: [ ^self ].
+
+	"Do #highlightIndexes: but without auto-scrolling."
+	self defer: [
+		table
+			basicHighlightIndexes: indices;
+			refresh ]
 ]
 
 { #category : #accessing }
