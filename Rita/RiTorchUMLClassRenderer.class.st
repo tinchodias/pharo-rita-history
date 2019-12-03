@@ -179,7 +179,7 @@ RiTorchUMLClassRenderer >> methodFor: iceNode [
 	iceNode nextNodeSuchThat: [ :each | each value name = #category ]
 		ifFound: [:found | shapes add: (self shapeForMethodProperty: found) ].
 	shapes ifEmpty: [ 
-		shapes add: (RSShape box 
+		shapes add: (RSShapeFactory box 
 			width: aesthetics scaleForMethods;
 			height: aesthetics scaleForMethods / 1.5;
 			color: aesthetics backgroundColor; 
@@ -300,13 +300,15 @@ RiTorchUMLClassRenderer >> shapeForFullClass: iceNode [
 
 { #category : #private }
 RiTorchUMLClassRenderer >> shapeForMethodProperty: iceNode [
-	^ RSShape box
+	^ RSShapeFactory box
 		width: aesthetics scaleForMethods;
 		height: aesthetics scaleForMethods/1.5;
 		model: iceNode;
 		border: (aesthetics innerBorderFor: iceNode);
 		color: (aesthetics fillColorFor: iceNode);
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
+		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		addInteraction: highlighingController;
 		yourself

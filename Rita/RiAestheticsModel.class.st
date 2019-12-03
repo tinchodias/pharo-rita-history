@@ -109,7 +109,7 @@ RiAestheticsModel >> iconForClassPropertyDefinition: iceDefinition [
 		extent: 12 asPoint;
 		foregroundColor: self foregroundColor;
 		backgroundColor: self backgroundColor;
-		bordered: RSShape square
+		bordered: RSShapeFactory square
 			with: (self iconTitleForClassPropertyDefinition: iceDefinition);
 		newForm
 ]
@@ -120,7 +120,7 @@ RiAestheticsModel >> iconForClassVariableDefinition: iceDefinition [
 		extent: 10 asPoint;
 		foregroundColor: self foregroundColor;
 		backgroundColor: self backgroundColor;
-		bordered: RSShape circle
+		bordered: RSShapeFactory circle
 			with: (self iconTitleForClassVariableDefinition: iceDefinition);
 		newForm
 
@@ -238,7 +238,7 @@ RiAestheticsModel >> shapeForClassPropertyDefinition: iceDefinition color: aColo
 		foregroundColor: aColor;
 		backgroundColor: self backgroundColor;
 		border: aBorder;
-		filled: RSShape square
+		filled: RSShapeFactory square
 			with: (self iconTitleForClassPropertyDefinition: iceDefinition);
 		newRSComposite
 
@@ -259,7 +259,7 @@ RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColo
 		foregroundColor: aColor;
 		backgroundColor: self backgroundColor;
 		border: aBorder;
-		filled: RSShape circle
+		filled: RSShapeFactory circle
 			with: (self iconTitleForClassVariableDefinition: iceDefinition);
 		newRSComposite
 

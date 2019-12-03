@@ -18,8 +18,8 @@ RiIconGenerator class >> examples [
 
 	instances := #(S P T) flatCollect: [ :letter |
 		shapeSelectors flatCollect: [ :s | {
-			self new filled: (RSShape perform: s) with: letter.
-			self new bordered: (RSShape perform: s) with: letter.
+			self new filled: (RSShapeFactory perform: s) with: letter.
+			self new bordered: (RSShapeFactory perform: s) with: letter.
 		} ]].
 	
 	(instances collect: #newForm) inspect
