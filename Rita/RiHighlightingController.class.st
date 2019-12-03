@@ -134,5 +134,5 @@ RiHighlightingController >> resetLastSecondaryOutlines [
 
 { #category : #accessing }
 RiHighlightingController >> secondaryOutlineColor [
-	^ Smalltalk ui theme lightBackgroundColor
+	^ self outlineColor alpha: 0.7
 ]
