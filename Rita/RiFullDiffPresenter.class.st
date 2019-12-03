@@ -15,9 +15,9 @@ RiFullDiffPresenter class >> defaultSpec [
 		position: 55 percent;
 		add:
 			(SpPanedLayout newHorizontal
-				position: 33 percent;
-				add: #treeDiffPresenter;
+				position: 66 percent;
 				add: #torchDiffPresenter;
+				add: #treeDiffPresenter;
 				yourself);
 		add: #diffPanel;
 		yourself
