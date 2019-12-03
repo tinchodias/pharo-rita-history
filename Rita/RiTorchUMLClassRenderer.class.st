@@ -207,6 +207,8 @@ RiTorchUMLClassRenderer >> methodFor: iceNode [
 			model: found;
 			border: (aesthetics innerBorderFor: found);
 			when: RSMouseClick do: self blockForMouseClickOnIceNode;
+			when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
+			when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
 			addInteraction: self popupForIceNodeShapes;
 			addInteraction: highlighingController;
 			yourself) ].
@@ -279,6 +281,8 @@ RiTorchUMLClassRenderer >> shapeForClassProperty: iceNode [
 	^ (aesthetics shapeForClassProperty: iceNode)
 		model: iceNode;
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
+		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		addInteraction: highlighingController;
 		yourself
@@ -309,6 +313,8 @@ RiTorchUMLClassRenderer >> shapeForFullClass: iceNode [
 		model: iceNode;
 		shapes: shapes;
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
+		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		addInteraction: highlighingController;
 		yourself
@@ -358,6 +364,8 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 	^ (aesthetics shapeForClassVariable: iceNode)
 		model: iceNode;
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
+		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
 		addInteraction: self popupForVariableShapes;
 		addInteraction: highlighingController;
 		yourself
