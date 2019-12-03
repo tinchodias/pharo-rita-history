@@ -12,7 +12,7 @@ Class {
 { #category : #specs }
 RiRepositoryAndElementPresenter class >> defaultSpec [
 	^ SpPanedLayout newHorizontal
-		position: 40 percent;
+		position: 30 percent;
 		add: #repositoryPresenter;
 		add: #elementPresenter;
 		yourself
