@@ -8,7 +8,7 @@ Class {
 		'onlyChangedButton',
 		'lastCanvas',
 		'highlighingController',
-		'showClassNamesButton'
+		'isExpandedButton'
 	],
 	#category : #'Rita-UI'
 }
@@ -90,7 +90,7 @@ RiTorchDiffPresenter >> initializePresenters [
 			self refreshOnModelUpdate ];
 		yourself.
 
-	showClassNamesButton := SpToolBarButton new
+	isExpandedButton := SpToolBarButton new
 		label: 'Compact';
 		icon: (self iconNamed: #class);
 		help: 'Whether use a compact or an expanded representation for code entities.';
@@ -102,7 +102,7 @@ RiTorchDiffPresenter >> initializePresenters [
 	toolBar := self newToolBar
 		addItem: onlyChangedButton;
 		addItem: spawnButton;
-		addItem: showClassNamesButton;
+		addItem: isExpandedButton;
 		yourself.
 		
 	roassalPresenter := self instantiate: SpRoassalPresenter.
