@@ -140,7 +140,7 @@ RiIconGenerator >> newMorph [
 RiIconGenerator >> newRSCanvas [
 	^ RSCanvas new
 		shapes: shapes;
-		color: backgroundColor;
+		color: Color transparent;
 		yourself
 ]
 
