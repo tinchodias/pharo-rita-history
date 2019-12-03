@@ -15,8 +15,8 @@ Class {
 { #category : #specs }
 RiTorchDiffPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
-		add: #toolBar withConstraints: [ :constraints | constraints height: self toolbarHeight + 16 ];
 		add: #roassalPresenter;
+		add: #toolBar withConstraints: [ :constraints | constraints height: self toolbarHeight + 16 ];
 		yourself
 ]
 
