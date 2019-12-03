@@ -5,7 +5,8 @@ Class {
 		'canvas',
 		'shapeByModel',
 		'selectedModel',
-		'lastOutline'
+		'lastOutline',
+		'lastSecondaryOutlines'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -49,6 +50,38 @@ RiHighlightingController >> addOutlineFor: aRSShape [
 
 ]
 
+{ #category : #private }
+RiHighlightingController >> addSecondaryOutlineFor: aRSShape [
+
+	| outline |
+	outline := RSBox new
+		border: (RSBorder new 
+				joinMiter;
+				color: self outlineColor trans;
+				width: self outlineSize;
+				yourself);
+		noPaint;
+		extent: aRSShape extent + self outlineSize;
+		position: aRSShape position;
+		yourself.
+
+	aRSShape parent add: outline.
+	outline pushBack.
+
+	lastSecondaryOutlines add: outline
+]
+
+{ #category : #api }
+RiHighlightingController >> highlightAsSecondary: aCollection [ 
+
+	self removeSecondaryOutlines.
+	aCollection do: [ :each |
+		shapeByModel at: each ifPresent: [ :shape |
+			self addSecondaryOutlineFor: shape ] ].
+	canvas signalUpdate.
+
+]
+
 { #category : #api }
 RiHighlightingController >> highlightAsSelected: anIceNode [ 
 
@@ -65,6 +98,7 @@ RiHighlightingController >> initializeWith: aRSCanvas [
 	
 	canvas := aRSCanvas.
 	shapeByModel := IdentityDictionary new.
+	self resetLastSecondaryOutlines.
 ]
 
 { #category : #hooks }
@@ -85,4 +119,15 @@ RiHighlightingController >> outlineSize [
 { #category : #private }
 RiHighlightingController >> removeOutline [
 	lastOutline ifNotNil: #remove
+]
+
+{ #category : #private }
+RiHighlightingController >> removeSecondaryOutlines [
+	lastSecondaryOutlines do: #remove.
+	self resetLastSecondaryOutlines
+]
+
+{ #category : #private }
+RiHighlightingController >> resetLastSecondaryOutlines [
+	lastSecondaryOutlines := OrderedCollection new
 ]

@@ -39,8 +39,8 @@ RiTorchDiffPresenter >> fillLastCanvas [
 
 	renderer := RiTorchUMLClassRenderer new.
 	renderer
-		blockWhenNodeSelected: [ :anIceNode |
-			(model at: #blockWhenNodeSelected) value: anIceNode ];
+		blockWhenNodeSelected: (model at: #blockWhenNodeSelected);
+		blockWhenNodesHighlighted: (model at: #blockWhenNodesHighlighted);
 		isExpanded: (model at: #root) isExpanded.
 
 	highlighingController := RiHighlightingController newFor: lastCanvas.
@@ -70,6 +70,13 @@ RiTorchDiffPresenter >> fillLastCanvas [
 						ifNone: [ nil ] ] ]).
 
 	builder build.
+
+]
+
+{ #category : #accessing }
+RiTorchDiffPresenter >> highlightIceNode: iceNodeCollection [
+	highlighingController ifNil: [ ^ self ].
+	highlighingController highlightAsSecondary: iceNodeCollection.
 
 ]
 

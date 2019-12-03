@@ -47,6 +47,9 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 					#from -> iceOperation rightContents.
 					#to -> iceOperation leftContents } asDictionary ].
 			];
+		add: #blockWhenNodesHighlighted -> [ :iceNode |
+			treeDiffPresenter highlightIceNode: iceNode.
+			torchDiffPresenter highlightIceNode: iceNode ];
 		yourself.
 
 	torchDiffPresenter model: modelCopy.

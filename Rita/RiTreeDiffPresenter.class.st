@@ -34,6 +34,16 @@ RiTreeDiffPresenter >> changeListColumn [
 ]
 
 { #category : #accessing }
+RiTreeDiffPresenter >> highlightIceNode: iceNodeCollection [
+	| table indices |
+	table := treeTable adapter widget.
+
+	indices := iceNodeCollection collect: [ :each |
+		table dataSource indexOfElement: each  ].
+	table highlightIndexes: indices
+]
+
+{ #category : #accessing }
 RiTreeDiffPresenter >> indexPathFor: anIceNode [
 	"Answer the sequence of indices of anIceNode in the treeTable"
 

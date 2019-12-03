@@ -6,7 +6,8 @@ Class {
 		'methodShapeCreatorVisitor',
 		'highlighingController',
 		'aesthetics',
-		'isExpanded'
+		'isExpanded',
+		'blockWhenNodesHighlighted'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -61,8 +62,23 @@ RiTorchUMLClassRenderer >> blockForMouseClickOnIceNode [
 ]
 
 { #category : #options }
-RiTorchUMLClassRenderer >> blockWhenNodeSelected: anObject [
-	blockWhenNodeSelected := anObject 
+RiTorchUMLClassRenderer >> blockForMouseEnterOnIceNode [
+	^ [ :clickEvent | blockWhenNodesHighlighted value: { clickEvent shape model } ]
+]
+
+{ #category : #options }
+RiTorchUMLClassRenderer >> blockForMouseLeaveOnIceNode [
+	^ [ :clickEvent | blockWhenNodesHighlighted value: #() ]
+]
+
+{ #category : #options }
+RiTorchUMLClassRenderer >> blockWhenNodeSelected: aBlock [
+	blockWhenNodeSelected := aBlock 
+]
+
+{ #category : #options }
+RiTorchUMLClassRenderer >> blockWhenNodesHighlighted: aBlock [
+	blockWhenNodesHighlighted := aBlock 
 ]
 
 { #category : #hooks }
