@@ -2,7 +2,6 @@ Class {
 	#name : #RiTreeDiffPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
-		'diffPanel',
 		'treeTable'
 	],
 	#category : #'Rita-UI'
@@ -11,10 +10,8 @@ Class {
 { #category : #specs }
 RiTreeDiffPresenter class >> defaultSpec [
 	<spec: #default>
-	^ SpPanedLayout newHorizontal
-		position: 33 percent;
+	^ SpBoxLayout newHorizontal
 		add: #treeTable;
-		add: #diffPanel;
 		yourself
 ]
 
@@ -53,13 +50,8 @@ RiTreeDiffPresenter >> indexPathFor: anIceNode [
 { #category : #accessing }
 RiTreeDiffPresenter >> initializePresenters [
 	treeTable := self newTreeTable.
-	diffPanel := self instantiate: RiUnifiedDiffPresenter.
-
 	self initializeTree.
-
-	self focusOrder
-		add: treeTable;
-		add: diffPanel
+	self focusOrder add: treeTable
 ]
 
 { #category : #accessing }
@@ -68,26 +60,14 @@ RiTreeDiffPresenter >> initializeTree [
 		addColumn: self changeListColumn;
 		children: [ :each | each children ];
 		whenSelectionChangedDo: [ :selection |
-			self refreshOnSelectionChanged: selection ]
+			(model at: #blockWhenNodeSelected) value: selection selectedItem ]
 ]
 
 { #category : #accessing }
 RiTreeDiffPresenter >> refreshOnModelUpdate [
-	diffPanel reset.
 	treeTable roots: (model at: #iceDiff) tree children.
 	treeTable whenBuiltDo: [ :ann |
 		ann widget dataSource expandAll ].
-]
-
-{ #category : #accessing }
-RiTreeDiffPresenter >> refreshOnSelectionChanged: selection [
-
-	(model at: #blockWhenNodeSelected) value: selection selectedItem.
-
-	selection selectedItem value ifNotNil: [ :iceOperation |
-		diffPanel model: { 
-			#from -> iceOperation rightContents.
-			#to -> iceOperation leftContents } asDictionary ]
 ]
 
 { #category : #accessing }

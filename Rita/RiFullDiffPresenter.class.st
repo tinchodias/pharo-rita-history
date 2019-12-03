@@ -3,16 +3,23 @@ Class {
 	#superclass : #RiPresenter,
 	#instVars : [
 		'torchDiffPresenter',
-		'treeDiffPresenter'
+		'treeDiffPresenter',
+		'diffPanel'
 	],
 	#category : #'Rita-UI'
 }
 
 { #category : #specs }
 RiFullDiffPresenter class >> defaultSpec [
-	^ SpPanedLayout newVertical
-		add: #torchDiffPresenter;
-		add: #treeDiffPresenter;
+	^ SpPanedLayout newHorizontal
+		position: 55 percent;
+		add:
+			(SpPanedLayout newHorizontal
+				position: 33 percent;
+				add: #treeDiffPresenter;
+				add: #torchDiffPresenter;
+				yourself);
+		add: #diffPanel;
 		yourself
 ]
 
@@ -20,17 +27,26 @@ RiFullDiffPresenter class >> defaultSpec [
 RiFullDiffPresenter >> initializePresenters [
 	torchDiffPresenter := self instantiate: RiTorchDiffPresenter.
 	treeDiffPresenter := self instantiate: RiTreeDiffPresenter.
+	diffPanel := self instantiate: RiUnifiedDiffPresenter.
+
 ]
 
 { #category : #initialization }
 RiFullDiffPresenter >> refreshOnModelUpdate [
 
 	| modelCopy |
+	diffPanel reset.
+
 	modelCopy := model copy
 		add: #aesthetics -> RiAestheticsModel new;
 		add: #blockWhenNodeSelected -> [ :iceNode |
 			treeDiffPresenter selectIceNode: iceNode.
-			torchDiffPresenter selectIceNode: iceNode ];
+			torchDiffPresenter selectIceNode: iceNode.
+			iceNode value ifNotNil: [ :iceOperation |
+				diffPanel model: { 
+					#from -> iceOperation rightContents.
+					#to -> iceOperation leftContents } asDictionary ].
+			];
 		yourself.
 
 	torchDiffPresenter model: modelCopy.
