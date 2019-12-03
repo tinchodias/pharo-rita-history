@@ -57,7 +57,7 @@ RiHighlightingController >> addSecondaryOutlineFor: aRSShape [
 	outline := RSBox new
 		border: (RSBorder new 
 				joinMiter;
-				color: self outlineColor trans;
+				color: self secondaryOutlineColor;
 				width: self outlineSize;
 				yourself);
 		noPaint;
@@ -113,7 +113,7 @@ RiHighlightingController >> outlineColor [
 
 { #category : #accessing }
 RiHighlightingController >> outlineSize [
-	^ 4
+	^ 5
 ]
 
 { #category : #private }
@@ -130,4 +130,9 @@ RiHighlightingController >> removeSecondaryOutlines [
 { #category : #private }
 RiHighlightingController >> resetLastSecondaryOutlines [
 	lastSecondaryOutlines := OrderedCollection new
+]
+
+{ #category : #accessing }
+RiHighlightingController >> secondaryOutlineColor [
+	^ Smalltalk ui theme lightBackgroundColor
 ]
