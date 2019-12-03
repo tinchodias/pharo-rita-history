@@ -8,7 +8,8 @@ Class {
 		'onlyChangedButton',
 		'lastCanvas',
 		'highlighingController',
-		'isExpandedButton'
+		'isExpandedButton',
+		'connectHierarchiesButton'
 	],
 	#category : #'Rita-UI'
 }
@@ -33,7 +34,7 @@ RiTorchDiffPresenter >> fillLastCanvas [
 	| query nodesWithClassesTraitsAndExtensions renderer builder |
 	query := RiDiffQuery new
 		diff: (model at: #iceDiff);
-		onlyConsiderChanged: (model at: #root) considerOnlyChanged;
+		onlyConsiderChanged: self rootModel considerOnlyChanged;
 		yourself.
 	nodesWithClassesTraitsAndExtensions := query nodesForBehaviors, query nodesForMethodExtensions.
 
@@ -41,7 +42,7 @@ RiTorchDiffPresenter >> fillLastCanvas [
 	renderer
 		blockWhenNodeSelected: (model at: #blockWhenNodeSelected);
 		blockWhenNodesHighlighted: (model at: #blockWhenNodesHighlighted);
-		isExpanded: (model at: #root) isExpanded.
+		isExpanded: self rootModel isExpanded.
 
 	highlighingController := RiHighlightingController newFor: lastCanvas.
 	renderer highlighingController: highlighingController.
@@ -60,14 +61,15 @@ RiTorchDiffPresenter >> fillLastCanvas [
 		instVars: [ :node | self childrenToShowFor: node withClassName: #IceVariableDefinition ];
 		methods: [ :node | self methodsToShowFor: node ];
 		superclass: [ :node |
-			node value definition isExtensionDefinition
-				ifTrue: [ nil ]
-				ifFalse: [
-					| superclassName |
-					superclassName := node value definition asMCDefinition superclassName.
-					nodesWithClassesTraitsAndExtensions
-						detect: [:each | each value definition name = superclassName ]
-						ifNone: [ nil ] ] ]).
+			(self rootModel connectHierarchies not or: [
+				node value definition isExtensionDefinition])
+					ifTrue: [ nil ]
+					ifFalse: [
+						| superclassName |
+						superclassName := node value definition asMCDefinition superclassName.
+						nodesWithClassesTraitsAndExtensions
+							detect: [:each | each value definition name = superclassName ]
+							ifNone: [ nil ] ] ]).
 
 	builder build.
 
@@ -93,7 +95,7 @@ RiTorchDiffPresenter >> initializePresenters [
 		icon: (self iconNamed: #changeUpdate);
 		help: 'Whether show only changed elements or all the elements, to have context.';
 		action: [
-			(model at: #root) considerOnlyChanged: (model at: #root) considerOnlyChanged not.
+			self rootModel considerOnlyChanged: self rootModel considerOnlyChanged not.
 			self refreshOnModelUpdate ];
 		yourself.
 
@@ -102,14 +104,25 @@ RiTorchDiffPresenter >> initializePresenters [
 		icon: (self iconNamed: #class);
 		help: 'Whether use a compact or an expanded representation for code entities.';
 		action: [
-			(model at: #root) isExpanded: (model at: #root) isExpanded not.
+			self rootModel isExpanded: self rootModel isExpanded not.
 			self refreshOnModelUpdate ];
 		yourself.
 
+	connectHierarchiesButton := SpToolBarButton new
+		label: 'Hierarchy';
+		icon: (self iconNamed: #class);
+		help: 'Whether connect subclasses or leave them free.';
+		action: [
+			self rootModel connectHierarchies: self rootModel connectHierarchies not.
+			self refreshOnModelUpdate ];
+		yourself.
+
+
 	toolBar := self newToolBar
 		addItem: onlyChangedButton;
-		addItem: spawnButton;
 		addItem: isExpandedButton;
+		addItem: connectHierarchiesButton;
+		addItemRight: spawnButton;
 		yourself.
 		
 	roassalPresenter := self instantiate: SpRoassalPresenter.
@@ -135,6 +148,11 @@ RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
 RiTorchDiffPresenter >> refreshOnModelUpdate [
 	roassalPresenter refresh.
 	spawnButton action: [ (model at: #blockForSpawn) value: model ]
+]
+
+{ #category : #initialization }
+RiTorchDiffPresenter >> rootModel [
+	^ model at: #root
 ]
 
 { #category : #accessing }

@@ -150,13 +150,10 @@ RiTorchUMLClassRenderer >> defaultEdgeBuilder [
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> defaultLayout [
-	| defaultLayout |
-	defaultLayout := RSLayoutBuilder new.
-	defaultLayout tree 
+	^ RSTreeLayout new
 		verticalGap: aesthetics gapFromClassToSubclass;
-		horizontalGap: aesthetics gapFromSubclassToSibling.
-	^ defaultLayout
-
+		horizontalGap: aesthetics gapFromSubclassToSibling;
+		yourself
 ]
 
 { #category : #hooks }

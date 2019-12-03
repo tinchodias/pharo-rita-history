@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'repositories',
 		'considerOnlyChanged',
-		'isExpanded'
+		'isExpanded',
+		'connectHierarchies'
 	],
 	#category : #'Rita-UI'
 }
@@ -26,6 +27,16 @@ RiRootModel class >> newWithRegisteredRepositories [
 ]
 
 { #category : #accessing }
+RiRootModel >> connectHierarchies [
+	^ connectHierarchies
+]
+
+{ #category : #accessing }
+RiRootModel >> connectHierarchies: anObject [
+	connectHierarchies := anObject
+]
+
+{ #category : #accessing }
 RiRootModel >> considerOnlyChanged [
 	^ considerOnlyChanged
 ]
@@ -40,6 +51,7 @@ RiRootModel >> initialize [
 	super initialize.
 	considerOnlyChanged := true.
 	isExpanded := true.
+	connectHierarchies := true.
 ]
 
 { #category : #accessing }
