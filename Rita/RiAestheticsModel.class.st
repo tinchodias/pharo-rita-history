@@ -79,7 +79,7 @@ RiAestheticsModel >> foregroundColorMixedWith: aColor [
 RiAestheticsModel >> gapBetweenHierarchies [
 	"Tricky: This gap is expressed as a ratio of the average size of elements. See RSRectanglePackLayout."
 
-	^ 0.3
+	^ 0.2
 ]
 
 { #category : #accessing }

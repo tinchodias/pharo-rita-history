@@ -6,7 +6,7 @@ Class {
 		'methodShapeCreatorVisitor',
 		'highlighingController',
 		'aesthetics',
-		'showClassNames'
+		'isExpanded'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -46,7 +46,7 @@ RiTorchUMLClassRenderer >> aesthetics: aRiAestheticsModel [
 RiTorchUMLClassRenderer >> applyMLayoutOn: shapes [
 	RSFlowLayout new 
 		gapSize: aesthetics gapBetweenMethods;
-		maxWidth: self currentMaxWidth;
+		maxWidth: self classBoxMaxWidth;
 		on: shapes.
 ]
 
@@ -63,6 +63,14 @@ RiTorchUMLClassRenderer >> blockForMouseClickOnIceNode [
 { #category : #options }
 RiTorchUMLClassRenderer >> blockWhenNodeSelected: anObject [
 	blockWhenNodeSelected := anObject 
+]
+
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> classBoxMaxWidth [
+	^ isExpanded
+		ifTrue: [ 200 ]
+		ifFalse: [ 60 ]
+
 ]
 
 { #category : #hooks }
@@ -100,14 +108,6 @@ RiTorchUMLClassRenderer >> classPropertiesFor: iceNode [
 				top: aesthetics gapBetweenMethods
 				bottom: aesthetics gapBetweenMethods);
 		yourself
-]
-
-{ #category : #hooks }
-RiTorchUMLClassRenderer >> currentMaxWidth [
-	^ showClassNames
-		ifTrue: [ 200 ]
-		ifFalse: [ 50 ]
-
 ]
 
 { #category : #hooks }
@@ -164,6 +164,11 @@ RiTorchUMLClassRenderer >> defaultTextColor [
 { #category : #accessing }
 RiTorchUMLClassRenderer >> highlighingController: aRiHighlighingController [
 	highlighingController := aRiHighlighingController
+]
+
+{ #category : #accessing }
+RiTorchUMLClassRenderer >> isExpanded: aBoolean [
+	isExpanded := aBoolean
 ]
 
 { #category : #hooks }
@@ -310,9 +315,9 @@ RiTorchUMLClassRenderer >> shapeForMethodProperty: iceNode [
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> shapeForSourceCode: iceNode [
-	^ showClassNames
-		ifFalse: [ iceNode accept: methodShapeCreatorVisitor ]
-		ifTrue: [
+	^ isExpanded
+		ifTrue: [ iceNode accept: methodShapeCreatorVisitor ]
+		ifFalse: [
 			RSBox new
 				extent: methodShapeCreatorVisitor widthForMethod asPoint;
 				color: (aesthetics fillColorFor: iceNode);
@@ -341,30 +346,23 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 
 ]
 
-{ #category : #accessing }
-RiTorchUMLClassRenderer >> showClassNames: aBoolean [
-	showClassNames := aBoolean
-]
-
 { #category : #hooks }
 RiTorchUMLClassRenderer >> titleFor: model [
-	| shapes abbreviatedTitleSizeLimit title |
-	shapes := OrderedCollection new.
+	| icon title label shapes |
+	icon := aesthetics shapeForDefinition: model value definition.
 
-	shapes add: (aesthetics shapeForDefinition: model value definition).
-
-	"FIX"
-	abbreviatedTitleSizeLimit := 8.
-	title := (modelDescriptor classname rsValue: model) asString.
-	(showClassNames and: [ title size > abbreviatedTitleSizeLimit ]) ifTrue: [
-		title := (title first: abbreviatedTitleSizeLimit), '...' ].
-	shapes add: (RSLabel new
+	label := (RSLabel new
 		color: self textColor;
-		text: title;
-		scaleBy: 0.7@0.8
+		scaleBy: 1@1.2
 		yourself).
-	"label fontSize: label fontSize * 0.8"
+	label fontSize: label fontSize * 0.6.
+	title := (modelDescriptor classname rsValue: model) asString.
+	label text: (RiTextWidthKeeper
+		stringFor: title
+		font: label font
+		maxSize: self classBoxMaxWidth - icon width - 10 "paddings").
 
+	shapes := { icon. label }.
 	RSHorizontalLineLayout new 
 		gapSize: 1;
 		alignCenter;

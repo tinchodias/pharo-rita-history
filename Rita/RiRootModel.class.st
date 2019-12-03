@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'repositories',
 		'considerOnlyChanged',
-		'showClassNames'
+		'isExpanded'
 	],
 	#category : #'Rita-UI'
 }
@@ -39,7 +39,17 @@ RiRootModel >> considerOnlyChanged: aBoolean [
 RiRootModel >> initialize [
 	super initialize.
 	considerOnlyChanged := true.
-	showClassNames := true.
+	isExpanded := true.
+]
+
+{ #category : #accessing }
+RiRootModel >> isExpanded [
+	^ isExpanded
+]
+
+{ #category : #accessing }
+RiRootModel >> isExpanded: aBoolean [
+	isExpanded := aBoolean
 ]
 
 { #category : #accessing }
@@ -50,14 +60,4 @@ RiRootModel >> repositories [
 { #category : #accessing }
 RiRootModel >> repositories: aCollection [ 
 	repositories := aCollection
-]
-
-{ #category : #accessing }
-RiRootModel >> showClassNames [
-	^ showClassNames
-]
-
-{ #category : #accessing }
-RiRootModel >> showClassNames: anObject [
-	showClassNames := anObject
 ]

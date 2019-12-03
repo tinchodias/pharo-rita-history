@@ -41,7 +41,7 @@ RiTorchDiffPresenter >> fillLastCanvas [
 	renderer
 		blockWhenNodeSelected: [ :anIceNode |
 			(model at: #blockWhenNodeSelected) value: anIceNode ];
-		showClassNames: (model at: #root) showClassNames.
+		isExpanded: (model at: #root) isExpanded.
 
 	highlighingController := RiHighlightingController newFor: lastCanvas.
 	renderer highlighingController: highlighingController.
@@ -91,11 +91,11 @@ RiTorchDiffPresenter >> initializePresenters [
 		yourself.
 
 	showClassNamesButton := SpToolBarButton new
-		label: 'Classnames';
+		label: 'Compact';
 		icon: (self iconNamed: #class);
-		help: 'Whether show class names.';
+		help: 'Whether use a compact or an expanded representation for code entities.';
 		action: [
-			(model at: #root) showClassNames: (model at: #root) showClassNames not.
+			(model at: #root) isExpanded: (model at: #root) isExpanded not.
 			self refreshOnModelUpdate ];
 		yourself.
 
