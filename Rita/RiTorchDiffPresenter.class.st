@@ -5,11 +5,8 @@ Class {
 		'spawnButton',
 		'roassalPresenter',
 		'toolBar',
-		'onlyChangedButton',
 		'lastCanvas',
-		'highlighingController',
-		'isExpandedButton',
-		'connectHierarchiesButton'
+		'highlighingController'
 	],
 	#category : #'Rita-UI'
 }
@@ -84,46 +81,8 @@ RiTorchDiffPresenter >> highlightIceNode: iceNodeCollection [
 
 { #category : #initialization }
 RiTorchDiffPresenter >> initializePresenters [
-	spawnButton := SpToolBarButton new
-			label: 'Spawn';
-			icon: (self iconNamed: #smallRemoteOpen);
-			help: 'Spawn this view in a new notebook page';
-			yourself.
-	
-	onlyChangedButton := SpToolBarButton new
-		label: 'All';
-		icon: (self iconNamed: #changeUpdate);
-		help: 'Whether show only changed elements or all the elements, to have context.';
-		action: [
-			self rootModel considerOnlyChanged: self rootModel considerOnlyChanged not.
-			self refreshOnModelUpdate ];
-		yourself.
 
-	isExpandedButton := SpToolBarButton new
-		label: 'Compact';
-		icon: (self iconNamed: #class);
-		help: 'Whether use a compact or an expanded representation for code entities.';
-		action: [
-			self rootModel isExpanded: self rootModel isExpanded not.
-			self refreshOnModelUpdate ];
-		yourself.
-
-	connectHierarchiesButton := SpToolBarButton new
-		label: 'Hierarchy';
-		icon: (self iconNamed: #class);
-		help: 'Whether connect subclasses or leave them free.';
-		action: [
-			self rootModel connectHierarchies: self rootModel connectHierarchies not.
-			self refreshOnModelUpdate ];
-		yourself.
-
-
-	toolBar := self newToolBar
-		addItem: onlyChangedButton;
-		addItem: isExpandedButton;
-		addItem: connectHierarchiesButton;
-		addItemRight: spawnButton;
-		yourself.
+	toolBar := self newSettingsToolBar.
 		
 	roassalPresenter := self instantiate: SpRoassalPresenter.
 	roassalPresenter script: [ :newCanvas | 
@@ -142,6 +101,51 @@ RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
 				ifTrue: [ a value definition linesOfCode > b value definition linesOfCode ]
 				ifFalse: [ a value class name < b value class name ] ].
 	^ methodNodes
+]
+
+{ #category : #initialization }
+RiTorchDiffPresenter >> newSettingsToolBar [
+
+	| onlyChangedButton isExpandedButton connectHierarchiesButton |
+	spawnButton := (self instantiate: SpToolBarButton)
+			label: 'Spawn';
+			icon: (self iconNamed: #smallRemoteOpen);
+			help: 'Spawn this view in a new notebook page';
+			yourself.
+	
+	onlyChangedButton := (self instantiate: SpToolBarButton)
+		label: 'All';
+		icon: (self iconNamed: #changeUpdate);
+		help: 'Whether show only changed elements or all the elements, to have context.';
+		action: [
+			self rootModel considerOnlyChanged: self rootModel considerOnlyChanged not.
+			self refreshOnModelUpdate ];
+		yourself.
+
+	isExpandedButton := (self instantiate: SpToolBarButton)
+		label: 'Wide';
+		icon: (self iconNamed: #class);
+		help: 'Whether use a compact or an expanded representation for code entities.';
+		action: [
+			self rootModel isExpanded: self rootModel isExpanded not.
+			self refreshOnModelUpdate ];
+		yourself.
+
+	connectHierarchiesButton := SpToolBarButton new
+		label: 'Hier';
+		icon: (self iconNamed: #class);
+		help: 'Whether connect subclasses or leave them free.';
+		action: [
+			self rootModel connectHierarchies: self rootModel connectHierarchies not.
+			self refreshOnModelUpdate ];
+		yourself.
+
+	^ self newToolBar
+		addItem: onlyChangedButton;
+		addItem: isExpandedButton;
+		addItem: connectHierarchiesButton;
+		addItemRight: spawnButton;
+		yourself
 ]
 
 { #category : #initialization }
