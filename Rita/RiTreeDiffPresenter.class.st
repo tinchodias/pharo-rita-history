@@ -96,6 +96,10 @@ RiTreeDiffPresenter >> refreshHighlight [
 		table dataSource indexOfElement: each  ].
 
 	table highlightedIndexes = indices ifTrue: [ ^self ].
+	
+	(table highlightedIndexes isEmpty and: [ 
+		indices noneSatisfy: [ :each | table isIndexVisible: each ] ])
+			ifTrue: [ ^self ].
 
 	"Do #highlightIndexes: but without auto-scrolling."
 	self defer: [
