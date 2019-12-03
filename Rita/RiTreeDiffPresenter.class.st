@@ -41,6 +41,8 @@ RiTreeDiffPresenter >> highlightIceNode: iceNodeCollection [
 	indices := iceNodeCollection collect: [ :each |
 		table dataSource indexOfElement: each  ].
 
+	table highlightedIndexes = indices ifTrue: [ ^self ].
+
 	"Do #highlightIndexes: but without auto-scrolling."
 	table basicHighlightIndexes: indices; refresh
 ]
