@@ -120,7 +120,8 @@ RiAestheticsModel >> iconForClassVariableDefinition: iceDefinition [
 		extent: 10 asPoint;
 		foregroundColor: self foregroundColor;
 		backgroundColor: self backgroundColor;
-		bordered: RSShape circle with: '';
+		bordered: RSShape circle
+			with: (self iconTitleForClassVariableDefinition: iceDefinition);
 		newForm
 
 ]
@@ -153,6 +154,20 @@ RiAestheticsModel >> iconTitleForClassPropertyDefinition: iceDefinition [
 	^ mapping 
 		at: iceDefinition propertyName
 		ifAbsent: [ iceDefinition propertyName first: 1 ]
+]
+
+{ #category : #accessing }
+RiAestheticsModel >> iconTitleForClassVariableDefinition: iceDefinition [
+
+	| mapping |
+	mapping := {
+		#instance -> 'i'.
+		#class -> 'c'.
+		#classInstance -> 'i.'.
+		#pool -> 'p'.
+		} asDictionary.
+
+	^ mapping at: iceDefinition typeToShow
 ]
 
 { #category : #initialization }
@@ -244,7 +259,8 @@ RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColo
 		foregroundColor: aColor;
 		backgroundColor: self backgroundColor;
 		border: aBorder;
-		filled: RSShape circle with: '';
+		filled: RSShape circle
+			with: (self iconTitleForClassVariableDefinition: iceDefinition);
 		newRSComposite
 
 ]
