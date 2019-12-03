@@ -22,8 +22,8 @@ RiTorchDiffPresenter class >> defaultSpec [
 
 { #category : #initialization }
 RiTorchDiffPresenter >> childrenToShowFor: node withClassName: aClassName [
-	^ (node children select: [ :each | each value definition className = aClassName ])
-		sorted: [ :a :b | a value definition className < b value definition className ]
+	^ (node children select: [ :each | each value definition class name = aClassName ])
+		sorted: [ :a :b | a value definition class name < b value definition class name ]
 ]
 
 { #category : #initialization }
