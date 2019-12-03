@@ -90,7 +90,7 @@ RiAestheticsModel >> gapBetweenMethods [
 
 { #category : #accessing }
 RiAestheticsModel >> gapFromClassToSubclass [
-	^ 20
+	^ 15
 ]
 
 { #category : #accessing }

@@ -5,7 +5,8 @@ Class {
 		'blockWhenNodeSelected',
 		'methodShapeCreatorVisitor',
 		'highlighingController',
-		'aesthetics'
+		'aesthetics',
+		'showClassNames'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -103,7 +104,10 @@ RiTorchUMLClassRenderer >> classPropertiesFor: iceNode [
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> currentMaxWidth [
-	^ 200
+	^ showClassNames
+		ifTrue: [ 200 ]
+		ifFalse: [ 50 ]
+
 ]
 
 { #category : #hooks }
@@ -172,13 +176,13 @@ RiTorchUMLClassRenderer >> methodFor: iceNode [
 	shapes ifEmpty: [ 
 		shapes add: (RSShape box 
 			width: aesthetics scaleForMethods;
-			height: aesthetics scaleForMethods / 2;
+			height: aesthetics scaleForMethods / 1.5;
 			color: aesthetics backgroundColor; 
 			border: aesthetics innerBorderLowImpact;
 			yourself) ].
 	
 	iceNode nextNodeSuchThat: [ :each | each value name = #source ] ifFound: [:found |
-		shapes add: ((iceNode accept: methodShapeCreatorVisitor)
+		shapes add: ((self shapeForSourceCode: iceNode)
 			model: found;
 			border: (aesthetics innerBorderFor: found);
 			when: RSMouseClick do: self blockForMouseClickOnIceNode;
@@ -304,6 +308,17 @@ RiTorchUMLClassRenderer >> shapeForMethodProperty: iceNode [
 
 ]
 
+{ #category : #hooks }
+RiTorchUMLClassRenderer >> shapeForSourceCode: iceNode [
+	^ showClassNames
+		ifFalse: [ iceNode accept: methodShapeCreatorVisitor ]
+		ifTrue: [
+			RSBox new
+				extent: methodShapeCreatorVisitor widthForMethod asPoint;
+				color: (aesthetics fillColorFor: iceNode);
+				yourself ]
+]
+
 { #category : #private }
 RiTorchUMLClassRenderer >> shapeForTinyClass: iceNode [
 	^ RSBox new
@@ -326,19 +341,29 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 
 ]
 
+{ #category : #accessing }
+RiTorchUMLClassRenderer >> showClassNames: aBoolean [
+	showClassNames := aBoolean
+]
+
 { #category : #hooks }
 RiTorchUMLClassRenderer >> titleFor: model [
-	| icon label shapes |
-	icon := aesthetics shapeForDefinition: model value definition.
+	| shapes abbreviatedTitleSizeLimit title |
+	shapes := OrderedCollection new.
 
-	label := RSLabel new
+	shapes add: (aesthetics shapeForDefinition: model value definition).
+
+	"FIX"
+	abbreviatedTitleSizeLimit := 8.
+	title := (modelDescriptor classname rsValue: model) asString.
+	(showClassNames and: [ title size > abbreviatedTitleSizeLimit ]) ifTrue: [
+		title := (title first: abbreviatedTitleSizeLimit), '...' ].
+	shapes add: (RSLabel new
 		color: self textColor;
-		text: (modelDescriptor classname rsValue: model) asString;
+		text: title;
 		scaleBy: 0.7@0.8
-		yourself.
-	"label fontSize: label fontSize * 0.8".
-
-	shapes := { icon. label }.
+		yourself).
+	"label fontSize: label fontSize * 0.8"
 
 	RSHorizontalLineLayout new 
 		gapSize: 1;

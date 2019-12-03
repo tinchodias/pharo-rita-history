@@ -7,7 +7,8 @@ Class {
 		'toolBar',
 		'onlyChangedButton',
 		'lastCanvas',
-		'highlighingController'
+		'highlighingController',
+		'showClassNamesButton'
 	],
 	#category : #'Rita-UI'
 }
@@ -37,8 +38,10 @@ RiTorchDiffPresenter >> fillLastCanvas [
 	nodesWithClassesTraitsAndExtensions := query nodesForBehaviors, query nodesForMethodExtensions.
 
 	renderer := RiTorchUMLClassRenderer new.
-	renderer blockWhenNodeSelected: [ :anIceNode |
-		(model at: #blockWhenNodeSelected) value: anIceNode ].
+	renderer
+		blockWhenNodeSelected: [ :anIceNode |
+			(model at: #blockWhenNodeSelected) value: anIceNode ];
+		showClassNames: (model at: #root) showClassNames.
 
 	highlighingController := RiHighlightingController newFor: lastCanvas.
 	renderer highlighingController: highlighingController.
@@ -87,9 +90,19 @@ RiTorchDiffPresenter >> initializePresenters [
 			self refreshOnModelUpdate ];
 		yourself.
 
+	showClassNamesButton := SpToolBarButton new
+		label: 'Classnames';
+		icon: (self iconNamed: #class);
+		help: 'Whether show class names.';
+		action: [
+			(model at: #root) showClassNames: (model at: #root) showClassNames not.
+			self refreshOnModelUpdate ];
+		yourself.
+
 	toolBar := self newToolBar
 		addItem: onlyChangedButton;
 		addItem: spawnButton;
+		addItem: showClassNamesButton;
 		yourself.
 		
 	roassalPresenter := self instantiate: SpRoassalPresenter.

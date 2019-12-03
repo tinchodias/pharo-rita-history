@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'repositories',
-		'considerOnlyChanged'
+		'considerOnlyChanged',
+		'showClassNames'
 	],
 	#category : #'Rita-UI'
 }
@@ -38,6 +39,7 @@ RiRootModel >> considerOnlyChanged: aBoolean [
 RiRootModel >> initialize [
 	super initialize.
 	considerOnlyChanged := true.
+	showClassNames := true.
 ]
 
 { #category : #accessing }
@@ -48,4 +50,14 @@ RiRootModel >> repositories [
 { #category : #accessing }
 RiRootModel >> repositories: aCollection [ 
 	repositories := aCollection
+]
+
+{ #category : #accessing }
+RiRootModel >> showClassNames [
+	^ showClassNames
+]
+
+{ #category : #accessing }
+RiRootModel >> showClassNames: anObject [
+	showClassNames := anObject
 ]
