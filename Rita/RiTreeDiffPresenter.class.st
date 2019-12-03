@@ -70,7 +70,18 @@ RiTreeDiffPresenter >> initializeTree [
 		addColumn: self changeListColumn;
 		children: [ :each | each children ];
 		whenSelectionChangedDo: [ :selection |
-			(model at: #blockWhenNodeSelected) value: selection selectedItem ]
+			(model at: #blockWhenNodeSelected) value: selection selectedItem ].
+	
+	treeTable whenBuiltDo: [:ann |
+		| table | 
+		table := ann widget.
+		table beRitaContainer.
+		table container
+			blockForMouseEnter: [ :rowIndex | 
+				(model at: #blockWhenNodesHighlighted) value: {
+					table dataSource realElementAt: rowIndex } ];
+			blockForMouseLeave: [ :rowIndex | 
+				(model at: #blockWhenNodesHighlighted) value: #() ] ]
 ]
 
 { #category : #accessing }
