@@ -92,8 +92,9 @@ RiCommentImageBuilder >> markMorphsAt: aRiElement [
 RiCommentImageBuilder >> morphAt: item [
 	| bar |
 	bar := SpToolBarMorph new.
-	bar leftPanel vResizing: #shrinkWrap; cellInset: 4@0.
-	bar rightPanel hResizing: #shrinkWrap.
+	bar color: Color transparent.
+	bar leftPanel vResizing: #shrinkWrap; cellInset: 4@0; color: Color transparent.
+	bar rightPanel hResizing: #shrinkWrap; color: Color transparent.
 	(self leftMorphsAt: item) do: [ :each | bar addItemLeft: each ].
 	self flag: #todo. "Why?!?!?!?!"
 	bar addItemRight: ('  ', item dateAndTime asString, '       ') asMorph.
