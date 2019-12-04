@@ -59,7 +59,7 @@ RiElementPresenter >> model: anObject [
 	notebook removeAll.
 	super model: anObject.
 	notebook pages
-		ifNotEmpty: [ notebook selectPage: notebook pages first ]
+		ifNotEmpty: [ notebook selectPage: notebook pages last ]
 ]
 
 { #category : #initialization }
