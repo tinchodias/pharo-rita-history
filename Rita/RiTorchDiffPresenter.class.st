@@ -39,7 +39,8 @@ RiTorchDiffPresenter >> fillLastCanvas [
 	renderer
 		blockWhenNodeSelected: (model at: #blockWhenNodeSelected);
 		blockWhenNodesHighlighted: (model at: #blockWhenNodesHighlighted);
-		isExpanded: self rootModel isExpanded.
+		isExpanded: self rootModel isExpanded;
+		showMethodsLOC: self rootModel showMethodsLOC.
 
 	highlighingController := RiHighlightingController newFor: lastCanvas.
 	renderer highlighingController: highlighingController.
@@ -106,7 +107,7 @@ RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
 { #category : #initialization }
 RiTorchDiffPresenter >> newSettingsToolBar [
 
-	| onlyChangedButton isExpandedButton connectHierarchiesButton |
+	| onlyChangedButton isExpandedButton connectHierarchiesButton showMethodsLOCButton |
 	spawnButton := (self instantiate: SpToolBarButton)
 			label: 'Spawn';
 			icon: (self iconNamed: #smallRemoteOpen);
@@ -125,9 +126,18 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 	isExpandedButton := (self instantiate: SpToolBarButton)
 		label: 'Wide';
 		icon: (self iconNamed: #class);
-		help: 'Whether use a compact or an expanded representation for code entities.';
+		help: 'Whether use a compact or an expanded representation for classes, traits and extensions.';
 		action: [
 			self rootModel isExpanded: self rootModel isExpanded not.
+			self refreshOnModelUpdate ];
+		yourself.
+
+	showMethodsLOCButton := (self instantiate: SpToolBarButton)
+		label: 'LOC';
+		icon: (self iconNamed: #tinyMenu);
+		help: 'Whether use a compact or an expanded representation for methods.';
+		action: [
+			self rootModel showMethodsLOC: self rootModel showMethodsLOC not.
 			self refreshOnModelUpdate ];
 		yourself.
 
@@ -144,6 +154,7 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 		addItem: onlyChangedButton;
 		addItem: isExpandedButton;
 		addItem: connectHierarchiesButton;
+		addItem: showMethodsLOCButton;
 		addItemRight: spawnButton;
 		yourself
 ]

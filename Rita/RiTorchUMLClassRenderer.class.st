@@ -7,7 +7,8 @@ Class {
 		'highlighingController',
 		'aesthetics',
 		'isExpanded',
-		'blockWhenNodesHighlighted'
+		'blockWhenNodesHighlighted',
+		'showMethodsLOC'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -336,7 +337,7 @@ RiTorchUMLClassRenderer >> shapeForMethodProperty: iceNode [
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> shapeForSourceCode: iceNode [
-	^ isExpanded
+	^ showMethodsLOC
 		ifTrue: [ iceNode accept: methodShapeCreatorVisitor ]
 		ifFalse: [
 			RSBox new
@@ -367,6 +368,11 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 		addInteraction: highlighingController;
 		yourself
 
+]
+
+{ #category : #accessing }
+RiTorchUMLClassRenderer >> showMethodsLOC: aBoolean [
+	showMethodsLOC := aBoolean
 ]
 
 { #category : #hooks }

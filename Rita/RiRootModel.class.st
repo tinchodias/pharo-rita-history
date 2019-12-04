@@ -5,7 +5,8 @@ Class {
 		'repositories',
 		'considerOnlyChanged',
 		'isExpanded',
-		'connectHierarchies'
+		'connectHierarchies',
+		'showMethodsLOC'
 	],
 	#category : #'Rita-UI'
 }
@@ -52,6 +53,7 @@ RiRootModel >> initialize [
 	considerOnlyChanged := true.
 	isExpanded := true.
 	connectHierarchies := true.
+	showMethodsLOC := true.
 ]
 
 { #category : #accessing }
@@ -72,4 +74,14 @@ RiRootModel >> repositories [
 { #category : #accessing }
 RiRootModel >> repositories: aCollection [ 
 	repositories := aCollection
+]
+
+{ #category : #accessing }
+RiRootModel >> showMethodsLOC [
+	^ showMethodsLOC
+]
+
+{ #category : #accessing }
+RiRootModel >> showMethodsLOC: anObject [
+	showMethodsLOC := anObject
 ]
