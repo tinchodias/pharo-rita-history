@@ -16,7 +16,7 @@ BaselineOfRita >> baseline: spec [
 				spec repository: 'github://sbragagnolo/taskit:v1.0' ].
 
 			spec
-				package: 'Rita' with: [ spec requires: #('Roassal3'. 'TaskIt') ];
+				package: 'Rita' with: [ spec requires: #('Roassal3' 'TaskIt') ];
 				package: 'Rita-Tests' with: [ spec requires: #('Rita') ].
 			spec
 				group: 'default' with: #('Rita' 'Rita-Tests') ]
