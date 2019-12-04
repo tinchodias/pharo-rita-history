@@ -19,22 +19,27 @@ RiFTTableContainer >> blockForMouseLeave: anObject [
 ]
 
 { #category : #updating }
+RiFTTableContainer >> transformRow: morph index: rowIndex [
+
+	RiFTTableRowMorph adoptInstance: morph.
+	morph
+		valuableForMouseEnter:
+			(MessageSend
+				receiver: valuableForMouseEnter
+				selector: #value:
+				argument: rowIndex);
+		valuableForMouseLeave:
+			(MessageSend
+				receiver: valuableForMouseLeave
+				selector: #value:
+				argument: rowIndex)
+]
+
+{ #category : #updating }
 RiFTTableContainer >> updateExposedRows [
 	super updateExposedRows.
-	exposedRows
-		keysAndValuesDo: [ :rowIndex :morph | 
-			RiFTTableRowMorph adoptInstance: morph.
-			morph
-				valuableForMouseEnter:
-					(MessageSend
-						receiver: valuableForMouseEnter
-						selector: #value:
-						argument: rowIndex);
-				valuableForMouseLeave:
-					(MessageSend
-						receiver: valuableForMouseLeave
-						selector: #value:
-						argument: rowIndex) ]
+	exposedRows keysAndValuesDo: [ :rowIndex :morph |
+		self transformRow: morph index: rowIndex ]
 ]
 
 { #category : #accessing }
