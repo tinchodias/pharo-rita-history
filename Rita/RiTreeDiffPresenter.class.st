@@ -64,7 +64,7 @@ RiTreeDiffPresenter >> initializePresenters [
 		OmDeferrer 
 			send: #refreshHighlight
 			to: self
-			after: 50 milliSeconds
+			after: 100 milliSeconds
 ]
 
 { #category : #accessing }
