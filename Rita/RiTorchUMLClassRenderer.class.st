@@ -2,16 +2,20 @@ Class {
 	#name : #RiTorchUMLClassRenderer,
 	#superclass : #RSAbstractUMLClassRenderer,
 	#instVars : [
-		'blockWhenNodeSelected',
 		'methodShapeCreatorVisitor',
 		'highlighingController',
 		'aesthetics',
-		'isExpanded',
-		'blockWhenNodesHighlighted',
-		'showMethodsLOC'
+		'model'
 	],
 	#category : #'Rita-Roassal3'
 }
+
+{ #category : #'instance creation' }
+RiTorchUMLClassRenderer class >> newWith: aModel [
+	^ self basicNew
+		initializeWith: aModel;
+		yourself
+]
 
 { #category : #private }
 RiTorchUMLClassRenderer >> addPackInteractionOn: aCanvas [
@@ -38,10 +42,8 @@ RiTorchUMLClassRenderer >> addZoomingInteractionOn: aCanvas [
 ]
 
 { #category : #accessing }
-RiTorchUMLClassRenderer >> aesthetics: aRiAestheticsModel [
-	aesthetics := aRiAestheticsModel.
-	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor aesthetics: aesthetics.
-
+RiTorchUMLClassRenderer >> aesthetics [
+	^ model at: #aesthetics
 ]
 
 { #category : #hooks }
@@ -59,32 +61,22 @@ RiTorchUMLClassRenderer >> applyVLayoutOn: shapes [
 
 { #category : #options }
 RiTorchUMLClassRenderer >> blockForMouseClickOnIceNode [
-	^ [ :clickEvent | blockWhenNodeSelected value: clickEvent shape model ]
+	^ [ :clickEvent | (model at: #blockWhenNodeSelected) value: clickEvent shape model ]
 ]
 
 { #category : #options }
 RiTorchUMLClassRenderer >> blockForMouseEnterOnIceNode [
-	^ [ :clickEvent | blockWhenNodesHighlighted value: { clickEvent shape model } ]
+	^ [ :clickEvent | (model at: #blockWhenNodesHighlighted) value: { clickEvent shape model } ]
 ]
 
 { #category : #options }
 RiTorchUMLClassRenderer >> blockForMouseLeaveOnIceNode [
-	^ [ :clickEvent | blockWhenNodesHighlighted value: #() ]
-]
-
-{ #category : #options }
-RiTorchUMLClassRenderer >> blockWhenNodeSelected: aBlock [
-	blockWhenNodeSelected := aBlock 
-]
-
-{ #category : #options }
-RiTorchUMLClassRenderer >> blockWhenNodesHighlighted: aBlock [
-	blockWhenNodesHighlighted := aBlock 
+	^ [ :clickEvent | (model at: #blockWhenNodesHighlighted) value: #() ]
 ]
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> classBoxMaxWidth [
-	^ isExpanded
+	^ (model at: #root) isExpanded
 		ifTrue: [ 200 ]
 		ifFalse: [ 60 ]
 
@@ -180,9 +172,14 @@ RiTorchUMLClassRenderer >> highlighingController: aRiHighlighingController [
 	highlighingController := aRiHighlighingController
 ]
 
-{ #category : #accessing }
-RiTorchUMLClassRenderer >> isExpanded: aBoolean [
-	isExpanded := aBoolean
+{ #category : #initialization }
+RiTorchUMLClassRenderer >> initializeWith: aDictionary [
+	self initialize.
+	
+	model := aDictionary.
+	aesthetics := model at: #aesthetics.
+	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor aesthetics: aesthetics.
+
 ]
 
 { #category : #hooks }
@@ -233,12 +230,22 @@ RiTorchUMLClassRenderer >> methodsFor: aClass [
 		yourself
 ]
 
+{ #category : #accessing }
+RiTorchUMLClassRenderer >> model: aDictionary [
+	model := aDictionary.
+	aesthetics := model at: #aesthetics.
+	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor aesthetics: aesthetics.
+
+]
+
 { #category : #private }
 RiTorchUMLClassRenderer >> popupForIceNodeShapes [
-	^ RSMorphicPopup new
-		morphBuilder: [ :iceNode |
-			aesthetics diffMorphFor: iceNode ];
-		yourself
+	^ (model at: #root) flyDiff
+		ifTrue: [
+			RSMorphicPopup new
+				morphBuilder: [ :iceNode | aesthetics diffMorphFor: iceNode ];
+				yourself ]
+		ifFalse: [ RSPopup text: [ :node | node value ritaKey ] ]
 ]
 
 { #category : #private }
@@ -337,7 +344,7 @@ RiTorchUMLClassRenderer >> shapeForMethodProperty: iceNode [
 
 { #category : #hooks }
 RiTorchUMLClassRenderer >> shapeForSourceCode: iceNode [
-	^ showMethodsLOC
+	^ (model at: #root) showMethodsLOC
 		ifTrue: [ iceNode accept: methodShapeCreatorVisitor ]
 		ifFalse: [
 			RSBox new
@@ -368,11 +375,6 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 		addInteraction: highlighingController;
 		yourself
 
-]
-
-{ #category : #accessing }
-RiTorchUMLClassRenderer >> showMethodsLOC: aBoolean [
-	showMethodsLOC := aBoolean
 ]
 
 { #category : #hooks }

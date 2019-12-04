@@ -6,7 +6,8 @@ Class {
 		'considerOnlyChanged',
 		'isExpanded',
 		'connectHierarchies',
-		'showMethodsLOC'
+		'showMethodsLOC',
+		'flyDiff'
 	],
 	#category : #'Rita-UI'
 }
@@ -47,6 +48,16 @@ RiRootModel >> considerOnlyChanged: aBoolean [
 	considerOnlyChanged := aBoolean
 ]
 
+{ #category : #accessing }
+RiRootModel >> flyDiff [
+	^ flyDiff
+]
+
+{ #category : #accessing }
+RiRootModel >> flyDiff: anObject [
+	flyDiff := anObject
+]
+
 { #category : #initialization }
 RiRootModel >> initialize [
 	super initialize.
@@ -54,6 +65,7 @@ RiRootModel >> initialize [
 	isExpanded := true.
 	connectHierarchies := true.
 	showMethodsLOC := true.
+	flyDiff := false.
 ]
 
 { #category : #accessing }
@@ -84,4 +96,11 @@ RiRootModel >> showMethodsLOC [
 { #category : #accessing }
 RiRootModel >> showMethodsLOC: anObject [
 	showMethodsLOC := anObject
+]
+
+{ #category : #accessing }
+RiRootModel >> toggle: aSymbol [
+	self
+		perform: aSymbol asMutator
+		with: (self perform: aSymbol) not
 ]

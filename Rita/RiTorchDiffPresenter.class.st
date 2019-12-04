@@ -6,7 +6,7 @@ Class {
 		'roassalPresenter',
 		'toolBar',
 		'lastCanvas',
-		'highlighingController'
+		'lastHighlighingController'
 	],
 	#category : #'Rita-UI'
 }
@@ -35,17 +35,8 @@ RiTorchDiffPresenter >> fillLastCanvas [
 		yourself.
 	nodesWithClassesTraitsAndExtensions := query nodesForBehaviors, query nodesForMethodExtensions.
 
-	renderer := RiTorchUMLClassRenderer new.
-	renderer
-		blockWhenNodeSelected: (model at: #blockWhenNodeSelected);
-		blockWhenNodesHighlighted: (model at: #blockWhenNodesHighlighted);
-		isExpanded: self rootModel isExpanded;
-		showMethodsLOC: self rootModel showMethodsLOC.
-
-	highlighingController := RiHighlightingController newFor: lastCanvas.
-	renderer highlighingController: highlighingController.
-	
-	renderer aesthetics: (model at: #aesthetics).
+	renderer := RiTorchUMLClassRenderer newWith: model.
+	renderer highlighingController: lastHighlighingController.
 	
 	builder := RSUMLClassBuilder new
 		container: lastCanvas;
@@ -75,20 +66,15 @@ RiTorchDiffPresenter >> fillLastCanvas [
 
 { #category : #accessing }
 RiTorchDiffPresenter >> highlightIceNode: iceNodeCollection [
-	highlighingController ifNil: [ ^ self ].
-	highlighingController highlightAsSecondary: iceNodeCollection.
+	lastHighlighingController ifNil: [ ^ self ].
+	lastHighlighingController highlightAsSecondary: iceNodeCollection.
 
 ]
 
 { #category : #initialization }
 RiTorchDiffPresenter >> initializePresenters [
-
 	toolBar := self newSettingsToolBar.
-		
-	roassalPresenter := self instantiate: SpRoassalPresenter.
-	roassalPresenter script: [ :newCanvas | 
-		lastCanvas := newCanvas.
-		model ifNotNil: [ self fillLastCanvas ] ].
+	roassalPresenter := self newRoassalPresenter.
 ]
 
 { #category : #initialization }
@@ -105,56 +91,74 @@ RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
 ]
 
 { #category : #initialization }
+RiTorchDiffPresenter >> newRoassalPresenter [
+	^ (self instantiate: SpRoassalPresenter)
+		script: [ :newCanvas | 
+			lastCanvas := newCanvas.
+			lastHighlighingController := RiHighlightingController newFor: lastCanvas.
+			model ifNotNil: [ self fillLastCanvas ] ];
+		yourself
+]
+
+{ #category : #initialization }
+RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: iconSymbol help: help [
+
+	^ (self instantiate: SpToolBarButton)
+		label: label;
+		help: help;
+		icon: (self iconNamed: iconSymbol);
+		action: [ 
+			self rootModel toggle: aSymbol.
+			self refreshOnModelUpdate ];
+		yourself
+]
+
+{ #category : #initialization }
 RiTorchDiffPresenter >> newSettingsToolBar [
 
-	| onlyChangedButton isExpandedButton connectHierarchiesButton showMethodsLOCButton |
+	| onlyChangedButton isExpandedButton connectHierarchiesButton showMethodsLOCButton flyDiffButton |
 	spawnButton := (self instantiate: SpToolBarButton)
 			label: 'Spawn';
 			icon: (self iconNamed: #smallRemoteOpen);
 			help: 'Spawn this view in a new notebook page';
 			yourself.
 	
-	onlyChangedButton := (self instantiate: SpToolBarButton)
-		label: 'All';
-		icon: (self iconNamed: #changeUpdate);
-		help: 'Whether show only changed elements or all the elements, to have context.';
-		action: [
-			self rootModel considerOnlyChanged: self rootModel considerOnlyChanged not.
-			self refreshOnModelUpdate ];
-		yourself.
+	onlyChangedButton := self
+		newRootModelToggleButtonFor: #considerOnlyChanged
+		label: 'All'
+		icon: #changeUpdate
+		help: 'Whether show only changed elements or all the elements, to have context.'.
 
-	isExpandedButton := (self instantiate: SpToolBarButton)
-		label: 'Wide';
-		icon: (self iconNamed: #class);
-		help: 'Whether use a compact or an expanded representation for classes, traits and extensions.';
-		action: [
-			self rootModel isExpanded: self rootModel isExpanded not.
-			self refreshOnModelUpdate ];
-		yourself.
+	isExpandedButton := self
+		newRootModelToggleButtonFor: #isExpanded
+		label: 'Wide'
+		icon: #class
+		help: 'Whether use a compact or an expanded representation for classes, traits and extensions.'.
 
-	showMethodsLOCButton := (self instantiate: SpToolBarButton)
-		label: 'LOC';
-		icon: (self iconNamed: #tinyMenu);
-		help: 'Whether use a compact or an expanded representation for methods.';
-		action: [
-			self rootModel showMethodsLOC: self rootModel showMethodsLOC not.
-			self refreshOnModelUpdate ];
-		yourself.
+	showMethodsLOCButton := self
+		newRootModelToggleButtonFor: #showMethodsLOC
+		label: 'LOC'
+		icon: #tinyMenu
+		help: 'Whether use a compact or an expanded representation for methods.'.
 
-	connectHierarchiesButton := SpToolBarButton new
-		label: 'Hier';
-		icon: (self iconNamed: #class);
-		help: 'Whether connect subclasses or leave them free.';
-		action: [
-			self rootModel connectHierarchies: self rootModel connectHierarchies not.
-			self refreshOnModelUpdate ];
-		yourself.
+	connectHierarchiesButton := self
+		newRootModelToggleButtonFor: #connectHierarchies
+		label: 'Hier'
+		icon: #hierarchy
+		help: 'Whether connect subclasses or leave them free.'.
+
+	flyDiffButton := self 
+		newRootModelToggleButtonFor: #flyDiff
+		label: 'FlyDiff'
+		icon: #announcement
+		help: 'Whether show a fly diff.'.
 
 	^ self newToolBar
 		addItem: onlyChangedButton;
 		addItem: isExpandedButton;
 		addItem: connectHierarchiesButton;
 		addItem: showMethodsLOCButton;
+		addItem: flyDiffButton;
 		addItemRight: spawnButton;
 		yourself
 ]
@@ -172,7 +176,7 @@ RiTorchDiffPresenter >> rootModel [
 
 { #category : #accessing }
 RiTorchDiffPresenter >> selectIceNode: anIceNode [
-	highlighingController ifNil: [ ^ self ].
-	highlighingController highlightAsSelected: anIceNode.
+	lastHighlighingController ifNil: [ ^ self ].
+	lastHighlighingController highlightAsSelected: anIceNode.
 
 ]

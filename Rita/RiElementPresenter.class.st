@@ -40,12 +40,7 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 				yourself);
 			yourself
 		]
-		on: Error do: [:e |
-			self reportWarning: e.
-			self newLabel
-				label: 'Failed to calculate diff';
-				yourself ].
-
+value
 ]
 
 { #category : #initialization }
