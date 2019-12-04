@@ -33,14 +33,11 @@ RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 { #category : #initialization }
 RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 	
-	^ [
-		(self instantiate: RiFullDiffPresenter)
+	^ (self instantiate: RiFullDiffPresenter)
 			model: (model copy
 				add: #iceDiff -> (aRiDiffModel iceDiffTo: targetRiCommit);
 				yourself);
 			yourself
-		]
-value
 ]
 
 { #category : #initialization }

@@ -29,10 +29,7 @@ RiTorchDiffPresenter >> childrenToShowFor: node withClassName: aClassName [
 RiTorchDiffPresenter >> fillLastCanvas [
 
 	| query nodesWithClassesTraitsAndExtensions renderer builder |
-	query := RiDiffQuery new
-		diff: (model at: #iceDiff);
-		onlyConsiderChanged: self rootModel considerOnlyChanged;
-		yourself.
+	query := model at: #diffQuery.
 	nodesWithClassesTraitsAndExtensions := query nodesForBehaviors, query nodesForMethodExtensions.
 
 	renderer := RiTorchUMLClassRenderer newWith: model.

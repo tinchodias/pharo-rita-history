@@ -27,7 +27,7 @@ RiFullDiffPresenter class >> defaultSpec [
 RiFullDiffPresenter >> initializePresenters [
 	torchDiffPresenter := self instantiate: RiTorchDiffPresenter.
 	treeDiffPresenter := self instantiate: RiTreeDiffPresenter.
-	diffPanel := self instantiate: RiUnifiedDiffPresenter.
+	diffPanel := self instantiate: RiMultipleDiffsPresenter.
 
 ]
 
@@ -35,23 +35,24 @@ RiFullDiffPresenter >> initializePresenters [
 RiFullDiffPresenter >> refreshOnModelUpdate [
 
 	| modelCopy |
-	diffPanel reset.
-
 	modelCopy := model copy
 		add: #aesthetics -> RiAestheticsModel new;
 		add: #blockWhenNodeSelected -> [ :iceNode |
 			treeDiffPresenter selectIceNode: iceNode.
 			torchDiffPresenter selectIceNode: iceNode.
-			iceNode value ifNotNil: [ :iceOperation |
-				diffPanel model: { 
-					#from -> iceOperation rightContents.
-					#to -> iceOperation leftContents } asDictionary ].
+			diffPanel selectIceNode: iceNode.
 			];
 		add: #blockWhenNodesHighlighted -> [ :iceNodeCollection |
 			treeDiffPresenter highlightIceNode: iceNodeCollection.
 			torchDiffPresenter highlightIceNode: iceNodeCollection ];
+		add: #diffQuery -> (RiDiffQuery new
+			diff: (model at: #iceDiff);
+			onlyConsiderChanged: (model at: #root) considerOnlyChanged;
+			yourself);
 		yourself.
 
 	torchDiffPresenter model: modelCopy.
 	treeDiffPresenter model: modelCopy.
+	diffPanel model: modelCopy.
+
 ]

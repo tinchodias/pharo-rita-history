@@ -9,6 +9,13 @@ Class {
 }
 
 { #category : #accessing }
+RiDiffQuery >> allChildrenn [
+	^ Array
+		streamContents:
+			[ :stream | self treeToQuery allChildrenDo: [ :node | stream nextPut: node ] ]
+]
+
+{ #category : #accessing }
 RiDiffQuery >> diff [
 	^ diff
 ]
