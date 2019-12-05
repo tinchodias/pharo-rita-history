@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'innerBorder',
 		'innerBorderLowImpact',
-		'tinyBoxBorder'
+		'tinyBoxBorder',
+		'colorMap',
+		'inlinecolorMap'
 	],
 	#category : #'Rita-UI'
 }
@@ -21,32 +23,40 @@ RiAestheticsModel >> backgroundColorFor: node [
 		with: self backgroundColor
 ]
 
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> columnMorphWithAll: someMorphs [
+
+	^ PanelMorph new
+		changeTableLayout;
+		vResizing: #shrinkWrap;
+		hResizing: #spaceFill;
+		listDirection: #topToBottom;
+		cellPositioning: #topLeft;
+		cellInset: 0;
+		addAllMorphs: someMorphs;
+		yourself
+]
+
 { #category : #accessing }
 RiAestheticsModel >> currentTheme [
 	^ Smalltalk ui theme
 ]
 
-{ #category : #accessing }
+{ #category : #'diff morph creation' }
 RiAestheticsModel >> diffMorphFor: iceNode [
 
-	| presenter font |
-	presenter := RiUnifiedDiffPresenter new
-		buildWithSpec;
-		model: {
-			#from -> iceNode value rightContents.
-			#to -> iceNode value leftContents
-			} asDictionary;
+	| textArea |
+	textArea := RubEditingArea new
+		beReadOnly;
+		font: StandardFonts codeFont;
 		yourself.
-			
-	font := LogicalFont 
-		familyName: StandardFonts codeFont familyName
-		pointSize: 7.
 
-	^ presenter theWidget
-		font: font;
-		extent: 300@250;
-		scrollbarsShowNever;
-		yourself.
+	self 
+		setUpUnifiedDiffFrom: (iceNode value rightContents)
+		to: (iceNode value leftContents)
+		on: textArea.
+
+	^ textArea
 ]
 
 { #category : #accessing }
@@ -176,6 +186,7 @@ RiAestheticsModel >> initialize [
 
 	innerBorder := RSBorder new color: self foregroundColor; width: 0.75; yourself.
 	innerBorderLowImpact := innerBorder copy dashArray: #(2); yourself.
+
 	tinyBoxBorder := RSBorder new
 		width: 1;
 		color: self foregroundColor;
@@ -183,6 +194,15 @@ RiAestheticsModel >> initialize [
 		dashArray: #(1); 
 		yourself.
 
+	colorMap := {
+		#insert -> self currentTheme diffAdditionalLineBackgroundColor.
+		#remove -> self currentTheme diffRemovedLinesBackgroundColor.
+		} asDictionary.
+	
+	inlinecolorMap := {
+		#insert -> self currentTheme diffAdditionalTextInLineBackgroundColor.
+		#remove -> self currentTheme diffRemovalHighlightColor.
+		} asDictionary 
 ]
 
 { #category : #accessing }
@@ -207,6 +227,35 @@ RiAestheticsModel >> insertColor [
 	^ self foregroundColorMixedWith: Color green
 ]
 
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> pathMorphWith: segments [
+
+	| separator |
+	separator := 
+		' / ' asText 
+			addAttribute: (TextColor color: Smalltalk ui theme caretColor); 
+			addAttribute: TextEmphasis bold;
+			yourself.
+	
+	^ (separator join: (segments collect: [ :each | each asString asText ])) 
+		asMorph
+		lock: true;
+		yourself
+]
+
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> popupDiffMorphFor: iceNode [
+
+	^ "self columnMorphWithAll: {
+			self pathMorphWith: iceNode allPathSegments.
+			"(self diffMorphFor: iceNode)
+				font: (LogicalFont 
+					familyName: StandardFonts codeFont familyName
+					pointSize: 7);
+				yourself
+		
+]
+
 { #category : #accessing }
 RiAestheticsModel >> removeColor [
 	^ self foregroundColorMixedWith: Color red
@@ -220,6 +269,37 @@ RiAestheticsModel >> rowForChange: iceNode [
 { #category : #accessing }
 RiAestheticsModel >> scaleForMethods [
 	^ 10
+]
+
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> setUpUnifiedDiffFrom: from to: to on: textArea [
+
+	| diff |
+	diff := RiUnifiedStringDiff new
+		oldString: from;
+		newString: to;
+		build;
+		yourself.
+
+	textArea removeAllSegments.
+
+	textArea updateTextWith: diff unifiedString.
+
+	diff lineJoins do: [:each |
+		colorMap at: each rawkind ifPresent: [ :color |
+			textArea addSegment: ((RubPlainSegmentMorph from: each rawfrom to: each rawto)
+				color: color;
+				yourself).
+		] ].
+
+	diff inlineJoins do: [:each |
+		inlinecolorMap at: each rawkind ifPresent: [ :color |
+			textArea addSegment: ((RubPlainSegmentMorph from: each rawfrom to: each rawto)
+				color: color;
+				yourself).
+		] ].
+	
+
 ]
 
 { #category : #accessing }

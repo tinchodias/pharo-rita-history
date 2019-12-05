@@ -243,7 +243,7 @@ RiTorchUMLClassRenderer >> popupForIceNodeShapes [
 	^ (model at: #root) flyDiff
 		ifTrue: [
 			RSMorphicPopup new
-				morphBuilder: [ :iceNode | aesthetics diffMorphFor: iceNode ];
+				morphBuilder: [ :iceNode | aesthetics popupDiffMorphFor: iceNode ];
 				yourself ]
 		ifFalse: [ RSPopup text: [ :node | node value ritaKey ] ]
 ]

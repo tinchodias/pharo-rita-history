@@ -9,10 +9,10 @@ Class {
 }
 
 { #category : #accessing }
-RiDiffQuery >> allChildrenn [
-	^ Array
-		streamContents:
-			[ :stream | self treeToQuery allChildrenDo: [ :node | stream nextPut: node ] ]
+RiDiffQuery >> allLeafChildren [
+	^ Array streamContents: [ :stream |
+		self treeToQuery allChildrenDo: [ :node |
+			node isEmpty ifTrue: [ stream nextPut: node ] ] ]
 ]
 
 { #category : #accessing }
