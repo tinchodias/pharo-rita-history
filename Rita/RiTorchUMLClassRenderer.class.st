@@ -271,7 +271,8 @@ RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
 	self addPackInteractionOn: aCanvas.
 
 	aCanvas color: aesthetics backgroundColor.
-
+	aCanvas when: RSMouseClick do: [
+		highlighingController highlightAsSelected: nil ]
 ]
 
 { #category : #hooks }
