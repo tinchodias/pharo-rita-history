@@ -53,7 +53,11 @@ RiMultipleDiffsPresenter >> refreshOnModelUpdate [
 { #category : #initialization }
 RiMultipleDiffsPresenter >> selectIceNode: anIceNode [
 
-	"self setIceNode: anIceNode in: table"
+	|  tableItemToSelect |
+	tableItemToSelect := table items detect: [ :each |  each first = anIceNode ]  ifNone: [ ^ self ].
+
+	table selectItem: tableItemToSelect
+
 ]
 
 { #category : #initialization }
