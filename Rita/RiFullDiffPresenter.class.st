@@ -6,7 +6,7 @@ Class {
 		'treeDiffPresenter',
 		'diffPanel'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Diff'
 }
 
 { #category : #specs }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'parentRiElement'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Diff'
 }
 
 { #category : #'instance creation' }

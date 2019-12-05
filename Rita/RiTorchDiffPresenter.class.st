@@ -8,7 +8,7 @@ Class {
 		'lastCanvas',
 		'lastHighlighingController'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Diff'
 }
 
 { #category : #specs }

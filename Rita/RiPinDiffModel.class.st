@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'sourceRiCommit'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Diff'
 }
 
 { #category : #'instance creation' }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'table'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Diff'
 }
 
 { #category : #specs }
@@ -30,42 +30,62 @@ RiMultipleDiffsPresenter >> columnMorphWithAll: someMophs [
 
 { #category : #initialization }
 RiMultipleDiffsPresenter >> diffMorphFor: iceNode [
-"	| presenter |
+	| presenter |
 	presenter := self instantiate: RiUnifiedDiffPresenter.
 	presenter buildWithSpec.
 	presenter model: { 
-			#from -> iceNode value rightContents.
-			#to -> iceNode value leftContents } asDictionary.
+		#from -> iceNode value rightContents.
+		#to -> iceNode value leftContents.
+		} asDictionary.
 
-	^ presenter theWidget
+	^ presenter "theWidget
 		extent: 300@250;
 		scrollbarsShowNever;
 		yourself.
 "
+
 "	^ (DiffMorph from: iceNode value rightContents to: iceNode value leftContents)
 			showOptions: false;
 			width: 400;
 			height: 200;
-			yourself"
+			yourself
+"
 			
-	^ (TextDiffBuilder
+"	^ (TextDiffBuilder
 			buildDisplayPatchFrom: iceNode value rightContents
 			to: iceNode value leftContents) asMorph
 			lock: true;
 			yourself
+"
 ]
 
 { #category : #initialization }
 RiMultipleDiffsPresenter >> initializePresenters [
-	table := self newTable.
-	table
+
+	table := self instantiate: RiUnifiedDiffPresenter.
+
+"	table := self newComponentList."
+
+"	table := self newTable
 		hideColumnHeaders;
 		addColumn: (SpImageTableColumn
 			evaluated: [ :each | self tableMorphFor: each ]);
 		whenBuiltDo: [ :ann | 
-			"HACKS HERE"
 			ann widget beRowNotHomogeneous.
-			SpMultipleDiffDataSource adoptInstance: ann widget dataSource ]
+			RiMultipleDiffDataSource adoptInstance: ann widget dataSource ];
+		yourself"
+]
+
+{ #category : #initialization }
+RiMultipleDiffsPresenter >> newPresenterFor: iceNode [
+"	^ self pathPresenterWith: iceNode allPathSegments"
+	| presenter |
+	presenter := self instantiate: RiUnifiedDiffPresenter.
+"	presenter buildWithSpec."
+	self setIceNode: iceNode in: presenter.
+	presenter extent: 400 asPoint.
+	
+	^ presenter
 ]
 
 { #category : #initialization }
@@ -76,7 +96,7 @@ RiMultipleDiffsPresenter >> pathMorphWith: segments [
 		' / ' asText 
 			addAttribute: (TextColor color: Color lightGray); 
 			addAttribute: (TextFontChange fontNumber: 1); 
-			yourself. 
+			yourself.
 	
 	^ (separator join: (segments collect: [ :each | 
 			each asString asText 
@@ -89,8 +109,29 @@ RiMultipleDiffsPresenter >> pathMorphWith: segments [
 ]
 
 { #category : #initialization }
+RiMultipleDiffsPresenter >> pathPresenterWith: segments [
+
+	| separator |
+	separator := 
+		' / ' asText 
+			addAttribute: (TextColor color: Color lightGray); 
+			addAttribute: (TextFontChange fontNumber: 1); 
+			yourself.
+	
+	^ SpLabelPresenter new
+		label: (separator join: (segments collect: [ :each | 
+			each asString asText 
+				addAttribute: (TextColor color: Smalltalk ui theme caretColor); 
+				addAttribute: (TextFontChange fontNumber: 2); 
+				yourself ]));
+		yourself
+]
+
+{ #category : #initialization }
 RiMultipleDiffsPresenter >> refreshOnModelUpdate [
-	table items: (model at: #diffQuery) allChildrenn
+	
+"	table items: ((model at: #diffQuery) allChildrenn
+		collect: [ :each | self newPresenterFor: each ])"
 ]
 
 { #category : #initialization }
@@ -108,7 +149,17 @@ RiMultipleDiffsPresenter >> rowMorphWithAll: someMophs [
 
 { #category : #initialization }
 RiMultipleDiffsPresenter >> selectIceNode: anIceNode [
-"	1halt."
+
+	self setIceNode: anIceNode in: table
+]
+
+{ #category : #initialization }
+RiMultipleDiffsPresenter >> setIceNode: iceNode in: presenter [
+	iceNode ifNil: [ ^self ].
+	presenter model: { 
+		#from -> iceNode value rightContents.
+		#to -> iceNode value leftContents.
+		} asDictionary
 ]
 
 { #category : #initialization }
@@ -125,9 +176,9 @@ RiMultipleDiffsPresenter >> tableMorphFor: iceNode [
 		scrollbarsShowNever;
 		yourself."
 
-	^ self rowMorphWithAll: {
-		self columnMorphWithAll: {
-			(self pathMorphWith: iceNode allPathSegments).
+	^ "self rowMorphWithAll: {"
+		"self columnMorphWithAll: {
+			(self pathMorphWith: iceNode allPathSegments)."
 			(self diffMorphFor: iceNode)
-		} }
+		
 ]

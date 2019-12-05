@@ -6,7 +6,7 @@ Class {
 		'highlightDeferrer',
 		'iceNodeCollectionToHighlight'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Diff'
 }
 
 { #category : #specs }

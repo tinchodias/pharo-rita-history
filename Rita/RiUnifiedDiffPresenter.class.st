@@ -38,7 +38,7 @@ Class {
 		'inlinecolorMap',
 		'theWidget'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Diff'
 }
 
 { #category : #specs }
@@ -78,6 +78,18 @@ RiUnifiedDiffPresenter >> initializePresenters [
 
 { #category : #accessing }
 RiUnifiedDiffPresenter >> refreshOnModelUpdate [
+	self refreshOnModelUpdateAndPresenterBuilt
+
+"	                  presenter isBuilt
+		                  ifTrue: [ 
+		                  self refreshOnModelUpdateAndPresenterBuilt ]
+		                  ifFalse: [ 
+			                  presenter whenBuiltDo: [ 
+				                  self refreshOnModelUpdateAndPresenterBuilt ] ]"
+]
+
+{ #category : #accessing }
+RiUnifiedDiffPresenter >> refreshOnModelUpdateAndPresenterBuilt [
 	| text segments diff |
 
 	diff := RiUnifiedStringDiff new
@@ -102,10 +114,10 @@ RiUnifiedDiffPresenter >> refreshOnModelUpdate [
 				yourself).
 		] ].
 	
- 	presenter textArea removeAllSegments.
+	presenter textArea removeAllSegments.
 	presenter text: text.
 	presenter textArea font: StandardFonts codeFont.
-	segments do: [ :each | presenter textArea addSegment: each ].
+	segments do: [ :each | presenter textArea addSegment: each ]
 ]
 
 { #category : #accessing }

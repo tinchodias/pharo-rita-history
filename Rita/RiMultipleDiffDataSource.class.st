@@ -1,17 +1,17 @@
 Class {
-	#name : #SpMultipleDiffDataSource,
+	#name : #RiMultipleDiffDataSource,
 	#superclass : #SpMorphicTableDataSource,
 	#category : #'Rita-FastTable'
 }
 
 { #category : #accessing }
-SpMultipleDiffDataSource >> cellColumn: column row: rowIndex [
+RiMultipleDiffDataSource >> cellColumn: column row: rowIndex [
  
 	^ super cellColumn: column row: rowIndex
 ]
 
 { #category : #accessing }
-SpMultipleDiffDataSource >> rowHeight: rowIndex [
+RiMultipleDiffDataSource >> rowHeight: rowIndex [
  
 
 	^ 300 "super rowHeight: rowIndex"
