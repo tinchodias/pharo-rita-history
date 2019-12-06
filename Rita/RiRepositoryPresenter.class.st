@@ -8,7 +8,7 @@ Class {
 	#instVars : [
 		'table',
 		'blockForPinToCompareFrom',
-		'imageBuilder'
+		'rowBuilder'
 	],
 	#category : #'Rita-UI'
 }
@@ -140,14 +140,14 @@ RiRepositoryPresenter >> contextMenuForTable [
 { #category : #initialization }
 RiRepositoryPresenter >> initializePresenters [
 
-	imageBuilder := RiCommentImageBuilder new.
+	rowBuilder := RiElementRowBuilder new.
 
 	table := self newTable.
 	table
 		hideColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
 		addColumn: (SpImageTableColumn
-			evaluated: [ :item | imageBuilder morphAt: item ]).
+			evaluated: [ :item | rowBuilder morphAt: item ]).
 
 	table whenBuiltDo: [ :ann |
 		self refreshOnModelUpdate ].
@@ -168,7 +168,7 @@ RiRepositoryPresenter >> refreshOnAvatarsUpdate [
 RiRepositoryPresenter >> refreshOnModelUpdate [
 	self isBuilt ifFalse: [ ^ self ].
 
-	imageBuilder refreshWith: self.
+	rowBuilder refreshWith: self.
 
 	table items: self riRepository elements
 ]

@@ -3,7 +3,7 @@ I'm responsible of building the image (a Morph) to show in the comment column of
 
 "
 Class {
-	#name : #RiCommentImageBuilder,
+	#name : #RiElementRowBuilder,
 	#superclass : #Object,
 	#instVars : [
 		'hiedraBuilder',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #accessing }
-RiCommentImageBuilder >> avatarsFor: item [
+RiElementRowBuilder >> avatarsFor: item [
 	
 	| authorEmail committerEmail |
 	authorEmail := item authorEmail.
@@ -27,41 +27,41 @@ RiCommentImageBuilder >> avatarsFor: item [
 ]
 
 { #category : #visiting }
-RiCommentImageBuilder >> colorForAlreadyPushed [
+RiElementRowBuilder >> colorForAlreadyPushed [
 	^ Color green
 ]
 
 { #category : #visiting }
-RiCommentImageBuilder >> colorForOnlyLocal [
+RiElementRowBuilder >> colorForOnlyLocal [
 	^ Color red
 ]
 
 { #category : #visiting }
-RiCommentImageBuilder >> iconForBranch [
+RiElementRowBuilder >> iconForBranch [
 	^ self iconNamed: #branch
 ]
 
 { #category : #visiting }
-RiCommentImageBuilder >> iconForTag [
+RiElementRowBuilder >> iconForTag [
 	^ (self iconNamed: #breakpoint)
 		flipBy: #horizontal
 		centerAt: 0 @ 0
 ]
 
 { #category : #visiting }
-RiCommentImageBuilder >> iconForWorkingCopy [
+RiElementRowBuilder >> iconForWorkingCopy [
 	^ self iconNamed: #smallSave
 ]
 
 { #category : #accessing }
-RiCommentImageBuilder >> initialize [
+RiElementRowBuilder >> initialize [
 	super initialize.
 	
 	hiedraBuilder := RiHiedraImageBuilder new.
 ]
 
 { #category : #accessing }
-RiCommentImageBuilder >> leftMorphsAt: item [
+RiElementRowBuilder >> leftMorphsAt: item [
 	^ 	{ hiedraBuilder morphAt: item. '   ' asMorph },
 		(self avatarsFor: item),
 		(self markMorphsAt: item),
@@ -70,7 +70,7 @@ RiCommentImageBuilder >> leftMorphsAt: item [
 ]
 
 { #category : #private }
-RiCommentImageBuilder >> markMorphText: text icon: icon color: color [
+RiElementRowBuilder >> markMorphText: text icon: icon color: color [
 	^ Morph new
 		layoutInset: 2 @ 0;
 		changeTableLayout;
@@ -84,12 +84,12 @@ RiCommentImageBuilder >> markMorphText: text icon: icon color: color [
 ]
 
 { #category : #accessing }
-RiCommentImageBuilder >> markMorphsAt: aRiElement [
+RiElementRowBuilder >> markMorphsAt: aRiElement [
 	^ aRiElement marks collect: [ :each | each accept: self ]
 ]
 
 { #category : #accessing }
-RiCommentImageBuilder >> morphAt: item [
+RiElementRowBuilder >> morphAt: item [
 	| bar |
 	bar := SpToolBarMorph new.
 	bar color: Color transparent.
@@ -102,7 +102,7 @@ RiCommentImageBuilder >> morphAt: item [
 ]
 
 { #category : #accessing }
-RiCommentImageBuilder >> refreshWith: aRiRepositoryPresenter [
+RiElementRowBuilder >> refreshWith: aRiRepositoryPresenter [
 	hiedraBuilder refreshWith: aRiRepositoryPresenter.
 
 	avatarDatabase := RiAvatarsDatabase new.
@@ -112,7 +112,7 @@ RiCommentImageBuilder >> refreshWith: aRiRepositoryPresenter [
 ]
 
 { #category : #visiting }
-RiCommentImageBuilder >> visitBranchMark: aRiBranchMark [
+RiElementRowBuilder >> visitBranchMark: aRiBranchMark [
 	^ self
 		markMorphText: aRiBranchMark shortname
 		icon: self iconForBranch
@@ -123,7 +123,7 @@ RiCommentImageBuilder >> visitBranchMark: aRiBranchMark [
 ]
 
 { #category : #visiting }
-RiCommentImageBuilder >> visitImageMark: aRiMark [
+RiElementRowBuilder >> visitImageMark: aRiMark [
 	^ self
 		markMorphText: 'IMAGE'
 		icon: self iconForWorkingCopy
@@ -131,7 +131,7 @@ RiCommentImageBuilder >> visitImageMark: aRiMark [
 ]
 
 { #category : #visiting }
-RiCommentImageBuilder >> visitTagMark: aRiTagMark [
+RiElementRowBuilder >> visitTagMark: aRiTagMark [
 	^ self
 		markMorphText: aRiTagMark name
 		icon: self iconForTag
@@ -139,7 +139,7 @@ RiCommentImageBuilder >> visitTagMark: aRiTagMark [
 ]
 
 { #category : #visiting }
-RiCommentImageBuilder >> visitWorkdirMark: aRiMark [
+RiElementRowBuilder >> visitWorkdirMark: aRiMark [
 	^ self
 		markMorphText: 'WORKDIR'
 		icon: self iconForWorkingCopy
