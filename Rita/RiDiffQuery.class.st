@@ -11,8 +11,8 @@ Class {
 { #category : #accessing }
 RiDiffQuery >> allLeafChildren [
 	^ Array streamContents: [ :stream |
-		self treeToQuery allChildrenDo: [ :node |
-			node isEmpty ifTrue: [ stream nextPut: node ] ] ]
+		self treeToQuery allLeavesDo: [ :node |
+			stream nextPut: node ] ]
 ]
 
 { #category : #accessing }

@@ -33,6 +33,7 @@ RiAestheticsModel >> columnMorphWithAll: someMorphs [
 		listDirection: #topToBottom;
 		cellPositioning: #topLeft;
 		cellInset: 0;
+		color: self currentTheme lightBackgroundColor;
 		addAllMorphs: someMorphs;
 		yourself
 ]
@@ -49,6 +50,7 @@ RiAestheticsModel >> diffMorphFor: iceNode [
 	textArea := RubEditingArea new
 		beReadOnly;
 		font: StandardFonts codeFont;
+		margins: 0 asMargin;
 		yourself.
 
 	self 
@@ -228,10 +230,12 @@ RiAestheticsModel >> insertColor [
 ]
 
 { #category : #'diff morph creation' }
-RiAestheticsModel >> pathMorphWith: segments [
+RiAestheticsModel >> pathMorphWith: iceNode [
 
-	| separator |
-	separator := 
+	| separator segments |
+	segments := iceNode withAllParentNodes collect: [:each | each value ritaKey].
+
+	separator :=
 		' / ' asText 
 			addAttribute: (TextColor color: Smalltalk ui theme caretColor); 
 			addAttribute: TextEmphasis bold;
@@ -239,6 +243,7 @@ RiAestheticsModel >> pathMorphWith: segments [
 	
 	^ (separator join: (segments collect: [ :each | each asString asText ])) 
 		asMorph
+		margins: 5 asMargin;
 		lock: true;
 		yourself
 ]

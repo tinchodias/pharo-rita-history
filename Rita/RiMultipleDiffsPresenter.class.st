@@ -21,7 +21,7 @@ RiMultipleDiffsPresenter >> diffMorphFor: iceNode [
 	aesthetics := model at: #aesthetics.
 
 	^ aesthetics columnMorphWithAll: {
-			aesthetics pathMorphWith: iceNode allPathSegments.
+			aesthetics pathMorphWith: iceNode.
 			(aesthetics diffMorphFor: iceNode)
 				hResizing: #spaceFill;
 				vResizing: #spaceFill;
@@ -53,10 +53,12 @@ RiMultipleDiffsPresenter >> refreshOnModelUpdate [
 { #category : #initialization }
 RiMultipleDiffsPresenter >> selectIceNode: anIceNode [
 
-	|  tableItemToSelect |
-	tableItemToSelect := table items detect: [ :each |  each first = anIceNode ]  ifNone: [ ^ self ].
+	|  index |
+	anIceNode ifNil: [ ^self ].
+	index := (table items collect: #first) indexOf: anIceNode.
+	index < 1 ifTrue: [ ^self ].
 
-	table selectItem: tableItemToSelect
+	table adapter widget scrollToIndex: index
 
 ]
 
