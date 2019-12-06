@@ -34,9 +34,7 @@ RiHiedraImageBuilder >> doRefreshWith: aRiRepositoryPresenter [
 
 { #category : #accessing }
 RiHiedraImageBuilder >> morphAt: item [
-	^ hiedraColumnController isReady
-		ifTrue: [ hiedraColumnController cellMorphAtValue: item ]
-		ifFalse: [ Morph new color: Color transparent; extent: 10@10 ]
+	^ hiedraColumnController cellMorphAtValue: item
 ]
 
 { #category : #refreshing }
