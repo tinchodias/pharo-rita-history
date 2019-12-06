@@ -53,7 +53,9 @@ RiAvatarsDatabase >> newGithubAvatarClientFor: githubRemote [
 			at: each authorEmail ifAbsentPut: [ each id ];
 			at: each committerEmail ifAbsentPut: [ each id ] ].
 	
-	credentials := IceGitHubAPI "ensureCredentials; "obtainCredentials.
+	self flag: #todo.
+	[ credentials := IceGitHubAPI ensureCredentials"; obtainCredentials" ]
+		on: LGitNoCredentialsProvided do: [ "ignore" ].
 
 	^ RiGithubAvatarClient new
 		remote: githubRemote;
