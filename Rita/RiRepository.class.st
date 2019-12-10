@@ -66,9 +66,7 @@ RiRepository >> process [
 	elements := OrderedCollection new.
 	elementByCommit := Dictionary new.
 	
-	"Note: HEAD branches were problematic. They are also uneeded, right?"
-	tips := iceRepository allBranches reject: [ :each | each name endsWith: '/HEAD' ].
-	tips := tips, iceRepository tags.
+	tips := self tipCommitishCollection.
 
 	"Determine the commits in the proper order via Libgit's revwalk."
 	walk := iceRepository newCommitWalk.
@@ -165,4 +163,14 @@ RiRepository >> processWorkdirMark [
 
 	aRiCommit addMark: (RiWorkdirMark new element: aRiCommit; yourself).
 
+]
+
+{ #category : #processing }
+RiRepository >> tipCommitishCollection [
+	
+	| branches |
+	"Note: /HEAD branches were problematic. And they are unneeded... right?"
+	branches := iceRepository allBranches reject: [ :each | each name endsWith: '/HEAD' ].
+
+	^ branches, iceRepository tags
 ]
