@@ -61,18 +61,21 @@ RiRepository >> openInNativeBrowser [
 { #category : #processing }
 RiRepository >> process [
 
-	| walk marks |
+	| walk tips |
 	elementMarks := OrderedCollection new.
 	elements := OrderedCollection new.
 	elementByCommit := Dictionary new.
-	marks := iceRepository tags, iceRepository localBranches", iceRepository remoteTrackedBranches".
+	
+	"Note: HEAD branches were problematic. They are also uneeded, right?"
+	tips := iceRepository allBranches reject: [ :each | each name endsWith: '/HEAD' ].
+	tips := tips, iceRepository tags.
 
 	"Determine the commits in the proper order via Libgit's revwalk."
 	walk := iceRepository newCommitWalk.
 	walk revwalk
 		beSortedByCommitTime;
 		beSortedParentsBeforeChildren.
-	(marks collect: #commit as: Set) do: [ :each | walk fromCommit: each ].
+	tips collect: #commitId thenDo: [ :each | walk fromLGitId: each ].
 	walk commitsDo: [:each |
 		| newCommit |
 		newCommit := RiCommit repository: self iceCommit: each.
@@ -81,7 +84,7 @@ RiRepository >> process [
 	self processCommitChildren.
 
 	"Add our marks to the commit elements."
-	marks do: [ :each | self processMark: each ].
+	tips do: [ :each | self processMark: each ].
 
 	"Add new non-commit elements to the list, if needed."
 	self processImageMark.
