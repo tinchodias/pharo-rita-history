@@ -5,6 +5,10 @@ Class {
 }
 
 { #category : #accessing }
-RiNullAvatarClient >> avatarByEmailFuture [
-	^ [ Dictionary empty ] future
+RiNullAvatarClient >> avatarByEmail [
+	^ Dictionary empty
+]
+
+{ #category : #accessing }
+RiNullAvatarClient >> process [
 ]

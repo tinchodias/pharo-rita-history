@@ -18,12 +18,17 @@ Class {
 RiAvatarsDatabase >> avatarFor: emailString [
 	^ avatarByEmail
 		at: emailString
-		ifAbsent: [ self iconNamed: #user ]
+		ifAbsent: [ self mockAvatar ]
 ]
 
 { #category : #accessing }
 RiAvatarsDatabase >> avatarSize [
 	^ 16
+]
+
+{ #category : #accessing }
+RiAvatarsDatabase >> mockAvatar [
+	^ self iconNamed: #user
 ]
 
 { #category : #private }
@@ -91,11 +96,13 @@ RiAvatarsDatabase >> newNullAvatarClient [
 
 { #category : #refreshing }
 RiAvatarsDatabase >> refreshWith: aRiRepositoryPresenter [
+	| client |
 	riRepository := aRiRepositoryPresenter riRepository.
 	avatarByEmail := Dictionary new.
-	self newAvatarClient avatarByEmailFuture
-		onSuccessDo: [ :result |
-			avatarByEmail := result.
+	client := self newAvatarClient.
+	[ client process ] future
+		onSuccessDo: [ :_ |
+			avatarByEmail := client avatarByEmail.
 			aRiRepositoryPresenter refreshOnAvatarsUpdate ];
 		onFailureDo: [ :error | aRiRepositoryPresenter reportWarning: error ]
 ]

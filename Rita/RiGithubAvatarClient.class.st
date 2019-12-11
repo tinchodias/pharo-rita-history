@@ -17,11 +17,6 @@ RiGithubAvatarClient >> avatarByEmail [
 	^ avatarByEmail
 ]
 
-{ #category : #'accessing - response' }
-RiGithubAvatarClient >> avatarByEmailFuture [
-	^ [ self get. avatarByEmail ] future
-]
-
 { #category : #private }
 RiGithubAvatarClient >> avatarFor: urlString [
 
@@ -60,14 +55,6 @@ RiGithubAvatarClient >> credentials [
 { #category : #'accessing - request' }
 RiGithubAvatarClient >> credentials: anObject [
 	credentials := anObject
-]
-
-{ #category : #action }
-RiGithubAvatarClient >> get [
-	"Do the HTTP requests"
-
-	self getAvatarUrlByEmail.
-	self getAvatarByEmail.
 ]
 
 { #category : #private }
@@ -142,6 +129,14 @@ fragment authorFragment on GitObject {
   }
 }
 ' ].
+]
+
+{ #category : #action }
+RiGithubAvatarClient >> process [
+	"Do the HTTP requests"
+
+	self getAvatarUrlByEmail.
+	self getAvatarByEmail.
 ]
 
 { #category : #action }

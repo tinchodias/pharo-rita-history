@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
-RiAbstractAvatarClient >> avatarByEmailFuture [
+RiAbstractAvatarClient >> avatarByEmail [
 	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+RiAbstractAvatarClient >> process [
+	self subclassResponsibility
 ]
