@@ -13,7 +13,15 @@ Metacello new
   load.
 ~~~
 
-## Execute experiments
+## Execute
+
+~~~
+RiRootPresenter open
+~~~
+
+## Old experiments 
+
+The following are experiments stored in this repository that (some of them might still run)
 
 * Code dependencies: See examples in class side of `HiMNavigator`.
 * Code dependencies in Spec2 + Search: `HiMNavigatorPresenter defaultSpec`.
