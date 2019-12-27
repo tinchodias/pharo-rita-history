@@ -327,10 +327,10 @@ RiAestheticsModel >> shapeForClassPropertyDefinition: iceDefinition color: aColo
 
 	^ RiIconGenerator new
 		extent: self scaleForMethods * 1.3 asPoint;
-		foregroundColor: aColor;
-		backgroundColor: self backgroundColor;
+		foregroundColor: self foregroundColor;
+		backgroundColor: aColor;
 		border: aBorder;
-		filled: RSShapeFactory square
+		filled2: RSShapeFactory square
 			with: (self iconTitleForClassPropertyDefinition: iceDefinition);
 		newRSComposite
 
@@ -348,10 +348,10 @@ RiAestheticsModel >> shapeForClassVariable: iceNode [
 RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColor border: aBorder [
 	^ RiIconGenerator new
 		extent: self scaleForMethods asPoint;
-		foregroundColor: aColor;
-		backgroundColor: self backgroundColor;
+		foregroundColor: self foregroundColor;
+		backgroundColor: aColor;
 		border: aBorder;
-		filled: RSShapeFactory circle
+		filled2: RSShapeFactory circle
 			with: (self iconTitleForClassVariableDefinition: iceDefinition);
 		newRSComposite
 

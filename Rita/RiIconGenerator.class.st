@@ -74,6 +74,23 @@ RiIconGenerator >> extent: anObject [
 ]
 
 { #category : #drawing }
+RiIconGenerator >> filled2: shape with: aString [
+
+	shapes add: 
+		(shape
+			size: extent;
+			color: backgroundColor;
+			border: border;
+			yourself).
+
+	shapes add: 
+		((self labelWith: aString)
+			color: foregroundColor;
+			yourself).
+
+]
+
+{ #category : #drawing }
 RiIconGenerator >> filled: shape with: aString [
 
 	shapes add: 
