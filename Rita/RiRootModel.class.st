@@ -65,7 +65,7 @@ RiRootModel >> initialize [
 	isExpanded := true.
 	connectHierarchies := true.
 	showMethodsLOC := true.
-	flyDiff := false.
+	flyDiff := true.
 ]
 
 { #category : #accessing }
