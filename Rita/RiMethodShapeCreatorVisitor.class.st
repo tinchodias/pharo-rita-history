@@ -30,8 +30,9 @@ RiMethodShapeCreatorVisitor >> initialize: aRiAestheticsModel [
 	self initialize.
 	aesthetics := aRiAestheticsModel.
 	colorMap := {
-		#insert -> aesthetics insertColor.
-		#remove -> aesthetics removeColor.
+		"FIX!"
+		#insert -> ((aesthetics visitAddition: nil) alpha: 0.5).
+		#remove -> ((aesthetics visitRemoval: nil) alpha: 0.5).
 		} asDictionary.
 
 
@@ -41,8 +42,8 @@ RiMethodShapeCreatorVisitor >> initialize: aRiAestheticsModel [
 RiMethodShapeCreatorVisitor >> newForPatchSequence: patchSequence [
 
 	| scale canvas |
-	scale := (self widthForMethod)@(self heightScale).
- 	canvas := FormCanvas extent: (1@patchSequence size)*scale.
+	scale := self widthForMethod @ self heightScale.
+ 	canvas := FormCanvas extent: (1 @ patchSequence size) * scale.
 	patchSequence withIndexDo: [ :each :index |
 		colorMap at: each key ifPresent: [ :color |
 			| rect |

@@ -18,7 +18,7 @@ RiAestheticsModel >> backgroundColor [
 
 { #category : #accessing }
 RiAestheticsModel >> backgroundColorFor: node [
-	^ node value ritaColor
+	^ (node value accept: self)
 		alphaMixed: 0.1
 		with: self backgroundColor
 ]
@@ -62,12 +62,8 @@ RiAestheticsModel >> diffMorphFor: iceNode [
 ]
 
 { #category : #accessing }
-RiAestheticsModel >> fillColorFor: node [
-	| color |
-	color := node value ritaColor.
-	^ color isTransparent
-		ifTrue: [ color ]
-		ifFalse: [ color mixed: 0.8 with: self foregroundColor ]
+RiAestheticsModel >> fillColorFor: iceNode [
+	^ iceNode value accept: self
 ]
 
 { #category : #accessing }
@@ -77,7 +73,7 @@ RiAestheticsModel >> foregroundColor [
 
 { #category : #accessing }
 RiAestheticsModel >> foregroundColorFor: iceNode [
-	^ self foregroundColorMixedWith: iceNode value ritaColor
+	^ self foregroundColorMixedWith: (iceNode value accept: self)
 ]
 
 { #category : #accessing }
@@ -197,13 +193,13 @@ RiAestheticsModel >> initialize [
 		yourself.
 
 	colorMap := {
-		#insert -> self currentTheme diffAdditionalLineBackgroundColor.
-		#remove -> self currentTheme diffRemovedLinesBackgroundColor.
+		#insert -> self insertColor.
+		#remove -> self removeColor.
 		} asDictionary.
 	
 	inlinecolorMap := {
-		#insert -> self currentTheme diffAdditionalTextInLineBackgroundColor.
-		#remove -> self currentTheme diffRemovalHighlightColor.
+		#insert -> self insertColor.
+		#remove -> self removeColor.
 		} asDictionary 
 ]
 
@@ -226,18 +222,29 @@ RiAestheticsModel >> innerBorderLowImpact [
 
 { #category : #accessing }
 RiAestheticsModel >> insertColor [
-	^ self foregroundColorMixedWith: Color green
+	^ self currentTheme diffAdditionalLineBackgroundColor
+]
+
+{ #category : #accessing }
+RiAestheticsModel >> modificationColor [
+	| reference |
+	reference := self removeColor.
+	^ Color
+		h: 205
+		s: reference saturation
+		v: reference brightness
+		alpha: reference alpha
 ]
 
 { #category : #'diff morph creation' }
 RiAestheticsModel >> pathMorphWith: iceNode [
 
 	| separator segments |
-	segments := iceNode withAllParentNodes collect: [:each | each value ritaKey].
+	segments := iceNode withAllParentNodes collect: [:each | each value ritaKey ].
 
 	separator :=
 		' / ' asText 
-			addAttribute: (TextColor color: Smalltalk ui theme caretColor); 
+"			addAttribute: (TextColor color: Smalltalk ui theme caretColor); "
 			addAttribute: TextEmphasis bold;
 			yourself.
 	
@@ -263,7 +270,7 @@ RiAestheticsModel >> popupDiffMorphFor: iceNode [
 
 { #category : #accessing }
 RiAestheticsModel >> removeColor [
-	^ self foregroundColorMixedWith: Color red
+	^ self currentTheme diffRemovedLinesBackgroundColor
 ]
 
 { #category : #accessing }
@@ -361,4 +368,24 @@ RiAestheticsModel >> shapeForDefinition: iceDefinition [
 { #category : #accessing }
 RiAestheticsModel >> tinyBoxBorder [
 	^ tinyBoxBorder
+]
+
+{ #category : #visiting }
+RiAestheticsModel >> visitAddition: anIceAddition [ 
+	^ self insertColor alphaMixed: 0.75 with: self foregroundColor
+]
+
+{ #category : #visiting }
+RiAestheticsModel >> visitModification: anIceModification [ 
+	^ self modificationColor alphaMixed: 0.75 with: self foregroundColor
+]
+
+{ #category : #visiting }
+RiAestheticsModel >> visitNoModification: anIceNoModification [ 
+	^ Color transparent
+]
+
+{ #category : #visiting }
+RiAestheticsModel >> visitRemoval: anIceRemoval [ 
+	^ self removeColor alphaMixed: 0.75 with: self foregroundColor
 ]

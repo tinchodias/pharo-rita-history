@@ -48,8 +48,6 @@ RiRowMorph >> initializePanels [
 	leftPanel := self newPanelMorph.
 	rightPanel := self newPanelMorph
 		listDirection: #rightToLeft;
-		listCentering: #center;
-		wrapCentering: #center;
 		hResizing: #shrinkWrap.
 
 	self
