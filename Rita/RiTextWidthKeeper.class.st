@@ -8,10 +8,33 @@ Class {
 }
 
 { #category : #convenience }
-RiTextWidthKeeper class >> stringFor: aString font: aFont maxSize: anInteger [
+RiTextWidthKeeper class >> endingTruncationFor: aString font: aFont maxSize: anInteger [
 	| width |
 	width := aFont widthOfString: aString.
 	^ (width <= anInteger or: [ aString size <= 3 ])
 		ifTrue: [ aString ]
-		ifFalse: [ self stringFor: ((aString allButLast: 2), '…') font: aFont maxSize: anInteger ]
+		ifFalse: [ self endingTruncationFor: ((aString allButLast: 2), '…') font: aFont maxSize: anInteger ]
+]
+
+{ #category : #convenience }
+RiTextWidthKeeper class >> middleTruncationFor: originalString font: aFont maxSize: max [
+	| length width result |
+	result := originalString.
+	length := originalString size.
+	
+	[	width := aFont widthOfString: result.
+		width <= max or: [ result size <= 5 ] ] whileFalse: [
+			length := length - 1.
+			result := originalString contractTo: length ].
+	^ result
+
+]
+
+{ #category : #convenience }
+RiTextWidthKeeper class >> startingTruncationFor: aString font: aFont maxSize: anInteger [
+	| width |
+	width := aFont widthOfString: aString.
+	^ (width <= anInteger or: [ aString size <= 3 ])
+		ifTrue: [ aString ]
+		ifFalse: [ self startingTruncationFor: ('…', (aString allButFirst: 2)) font: aFont maxSize: anInteger ]
 ]

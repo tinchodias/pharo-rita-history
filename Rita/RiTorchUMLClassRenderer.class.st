@@ -379,18 +379,18 @@ RiTorchUMLClassRenderer >> shapeForVariable: iceNode [
 ]
 
 { #category : #hooks }
-RiTorchUMLClassRenderer >> titleFor: model [
+RiTorchUMLClassRenderer >> titleFor: iceNode [
 	| icon title label shapes |
-	icon := aesthetics shapeForDefinition: model value definition.
+	icon := aesthetics shapeForDefinition: iceNode value definition.
 
 	label := (RSLabel new
 		color: self textColor;
 		scaleBy: 1@1.2
 		yourself).
 	label fontSize: label fontSize * 0.6.
-	title := (modelDescriptor classname rsValue: model) asString.
+	title := (modelDescriptor classname rsValue: iceNode) asString.
 	label text: (RiTextWidthKeeper
-		stringFor: title
+		middleTruncationFor: title
 		font: label font
 		maxSize: self classBoxMaxWidth - icon width - 10 "paddings").
 
@@ -399,7 +399,7 @@ RiTorchUMLClassRenderer >> titleFor: model [
 		gapSize: 1;
 		alignCenter;
 		on: shapes.
-		
+	
 	^ RSComposite new
 		shapes: shapes;
 		yourself
