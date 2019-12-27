@@ -1,3 +1,6 @@
+"
+I'm a view model for the main (root) repositories browser.
+"
 Class {
 	#name : #RiRootModel,
 	#superclass : #Object,

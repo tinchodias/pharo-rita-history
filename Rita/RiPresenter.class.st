@@ -1,3 +1,6 @@
+"
+I'm the abstract superclass of presenters that have a model and a refresh hook.
+"
 Class {
 	#name : #RiPresenter,
 	#superclass : #SpPresenter,
