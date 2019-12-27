@@ -90,15 +90,12 @@ RiElementRowBuilder >> markMorphsAt: aRiElement [
 
 { #category : #accessing }
 RiElementRowBuilder >> morphAt: item [
-	| bar |
-	bar := SpToolBarMorph new.
-	bar color: Color transparent.
-	bar leftPanel vResizing: #shrinkWrap; cellInset: 4@0; color: Color transparent.
-	bar rightPanel hResizing: #shrinkWrap; color: Color transparent.
-	(self leftMorphsAt: item) do: [ :each | bar addItemLeft: each ].
-	self flag: #todo. "Why?!?!?!?!"
-	bar addItemRight: ('  ', item dateAndTime asString, '       ') asMorph.
-	^ bar
+	| row |
+	row := RiRowMorph new.
+	(self leftMorphsAt: item) do: [ :each | row addItemLeft: each ].
+	row addItemRight: ('  {1}       ' format: { item dateAndTime }) asMorph.
+	^ row
+
 ]
 
 { #category : #accessing }
