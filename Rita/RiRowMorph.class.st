@@ -8,7 +8,7 @@ Class {
 		'leftPanel',
 		'rightPanel'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Morphic'
 }
 
 { #category : #accessing }

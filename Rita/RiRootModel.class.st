@@ -12,7 +12,7 @@ Class {
 		'showMethodsLOC',
 		'flyDiff'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Models'
 }
 
 { #category : #'instance creation' }

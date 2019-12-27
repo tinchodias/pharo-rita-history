@@ -8,7 +8,7 @@ Class {
 		'colorMap',
 		'inlinecolorMap'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Models'
 }
 
 { #category : #accessing }

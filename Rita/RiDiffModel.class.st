@@ -1,5 +1,5 @@
 Class {
 	#name : #RiDiffModel,
 	#superclass : #Object,
-	#category : #'Rita-UI-Diff'
+	#category : #'Rita-UI-Models'
 }

@@ -9,7 +9,7 @@ Class {
 		'hiedraBuilder',
 		'avatarDatabase'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Morphic'
 }
 
 { #category : #accessing }

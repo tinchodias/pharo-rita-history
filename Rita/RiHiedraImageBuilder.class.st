@@ -8,7 +8,7 @@ Class {
 	#instVars : [
 		'hiedraColumnController'
 	],
-	#category : #'Rita-UI'
+	#category : #'Rita-UI-Morphic'
 }
 
 { #category : #refreshing }
