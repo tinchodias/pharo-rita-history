@@ -115,7 +115,7 @@ RiTorchUMLClassRenderer >> defaultEdgeBuilder [
 { #category : #hooks }
 RiTorchUMLClassRenderer >> defaultMarker [
 	^ RSMarker new
-		shape: (RSPolygon triangle
+		shape: (RSShapeFactory triangle
 			color: aesthetics backgroundColor;
 			border: self border;
 			size: aesthetics gapFromClassToSubclass / 6;
