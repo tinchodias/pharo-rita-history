@@ -3,9 +3,10 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'diff',
-		'onlyConsiderChanged'
+		'onlyConsiderChanged',
+		'treeToQuery'
 	],
-	#category : #Rita
+	#category : #'Rita-Diff'
 }
 
 { #category : #accessing }
@@ -13,6 +14,19 @@ RiDiffQuery >> allLeafChildren [
 	^ Array streamContents: [ :stream |
 		self treeToQuery allLeavesDo: [ :node |
 			stream nextPut: node ] ]
+]
+
+{ #category : #private }
+RiDiffQuery >> basicTreeToQuery [
+	^ self onlyConsiderChanged
+		ifTrue: [ diff tree ]
+		ifFalse: [
+			"FIX"
+			IceDiff new
+				sourceVersion: diff sourceVersion;
+				targetVersion: diff targetVersion;
+				buildForAllFiles;
+				mergedTree ]
 ]
 
 { #category : #accessing }
@@ -32,14 +46,20 @@ RiDiffQuery >> initialize [
 	onlyConsiderChanged := true.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RiDiffQuery >> nodesForBehaviors [
-	^ Array
-		streamContents: [ :stream | 
-			self treeToQuery
-				allChildrenDo: [ :node | 
-					node value definition isClassDefinition
-						ifTrue: [ stream nextPut: node ] ] ]
+	^ Array streamContents: [ :stream |
+		self treeToQuery allChildrenDo: [ :node |
+			node value definition isClassDefinition
+				ifTrue: [ stream nextPut: node ] ] ]
+]
+
+{ #category : #accessing }
+RiDiffQuery >> nodesForFiles [
+	^ Array streamContents: [ :stream |
+		self treeToQuery allChildrenDo: [ :node |
+			node value definition isFileDefinition
+				ifTrue: [ stream nextPut: node ] ] ]
 ]
 
 { #category : #accessing }
@@ -52,7 +72,7 @@ RiDiffQuery >> nodesForMethodExtensions [
 						ifTrue: [ stream nextPut: node ] ] ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RiDiffQuery >> onlyConsiderChanged [
 	^ onlyConsiderChanged
 ]
@@ -62,20 +82,7 @@ RiDiffQuery >> onlyConsiderChanged: anObject [
 	onlyConsiderChanged := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RiDiffQuery >> treeToQuery [
-	^ self onlyConsiderChanged
-		ifTrue: [ diff tree ]
-		ifFalse: [
-			"FIX"
-			IceDiff new
-				sourceVersion: diff sourceVersion;
-				targetVersion: diff targetVersion;
-				buildForAllFiles;
-				mergedTree ]
-]
-
-{ #category : #'as yet unclassified' }
-RiDiffQuery >> visitNoModification: anIceNoModification [ 
-	self shouldBeImplemented.
+	^ treeToQuery ifNil: [ treeToQuery := self basicTreeToQuery ]
 ]

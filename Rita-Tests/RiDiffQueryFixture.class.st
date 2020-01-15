@@ -7,10 +7,19 @@ Class {
 		'commit4',
 		'commit1',
 		'commit5',
-		'commit6'
+		'commit6',
+		'commit7'
 	],
 	#category : #'Rita-Tests'
 }
+
+{ #category : #private }
+RiDiffQueryFixture >> addFileAt: pathString with: aString [
+	| fileReference |
+	fileReference := repository location / pathString.
+	fileReference ensureCreateFile writeStreamDo: [ :stream | stream << aString ].
+	repository index addPath: (fileReference relativeTo: repository location).
+]
 
 { #category : #accessing }
 RiDiffQueryFixture >> commit1 [
@@ -40,6 +49,11 @@ RiDiffQueryFixture >> commit5 [
 { #category : #accessing }
 RiDiffQueryFixture >> commit6 [
 	^ commit6
+]
+
+{ #category : #accessing }
+RiDiffQueryFixture >> commit7 [
+	^ commit7
 ]
 
 { #category : #running }
@@ -81,5 +95,11 @@ RiDiffQueryFixture >> setUp [
 	commit6 := repository workingCopy
 		createClass: 'C' inPackage: packageName2;
 		commitWithMessage: '6'.
+
+	"Add some files"
+	self addFileAt: 'README.md' with: '# Title'.
+	self addFileAt: 'resources/a.txt' with: 'content for a'.
+	self addFileAt: 'resources/b.txt' with: 'content for b'.
+	commit7 := repository workingCopy commitWithMessage: '7'.
 
 ]

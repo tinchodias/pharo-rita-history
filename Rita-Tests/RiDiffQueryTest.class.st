@@ -78,3 +78,16 @@ RiDiffQueryTest >> test05ConsiderUnchangedWithAnotherPackage [
 	self assert: nodes size equals: 2.
 
 ]
+
+{ #category : #tests }
+RiDiffQueryTest >> test06ConsiderOnlyChangedWithFiles [
+
+	| query nodes |
+	query := RiDiffQuery new
+		diff: fixture commit7 diffToParent;
+		onlyConsiderChanged: true;
+		yourself.
+	nodes := query nodesForFiles.
+	self assert: nodes size equals: 3.
+
+]
