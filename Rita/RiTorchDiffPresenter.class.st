@@ -20,13 +20,18 @@ RiTorchDiffPresenter class >> defaultSpec [
 ]
 
 { #category : #'canvas building' }
+RiTorchDiffPresenter >> aesthetics [
+	^ model at: #aesthetics
+]
+
+{ #category : #'canvas building' }
 RiTorchDiffPresenter >> buildCanvas [
 
 	| query shapes |
 	query := model at: #diffQuery.
 
 	shapes := self classShapesFor: query nodesForBehaviors, query nodesForMethodExtensions.
-"	shapes addAll: (self fileShapesFor: query nodesForFiles)."
+	shapes := shapes, (self fileShapesFor: query nodesForFiles).
 	lastCanvas addAll: shapes.
 	
 	self canvasLayout on: shapes.
@@ -37,23 +42,22 @@ RiTorchDiffPresenter >> buildCanvas [
 		when: RSMouseClick do: [
 			lastHighlighingController highlightAsSelected: nil ].
 
-	lastCanvas color: (model at: #aesthetics) backgroundColor.
+	lastCanvas color: self aesthetics backgroundColor.
 
 ]
 
 { #category : #'canvas building' }
 RiTorchDiffPresenter >> canvasLayout [
-	| aesthetics |
-	aesthetics := model at: #aesthetics.
 	^ RSTreeLayout new
-		verticalGap: aesthetics gapFromClassToSubclass;
-		horizontalGap: aesthetics gapFromSubclassToSibling;
+		verticalGap: self aesthetics gapFromClassToSubclass;
+		horizontalGap: self aesthetics gapFromSubclassToSibling;
 		yourself
 ]
 
 { #category : #'canvas building' }
 RiTorchDiffPresenter >> childrenToShowFor: node withClassName: aClassName [
-	^ (node children select: [ :each | each value definition class name = aClassName ])
+	^ (node children
+		select: [ :each | each value definition class name = aClassName ])
 		sorted: [ :a :b | a value definition class name < b value definition class name ]
 ]
 
@@ -88,6 +92,18 @@ RiTorchDiffPresenter >> classShapesFor: iceNodes [
 
 	^ shapes
 
+]
+
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> fileShapesFor: iceNodes [
+	^ iceNodes collect: [ :each | 
+			RSBox new
+				noPaint;
+				size: self aesthetics scaleForMethods * 2;
+				model: each;
+				border: self aesthetics tinyBoxBorder;
+				addInteraction: (RSPopup text: [ :node | node path pathString ]);
+				yourself ]
 ]
 
 { #category : #accessing }
@@ -198,7 +214,7 @@ RiTorchDiffPresenter >> packInteraction [
 
 	| packer |
 	packer := RSHierarchyPacker new.
-	packer rectanglePackLayout gap: (model at: #aesthetics) gapBetweenHierarchies.
+	packer rectanglePackLayout gap: self aesthetics gapBetweenHierarchies.
 	^ packer
 
 ]
