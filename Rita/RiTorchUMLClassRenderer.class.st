@@ -17,35 +17,6 @@ RiTorchUMLClassRenderer class >> newWith: aModel [
 		yourself
 ]
 
-{ #category : #private }
-RiTorchUMLClassRenderer >> addPackInteractionOn: aCanvas [
-	"Interaction to pack hierarachies."
-
-	| packer |
-	packer := RSHierarchyPacker new.
-	packer rectanglePackLayout gap: aesthetics gapBetweenHierarchies.
-	aCanvas addInteraction: packer.
-
-]
-
-{ #category : #private }
-RiTorchUMLClassRenderer >> addZoomingInteractionOn: aCanvas [
-	"Interaction for zooming."
-
-	| controls |
-	controls := RSCanvasController new.
-	controls configuration
-		useBasicZoom;
-		maxScale: 1.
-	aCanvas addInteraction: controls.
-
-]
-
-{ #category : #accessing }
-RiTorchUMLClassRenderer >> aesthetics [
-	^ model at: #aesthetics
-]
-
 { #category : #hooks }
 RiTorchUMLClassRenderer >> applyMLayoutOn: shapes [
 	RSFlowLayout new 
@@ -138,14 +109,6 @@ RiTorchUMLClassRenderer >> defaultEdgeBuilder [
 		attachPoint: RSVerticalAttachPoint new;
 		border: aesthetics innerBorder;
 		"markerStart: self marker;"
-		yourself
-]
-
-{ #category : #hooks }
-RiTorchUMLClassRenderer >> defaultLayout [
-	^ RSTreeLayout new
-		verticalGap: aesthetics gapFromClassToSubclass;
-		horizontalGap: aesthetics gapFromSubclassToSibling;
 		yourself
 ]
 
@@ -262,17 +225,6 @@ RiTorchUMLClassRenderer >> popupForTinyClassShapes [
 RiTorchUMLClassRenderer >> popupForVariableShapes [
 	^ RSPopup text: [ :node | 
 		'{1} [{2}]' format: { node value definition name. node value definition typeToShow } ]
-]
-
-{ #category : #hooks }
-RiTorchUMLClassRenderer >> setUpCanvas: aCanvas [
-
-	self addZoomingInteractionOn: aCanvas.
-	self addPackInteractionOn: aCanvas.
-
-	aCanvas color: aesthetics backgroundColor.
-	aCanvas when: RSMouseClick do: [
-		highlighingController highlightAsSelected: nil ]
 ]
 
 { #category : #hooks }

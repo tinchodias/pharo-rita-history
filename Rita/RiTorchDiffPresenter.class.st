@@ -19,22 +19,50 @@ RiTorchDiffPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> buildCanvas [
+
+	| query shapes |
+	query := model at: #diffQuery.
+
+	shapes := self classShapesFor: query nodesForBehaviors, query nodesForMethodExtensions.
+"	shapes addAll: (self fileShapesFor: query nodesForFiles)."
+	lastCanvas addAll: shapes.
+	
+	self canvasLayout on: shapes.
+
+	lastCanvas
+		addInteraction: self zoomingInteraction;
+		addInteraction: self packInteraction;
+		when: RSMouseClick do: [
+			lastHighlighingController highlightAsSelected: nil ].
+
+	lastCanvas color: (model at: #aesthetics) backgroundColor.
+
+]
+
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> canvasLayout [
+	| aesthetics |
+	aesthetics := model at: #aesthetics.
+	^ RSTreeLayout new
+		verticalGap: aesthetics gapFromClassToSubclass;
+		horizontalGap: aesthetics gapFromSubclassToSibling;
+		yourself
+]
+
+{ #category : #'canvas building' }
 RiTorchDiffPresenter >> childrenToShowFor: node withClassName: aClassName [
 	^ (node children select: [ :each | each value definition class name = aClassName ])
 		sorted: [ :a :b | a value definition class name < b value definition class name ]
 ]
 
-{ #category : #initialization }
-RiTorchDiffPresenter >> fillLastCanvas [
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> classShapesFor: iceNodes [
 
-	| query iceNodes renderer shapes |
-	query := model at: #diffQuery.
-	iceNodes := query nodesForBehaviors, query nodesForMethodExtensions.
-
+	| renderer shapes |
 	renderer := RiTorchUMLClassRenderer newWith: model.
 	renderer highlighingController: lastHighlighingController.
-	
 	renderer modelDescriptor: (RiIceNodeUMLModelDescriptor new
 		classname: [ :node | node value name ];
 		classProperties: [ :node | self childrenToShowFor: node withClassName: #IcePropertyDefinition ];
@@ -43,7 +71,6 @@ RiTorchDiffPresenter >> fillLastCanvas [
 		yourself).
 
 	shapes := iceNodes collect: [ :each | renderer shapeFor: each ].
-	lastCanvas addAll: shapes.
 
 	self rootModel connectHierarchies ifTrue: [
 		renderer edgeBuilder
@@ -59,8 +86,7 @@ RiTorchDiffPresenter >> fillLastCanvas [
 							detect: [:each | each value definition name = superclassName ]
 							ifNone: [ nil ] ] ] ].
 
-	renderer layout on: shapes.
-	renderer setUpCanvas: lastCanvas.
+	^ shapes
 
 ]
 
@@ -73,12 +99,14 @@ RiTorchDiffPresenter >> highlightIceNode: iceNodeCollection [
 
 { #category : #initialization }
 RiTorchDiffPresenter >> initializePresenters [
+
 	toolBar := self newSettingsToolBar.
 	roassalPresenter := self newRoassalPresenter.
 ]
 
-{ #category : #initialization }
+{ #category : #'canvas building' }
 RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
+
 	| methodNodes |
 	methodNodes := iceNodeWithBehavior children
 		select: [ :each | each value definition isMethodDefinition ].
@@ -92,11 +120,12 @@ RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
 
 { #category : #initialization }
 RiTorchDiffPresenter >> newRoassalPresenter [
+
 	^ (self instantiate: SpRoassalPresenter)
 		script: [ :newCanvas | 
 			lastCanvas := newCanvas.
 			lastHighlighingController := RiHighlightingController newFor: lastCanvas.
-			model ifNotNil: [ self fillLastCanvas ] ];
+			model ifNotNil: [ self buildCanvas ] ];
 		yourself
 ]
 
@@ -163,13 +192,24 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> packInteraction [
+	"Interaction to pack hierarachies."
+
+	| packer |
+	packer := RSHierarchyPacker new.
+	packer rectanglePackLayout gap: (model at: #aesthetics) gapBetweenHierarchies.
+	^ packer
+
+]
+
+{ #category : #accessing }
 RiTorchDiffPresenter >> refreshOnModelUpdate [
 	roassalPresenter refresh.
 	spawnButton action: [ (model at: #blockForSpawn) value: model ]
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 RiTorchDiffPresenter >> rootModel [
 	^ model at: #root
 ]
@@ -178,5 +218,18 @@ RiTorchDiffPresenter >> rootModel [
 RiTorchDiffPresenter >> selectIceNode: anIceNode [
 	lastHighlighingController ifNil: [ ^ self ].
 	lastHighlighingController highlightAsSelected: anIceNode.
+
+]
+
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> zoomingInteraction [
+	"Interaction for zooming."
+
+	| controls |
+	controls := RSCanvasController new.
+	controls configuration
+		useBasicZoom;
+		maxScale: 1.
+	^ controls
 
 ]
