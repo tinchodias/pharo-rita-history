@@ -28,36 +28,39 @@ RiTorchDiffPresenter >> childrenToShowFor: node withClassName: aClassName [
 { #category : #initialization }
 RiTorchDiffPresenter >> fillLastCanvas [
 
-	| query nodesWithClassesTraitsAndExtensions renderer builder |
+	| query iceNodes renderer shapes |
 	query := model at: #diffQuery.
-	nodesWithClassesTraitsAndExtensions := query nodesForBehaviors, query nodesForMethodExtensions.
+	iceNodes := query nodesForBehaviors, query nodesForMethodExtensions.
 
 	renderer := RiTorchUMLClassRenderer newWith: model.
 	renderer highlighingController: lastHighlighingController.
 	
-	builder := RSUMLClassBuilder new
-		container: lastCanvas;
-		classes: nodesWithClassesTraitsAndExtensions;
-		renderer: renderer;
-		yourself.
-
-	builder modelDescriptor: (RiIceNodeUMLModelDescriptor new
+	renderer modelDescriptor: (RiIceNodeUMLModelDescriptor new
 		classname: [ :node | node value name ];
 		classProperties: [ :node | self childrenToShowFor: node withClassName: #IcePropertyDefinition ];
 		instVars: [ :node | self childrenToShowFor: node withClassName: #IceVariableDefinition ];
 		methods: [ :node | self methodsToShowFor: node ];
-		superclass: [ :node |
-			(self rootModel connectHierarchies not or: [
-				node value definition isExtensionDefinition])
+		yourself).
+
+	shapes := iceNodes collect: [ :each | renderer shapeFor: each ].
+	lastCanvas addAll: shapes.
+
+	self rootModel connectHierarchies ifTrue: [
+		renderer edgeBuilder
+			canvas: lastCanvas;
+			shapes: shapes;
+			connectFrom: [ :node |
+				node value definition isExtensionDefinition
 					ifTrue: [ nil ]
 					ifFalse: [
 						| superclassName |
 						superclassName := node value definition asMCDefinition superclassName.
-						nodesWithClassesTraitsAndExtensions
+						iceNodes
 							detect: [:each | each value definition name = superclassName ]
-							ifNone: [ nil ] ] ]).
+							ifNone: [ nil ] ] ] ].
 
-	builder build.
+	renderer layout on: shapes.
+	renderer setUpCanvas: lastCanvas.
 
 ]
 
