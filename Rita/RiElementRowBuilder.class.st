@@ -26,34 +26,24 @@ RiElementRowBuilder >> avatarsFor: item [
 		] ]
 ]
 
-{ #category : #visiting }
-RiElementRowBuilder >> colorForAlreadyPushed [
-	^ Color green
-]
-
-{ #category : #visiting }
-RiElementRowBuilder >> colorForOnlyLocal [
-	^ Color red
-]
-
-{ #category : #visiting }
+{ #category : #'mark morph building' }
 RiElementRowBuilder >> iconForBranch [
 	^ self iconNamed: #branch
 ]
 
-{ #category : #visiting }
+{ #category : #'mark morph building' }
 RiElementRowBuilder >> iconForTag [
 	^ (self iconNamed: #breakpoint)
 		flipBy: #horizontal
 		centerAt: 0 @ 0
 ]
 
-{ #category : #visiting }
+{ #category : #'mark morph building' }
 RiElementRowBuilder >> iconForWorkingCopy [
 	^ self iconNamed: #smallSave
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 RiElementRowBuilder >> initialize [
 	super initialize.
 	
@@ -69,8 +59,25 @@ RiElementRowBuilder >> leftMorphsAt: item [
 
 ]
 
-{ #category : #private }
-RiElementRowBuilder >> markMorphText: text icon: icon color: color [
+{ #category : #'mark morph building' }
+RiElementRowBuilder >> localMarkMorphText: text icon: icon [
+	^ (self markMorphText: text icon: icon)
+		borderStyle: (DashedBorder new
+			width: 1;
+			dashColors: { self markMorphBorderColor. Color transparent }
+				dashLengths: #(2 2);
+			yourself);
+		yourself
+]
+
+{ #category : #'mark morph building' }
+RiElementRowBuilder >> markMorphBorderColor [
+	self flag: #todo. "Fix... use aesthetics"
+	^ Smalltalk ui theme textColor alpha: 0.25
+]
+
+{ #category : #'mark morph building' }
+RiElementRowBuilder >> markMorphText: text icon: icon [
 	^ Morph new
 		layoutInset: 2 @ 0;
 		changeTableLayout;
@@ -79,7 +86,7 @@ RiElementRowBuilder >> markMorphText: text icon: icon color: color [
 		vResizing: #shrinkWrap;
 		addMorphBack: (icon darker: 1) asMorph;
 		addMorphBack: (' ' , text) asMorph;
-		color: (color alpha: 0.3);
+		color: Color transparent;
 		yourself
 ]
 
@@ -108,37 +115,46 @@ RiElementRowBuilder >> refreshWith: aRiRepositoryPresenter [
 
 ]
 
+{ #category : #'mark morph building' }
+RiElementRowBuilder >> remoteMarkMorphText: text icon: icon [
+	^ (self markMorphText: text icon: icon)
+		borderStyle: (SimpleBorder new
+			width: 1;
+			color: self markMorphBorderColor;
+			yourself);
+		yourself
+]
+
 { #category : #visiting }
 RiElementRowBuilder >> visitBranchMark: aRiBranchMark [
-	^ self
-		markMorphText: aRiBranchMark shortname
-		icon: self iconForBranch
-		color:
-			(aRiBranchMark isOnlyLocal
-				ifTrue: [ self colorForOnlyLocal ]
-				ifFalse: [ self colorForAlreadyPushed ])
+	^ aRiBranchMark isOnlyLocal
+		ifTrue: [
+			self
+				localMarkMorphText: aRiBranchMark shortname
+				icon: self iconForBranch ]
+		ifFalse: [
+			self
+				remoteMarkMorphText: aRiBranchMark shortname
+				icon: self iconForBranch ]
 ]
 
 { #category : #visiting }
 RiElementRowBuilder >> visitImageMark: aRiMark [
 	^ self
-		markMorphText: 'IMAGE'
+		localMarkMorphText: 'IMAGE'
 		icon: self iconForWorkingCopy
-		color: self colorForOnlyLocal
 ]
 
 { #category : #visiting }
 RiElementRowBuilder >> visitTagMark: aRiTagMark [
 	^ self
-		markMorphText: aRiTagMark name
+		remoteMarkMorphText: aRiTagMark name
 		icon: self iconForTag
-		color: self colorForAlreadyPushed
 ]
 
 { #category : #visiting }
 RiElementRowBuilder >> visitWorkdirMark: aRiMark [
 	^ self
-		markMorphText: 'WORKDIR'
+		localMarkMorphText: 'WORKDIR'
 		icon: self iconForWorkingCopy
-		color: self colorForOnlyLocal
 ]
