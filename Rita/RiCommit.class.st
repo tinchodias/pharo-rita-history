@@ -45,12 +45,17 @@ RiCommit >> asIceObject [
 
 { #category : #accessing }
 RiCommit >> author [
-	^ iceCommit author
+	^ iceCommit libgitCommit author
 ]
 
 { #category : #accessing }
 RiCommit >> authorEmail [
-	^ iceCommit libgitCommit author email
+	^ self author email
+]
+
+{ #category : #accessing }
+RiCommit >> authorName [
+	^ iceCommit author
 ]
 
 { #category : #accessing }
@@ -64,9 +69,14 @@ RiCommit >> comment [
 	^ iceCommit comment
 ]
 
+{ #category : #'as yet unclassified' }
+RiCommit >> committer [
+	^ iceCommit libgitCommit committer
+]
+
 { #category : #accessing }
 RiCommit >> committerEmail [
-	^ iceCommit libgitCommit committer email
+	^ self committer email
 ]
 
 { #category : #accessing }

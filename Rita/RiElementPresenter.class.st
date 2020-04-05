@@ -2,22 +2,23 @@ Class {
 	#name : #RiElementPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
-		'summaryLabel',
 		'diffPresenter',
-		'notebook'
+		'notebook',
+		'summary'
 	],
 	#category : #'Rita-UI'
 }
 
 { #category : #specs }
 RiElementPresenter class >> defaultSpec [
-	^ SpBoxLayout newVertical
-		add: #summaryLabel withConstraints: [ :constraints | constraints height: self labelHeight ];
+	^ SpPanedLayout newVertical
+		position: 0.15;
+		add: #summary;
 		add: #notebook;
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 
 	| page |
@@ -30,7 +31,7 @@ RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 	notebook addPage: page
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 	
 	^ (self instantiate: RiFullDiffPresenter)
@@ -42,11 +43,11 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 
 { #category : #initialization }
 RiElementPresenter >> initializePresenters [
-	summaryLabel := self newLabel.
+	summary := self instantiate: RiCommitSummaryPresenter.
 	notebook := self newNotebook.
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 RiElementPresenter >> model: anObject [
 	notebook removeAll.
 	super model: anObject.
@@ -54,14 +55,13 @@ RiElementPresenter >> model: anObject [
 		ifNotEmpty: [ notebook selectPage: notebook pages last ]
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 RiElementPresenter >> refreshOnModelUpdate [
 	| element |
 	element := model at: #element.
 
-	summaryLabel label: ('SHA: {1}, author: {2}, committer: {3}' format: {
-		element shortId. element authorEmail. element committerEmail }).
+	summary model: element.
 
 	(model at: #diffModels) do: [ :each |
-		self addPageFor: each to: (model at: #element) ]
+		self addPageFor: each to: element ]
 ]

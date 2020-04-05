@@ -11,7 +11,6 @@ Class {
 
 { #category : #specs }
 RiTreeDiffPresenter class >> defaultSpec [
-	<spec: #default>
 	^ SpBoxLayout newHorizontal
 		add: #treeTable;
 		yourself
