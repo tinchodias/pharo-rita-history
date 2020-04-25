@@ -69,7 +69,7 @@ RiCommit >> comment [
 	^ iceCommit comment
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RiCommit >> committer [
 	^ iceCommit libgitCommit committer
 ]
