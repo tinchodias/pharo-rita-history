@@ -81,12 +81,7 @@ RiCommit >> committerEmail [
 
 { #category : #accessing }
 RiCommit >> dateAndTime [
-	^ String
-		streamContents: [ :stream | 
-			ExtendedDatePrinter default
-				printDate: iceCommit datetime asDate
-				format: #(1 2 3 $  2 2 1)
-				on: stream ]
+	^ RiDatePrinter new stringFor: iceCommit datetime asDate
 ]
 
 { #category : #diff }
