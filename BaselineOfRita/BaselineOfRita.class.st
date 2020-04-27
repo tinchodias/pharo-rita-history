@@ -19,7 +19,7 @@ BaselineOfRita >> baseline: spec [
 					repository: 'github://tinchodias/iceberg:playing';
 					loads: 'development' ].
 			spec baseline: 'Hiedra' with: [
-				spec repository: 'github://tinchodias/hiedra:stickyrendering/src' ].
+				spec repository: 'github://tinchodias/hiedra:master/src' ].
 
 			spec
 				package: 'Rita' with: [ spec requires: #('Roassal3' 'TaskIt' 'Iceberg' 'Hiedra') ];
