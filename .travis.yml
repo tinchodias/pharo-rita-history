@@ -1,0 +1,8 @@
+language: smalltalk
+
+os:
+  - linux
+
+smalltalk:
+  - Pharo64-8.0
+  - Pharo64-9.0

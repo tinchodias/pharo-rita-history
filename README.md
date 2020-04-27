@@ -1,5 +1,7 @@
 # pharo-rita-history
 
+[![Build Status](https://travis-ci.org/tinchodias/pharo-rita-history.png)](http://travis-ci.org/tinchodias/pharo-rita-history)
+
 Several experiments with Pharo8, Roassal3, Spec2, Iceberg, and more.
 
 ## Install it
