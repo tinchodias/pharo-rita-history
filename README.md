@@ -2,13 +2,13 @@
 
 [![Build Status](https://travis-ci.org/tinchodias/pharo-rita-history.png)](http://travis-ci.org/tinchodias/pharo-rita-history)
 
-Several experiments with Pharo8, Roassal3, Spec2, Iceberg, and more.
+This repository is home of several experiments on understanding of code changes with Pharo.
 
-## Install it
+## Install
 
 In Pharo 8:
 
-~~~
+~~~Smalltalk
 Metacello new 
   baseline: 'Rita'; 
   repository: 'github://tinchodias/pharo-rita-history/'; 
@@ -17,7 +17,7 @@ Metacello new
 
 ## Execute
 
-~~~
+~~~Smalltalk
 RiRootPresenter open
 ~~~
 
@@ -33,7 +33,7 @@ The following are experiments stored in this repository that (some of them might
 * UML-like view of a commit: RiUMLClassBuilder
 
 
-## What's rita?
+## What's *rita*?
 
 It comes from Santa Rita, the name of this plant in Argentina:
 
