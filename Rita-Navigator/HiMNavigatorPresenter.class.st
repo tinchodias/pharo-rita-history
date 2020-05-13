@@ -48,7 +48,7 @@ HiMNavigatorPresenter >> fillLastView [
 
 	searchPresenter searchModel topParentNodes: builder topLevelNodes.
 	lastView camera scale: 6.
-	lastView when: TSMouseClick do: [ lastView morph takeKeyboardFocus ].
+	lastView when: RSMouseClick do: [ lastView morph takeKeyboardFocus ].
 ]
 
 { #category : #'private - searching' }
@@ -58,22 +58,22 @@ HiMNavigatorPresenter >> highlightAllSearchResults [
 	allSearchResults := searchPresenter lastResultModel nodes.
 
 	highlightableForCurrentSearchResult := RSHighlightable new
-		highlightElements: [ :each | {each attributeAt: #RSLabeled} ];
-		attributeKey: #allSearchResults;
-		when: TSHighlightEvent do: [ :evt |
+		highlightShapes: [ :each | {each attributeAt: #RSLabeled} ];
+		propertyKey: #allSearchResults;
+		when: RSHighlightEvent do: [ :evt |
 			self highlightCompositeElementWithLabel: evt element intensity: 0.5 ];
-		when: TSUnHighlightEvent do: [ :evt |
+		when: RSUnHighlightEvent do: [ :evt |
 			self unhighlightCompositeElementWithLabel: evt element ].
 	
 	elementsForAllSearchResults := allSearchResults
-		collect: [:each | lastView elementFromModel: each ]
+		collect: [:each | lastView shapeFromModel: each ]
 		thenReject: #isNil.
 	
 	self shouldHighlightAll
 		ifTrue: [
-			highlightableForCurrentSearchResult doHighlightElements: elementsForAllSearchResults ]
+			highlightableForCurrentSearchResult doHighlightShapes: elementsForAllSearchResults ]
 		ifFalse: [ 
-			highlightableForCurrentSearchResult unhighlightRecordedElements: lastView ].
+			highlightableForCurrentSearchResult unhighlightRecordedShapes: lastView ].
 	
 	lastView signalUpdate
 ]
@@ -91,10 +91,10 @@ HiMNavigatorPresenter >> highlightCompositeElementWithLabel: element intensity: 
 	highlightColor := lastNavigator currentTheme warningTextColor.
 	backgroundColor := lastNavigator currentTheme backgroundColor alpha: 0.5.
 	element color: backgroundColor.
-	element border: (TSBorder new color: (highlightColor alpha: k); width: 3 * k; yourself).
+	element border: (RSBorder new color: (highlightColor alpha: k); width: 3 * k; yourself).
 	element pushFront.
 
-	highlightShapeBuilder := RSShapeBuilder box
+	highlightShapeBuilder := RSBox new
 		color: (highlightColor alpha: k * 0.5);
 "		border: (TSBorder new color: (highlightColor alpha: k * 0.5); width: 2 * k; yourself);"
 		yourself.
@@ -120,25 +120,26 @@ HiMNavigatorPresenter >> highlightCurrentSearchResult [
 	aHiMNode := searchPresenter lastResultModel currentNode.
 
 	highlightableForCurrentSearchResult := RSHighlightable new
-		attributeKey: #searchResult;
-		highlightElements: [ :each | {each attributeAt: #RSLabeled} ];
-		when: TSHighlightEvent do: [ :evt |
+		propertyKey: #searchResult;
+		highlightShapes: [ :each | {each attributeAt: #RSLabeled} ];
+		when: RSHighlightEvent do: [ :evt |
 			self highlightCompositeElementWithLabel: evt element intensity: 1 ];
-		when: TSUnHighlightEvent do: [ :evt |
+		when: RSUnHighlightEvent do: [ :evt |
 			self unhighlightCompositeElementWithLabel: evt element.
 			self shouldHighlightAll 
 				ifTrue: [ self highlightCompositeElementWithLabel: evt element intensity: 0.5 ] ].
 
+	self flag: #todo.
 	highlightableForCurrentSearchResult highlightShape. "TODO: Needed to ensure a slot has been initialized."
 
-	topLevelElement := lastView elementFromModel: aHiMNode topParent.
+	topLevelElement := lastView shapeFromModel: aHiMNode topParent.
 	lastNavigator executeAndRegisterExpandIfPossible: topLevelElement.
 
-	(topLevelElement elementFromModel: aHiMNode)
+	(topLevelElement shapeFromModel: aHiMNode)
 		ifNotNil: [ :element | 
 			highlightableForCurrentSearchResult doHighlight: element ]
 		ifNil: [
-			(lastView elementFromModel: aHiMNode topParent) ifNotNil:
+			(lastView shapeFromModel: aHiMNode topParent) ifNotNil:
 				[ :element | highlightableForCurrentSearchResult doHighlight: element ] ].
 		
 	lastView signalUpdate
@@ -146,7 +147,7 @@ HiMNavigatorPresenter >> highlightCurrentSearchResult [
 
 { #category : #initialization }
 HiMNavigatorPresenter >> initializeWidgets [
-	viewPresenter := (self instantiate: RoassalPresenter)
+	viewPresenter := (self instantiate: SpRoassalPresenter)
 		script: [ :newView |
 			lastView := newView.
 			self fillLastView ];

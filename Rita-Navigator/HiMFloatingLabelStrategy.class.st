@@ -14,7 +14,7 @@ HiMFloatingLabelStrategy >> applyAfterAddingElements: elements [
 		| label edge mockEdge |
 		label := self shapeBuilder elementOn: each model object.
 		edge := self edgeBuilder "withBorderAttachPoint" from: each; to: label; edge.
-		navigator view add: label; add: edge.
+		navigator canvas add: label; add: edge.
 		navigator layout
 			addNodes: { label };
 			addEdges: { edge }.

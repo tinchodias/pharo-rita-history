@@ -28,10 +28,10 @@ HiMImageDependenciesBuilder >> build [
 HiMImageDependenciesBuilder >> buildColorScale [
 
 	| tmpScale nodes |
-	tmpScale := TSScale category20.
+	tmpScale := NSScale category20.
 	nodes := self topLevelNodes asArray.
 	
-	colorScale := TSScale ordinal
+	colorScale := NSScale ordinal
 		domain: nodes;
 		range: (nodes collect: [:each | 
 			| color |
@@ -172,6 +172,11 @@ HiMImageDependenciesBuilder >> visitDAMessageSendDependency: aDAMessageSendDepen
 	self flag: #todo. "Not true!"
 	"from withAllChildrenDo: [:node |
 		node addOutgoingLinkTo: to ]."
+]
+
+{ #category : #visiting }
+HiMImageDependenciesBuilder >> visitDAPoolDictionaryDependency: aDAPoolDictionaryDependency [ 
+	self flag: #todo "should be implemented"
 ]
 
 { #category : #visiting }
