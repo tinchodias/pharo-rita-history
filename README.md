@@ -2,7 +2,9 @@
 
 [![Build Status](https://travis-ci.org/tinchodias/pharo-rita-history.png)](http://travis-ci.org/tinchodias/pharo-rita-history)
 
-This repository is home of several experiments on understanding of code changes with Pharo.
+This repository is home of several experiments on understanding of code changes with Pharo inspired in Torch.
+
+![Screenshot](small.png)
 
 ## Install
 
