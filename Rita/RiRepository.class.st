@@ -58,6 +58,17 @@ RiRepository >> openInNativeBrowser [
 	iceRepository location openInNativeBrowser
 ]
 
+{ #category : #printing }
+RiRepository >> printOn: aStream [
+	"Append a sequence of characters to aStream that identify the receiver."
+
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self name;
+		nextPut: $)
+]
+
 { #category : #processing }
 RiRepository >> process [
 
