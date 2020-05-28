@@ -40,3 +40,13 @@ IceGitHubAPI >> newGraphQLRequest [
 		url: 'https://api.github.com/graphql';
 		yourself
 ]
+
+{ #category : #'*Rita' }
+IceGitHubAPI >> replyCommentOn: owner project: projectName number: aNumber commentId: commentId body: aString [
+	^ self
+		post: 'repos/', owner, '/', projectName, '/pulls/', aNumber asString, '/comments/', commentId asString, '/replies'
+		with: [ :client |
+			client 
+				entity: (ZnEntity text: (STON toJsonString: { #body -> aString } asDictionary));
+				contentType: ZnMimeType applicationJson ]
+]
