@@ -7,10 +7,20 @@ IceGitHubPullRequest >> comments [
 		listPullRequestComments: self owner 
 			project: self projectName
 			number: self number) all.
-	^ jsons "collect: [ :each |
+	^ jsons collect: [ :each |
 		(IceGitHubPullRequestComment fromJSON: each)
-			repository: self repository entity;
-			yourself ]"
+			"repository: self repository entity;
+			yourself" ]
+]
+
+{ #category : #'*Rita' }
+IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
+	IceGitHubAPI new 
+		replyCommentOn: self owner 
+			project: self projectName
+			number: self number
+			commentId: commentId
+			body: messageString
 ]
 
 { #category : #'*Rita' }
