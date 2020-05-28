@@ -14,12 +14,29 @@ IceGitHubAPI >> graphql: aGraphQLString [
 ]
 
 { #category : #'*Rita' }
+IceGitHubAPI >> listPullRequestComments: owner project: projectName [
+	^ self getPaginated: 'repos/', owner, '/', projectName, '/pulls/comments'
+]
+
+{ #category : #'*Rita' }
+IceGitHubAPI >> listPullRequestComments: owner project: projectName number: aNumber [
+	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/pulls/', aNumber asString, '/comments'
+]
+
+{ #category : #'*Rita' }
+IceGitHubAPI >> listPullRequestReviews: owner project: projectName number: aNumber [
+	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/pulls/', aNumber asString, '/reviews'
+]
+
+{ #category : #'*Rita' }
 IceGitHubAPI >> newGraphQLRequest [
-	^ ZnClient new 
-		in: [ :this | 
-			this 
-				username: self credentials username 
-				password: self credentials password ];
-			url: 'https://api.github.com/graphql';
-			yourself
+	^ ZnClient new in: [ :this |
+		this prepareRequest: [ :request | request setAuthorization: 'bearer ', MartinPersonalToken ]
+"		this
+			username: self credentials username 
+			password: self credentials password" ];
+		url: 'https://api.github.com/graphql';
+		yourself
 ]
