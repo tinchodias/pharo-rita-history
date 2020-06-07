@@ -35,6 +35,33 @@ IceGitHubPullRequestComment >> initializeWithJSON: aDictionary [
 	self initialize
 ]
 
+{ #category : #inspecting }
+IceGitHubPullRequestComment >> inspectBodyOn: composite [
+	<gtInspectorPresentationOrder: 1>
+	composite text
+		title: 'Contents';
+		format: #asText;
+		display: [ MicroDownParser asText: self body ];
+		yourself
+]
+
+{ #category : #printing }
+IceGitHubPullRequestComment >> printOn: aStream [
+	"Append a sequence of characters to aStream that identify the receiver."
+
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: self id.
+	
+	self repliedId ifNotNil: [ :repliedId |
+		aStream
+			nextPutAll: ' - reply to: ';
+			print: repliedId ].
+	aStream
+		nextPut: $).
+]
+
 { #category : #accessing }
 IceGitHubPullRequestComment >> projectName [
 	^ ((self jsonAt: #base) at: #repo) at: #name
