@@ -14,6 +14,16 @@ IceGitHubPullRequest >> comments [
 ]
 
 { #category : #'*Rita' }
+IceGitHubPullRequest >> createdAt [
+	^ json at: 'created_at'
+]
+
+{ #category : #'*Rita' }
+IceGitHubPullRequest >> htmlUrl [
+	^ self jsonAt: #html_url
+]
+
+{ #category : #'*Rita' }
 IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 	IceGitHubAPI new 
 		replyCommentOn: self owner 

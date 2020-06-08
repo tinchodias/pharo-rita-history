@@ -14,6 +14,11 @@ IceGitHubPullRequestComment class >> fromJSON: aDictionary [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+IceGitHubPullRequestComment >> author [
+	^ (json at: #user) at: #login
+]
+
 { #category : #accessing }
 IceGitHubPullRequestComment >> body [
 	^ json at: #body

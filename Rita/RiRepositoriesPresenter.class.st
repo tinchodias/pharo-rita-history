@@ -2,7 +2,9 @@ Class {
 	#name : #RiRepositoriesPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
-		'table'
+		'table',
+		'blockForOpenPullRequests',
+		'blockForOpenRepository'
 	],
 	#category : #'Rita-UI'
 }
@@ -36,9 +38,13 @@ RiRepositoriesPresenter class >> open [
 ]
 
 { #category : #accessing }
+RiRepositoriesPresenter >> blockForOpenPullRequests: aBlock [
+	blockForOpenPullRequests:= aBlock
+]
+
+{ #category : #accessing }
 RiRepositoriesPresenter >> blockForOpenRepository: aBlock [
-	table whenActivatedDo: [:selection |
-		aBlock value: selection selectedItem ]
+	blockForOpenRepository := aBlock
 ]
 
 { #category : #initialization }
@@ -48,7 +54,15 @@ RiRepositoriesPresenter >> contextMenuForTable [
 	
 	selected := table selection selectedItem.
 
-	menu addItem: [ :item | 
+	menu addItem: [ :item |
+		item
+			name: 'Open Repository';
+			action: [ blockForOpenRepository value: selected ] ].
+	menu addItem: [ :item |
+		item
+			name: 'View Pull Requests';
+			action: [ blockForOpenPullRequests value: selected ] ].
+	menu addItem: [ :item |
 		item
 			name: 'Open folder';
 			action: [ selected openInNativeBrowser ] ].
@@ -68,13 +82,20 @@ RiRepositoriesPresenter >> contextMenuForTable [
 RiRepositoriesPresenter >> initializePresenters [
 
 	table := self newTable.
+
+	"Set up columns"
 	table
 		showColumnHeaders;
-		contextMenu: [ self contextMenuForTable ];
 		addColumn: ((SpImageTableColumn evaluated: [ :each | self iconNamed: #git ]) width: 20);
 		addColumn: (SpStringTableColumn title: 'Name' evaluated: #name);
 		addColumn: (SpStringTableColumn title: 'Description' evaluated: #description).
 
+	"Set up actions"
+	table
+		contextMenu: [ self contextMenuForTable ];
+		whenActivatedDo: [:selection |
+			blockForOpenRepository value: selection selectedItem ].
+	
 	table whenBuiltDo: [ :ann |
 		self refreshOnModelUpdate ].
 

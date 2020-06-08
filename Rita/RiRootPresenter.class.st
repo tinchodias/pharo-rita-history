@@ -48,7 +48,24 @@ RiRootPresenter >> newHomePage [
 				model: model repositories;
 				blockForOpenRepository: [ :aRiRepository |
 					self openRepository: aRiRepository ];
+				blockForOpenPullRequests: [ :aRiRepository |
+					self openPullRequestsOf: aRiRepository ];
 				yourself ]
+]
+
+{ #category : #private }
+RiRootPresenter >> newPullRequestsPageFor: aRiRepository [ 
+	^ SpNotebookPage
+		title: 'Pull Requests - ', aRiRepository name
+		icon: (self iconNamed: #github)
+		provider: [
+			(self instantiate: RiPullRequestListAndCommentListPresenter)
+				model: { 
+					#repository -> aRiRepository. 
+					#root -> model. 
+					} asDictionary;
+				yourself ]
+
 ]
 
 { #category : #initialization }
@@ -65,6 +82,17 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 					} asDictionary;
 				yourself ]
 
+]
+
+{ #category : #private }
+RiRootPresenter >> openPullRequestsOf: aRiRepository [ 
+	| page |
+	aRiRepository process.
+	
+	page := self newPullRequestsPageFor: aRiRepository.
+	notebook
+		addPage: page;
+		selectPage: page
 ]
 
 { #category : #initialization }
