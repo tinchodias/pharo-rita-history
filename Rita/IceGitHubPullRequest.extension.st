@@ -24,6 +24,16 @@ IceGitHubPullRequest >> htmlUrl [
 ]
 
 { #category : #'*Rita' }
+IceGitHubPullRequest >> path [
+	^ nil
+]
+
+{ #category : #'*Rita' }
+IceGitHubPullRequest >> repliedId [
+	^ nil
+]
+
+{ #category : #'*Rita' }
 IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 	IceGitHubAPI new 
 		replyCommentOn: self owner 
@@ -31,6 +41,19 @@ IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 			number: self number
 			commentId: commentId
 			body: messageString
+]
+
+{ #category : #'*Rita' }
+IceGitHubPullRequest >> reviewComments [
+	| jsons |
+	jsons := (IceGitHubAPI new 
+		listPullRequestReviewComments: self owner 
+			project: self projectName
+			number: self number) all.
+	^ jsons collect: [ :each |
+		(IceGitHubPullRequestComment fromJSON: each)
+			"repository: self repository entity;
+			yourself" ]
 ]
 
 { #category : #'*Rita' }

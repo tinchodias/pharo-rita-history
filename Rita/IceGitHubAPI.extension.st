@@ -21,6 +21,12 @@ IceGitHubAPI >> listPullRequestComments: owner project: projectName [
 { #category : #'*Rita' }
 IceGitHubAPI >> listPullRequestComments: owner project: projectName number: aNumber [
 	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/issues/', aNumber asString, '/comments'
+]
+
+{ #category : #'*Rita' }
+IceGitHubAPI >> listPullRequestReviewComments: owner project: projectName number: aNumber [
+	^ self
 		getPaginated: 'repos/', owner, '/', projectName, '/pulls/', aNumber asString, '/comments'
 ]
 

@@ -15,6 +15,23 @@ RiPullRequestPresenter2 class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #private }
+RiPullRequestPresenter2 >> hunkTextFor: aPRComment [
+	^ Text streamContents: [ :stream |
+		| path line |
+		path := aPRComment path asText makeAllColor: (self theme textColor alpha: 0.7).
+		line := (aPRComment originalPosition asString, ':	', (aPRComment diffHunk lines at: (aPRComment originalPosition+1))) asText
+						addAttribute: (TextFontReference
+						toFont: (LogicalFont 
+							familyName: 'Source Code Pro' 
+							pointSize: StandardFonts defaultFont pointSize)).
+		stream
+			nextPutAll: path; lf;
+			nextPutAll: line; lf; lf.
+		 ].
+
+]
+
 { #category : #initialization }
 RiPullRequestPresenter2 >> initializePresenters [
 	textPresenter := self newText.
@@ -23,10 +40,21 @@ RiPullRequestPresenter2 >> initializePresenters [
 
 { #category : #initialization }
 RiPullRequestPresenter2 >> refreshOnModelUpdate [
-	| aPR items |
+	| aPR sortedComments commentsToSort |
 	aPR := model at: #pullRequest.
-	items := {aPR}, aPR comments.
-	textPresenter text: (self textForAll: items)
+	commentsToSort := aPR reviewComments.
+
+	sortedComments := (commentsToSort select: [:each | each repliedId isNil ]) asOrderedCollection.
+	sortedComments := (sortedComments, aPR comments) sorted: [ :a :b | a createdAt asDateAndTime < b createdAt asDateAndTime ].
+	sortedComments := sortedComments asOrderedCollection.
+
+	commentsToSort
+		select: [:each | each repliedId notNil ]
+		thenDo: [ :each |
+			| repliedComment |
+			repliedComment := sortedComments detect: [ :c | c id = each repliedId ].
+			sortedComments add: each after: repliedComment ].
+	textPresenter text: (self textForAll: ({aPR}, sortedComments))
 ]
 
 { #category : #initialization }
@@ -35,11 +63,21 @@ RiPullRequestPresenter2 >> textFor: aPRComment [
 	timestamp := aPRComment createdAt asDateAndTime.
 	timestampHumanReadable := printer stringFor: timestamp.
 
-	text := aPRComment author asText allBold.
-	text
-		append: ' commented on ' , timestampHumanReadable;
+	text := aPRComment author asText
+		append: ' · ' , timestampHumanReadable;
 		append: String lf;
-		append: (MicroDownParser asText: aPRComment body).
+		yourself.
+	text := text allBold makeAllColor: self theme warningTextColor.
+	
+	aPRComment path ifNotNil: [
+		self flag: #todo.
+		text append: String tab.
+		text prepend: String tab.
+		aPRComment repliedId ifNil: [ 
+			text prepend: (self hunkTextFor: aPRComment) ]].
+		
+	text append: (MicroDownParser asText: aPRComment body).
+	text append: String lf.
 	^ text
 ]
 

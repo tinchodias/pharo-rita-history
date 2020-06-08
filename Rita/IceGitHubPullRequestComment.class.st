@@ -29,6 +29,11 @@ IceGitHubPullRequestComment >> createdAt [
 	^ (json at: #created_at) asDateAndTime 
 ]
 
+{ #category : #'as yet unclassified' }
+IceGitHubPullRequestComment >> diffHunk [
+	^ json at: 'diff_hunk' ifAbsent: [ nil ]
+]
+
 { #category : #accessing }
 IceGitHubPullRequestComment >> id [
 	^ json at: #id
@@ -48,6 +53,16 @@ IceGitHubPullRequestComment >> inspectBodyOn: composite [
 		format: #asText;
 		display: [ MicroDownParser asText: self body ];
 		yourself
+]
+
+{ #category : #'as yet unclassified' }
+IceGitHubPullRequestComment >> originalPosition [
+	^ json at: 'original_position' ifAbsent: [ nil ]
+]
+
+{ #category : #'as yet unclassified' }
+IceGitHubPullRequestComment >> path [
+	^ json at: 'path' ifAbsent: [ nil ]
 ]
 
 { #category : #printing }

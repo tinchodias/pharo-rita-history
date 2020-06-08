@@ -17,8 +17,8 @@ RiPullRequestRowBuilder >> initialize [
 RiPullRequestRowBuilder >> morphAt: item [
 	| row |
 	row := RiRowMorph new.
-	row addItemLeft: (item title asMorph hResizing: #spaceFill).
-	row addItemRight: ('  {1}       ' format: { self timestampStringFor: item }) asMorph.
+	row addItemLeft: (('#{1} {2}' format: {item number. item title}) asMorph hResizing: #spaceFill).
+	row addItemRight: ('  {1}     ' format: { self timestampStringFor: item }) asMorph.
 	^ row
 
 ]
