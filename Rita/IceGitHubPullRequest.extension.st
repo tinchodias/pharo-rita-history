@@ -61,7 +61,8 @@ IceGitHubPullRequest >> reviewComments [
 { #category : #'*Rita' }
 IceGitHubPullRequest >> reviews [
 	| jsons |
-	jsons := (IceGitHubAPI new 
+	jsons := (IceGitHubAPI new
+		beAnonymous;
 		listPullRequestReviews: self owner 
 			project: self projectName
 			number: self number) all.
