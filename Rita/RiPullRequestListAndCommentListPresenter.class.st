@@ -45,6 +45,7 @@ RiPullRequestListAndCommentListPresenter >> model: anObject [
 
 	"List all PRs"
 	jsons := (IceGitHubAPI new
+		beAnonymous;
 		getPullRequests: githubRemote owner
 		project: githubRemote projectName) all.
 	prs := jsons collect: [ :each |

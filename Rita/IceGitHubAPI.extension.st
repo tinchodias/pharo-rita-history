@@ -39,10 +39,10 @@ IceGitHubAPI >> listPullRequestReviews: owner project: projectName number: aNumb
 { #category : #'*Rita' }
 IceGitHubAPI >> newGraphQLRequest [
 	^ ZnClient new in: [ :this |
-		this prepareRequest: [ :request | request setAuthorization: 'bearer ', MartinPersonalToken ]
-"		this
+"		this prepareRequest: [ :request | request setAuthorization: 'bearer ', MartinPersonalToken ]"
+		this
 			username: self credentials username 
-			password: self credentials password" ];
+			password: self credentials password ];
 		url: 'https://api.github.com/graphql';
 		yourself
 ]

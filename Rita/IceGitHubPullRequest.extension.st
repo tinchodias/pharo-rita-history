@@ -3,7 +3,8 @@ Extension { #name : #IceGitHubPullRequest }
 { #category : #'*Rita' }
 IceGitHubPullRequest >> comments [
 	| jsons |
-	jsons := (IceGitHubAPI new 
+	jsons := (IceGitHubAPI new
+		beAnonymous;
 		listPullRequestComments: self owner 
 			project: self projectName
 			number: self number) all.
@@ -47,6 +48,7 @@ IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 IceGitHubPullRequest >> reviewComments [
 	| jsons |
 	jsons := (IceGitHubAPI new 
+		beAnonymous;
 		listPullRequestReviewComments: self owner 
 			project: self projectName
 			number: self number) all.
