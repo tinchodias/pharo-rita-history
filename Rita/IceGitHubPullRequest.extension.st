@@ -5,7 +5,7 @@ IceGitHubPullRequest >> comments [
 	| jsons |
 	jsons := (IceGitHubAPI new
 		beAnonymous;
-		listPullRequestComments: self owner 
+		getListPullRequestComments: self owner 
 			project: self projectName
 			number: self number) all.
 	^ jsons collect: [ :each |
@@ -37,7 +37,7 @@ IceGitHubPullRequest >> repliedId [
 { #category : #'*Rita' }
 IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 	IceGitHubAPI new 
-		replyCommentOn: self owner 
+		addCommentOn: self owner 
 			project: self projectName
 			number: self number
 			commentId: commentId
@@ -49,7 +49,7 @@ IceGitHubPullRequest >> reviewComments [
 	| jsons |
 	jsons := (IceGitHubAPI new 
 		beAnonymous;
-		listPullRequestReviewComments: self owner 
+		getListPullRequestReviewComments: self owner 
 			project: self projectName
 			number: self number) all.
 	^ jsons collect: [ :each |
@@ -63,7 +63,7 @@ IceGitHubPullRequest >> reviews [
 	| jsons |
 	jsons := (IceGitHubAPI new
 		beAnonymous;
-		listPullRequestReviews: self owner 
+		getListPullRequestReviews: self owner 
 			project: self projectName
 			number: self number) all.
 	^ jsons "reify"

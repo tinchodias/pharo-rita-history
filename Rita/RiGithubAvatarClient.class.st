@@ -99,7 +99,7 @@ RiGithubAvatarClient >> getAvatarUrlByEmail [
 	"Query Github"
 	response := IceGitHubAPI new
 		credentials: self credentials;
-		graphql: self graphQL.
+		postGraphQL: self graphQL.
 
 	"On sucess: Get avatar URLs"
 	avatarUrlByEmail := Dictionary new.
