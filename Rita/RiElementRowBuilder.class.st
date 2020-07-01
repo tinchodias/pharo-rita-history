@@ -73,7 +73,7 @@ RiElementRowBuilder >> localMarkMorphText: text icon: icon [
 { #category : #'mark morph building' }
 RiElementRowBuilder >> markMorphBorderColor [
 	self flag: #todo. "Fix... use aesthetics"
-	^ Smalltalk ui theme textColor alpha: 0.25
+	^ self theme textColor alpha: 0.25
 ]
 
 { #category : #'mark morph building' }
@@ -123,6 +123,11 @@ RiElementRowBuilder >> remoteMarkMorphText: text icon: icon [
 			color: self markMorphBorderColor;
 			yourself);
 		yourself
+]
+
+{ #category : #accessing }
+RiElementRowBuilder >> theme [
+	^ Smalltalk ui theme
 ]
 
 { #category : #visiting }
