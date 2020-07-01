@@ -1,11 +1,11 @@
 Class {
-	#name : #RiPullRequestListAndCommentListPresenter,
+	#name : #RiPullRequestMasterDetailPresenter,
 	#superclass : #RiMasterDetailPresenter,
 	#category : #'Rita-UI-PullRequests'
 }
 
 { #category : #initialization }
-RiPullRequestListAndCommentListPresenter >> connectMasterToDetail [
+RiPullRequestMasterDetailPresenter >> connectMasterToDetail [
 	masterPresenter blockForPRSelected: [ :aPR |
 		detailPresenter model: 
 			(model copy 
@@ -15,17 +15,17 @@ RiPullRequestListAndCommentListPresenter >> connectMasterToDetail [
 ]
 
 { #category : #initialization }
-RiPullRequestListAndCommentListPresenter >> detailPresenterClass [
+RiPullRequestMasterDetailPresenter >> detailPresenterClass [
 	^ RiPullRequestPresenter2
 ]
 
 { #category : #initialization }
-RiPullRequestListAndCommentListPresenter >> masterPresenterClass [
+RiPullRequestMasterDetailPresenter >> masterPresenterClass [
 	^ RiPullRequestListPresenter
 ]
 
 { #category : #accessing }
-RiPullRequestListAndCommentListPresenter >> model: anObject [
+RiPullRequestMasterDetailPresenter >> model: anObject [
 	| iceRepo githubRemote jsons prs |
 
 	iceRepo := (anObject at: #repository) iceRepository.

@@ -1,5 +1,5 @@
 Class {
-	#name : #RiRepositoryAndElementPresenter,
+	#name : #RiRepositoryMasterDetailPresenter,
 	#superclass : #RiMasterDetailPresenter,
 	#instVars : [
 		'pinDiffModels'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #initialization }
-RiRepositoryAndElementPresenter >> connectMasterToDetail [
+RiRepositoryMasterDetailPresenter >> connectMasterToDetail [
 	masterPresenter blockForElementSelected: [ :targetRiElement |
 		| parentDiffModels diffModels |
 		parentDiffModels := targetRiElement ancestors collect: [:each | 
@@ -30,17 +30,17 @@ RiRepositoryAndElementPresenter >> connectMasterToDetail [
 ]
 
 { #category : #initialization }
-RiRepositoryAndElementPresenter >> detailPresenterClass [
+RiRepositoryMasterDetailPresenter >> detailPresenterClass [
 	^ RiElementPresenter
 ]
 
 { #category : #initialization }
-RiRepositoryAndElementPresenter >> masterPresenterClass [
+RiRepositoryMasterDetailPresenter >> masterPresenterClass [
 	^ RiRepositoryPresenter
 ]
 
 { #category : #initialization }
-RiRepositoryAndElementPresenter >> model: aDictionary [
+RiRepositoryMasterDetailPresenter >> model: aDictionary [
 	pinDiffModels := OrderedCollection new.
 	masterPresenter model: 
 		(aDictionary copy

@@ -59,7 +59,7 @@ RiRootPresenter >> newPullRequestsPageFor: aRiRepository [
 		title: 'Pull Requests - ', aRiRepository name
 		icon: (self iconNamed: #github)
 		provider: [
-			(self instantiate: RiPullRequestListAndCommentListPresenter)
+			(self instantiate: RiPullRequestMasterDetailPresenter)
 				model: { 
 					#repository -> aRiRepository. 
 					#root -> model. 
@@ -74,7 +74,7 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 		title: aRiRepository name
 		icon: (self iconNamed: #git)
 		provider: [
-			RiRepositoryAndElementPresenter new
+			RiRepositoryMasterDetailPresenter new
 				model: { 
 					#repository -> aRiRepository. 
 					#root -> model. 
