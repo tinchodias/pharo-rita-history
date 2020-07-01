@@ -44,7 +44,7 @@ RiRootPresenter >> newHomePage [
 		title: 'Home'
 		icon: (self iconNamed: #homeIcon)
 		provider: [
-			RiRepositoriesPresenter new
+			RiRepositoryListPresenter new
 				model: model repositories;
 				blockForOpenRepository: [ :aRiRepository |
 					self openRepository: aRiRepository ];

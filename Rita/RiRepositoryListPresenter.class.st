@@ -1,5 +1,5 @@
 Class {
-	#name : #RiRepositoriesPresenter,
+	#name : #RiRepositoryListPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
 		'table',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #specs }
-RiRepositoriesPresenter class >> defaultSpec [
+RiRepositoryListPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 "		add: #menuBar
 			withConstraints: [ :constraints | constraints height: self toolbarHeight ];"
@@ -19,14 +19,14 @@ RiRepositoriesPresenter class >> defaultSpec [
 ]
 
 { #category : #examples }
-RiRepositoriesPresenter class >> newWithRegistry [
+RiRepositoryListPresenter class >> newWithRegistry [
 	^ self new
 		model: IceRepository registry;
 		yourself
 ]
 
 { #category : #examples }
-RiRepositoriesPresenter class >> open [
+RiRepositoryListPresenter class >> open [
 	<example>
 
 	self newWithRegistry
@@ -38,17 +38,17 @@ RiRepositoriesPresenter class >> open [
 ]
 
 { #category : #accessing }
-RiRepositoriesPresenter >> blockForOpenPullRequests: aBlock [
+RiRepositoryListPresenter >> blockForOpenPullRequests: aBlock [
 	blockForOpenPullRequests:= aBlock
 ]
 
 { #category : #accessing }
-RiRepositoriesPresenter >> blockForOpenRepository: aBlock [
+RiRepositoryListPresenter >> blockForOpenRepository: aBlock [
 	blockForOpenRepository := aBlock
 ]
 
 { #category : #initialization }
-RiRepositoriesPresenter >> contextMenuForTable [
+RiRepositoryListPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := self newMenu.
 	
@@ -79,7 +79,7 @@ RiRepositoriesPresenter >> contextMenuForTable [
 ]
 
 { #category : #initialization }
-RiRepositoriesPresenter >> initializePresenters [
+RiRepositoryListPresenter >> initializePresenters [
 
 	table := self newTable.
 
@@ -102,6 +102,6 @@ RiRepositoriesPresenter >> initializePresenters [
 ]
 
 { #category : #accessing }
-RiRepositoriesPresenter >> refreshOnModelUpdate [
+RiRepositoryListPresenter >> refreshOnModelUpdate [
 	table items: model.
 ]
