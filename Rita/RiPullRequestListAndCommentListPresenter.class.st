@@ -1,24 +1,11 @@
 Class {
 	#name : #RiPullRequestListAndCommentListPresenter,
-	#superclass : #RiPresenter,
-	#instVars : [
-		'masterPresenter',
-		'detailPresenter'
-	],
+	#superclass : #RiMasterDetailPresenter,
 	#category : #'Rita-UI-PullRequests'
 }
 
-{ #category : #specs }
-RiPullRequestListAndCommentListPresenter class >> defaultSpec [
-	^ SpPanedLayout newHorizontal
-		position: 30 percent;
-		add: #masterPresenter;
-		add: #detailPresenter;
-		yourself
-]
-
 { #category : #initialization }
-RiPullRequestListAndCommentListPresenter >> connectPresenters [
+RiPullRequestListAndCommentListPresenter >> connectMasterToDetail [
 	masterPresenter blockForPRSelected: [ :aPR |
 		detailPresenter model: 
 			(model copy 
@@ -28,10 +15,13 @@ RiPullRequestListAndCommentListPresenter >> connectPresenters [
 ]
 
 { #category : #initialization }
-RiPullRequestListAndCommentListPresenter >> initializePresenters [
-	masterPresenter := self instantiate: RiPullRequestListPresenter.
-	detailPresenter := self instantiate: RiPullRequestPresenter2.
+RiPullRequestListAndCommentListPresenter >> detailPresenterClass [
+	^ RiPullRequestPresenter2
+]
 
+{ #category : #initialization }
+RiPullRequestListAndCommentListPresenter >> masterPresenterClass [
+	^ RiPullRequestListPresenter
 ]
 
 { #category : #accessing }

@@ -1,57 +1,48 @@
 Class {
 	#name : #RiRepositoryAndElementPresenter,
-	#superclass : #RiPresenter,
+	#superclass : #RiMasterDetailPresenter,
 	#instVars : [
-		'elementPresenter',
-		'repositoryPresenter',
 		'pinDiffModels'
 	],
 	#category : #'Rita-UI'
 }
 
-{ #category : #specs }
-RiRepositoryAndElementPresenter class >> defaultSpec [
-	^ SpPanedLayout newHorizontal
-		position: 30 percent;
-		add: #repositoryPresenter;
-		add: #elementPresenter;
-		yourself
-]
-
 { #category : #initialization }
-RiRepositoryAndElementPresenter >> initializePresenters [
-	repositoryPresenter := self instantiate: RiRepositoryPresenter.
-	elementPresenter := self instantiate: RiElementPresenter.
-	self initializeRepositoryPresenter
-]
-
-{ #category : #initialization }
-RiRepositoryAndElementPresenter >> initializeRepositoryPresenter [
-
-	repositoryPresenter blockForElementSelected: [ :targetRiElement |
+RiRepositoryAndElementPresenter >> connectMasterToDetail [
+	masterPresenter blockForElementSelected: [ :targetRiElement |
 		| parentDiffModels diffModels |
 		parentDiffModels := targetRiElement ancestors collect: [:each | 
 			RiParentDiffModel parentRiElement: each ].
 		diffModels := (parentDiffModels, pinDiffModels) select: [:each |
 			each shouldCompareTo: targetRiElement ].
-		elementPresenter model: 
+		detailPresenter model: 
 			(model copy 
 				add: #element -> targetRiElement;
 				add: #diffModels -> diffModels;
 				yourself) ].
 	
-	repositoryPresenter blockForPinToCompareFrom: [ :sourceRiElement |
+	masterPresenter blockForPinToCompareFrom: [ :sourceRiElement |
 		pinDiffModels add: (RiPinDiffModel sourceRiCommit: sourceRiElement).
 		
 		"Refresh only table to show the pin: the detail will refresh on next table selection."
-		repositoryPresenter refreshOnModelUpdate ]
+		masterPresenter refreshOnModelUpdate ]
 
+]
+
+{ #category : #initialization }
+RiRepositoryAndElementPresenter >> detailPresenterClass [
+	^ RiElementPresenter
+]
+
+{ #category : #initialization }
+RiRepositoryAndElementPresenter >> masterPresenterClass [
+	^ RiRepositoryPresenter
 ]
 
 { #category : #initialization }
 RiRepositoryAndElementPresenter >> model: aDictionary [
 	pinDiffModels := OrderedCollection new.
-	repositoryPresenter model: 
+	masterPresenter model: 
 		(aDictionary copy
 			add: #pinDiffModels -> pinDiffModels;
 			yourself).
