@@ -19,11 +19,8 @@ Class {
 RiRootModel class >> newWithRegisteredRepositories [
 
 	| repositories |
-	repositories := IceRepository registry
-		collect: [ :anIceRepository | 
-			RiRepository new
-				iceRepository: anIceRepository;
-				yourself ].
+	repositories := IceRepository registry collect: [ :anIceRepository | 
+		RiRepository iceRepository: anIceRepository ].
 
 	^ self new
 		repositories: repositories;

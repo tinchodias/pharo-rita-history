@@ -13,6 +13,13 @@ Class {
 	#category : #'Rita-Core'
 }
 
+{ #category : #'instance creation' }
+RiRepository class >> iceRepository: anIceLibgitRepository [
+	^ self new
+		iceRepository: anIceLibgitRepository;
+		yourself
+]
+
 { #category : #accessing }
 RiRepository >> commits [
 	^ elements reject: #isUncommited
@@ -36,6 +43,11 @@ RiRepository >> elementMarks [
 { #category : #accessing }
 RiRepository >> elements [
 	^ elements
+]
+
+{ #category : #processing }
+RiRepository >> ensureProcessed [
+	elements ifNil: [ self process ]
 ]
 
 { #category : #accessing }

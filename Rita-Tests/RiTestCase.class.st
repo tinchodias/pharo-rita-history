@@ -9,8 +9,7 @@ Class {
 
 { #category : #running }
 RiTestCase >> buildRepository [
-	repository := RiRepository new
-		iceRepository: self repository;
+	repository := (RiRepository iceRepository: self repository)
 		process;
 		yourself
 

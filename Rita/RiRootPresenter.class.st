@@ -38,7 +38,7 @@ RiRootPresenter >> initializePresenters [
 	notebook addPage: self newHomePage
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiRootPresenter >> newHomePage [
 	^ SpNotebookPage
 		title: 'Home'
@@ -68,10 +68,10 @@ RiRootPresenter >> newPullRequestsPageFor: aRiRepository [
 
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 	^ SpNotebookPage
-		title: aRiRepository name
+		title: ''
 		icon: (self iconNamed: #git)
 		provider: [
 			RiRepositoryMasterDetailPresenter new
@@ -85,28 +85,39 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 ]
 
 { #category : #private }
-RiRootPresenter >> openPullRequestsOf: aRiRepository [ 
+RiRootPresenter >> openPage: anObject title: aString ifAbsentBuildWith: aBlock [
+	"Ensure a notebook's page is open (and selected)."
+
 	| page |
-	aRiRepository process.
+	self flag: #todo. "Use model as key instead of the title, to know if it's already a page."
+	notebook pages
+		detect: [ :each | each title = aString ]
+		ifFound: [ :foundPage | ^ notebook selectPage: foundPage ].
 	
-	page := self newPullRequestsPageFor: aRiRepository.
+	page := aBlock value.
+	page title: aString.
 	notebook
 		addPage: page;
 		selectPage: page
 ]
 
-{ #category : #initialization }
+{ #category : #private }
+RiRootPresenter >> openPullRequestsOf: aRiRepository [
+	self
+		openPage: aRiRepository
+		title: (self titleForPullRequestsPage: aRiRepository)
+		ifAbsentBuildWith: [ self newPullRequestsPageFor: aRiRepository ]
+]
+
+{ #category : #private }
 RiRootPresenter >> openRepository: aRiRepository [
-	| page |
-	aRiRepository process.
-	
-	page := self newRepositoryPageFor: aRiRepository.
-	notebook
-		addPage: page;
-		selectPage: page
+	self
+		openPage: aRiRepository
+		title: (self titleForRepositoryPage: aRiRepository)
+		ifAbsentBuildWith: [ self newRepositoryPageFor: aRiRepository ]
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 RiRootPresenter >> openSpawnFor: modelToSpawn [
 	| page |
 	page := SpNotebookPage
@@ -120,4 +131,14 @@ RiRootPresenter >> openSpawnFor: modelToSpawn [
 	notebook
 		addPage: page;
 		selectPage: page
+]
+
+{ #category : #private }
+RiRootPresenter >> titleForPullRequestsPage: aRiRepository [
+	^ 'Pull Requests - ', aRiRepository name
+]
+
+{ #category : #private }
+RiRootPresenter >> titleForRepositoryPage: aRiRepository [
+	^ aRiRepository name
 ]

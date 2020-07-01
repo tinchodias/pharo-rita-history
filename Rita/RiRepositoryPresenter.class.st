@@ -41,8 +41,7 @@ RiRepositoryPresenter class >> openOnRepositoryNamed: aName [
 	| aRiRepository anIceRepository |
 	anIceRepository := IceRepository registry
 		detect: [ :each | each name asLowercase beginsWith: aName asLowercase ].
-	aRiRepository := RiRepository new
-		iceRepository: anIceRepository;
+	aRiRepository := (RiRepository iceRepository: anIceRepository)
 		process;
 		yourself.
 
@@ -167,6 +166,8 @@ RiRepositoryPresenter >> refreshOnAvatarsUpdate [
 { #category : #accessing }
 RiRepositoryPresenter >> refreshOnModelUpdate [
 	self isBuilt ifFalse: [ ^ self ].
+
+	self riRepository ensureProcessed.
 
 	rowBuilder refreshWith: self.
 
