@@ -13,7 +13,7 @@ BaselineOfRita >> baseline: spec [
 			spec baseline: 'Roassal3' with: [
 				spec repository: 'github://ObjectProfile/Roassal3:master/src' ].
 			spec baseline: 'TaskIt' with: [
-				spec repository: 'github://sbragagnolo/taskit:v1' ].
+				spec repository: 'github://sbragagnolo/taskit:v1.1.0' ].
 			spec baseline: 'Iceberg' with: [
 				spec
 					repository: 'github://tinchodias/iceberg:playing';
