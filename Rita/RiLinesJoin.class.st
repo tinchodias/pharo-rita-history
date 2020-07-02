@@ -2,12 +2,29 @@ Class {
 	#name : #RiLinesJoin,
 	#superclass : #Object,
 	#instVars : [
-		'rawfrom',
-		'rawto',
-		'rawpatch'
+		'string',
+		'kind',
+		'to',
+		'from'
 	],
 	#category : #'Rita-Diff'
 }
+
+{ #category : #'instance creation' }
+RiLinesJoin class >> from: anIndex to: anotherIndex kind: aSymbol string: aString [
+	^ self basicNew
+		initializeFrom: anIndex to: anotherIndex kind: aSymbol string: aString;
+		yourself
+]
+
+{ #category : #initialization }
+RiLinesJoin >> initializeFrom: anIndex to: anotherIndex kind: aSymbol string: aString [
+	self initialize.
+	from := anIndex.
+	to := anotherIndex.
+	string := aString.
+	kind := aSymbol
+]
 
 { #category : #printing }
 RiLinesJoin >> printOn: aStream [
@@ -18,9 +35,9 @@ RiLinesJoin >> printOn: aStream [
 		nextPutAll: '(';
 		print: self rawkind;
 		space;
-		print: rawfrom;
+		print: from;
 		nextPutAll: ' to ';
-		print: rawto;
+		print: to;
 		nextPutAll: ')'
 
 
@@ -28,40 +45,20 @@ RiLinesJoin >> printOn: aStream [
 
 { #category : #accessing }
 RiLinesJoin >> rawfrom [
-	^ rawfrom
-]
-
-{ #category : #accessing }
-RiLinesJoin >> rawfrom: anObject [
-	rawfrom := anObject
+	^ from
 ]
 
 { #category : #accessing }
 RiLinesJoin >> rawkind [
-	^ rawpatch key
-]
-
-{ #category : #accessing }
-RiLinesJoin >> rawpatch [
-	^ rawpatch
-]
-
-{ #category : #accessing }
-RiLinesJoin >> rawpatch: anObject [
-	rawpatch := anObject
+	^ kind
 ]
 
 { #category : #accessing }
 RiLinesJoin >> rawstring [
-	^ rawpatch value
+	^ string value
 ]
 
 { #category : #accessing }
 RiLinesJoin >> rawto [
-	^ rawto
-]
-
-{ #category : #accessing }
-RiLinesJoin >> rawto: anObject [
-	rawto := anObject
+	^ to
 ]

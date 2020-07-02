@@ -25,7 +25,7 @@ RiUnifiedStringDiff >> build [
 		unifiedString := unifiedString, patch value, String cr.
 		end := unifiedString size.
 
-		lineJoins add: (RiLinesJoin new rawfrom: start; rawto: end; rawpatch: patch; yourself) ].
+		lineJoins add: (RiLinesJoin from: start to: end kind: patch key string: patch value)  ].
 	self buildInlineJoins.
 ]
 
@@ -62,7 +62,7 @@ RiUnifiedStringDiff >> buildInlineJoins: inlinePatches offset: offset reject: aS
 		end := inlineString size.
 
 		patch key = anotherSymbol ifTrue: [
-			inlineJoins add: (RiLinesJoin new rawfrom: offset+start; rawto: offset+end; rawpatch: patch; yourself)] ].
+			inlineJoins add: (RiLinesJoin from: offset+start to: offset+end kind: patch key string: patch value) ] ].
 
 ]
 
