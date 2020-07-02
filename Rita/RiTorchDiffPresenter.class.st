@@ -245,7 +245,7 @@ RiTorchDiffPresenter >> zoomingInteraction [
 	controls := RSCanvasController new.
 	controls configuration
 		useBasicZoom;
-		maxScale: 1.
+		maxScale: 2.0.
 	^ controls
 
 ]
