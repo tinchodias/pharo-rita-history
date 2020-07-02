@@ -34,6 +34,8 @@ RiHiedraImageBuilder >> doRefreshWith: aRiRepositoryPresenter [
 
 { #category : #accessing }
 RiHiedraImageBuilder >> morphAt: item [
+	self flag: #todo. "Fix this async problem in other way"
+	hiedraColumnController ifNil: [ ^ Morph new ].
 	^ hiedraColumnController cellMorphAtValue: item
 ]
 
