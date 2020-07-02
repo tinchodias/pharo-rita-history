@@ -11,6 +11,11 @@ Class {
 	#category : #'Rita-UI-Models'
 }
 
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> asContentsToDiff: aString [
+	^ aString displayStringLimitedTo: 1000
+]
+
 { #category : #accessing }
 RiAestheticsModel >> backgroundColor [
 	^ self currentTheme backgroundColor
@@ -45,20 +50,10 @@ RiAestheticsModel >> currentTheme [
 
 { #category : #'diff morph creation' }
 RiAestheticsModel >> diffMorphFor: iceNode [
-
-	| textArea |
-	textArea := RubEditingArea new
-		beReadOnly;
-		font: StandardFonts codeFont;
-		margins: 0 asMargin;
-		yourself.
-
-	self 
-		setUpUnifiedDiffFrom: (iceNode value rightContents)
-		to: (iceNode value leftContents)
-		on: textArea.
-
-	^ textArea
+	| oldString newString |
+	oldString := self asContentsToDiff: iceNode value rightContents.
+	newString := self asContentsToDiff: iceNode value leftContents.
+	^ self unifiedDiffFrom: oldString to: newString
 ]
 
 { #category : #accessing }
@@ -283,37 +278,6 @@ RiAestheticsModel >> scaleForMethods [
 	^ 10
 ]
 
-{ #category : #'diff morph creation' }
-RiAestheticsModel >> setUpUnifiedDiffFrom: from to: to on: textArea [
-
-	| diff |
-	diff := RiUnifiedStringDiff new
-		oldString: from;
-		newString: to;
-		build;
-		yourself.
-
-	textArea removeAllSegments.
-
-	textArea updateTextWith: diff unifiedString.
-
-	diff lineJoins do: [:each |
-		colorMap at: each kindSymbol ifPresent: [ :color |
-			textArea addSegment: ((RiRubricTextSegment from: each fromIndex to: each toIndex)
-				color: color;
-				yourself).
-		] ].
-
-	diff inlineJoins do: [:each |
-		inlinecolorMap at: each kindSymbol ifPresent: [ :color |
-			textArea addSegment: ((RubPlainSegmentMorph from: each fromIndex to: each toIndex)
-				color: color;
-				yourself).
-		] ].
-	
-
-]
-
 { #category : #accessing }
 RiAestheticsModel >> shapeForClassProperty: iceNode [
 	^ self
@@ -368,6 +332,43 @@ RiAestheticsModel >> shapeForDefinition: iceDefinition [
 { #category : #accessing }
 RiAestheticsModel >> tinyBoxBorder [
 	^ tinyBoxBorder
+]
+
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> unifiedDiffFrom: from to: to [
+
+	| textArea diff |
+	textArea := RubEditingArea new
+		beReadOnly;
+		font: StandardFonts codeFont;
+		margins: 0 asMargin;
+		yourself.
+		
+	diff := RiUnifiedStringDiff new
+		oldString: from;
+		newString: to;
+		build;
+		yourself.
+
+	textArea
+		removeAllSegments;
+		updateTextWith: diff unifiedString.
+
+	diff lineJoins do: [:each |
+		colorMap at: each kindSymbol ifPresent: [ :color |
+			textArea addSegment: ((RiRubricTextSegment from: each fromIndex to: each toIndex)
+				color: color;
+				yourself).
+		] ].
+
+	diff inlineJoins do: [:each |
+		inlinecolorMap at: each kindSymbol ifPresent: [ :color |
+			textArea addSegment: ((RubPlainSegmentMorph from: each fromIndex to: each toIndex)
+				color: color;
+				yourself).
+		] ].
+
+	^ textArea
 ]
 
 { #category : #visiting }
