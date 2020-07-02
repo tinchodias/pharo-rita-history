@@ -34,19 +34,19 @@ RiUnifiedStringDiff >> buildInlineJoins [
 	| runs runsStream |
 	inlineJoins := OrderedCollection new.
 
-	runs := lineJoins groupByRuns: [ :e | e rawkind ].
+	runs := lineJoins groupByRuns: [ :e | e kindSymbol ].
 	runsStream := runs readStream.
 	[ runsStream atEnd ] whileFalse: [
 		| current following inlinePatches removedPart insertedPart |
 		current := runsStream next.
 		following := runsStream peek.
-		(current first rawkind = #remove and: [ following isNotNil and: [following first rawkind = #insert] ]) ifTrue: [
-			removedPart := current flatCollect: [ :each | each rawstring, String cr ] as: String.
-			insertedPart := following flatCollect: [ :each | each rawstring, String cr ] as: String.
+		(current first kindSymbol = #remove and: [ following isNotNil and: [following first kindSymbol = #insert] ]) ifTrue: [
+			removedPart := current flatCollect: [ :each | each diffString, String cr ] as: String.
+			insertedPart := following flatCollect: [ :each | each diffString, String cr ] as: String.
 			inlinePatches := (InlineTextDiffBuilder from: removedPart to: insertedPart) buildPatchSequence.
 
-			self buildInlineJoins: inlinePatches offset: following first rawfrom reject: #remove add: #insert.
-			self buildInlineJoins: inlinePatches offset: current first rawfrom reject: #insert add: #remove.
+			self buildInlineJoins: inlinePatches offset: following first fromIndex reject: #remove add: #insert.
+			self buildInlineJoins: inlinePatches offset: current first fromIndex reject: #insert add: #remove.
 		]]
 
 ]

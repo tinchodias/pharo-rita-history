@@ -17,6 +17,16 @@ RiLinesJoin class >> from: anIndex to: anotherIndex kind: aSymbol string: aStrin
 		yourself
 ]
 
+{ #category : #accessing }
+RiLinesJoin >> diffString [
+	^ string
+]
+
+{ #category : #accessing }
+RiLinesJoin >> fromIndex [
+	^ from
+]
+
 { #category : #initialization }
 RiLinesJoin >> initializeFrom: anIndex to: anotherIndex kind: aSymbol string: aString [
 	self initialize.
@@ -26,6 +36,11 @@ RiLinesJoin >> initializeFrom: anIndex to: anotherIndex kind: aSymbol string: aS
 	kind := aSymbol
 ]
 
+{ #category : #accessing }
+RiLinesJoin >> kindSymbol [
+	^ kind
+]
+
 { #category : #printing }
 RiLinesJoin >> printOn: aStream [
 	"Append a sequence of characters to aStream that identify the receiver."
@@ -33,7 +48,7 @@ RiLinesJoin >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPutAll: '(';
-		print: self rawkind;
+		print: kind;
 		space;
 		print: from;
 		nextPutAll: ' to ';
@@ -44,21 +59,6 @@ RiLinesJoin >> printOn: aStream [
 ]
 
 { #category : #accessing }
-RiLinesJoin >> rawfrom [
-	^ from
-]
-
-{ #category : #accessing }
-RiLinesJoin >> rawkind [
-	^ kind
-]
-
-{ #category : #accessing }
-RiLinesJoin >> rawstring [
-	^ string value
-]
-
-{ #category : #accessing }
-RiLinesJoin >> rawto [
+RiLinesJoin >> toIndex [
 	^ to
 ]

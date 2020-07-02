@@ -298,15 +298,15 @@ RiAestheticsModel >> setUpUnifiedDiffFrom: from to: to on: textArea [
 	textArea updateTextWith: diff unifiedString.
 
 	diff lineJoins do: [:each |
-		colorMap at: each rawkind ifPresent: [ :color |
-			textArea addSegment: ((RubPlainSegmentMorph from: each rawfrom to: each rawto)
+		colorMap at: each kindSymbol ifPresent: [ :color |
+			textArea addSegment: ((RubPlainSegmentMorph from: each fromIndex to: each toIndex)
 				color: color;
 				yourself).
 		] ].
 
 	diff inlineJoins do: [:each |
-		inlinecolorMap at: each rawkind ifPresent: [ :color |
-			textArea addSegment: ((RubPlainSegmentMorph from: each rawfrom to: each rawto)
+		inlinecolorMap at: each kindSymbol ifPresent: [ :color |
+			textArea addSegment: ((RubPlainSegmentMorph from: each fromIndex to: each toIndex)
 				color: color;
 				yourself).
 		] ].
