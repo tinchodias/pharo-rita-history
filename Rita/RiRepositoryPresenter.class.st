@@ -91,7 +91,7 @@ RiRepositoryPresenter >> actionLoadCommit: aRiCommit [
 { #category : #initialization }
 RiRepositoryPresenter >> blockForElementSelected: aBlock [
 	table whenSelectionChangedDo: [:selection |
-		aBlock value: selection selectedItem ]
+		selection selectedItem ifNotNil: aBlock ]
 ]
 
 { #category : #initialization }
