@@ -55,7 +55,7 @@ RiPullRequestListPresenter >> initializePresenters [
 		addColumn: (SpImageTableColumn
 			evaluated: [ :item | rowBuilder morphAt: item ]);
 		whenSelectionChangedDo: [ :selection |
-			blockForPRSelected value: selection selectedItem ];
+			selection selectedItem ifNotNil: blockForPRSelected ];
 		contextMenu: [ self contextMenuForTable ].
 
 ]
