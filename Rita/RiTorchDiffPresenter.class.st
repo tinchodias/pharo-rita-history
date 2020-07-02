@@ -148,7 +148,7 @@ RiTorchDiffPresenter >> newRoassalPresenter [
 { #category : #initialization }
 RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: iconSymbol help: help [
 
-	^ (self instantiate: SpToolBarButtonPresenter)
+	^ (self instantiate: SpToolBarToggleButtonPresenter)
 		label: label;
 		help: help;
 		icon: (self iconNamed: iconSymbol);
