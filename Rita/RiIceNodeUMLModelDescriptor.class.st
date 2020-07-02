@@ -13,6 +13,6 @@ RiIceNodeUMLModelDescriptor >> classProperties [
 ]
 
 { #category : #accessing }
-RiIceNodeUMLModelDescriptor >> classProperties: anObject [
-	classProperties := anObject
+RiIceNodeUMLModelDescriptor >> classProperties: aCollection [
+	classProperties := aCollection
 ]
