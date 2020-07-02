@@ -16,9 +16,9 @@ RiRubricTextSegment >> computeVertices [
 	lastLine := self lines at: lastLineIndex.
 
 	self setVertices: {
-		firstLine left @ firstLine top.
-		firstLine left @ lastLine bottom.
-		lastLine right @ lastLine bottom.
-		lastLine right @ firstLine top }
+		self textArea left @ firstLine top.
+		self textArea left @ lastLine bottom.
+		self textArea right @ lastLine bottom.
+		self textArea right @ firstLine top }
 
 ]
