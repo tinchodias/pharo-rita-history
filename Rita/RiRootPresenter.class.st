@@ -56,7 +56,7 @@ RiRootPresenter >> newHomePage [
 { #category : #private }
 RiRootPresenter >> newPullRequestsPageFor: aRiRepository [ 
 	^ SpNotebookPage
-		title: 'Pull Requests - ', aRiRepository name
+		title: ''
 		icon: (self iconNamed: #github)
 		provider: [
 			(self instantiate: RiPullRequestMasterDetailPresenter)
@@ -82,6 +82,17 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 					} asDictionary;
 				yourself ]
 
+]
+
+{ #category : #private }
+RiRootPresenter >> newSpawnPageFor: modelToSpawn [
+	^ SpNotebookPage
+		title: ''
+		icon: (self iconNamed: #git)
+		provider: [
+			RiFullDiffPresenter new
+				model: modelToSpawn;
+				yourself ]
 ]
 
 { #category : #private }
@@ -119,26 +130,26 @@ RiRootPresenter >> openRepository: aRiRepository [
 
 { #category : #private }
 RiRootPresenter >> openSpawnFor: modelToSpawn [
-	| page |
-	page := SpNotebookPage
-		title: 'Diff'
-		icon: (self iconNamed: #objects)
-		provider: [
-			RiFullDiffPresenter new
-				model: modelToSpawn;
-				yourself ].
-
-	notebook
-		addPage: page;
-		selectPage: page
+	self
+		openPage: modelToSpawn
+		title: (self titleForSpawnPage: modelToSpawn)
+		ifAbsentBuildWith: [ self newSpawnPageFor: modelToSpawn ]
 ]
 
 { #category : #private }
 RiRootPresenter >> titleForPullRequestsPage: aRiRepository [
-	^ 'Pull Requests - ', aRiRepository name
+	^ '{1}: Pull Requests' format: {aRiRepository name}
 ]
 
 { #category : #private }
 RiRootPresenter >> titleForRepositoryPage: aRiRepository [
 	^ aRiRepository name
+]
+
+{ #category : #private }
+RiRootPresenter >> titleForSpawnPage: modelToSpawn [
+	^ '{1}: {2}'
+		format:
+			{(modelToSpawn at: #repository) name.
+			(modelToSpawn at: #iceDiff) ritaShortId}
 ]

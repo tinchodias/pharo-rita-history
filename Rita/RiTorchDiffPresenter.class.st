@@ -163,14 +163,14 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 
 	| onlyChangedButton isExpandedButton connectHierarchiesButton showMethodsLOCButton flyDiffButton |
 	spawnButton := (self instantiate: SpToolBarButtonPresenter)
-			label: 'Spawn';
+			label: 'Expand';
 			icon: (self iconNamed: #smallRemoteOpen);
-			help: 'Spawn this view in a new notebook page';
+			help: 'Expand this view in a new notebook page.';
 			yourself.
 	
 	onlyChangedButton := self
 		newRootModelToggleButtonFor: #considerOnlyChanged
-		label: 'All'
+		label: 'Unchnged'
 		icon: #changeUpdate
 		help: 'Whether show only changed elements or all the elements, to have context.'.
 
