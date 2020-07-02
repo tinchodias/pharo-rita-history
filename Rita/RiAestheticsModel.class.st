@@ -299,7 +299,7 @@ RiAestheticsModel >> setUpUnifiedDiffFrom: from to: to on: textArea [
 
 	diff lineJoins do: [:each |
 		colorMap at: each kindSymbol ifPresent: [ :color |
-			textArea addSegment: ((RubPlainSegmentMorph from: each fromIndex to: each toIndex)
+			textArea addSegment: ((RiRubricTextSegment from: each fromIndex to: each toIndex)
 				color: color;
 				yourself).
 		] ].
