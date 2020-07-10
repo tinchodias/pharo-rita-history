@@ -32,6 +32,23 @@ RiRootPresenter class >> open [
 				title: 'History Explorer' ]
 ]
 
+{ #category : #accessing }
+RiRootPresenter class >> taskbarIconName [
+
+	^ #git
+]
+
+{ #category : #accessing }
+RiRootPresenter class >> worldMenuItemOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: 'Rita')
+		parent: #Tools;
+		action: [ self open ];
+		icon: self taskbarIcon;
+		help: 'Experimental alternative to Iceberg UI.';
+		order: 10
+]
+
 { #category : #initialization }
 RiRootPresenter >> initializePresenters [
 	notebook := self newNotebook.
