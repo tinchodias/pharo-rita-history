@@ -30,6 +30,10 @@ RiPullRequestListPresenter >> contextMenuForTable [
 
 	menu addItem: [ :item |
 		item
+			name: 'View Diff to Repository Head';
+			action: [ self openDiffFor: selected ] ].
+	menu addItem: [ :item |
+		item
 			name: 'Open in Web Browser';
 			action: [ self openInWebBrowser: selected ] ].
 	menu addItem: [ :item | 
@@ -58,6 +62,13 @@ RiPullRequestListPresenter >> initializePresenters [
 			selection selectedItem ifNotNil: blockForPRSelected ];
 		contextMenu: [ self contextMenuForTable ].
 
+]
+
+{ #category : #initialization }
+RiPullRequestListPresenter >> openDiffFor: aPR [ 
+	| iceDiff |
+	iceDiff := aPR diffToRepositoryHead.
+	(model at: #blockForSpawn) value: iceDiff
 ]
 
 { #category : #initialization }

@@ -80,6 +80,7 @@ RiRootPresenter >> newPullRequestsPageFor: aRiRepository [
 				model: { 
 					#repository -> aRiRepository. 
 					#root -> model. 
+					#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ].
 					} asDictionary;
 				yourself ]
 

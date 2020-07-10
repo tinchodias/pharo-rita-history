@@ -20,6 +20,13 @@ IceGitHubPullRequest >> createdAt [
 ]
 
 { #category : #'*Rita' }
+IceGitHubPullRequest >> diffToRepositoryHead [
+	"Inspired on IceMerge>>calculateChanges"
+
+	^ self branch head diffTo: self repository head
+]
+
+{ #category : #'*Rita' }
 IceGitHubPullRequest >> htmlUrl [
 	^ self jsonAt: #html_url
 ]
