@@ -8,20 +8,34 @@ This repository is home of several experiments on understanding of code changes 
 
 ## Install
 
-In Pharo 8/9:
+In Pharo 8:
 
 ~~~Smalltalk
-Metacello new 
-  baseline: 'Rita'; 
-  repository: 'github://tinchodias/pharo-rita-history/'; 
-  load.
+    Metacello new
+        githubUser: 'pharo-spec' project: 'Spec' commitish: 'v0.7.0' path: 'src';
+        baseline: 'Spec2';
+        onConflict: [ :e | e useIncoming ];
+        onUpgrade: [ :e | e useIncoming ];
+        ignoreImage;
+        load.
+
+    Metacello new 
+        baseline: 'Rita'; 
+        repository: 'github://tinchodias/pharo-rita-history/'; 
+        load.
 ~~~
 
 ## Execute
 
+World Menu -> Tools -> Rita
+
+or:
+
 ~~~Smalltalk
 RiRootPresenter open
 ~~~
+
+---
 
 ## What's *rita*?
 
