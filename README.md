@@ -21,7 +21,8 @@ In Pharo 8:
 
     Metacello new 
         baseline: 'Rita'; 
-        repository: 'github://tinchodias/pharo-rita-history/'; 
+        repository: 'github://tinchodias/pharo-rita-history/';
+        onConflictUseLoaded;
         load.
 ~~~
 
