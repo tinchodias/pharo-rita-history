@@ -148,7 +148,7 @@ RiTorchDiffPresenter >> newRoassalPresenter [
 { #category : #initialization }
 RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: iconSymbol help: help [
 
-	^ (self instantiate: SpToolBarToggleButtonPresenter)
+	^ (self instantiate: SpToolbarToggleButtonPresenter)
 		label: label;
 		help: help;
 		icon: (self iconNamed: iconSymbol);
@@ -162,7 +162,7 @@ RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: 
 RiTorchDiffPresenter >> newSettingsToolBar [
 
 	| onlyChangedButton isExpandedButton connectHierarchiesButton showMethodsLOCButton flyDiffButton |
-	spawnButton := (self instantiate: SpToolBarButtonPresenter)
+	spawnButton := (self instantiate: SpToolbarButtonPresenter)
 			label: 'Expand';
 			icon: (self iconNamed: #smallRemoteOpen);
 			help: 'Expand this view in a new notebook page.';
@@ -198,7 +198,7 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 		icon: #announcement
 		help: 'Whether show a fly diff.'.
 
-	^ self newToolBar
+	^ self newToolbar
 		addItem: onlyChangedButton;
 		addItem: isExpandedButton;
 		addItem: connectHierarchiesButton;
