@@ -116,6 +116,9 @@ RiTreeDiffPresenter >> refreshOnModelUpdate [
 
 { #category : #accessing }
 RiTreeDiffPresenter >> selectIceNode: anIceNode [
-	treeTable selectedItem = anIceNode ifTrue: [ ^ self ].
-	treeTable selectPath: (self indexPathFor: anIceNode)
+	treeTable selectedItem = anIceNode
+		ifTrue: [ ^ self ].
+	treeTable
+		selectPath: (self indexPathFor: anIceNode)
+		scrollToSelection: true
 ]
