@@ -164,10 +164,10 @@ RiAestheticsModel >> iconTitleForClassVariableDefinition: iceDefinition [
 
 	| mapping |
 	mapping := {
-		#instance -> 'i'.
-		#class -> 'c'.
-		#classInstance -> 'i.'.
-		#pool -> 'p'.
+		#instance -> ' '.
+		#class -> 'C'.
+		#classInstance -> 'I'.
+		#pool -> 'P'.
 		} asDictionary.
 
 	^ mapping at: iceDefinition typeToShow
@@ -288,14 +288,13 @@ RiAestheticsModel >> shapeForClassProperty: iceNode [
 
 { #category : #accessing }
 RiAestheticsModel >> shapeForClassPropertyDefinition: iceDefinition color: aColor border: aBorder [
-
 	^ RiIconGenerator new
 		extent: self scaleForMethods * 1.3 asPoint;
 		foregroundColor: self foregroundColor;
-		backgroundColor: aColor;
 		border: aBorder;
-		filled2: RSShapeFactory square
-			with: (self iconTitleForClassPropertyDefinition: iceDefinition);
+		fillShape: RSShapeFactory square
+			colored: aColor
+			labeled: (self iconTitleForClassPropertyDefinition: iceDefinition);
 		newRSComposite
 
 ]
@@ -310,13 +309,23 @@ RiAestheticsModel >> shapeForClassVariable: iceNode [
 
 { #category : #accessing }
 RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColor border: aBorder [
+	| shape |
+	shape := RSPolygon new
+			points: {(-0.2500000000000001@1.75). (0.616025403784439@0.2500000000000007). (-1.1160254037844388@0.2500000000000002)};
+			cornerRadii: 1;
+			yourself.
+	"^^^ Generated with: (RSPolygon 
+			generateUnitNgonPoints: 3
+			rotation: Float pi) collect: [ :each | each + (-0.25@0.75) ]"
+	
 	^ RiIconGenerator new
-		extent: self scaleForMethods asPoint;
+		extent: (self scaleForMethods * 1.5) asPoint;
 		foregroundColor: self foregroundColor;
-		backgroundColor: aColor;
 		border: aBorder;
-		filled2: RSShapeFactory circle
-			with: (self iconTitleForClassVariableDefinition: iceDefinition);
+		labelScale: 0.05;
+		fillShape: shape
+			colored: aColor
+			labeled: (self iconTitleForClassVariableDefinition: iceDefinition);
 		newRSComposite
 
 ]

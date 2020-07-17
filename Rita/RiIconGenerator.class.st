@@ -6,7 +6,8 @@ Class {
 		'foregroundColor',
 		'backgroundColor',
 		'border',
-		'shapes'
+		'shapes',
+		'labelScale'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -74,6 +75,23 @@ RiIconGenerator >> extent: anObject [
 ]
 
 { #category : #drawing }
+RiIconGenerator >> fillShape: shape colored: aColor labeled: aString [
+
+	shapes add: 
+		(shape
+			size: extent;
+			color: aColor;
+			border: border;
+			yourself).
+
+	shapes add: 
+		((self labelWith: aString)
+			color: foregroundColor;
+			yourself).
+
+]
+
+{ #category : #drawing }
 RiIconGenerator >> filled2: shape with: aString [
 
 	shapes add: 
@@ -126,7 +144,17 @@ RiIconGenerator >> initialize [
 	
 	extent := 16 @ 16.
 	shapes := OrderedCollection new.
+	labelScale := 0.08.
+]
 
+{ #category : #accessing }
+RiIconGenerator >> labelScale [
+	^ labelScale
+]
+
+{ #category : #accessing }
+RiIconGenerator >> labelScale: aFloat [
+	labelScale := aFloat
 ]
 
 { #category : #private }
@@ -136,7 +164,7 @@ RiIconGenerator >> labelWith: aString [
 		bold;
 		fontSize: 100;
 		position: 0 @ -0.15;
-		scaleBy: 0.08;
+		scaleBy: labelScale;
 		extent: 1@1; "Important: fonts may exceed the height of the icon"
 		yourself
 ]
