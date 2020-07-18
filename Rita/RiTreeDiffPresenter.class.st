@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'treeTable',
 		'highlightDeferrer',
-		'iceNodeCollectionToHighlight'
+		'iceNodeCollectionToHighlight',
+		'checkedNodes'
 	],
 	#category : #'Rita-UI-Diff'
 }
@@ -32,6 +33,47 @@ RiTreeDiffPresenter >> changeListColumn [
 				evaluated: [ :each | (model at: #aesthetics) rowForChange: each value ];
 				yourself);
 		yourself
+]
+
+{ #category : #accessing }
+RiTreeDiffPresenter >> contextMenuForTable [
+	| menu selected |
+	menu := self newMenu.
+	
+	selected := treeTable selection selectedItem.
+
+"	menu addItem: [ :item |
+		item
+			name: 'Check all children';
+			action: [ self doCheckAllChildrenOf: selected  ] ].
+	menu addItem: [ :item |
+		item
+			name: 'Uncheck all children';
+			action: [ self doUncheckAllChildrenOf: selected  ] ].
+"	menu addItem: [ :item | 
+		item
+			name: 'Inspect object';
+			action: [ selected inspect ] ].
+
+	^ menu
+]
+
+{ #category : #private }
+RiTreeDiffPresenter >> doCheck: anIceNode [
+	checkedNodes add: anIceNode.
+	anIceNode allChildrenDo: [ :each |
+		checkedNodes add: each ].
+	treeTable update.
+	self selectIceNode: anIceNode.
+]
+
+{ #category : #private }
+RiTreeDiffPresenter >> doUncheck: anIceNode [
+	checkedNodes remove: anIceNode ifAbsent: [ ].
+	anIceNode allChildrenDo: [ :each |
+		checkedNodes remove: each ifAbsent: [ ] ].
+	treeTable update.
+	self selectIceNode: anIceNode.
 ]
 
 { #category : #accessing }
@@ -69,11 +111,17 @@ RiTreeDiffPresenter >> initializePresenters [
 { #category : #accessing }
 RiTreeDiffPresenter >> initializeTree [
 	treeTable
-		addColumn: self changeListColumn;
 		children: [ :each | each children ];
 		whenSelectionChangedDo: [ :selection |
-			(model at: #blockWhenNodeSelected) value: selection selectedItem ].
-	
+			(model at: #blockWhenNodeSelected) value: selection selectedItem ];
+		contextMenu: [ self contextMenuForTable ].
+
+	treeTable addColumn: self newColumn.
+
+	treeTable
+		bindKeyCombination: Character space 
+		toAction: [ self toggleSelection ].
+		
 	treeTable whenBuiltDo: [:ann |
 		| table | 
 		table := ann widget.
@@ -84,6 +132,27 @@ RiTreeDiffPresenter >> initializeTree [
 					table dataSource realElementAt: rowIndex } ];
 			blockForMouseLeave: [ :rowIndex | 
 				(model at: #blockWhenNodesHighlighted) value: #() ] ]
+]
+
+{ #category : #private }
+RiTreeDiffPresenter >> isChecked: anIceNode [
+	^ checkedNodes includes: anIceNode
+]
+
+{ #category : #accessing }
+RiTreeDiffPresenter >> newColumn [
+	^ SpCompositeTableColumn new
+		title: ' ';
+		addColumn: 
+			(SpCheckBoxTableColumn new
+				title: ' ';
+				evaluated: [ :iceNode | self isChecked: iceNode ];
+				onActivation: [ :iceNode | self doCheck: iceNode ];
+				onDesactivation: [ :iceNode | self doUncheck: iceNode ];
+				width: 20;
+				yourself);
+		addColumn: self changeListColumn;
+		yourself
 ]
 
 { #category : #accessing }
@@ -109,9 +178,17 @@ RiTreeDiffPresenter >> refreshHighlight [
 
 { #category : #accessing }
 RiTreeDiffPresenter >> refreshOnModelUpdate [
-	treeTable roots: (model at: #iceDiff) tree children.
+
+	| diffTree |
+	diffTree := (model at: #iceDiff) tree.
+
+	treeTable roots: diffTree children.
 	treeTable whenBuiltDo: [ :ann |
 		ann widget dataSource expandAll ].
+	
+	checkedNodes := Set new.
+	diffTree allChildrenDo: [ :each |
+		checkedNodes add: each ].
 ]
 
 { #category : #accessing }
@@ -121,4 +198,14 @@ RiTreeDiffPresenter >> selectIceNode: anIceNode [
 	treeTable
 		selectPath: (self indexPathFor: anIceNode)
 		scrollToSelection: true
+]
+
+{ #category : #private }
+RiTreeDiffPresenter >> toggleSelection [
+	| anIceNode |
+	anIceNode := treeTable selection selectedItem.
+	anIceNode ifNil: [ ^self ].
+	(self isChecked: anIceNode)
+		ifTrue: [ self doUncheck: anIceNode ]
+		ifFalse: [ self doCheck: anIceNode ]
 ]
