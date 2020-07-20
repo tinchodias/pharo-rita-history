@@ -240,6 +240,16 @@ RiAestheticsModel >> modificationColor [
 		alpha: reference alpha
 ]
 
+{ #category : #accessing }
+RiAestheticsModel >> outlineColor [
+	^ Smalltalk ui theme selectionColor
+]
+
+{ #category : #accessing }
+RiAestheticsModel >> outlineSize [
+	^ 5
+]
+
 { #category : #'diff morph creation' }
 RiAestheticsModel >> pathMorphWith: iceNode [
 
@@ -285,6 +295,11 @@ RiAestheticsModel >> rowForChange: iceNode [
 { #category : #accessing }
 RiAestheticsModel >> scaleForMethods [
 	^ 10
+]
+
+{ #category : #accessing }
+RiAestheticsModel >> secondaryOutlineColor [
+	^ self outlineColor alpha: 0.7
 ]
 
 { #category : #accessing }

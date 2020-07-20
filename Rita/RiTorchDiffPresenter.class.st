@@ -136,11 +136,12 @@ RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
 
 { #category : #initialization }
 RiTorchDiffPresenter >> newRoassalPresenter [
-
 	^ (self instantiate: SpRoassalPresenter)
 		script: [ :newCanvas | 
 			lastCanvas := newCanvas.
-			lastHighlighingController := RiHighlightingController newFor: lastCanvas.
+			lastHighlighingController := RiHighlightingController
+				canvas: lastCanvas
+				aesthetics: self aesthetics.
 			model ifNotNil: [ self buildCanvas ] ];
 		yourself
 ]

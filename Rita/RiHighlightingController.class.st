@@ -6,15 +6,16 @@ Class {
 		'shapeByModel',
 		'selectedModel',
 		'lastOutline',
-		'lastSecondaryOutlines'
+		'lastSecondaryOutlines',
+		'aesthetics'
 	],
 	#category : #'Rita-Roassal3'
 }
 
 { #category : #'instance creation' }
-RiHighlightingController class >> newFor: aRSCanvas [
+RiHighlightingController class >> canvas: aRSCanvas aesthetics: aRiAestheticsModel [
 	^ self basicNew
-		initializeWith: aRSCanvas;
+		initializeWithCanvas: aRSCanvas aesthetics: aRiAestheticsModel;
 		yourself
 ]
 
@@ -24,11 +25,11 @@ RiHighlightingController >> addOutlineFor: aRSShape [
 	lastOutline := RSBox new
 		border: (RSBorder new 
 				joinMiter;
-				color: self outlineColor;
-				width: self outlineSize;
+				color: aesthetics outlineColor;
+				width: aesthetics outlineSize;
 				yourself);
 		noPaint;
-		extent: aRSShape extent + self outlineSize;
+		extent: aRSShape extent + aesthetics outlineSize;
 		position: aRSShape position;
 		yourself.
 
@@ -57,11 +58,11 @@ RiHighlightingController >> addSecondaryOutlineFor: aRSShape [
 	outline := RSBox new
 		border: (RSBorder new 
 				joinMiter;
-				color: self secondaryOutlineColor;
-				width: self outlineSize;
+				color: aesthetics secondaryOutlineColor;
+				width: aesthetics outlineSize;
 				yourself);
 		noPaint;
-		extent: aRSShape extent + self outlineSize;
+		extent: aRSShape extent + aesthetics outlineSize;
 		position: aRSShape position;
 		yourself.
 
@@ -93,27 +94,17 @@ RiHighlightingController >> highlightAsSelected: anIceNode [
 ]
 
 { #category : #initialization }
-RiHighlightingController >> initializeWith: aRSCanvas [
+RiHighlightingController >> initializeWithCanvas: aRSCanvas aesthetics: aRiAestheticsModel [
 	self initialize.
-	
 	canvas := aRSCanvas.
+	aesthetics := aRiAestheticsModel.
 	shapeByModel := IdentityDictionary new.
-	self resetLastSecondaryOutlines.
+	self resetLastSecondaryOutlines
 ]
 
 { #category : #hooks }
 RiHighlightingController >> onShape: aRSShape [
 	^ shapeByModel at: aRSShape model put: aRSShape
-]
-
-{ #category : #accessing }
-RiHighlightingController >> outlineColor [
-	^ Smalltalk ui theme selectionColor
-]
-
-{ #category : #accessing }
-RiHighlightingController >> outlineSize [
-	^ 5
 ]
 
 { #category : #private }
@@ -130,9 +121,4 @@ RiHighlightingController >> removeSecondaryOutlines [
 { #category : #private }
 RiHighlightingController >> resetLastSecondaryOutlines [
 	lastSecondaryOutlines := OrderedCollection new
-]
-
-{ #category : #accessing }
-RiHighlightingController >> secondaryOutlineColor [
-	^ self outlineColor alpha: 0.7
 ]
