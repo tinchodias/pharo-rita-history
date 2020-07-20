@@ -55,24 +55,11 @@ RiTorchDiffPresenter >> canvasLayout [
 ]
 
 { #category : #'canvas building' }
-RiTorchDiffPresenter >> childrenToShowFor: node withClassName: aClassName [
-	^ (node children
-		select: [ :each | each value definition class name = aClassName ])
-		sorted: [ :a :b | a value definition class name < b value definition class name ]
-]
-
-{ #category : #'canvas building' }
 RiTorchDiffPresenter >> classShapesFor: iceNodes [
 
 	| renderer shapes |
-	renderer := RiTorchUMLClassRenderer newWith: model.
+	renderer := RiTorchClassRenderer newWith: model.
 	renderer highlighingController: lastHighlighingController.
-	renderer modelDescriptor: (RiIceNodeUMLModelDescriptor new
-		classname: [ :node | node value name ];
-		classProperties: [ :node | self childrenToShowFor: node withClassName: #IcePropertyDefinition ];
-		instVars: [ :node | self childrenToShowFor: node withClassName: #IceVariableDefinition ];
-		methods: [ :node | self methodsToShowFor: node ];
-		yourself).
 
 	shapes := iceNodes collect: [ :each | renderer shapeFor: each ].
 
@@ -118,20 +105,6 @@ RiTorchDiffPresenter >> initializePresenters [
 
 	toolBar := self newSettingsToolBar.
 	roassalPresenter := self newRoassalPresenter.
-]
-
-{ #category : #'canvas building' }
-RiTorchDiffPresenter >> methodsToShowFor: iceNodeWithBehavior [
-
-	| methodNodes |
-	methodNodes := iceNodeWithBehavior children
-		select: [ :each | each value definition isMethodDefinition ].
-	methodNodes := methodNodes
-		sorted: [ :a :b | 
-			a value class = b value class
-				ifTrue: [ a value definition linesOfCode > b value definition linesOfCode ]
-				ifFalse: [ a value class name < b value class name ] ].
-	^ methodNodes
 ]
 
 { #category : #initialization }

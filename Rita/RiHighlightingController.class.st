@@ -72,6 +72,20 @@ RiHighlightingController >> addSecondaryOutlineFor: aRSShape [
 	lastSecondaryOutlines add: outline
 ]
 
+{ #category : #private }
+RiHighlightingController >> addShadowLayerTo: aRSShape [
+"	| shadow | 
+	shadow := RSBox new
+		color: (aesthetics backgroundColor alpha: 0.75);
+		extent: aRSShape extent + self outlineSize;
+		yourself.
+
+	aRSShape parent add: shadow.
+	
+	lastShadows add: shadow.
+"
+]
+
 { #category : #api }
 RiHighlightingController >> highlightAsSecondary: aCollection [ 
 
