@@ -35,6 +35,11 @@ RiTreeDiffPresenter >> changeListColumn [
 		yourself
 ]
 
+{ #category : #private }
+RiTreeDiffPresenter >> checkedNodes [
+	^ model at: #checkedIceNodes
+]
+
 { #category : #accessing }
 RiTreeDiffPresenter >> contextMenuForTable [
 	| menu selected |
@@ -60,40 +65,40 @@ RiTreeDiffPresenter >> contextMenuForTable [
 
 { #category : #private }
 RiTreeDiffPresenter >> doCheck: anIceNode [
-	checkedNodes add: anIceNode.
+	self checkedNodes add: anIceNode.
 	anIceNode allChildrenDo: [ :each |
-		checkedNodes add: each ].
-	treeTable update.
-	self selectIceNode: anIceNode.
+		self checkedNodes add: each ].
+
+	"Trigger update in self and in Torch view"
+	(model at: #blockWhenCheckedNodesChanged) value.
+
+]
+
+{ #category : #private }
+RiTreeDiffPresenter >> doExpandSelectedNodeAndSelectFirstChild [
+	(treeTable adapter widget dataSource
+		itemAtPath: treeTable selection selectedPath) expand.
+	(model at: #collapsedIceNodes)
+		remove: treeTable selection selectedItem
+		ifAbsent: [ ^ self ].
+	(model at: #blockWhenCollapsedIceNodesChanged) value
 ]
 
 { #category : #private }
 RiTreeDiffPresenter >> doUncheck: anIceNode [
-	checkedNodes remove: anIceNode ifAbsent: [ ].
+	self checkedNodes remove: anIceNode ifAbsent: [ ].
 	anIceNode allChildrenDo: [ :each |
-		checkedNodes remove: each ifAbsent: [ ] ].
-	treeTable update.
-	self selectIceNode: anIceNode.
+		self checkedNodes remove: each ifAbsent: [ ] ].
+
+	"Trigger update in self and in Torch view"
+	(model at: #blockWhenCheckedNodesChanged) value.
+
 ]
 
 { #category : #accessing }
 RiTreeDiffPresenter >> highlightIceNode: iceNodeCollection [
 	iceNodeCollectionToHighlight := iceNodeCollection.
 	highlightDeferrer schedule.
-]
-
-{ #category : #accessing }
-RiTreeDiffPresenter >> indexPathFor: anIceNode [
-	"Answer the sequence of indices of anIceNode in the treeTable"
-
-	^ Array streamContents: [ :stream |
-		| currentNodes |
-		currentNodes := treeTable roots.
-		anIceNode withAllParentNodes do: [ :each |
-			| index |
-			index := currentNodes indexOf: each.
-			stream nextPut: index.
-			currentNodes := (currentNodes at: index) children ]]
 ]
 
 { #category : #accessing }
@@ -114,14 +119,11 @@ RiTreeDiffPresenter >> initializeTree [
 		children: [ :each | each children ];
 		whenSelectionChangedDo: [ :selection |
 			(model at: #blockWhenNodeSelected) value: selection selectedItem ];
-		contextMenu: [ self contextMenuForTable ].
+		contextMenu: [ self contextMenuForTable ];
+		addColumn: self newColumn.
 
-	treeTable addColumn: self newColumn.
-
-	treeTable
-		bindKeyCombination: Character space 
-		toAction: [ self toggleSelection ].
-		
+	self initializeTreeKeyCombinations.
+	
 	treeTable whenBuiltDo: [:ann |
 		| table | 
 		table := ann widget.
@@ -134,9 +136,26 @@ RiTreeDiffPresenter >> initializeTree [
 				(model at: #blockWhenNodesHighlighted) value: #() ] ]
 ]
 
+{ #category : #accessing }
+RiTreeDiffPresenter >> initializeTreeKeyCombinations [
+		
+	treeTable
+		bindKeyCombination: Character space 
+			toAction: [ self toggleSelection ].
+
+	treeTable
+		bindKeyCombination: Character arrowLeft
+			toAction: [ self doCollapseSelectedNode ].
+
+	treeTable
+		bindKeyCombination: Character arrowRight
+			toAction: [ self doExpandSelectedNodeAndSelectFirstChild ].
+
+]
+
 { #category : #private }
 RiTreeDiffPresenter >> isChecked: anIceNode [
-	^ checkedNodes includes: anIceNode
+	^ self checkedNodes includes: anIceNode
 ]
 
 { #category : #accessing }
@@ -176,19 +195,18 @@ RiTreeDiffPresenter >> refreshHighlight [
 			refresh ]
 ]
 
+{ #category : #private }
+RiTreeDiffPresenter >> refreshOnCheckedIceNodesChanged [
+	self defer: [ treeTable adapter widget refresh ]
+]
+
 { #category : #accessing }
 RiTreeDiffPresenter >> refreshOnModelUpdate [
+	treeTable roots: (model at: #iceDiff) tree children.
 
-	| diffTree |
-	diffTree := (model at: #iceDiff) tree.
-
-	treeTable roots: diffTree children.
 	treeTable whenBuiltDo: [ :ann |
-		ann widget dataSource expandAll ].
-	
-	checkedNodes := Set new.
-	diffTree allChildrenDo: [ :each |
-		checkedNodes add: each ].
+		ann widget dataSource expandAll ]
+
 ]
 
 { #category : #accessing }
@@ -196,7 +214,7 @@ RiTreeDiffPresenter >> selectIceNode: anIceNode [
 	treeTable selectedItem = anIceNode
 		ifTrue: [ ^ self ].
 	treeTable
-		selectPath: (self indexPathFor: anIceNode)
+		selectPath: (treeTable selection pathOf: anIceNode)
 		scrollToSelection: true
 ]
 

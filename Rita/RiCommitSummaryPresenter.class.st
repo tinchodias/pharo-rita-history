@@ -3,21 +3,43 @@ Class {
 	#superclass : #RiPresenter,
 	#instVars : [
 		'authorPanel',
-		'commiterPanel',
 		'commentLabel',
-		'headerLabel'
+		'headerLabel',
+		'committerPanel'
 	],
 	#category : #'Rita-UI'
 }
 
 { #category : #specs }
 RiCommitSummaryPresenter class >> defaultSpec [
+	<spec>
+	^ SpBoxLayout newVertical
+		add: #headerLabel
+			withConstraints: [ :constraints | constraints height: 25 ];
+		yourself
+]
+
+{ #category : #specs }
+RiCommitSummaryPresenter class >> doubleUserSpec [
+	<spec>
 	^ SpBoxLayout newVertical
 		add: #headerLabel
 			withConstraints: [ :constraints | constraints height: 25 ];
 		add: #authorPanel
 			withConstraints: [ :constraints | constraints height: 25 ];
-		add: #commiterPanel
+		add: #committerPanel
+			withConstraints: [ :constraints | constraints height: 25 ];
+		add: #commentLabel;
+		yourself
+]
+
+{ #category : #specs }
+RiCommitSummaryPresenter class >> singleUserSpec [
+	<spec>
+	^ SpBoxLayout newVertical
+		add: #headerLabel
+			withConstraints: [ :constraints | constraints height: 25 ];
+		add: #authorPanel
 			withConstraints: [ :constraints | constraints height: 25 ];
 		add: #commentLabel;
 		yourself
@@ -43,15 +65,17 @@ RiCommitSummaryPresenter >> initializePresenters [
 	headerLabel := self newLabel.
 	commentLabel := self newLabel.
 	authorPanel := self instantiate: RiCommitUserPresenter.
-	commiterPanel := self instantiate: RiCommitUserPresenter
+	committerPanel := self instantiate: RiCommitUserPresenter.
+]
+
+{ #category : #accessing }
+RiCommitSummaryPresenter >> isCommitterDifferentFromAuthor [
+	^ model committer ~= model author
 ]
 
 { #category : #accessing }
 RiCommitSummaryPresenter >> refreshOnModelUpdate [
-	headerLabel label: self headerString.
-	commentLabel label: model comment.
-	authorPanel model: self authorModel.
-	commiterPanel model: self committerModel.
+	model accept: self
 ]
 
 { #category : #accessing }
@@ -61,4 +85,24 @@ RiCommitSummaryPresenter >> userModelFor: signature roleName: roleName [
 		#signature -> signature.
 		#avatar -> (self iconNamed: #user).
 		} asDictionary
+]
+
+{ #category : #visiting }
+RiCommitSummaryPresenter >> visitCommit: aRiCommit [ 
+	| spec |
+	spec := self isCommitterDifferentFromAuthor
+		ifTrue: [ self class doubleUserSpec ]
+		ifFalse: [ self class singleUserSpec ].
+	self layout: spec.
+
+	headerLabel label: self headerString.
+	commentLabel label: model comment.
+	authorPanel model: self authorModel.
+	committerPanel model: self committerModel
+]
+
+{ #category : #visiting }
+RiCommitSummaryPresenter >> visitUncommitedWorkingCopy: aRiUncommitedWorkingCopy [
+	self layout: self class defaultSpec.
+	headerLabel label: self headerString
 ]

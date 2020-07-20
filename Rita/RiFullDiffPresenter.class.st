@@ -45,6 +45,9 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 		add: #blockWhenNodesHighlighted -> [ :iceNodeCollection |
 			treeDiffPresenter highlightIceNode: iceNodeCollection.
 			torchDiffPresenter highlightIceNode: iceNodeCollection ];
+		add: #blockWhenCheckedNodesChanged -> [ 
+			torchDiffPresenter refreshOnCheckedIceNodesChanged.
+			treeDiffPresenter refreshOnCheckedIceNodesChanged ];
 		add: #diffQuery -> (RiDiffQuery new
 			diff: (model at: #iceDiff);
 			onlyConsiderChanged: (model at: #root) considerOnlyChanged;

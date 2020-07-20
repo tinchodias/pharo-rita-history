@@ -220,6 +220,11 @@ RiTorchDiffPresenter >> packInteraction [
 ]
 
 { #category : #accessing }
+RiTorchDiffPresenter >> refreshOnCheckedIceNodesChanged [
+	roassalPresenter refresh
+]
+
+{ #category : #accessing }
 RiTorchDiffPresenter >> refreshOnModelUpdate [
 	roassalPresenter refresh.
 	spawnButton action: [ (model at: #blockForSpawn) value: model ]

@@ -33,10 +33,12 @@ RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 
 { #category : #private }
 RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
-	
+	| iceDiff |
+	iceDiff := aRiDiffModel iceDiffTo: targetRiCommit.
 	^ (self instantiate: RiFullDiffPresenter)
 			model: (model copy
-				add: #iceDiff -> (aRiDiffModel iceDiffTo: targetRiCommit);
+				add: #iceDiff -> iceDiff;
+				add: #checkedIceNodes -> (IdentitySet newFrom: iceDiff tree allChildrenNodes);
 				yourself);
 			yourself
 ]
@@ -45,6 +47,7 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 RiElementPresenter >> initializePresenters [
 	summary := self instantiate: RiCommitSummaryPresenter.
 	notebook := self newNotebook.
+
 ]
 
 { #category : #accessing }

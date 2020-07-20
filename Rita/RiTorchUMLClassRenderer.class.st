@@ -193,14 +193,6 @@ RiTorchUMLClassRenderer >> methodsFor: aClass [
 		yourself
 ]
 
-{ #category : #accessing }
-RiTorchUMLClassRenderer >> model: aDictionary [
-	model := aDictionary.
-	aesthetics := model at: #aesthetics.
-	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor aesthetics: aesthetics.
-
-]
-
 { #category : #private }
 RiTorchUMLClassRenderer >> popupForIceNodeShapes [
 	^ (model at: #root) flyDiff
@@ -267,15 +259,30 @@ RiTorchUMLClassRenderer >> shapeForFullClass: iceNode [
 		position: box position x @ title position y;
 		extent: (box width @ title height).
 
-	^ RSComposite new
-		model: iceNode;
-		shapes: shapes;
-		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
-		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
-		addInteraction: self popupForIceNodeShapes;
-		addInteraction: highlighingController;
-		yourself
+	self flag: #todo.
+	^ ((model at: #checkedIceNodes) includes: iceNode)
+		ifTrue: [
+			RSComposite new
+				model: iceNode;
+				shapes: shapes;
+				when: RSMouseClick do: self blockForMouseClickOnIceNode;
+				when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
+				when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
+				addInteraction: self popupForIceNodeShapes;
+				addInteraction: highlighingController;
+				yourself ]
+		ifFalse: [
+			| c | 
+			c := RSComposite new
+				model: iceNode;
+				shapes: shapes;
+				yourself.
+			c addShape: (RSBox new
+				color: (aesthetics backgroundColor alpha: 0.75);
+				extent: c extent + 6; "A little larger to cover border"
+				yourself).
+			c ].
+
 ]
 
 { #category : #private }
@@ -354,6 +361,7 @@ RiTorchUMLClassRenderer >> titleFor: iceNode [
 	
 	^ RSComposite new
 		shapes: shapes;
+		padding: 0@4;
 		yourself
 ]
 
