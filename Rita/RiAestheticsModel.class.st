@@ -13,7 +13,16 @@ Class {
 
 { #category : #'diff morph creation' }
 RiAestheticsModel >> asContentsToDiff: aString [
-	^ aString displayStringLimitedTo: 1000
+	| limit |
+	limit := 1000.
+	aString size <= limit
+		ifTrue: [ ^ aString ].
+	^ String
+		streamContents: [ :stream | 
+			stream
+				nextPutAll: (aString first: limit);
+				cr;
+				nextPutAll: '...etc...' ]
 ]
 
 { #category : #accessing }
