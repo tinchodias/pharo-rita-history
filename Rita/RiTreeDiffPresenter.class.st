@@ -60,34 +60,51 @@ RiTreeDiffPresenter >> contextMenuForTable [
 
 { #category : #private }
 RiTreeDiffPresenter >> doCheck: anIceNode [
-	self shadowedIceNodes remove: anIceNode ifAbsent: [].
-	anIceNode allChildrenDo: [ :each |
-		self shadowedIceNodes remove: each ifAbsent: [] ].
+	self shadowedIceNodes
+		removeAllFoundIn: anIceNode allChildren;
+		removeAllFoundIn: anIceNode withAllParentNodes.
 
 	"Trigger update in self and in Torch view"
 	(model at: #blockWhenShadowedIceNodesChanged) value.
 
+]
+
+{ #category : #private }
+RiTreeDiffPresenter >> doCollapseSelectedNode [
+	| item |
+	item := treeTable adapter widget dataSource
+		itemAtPath: treeTable selection selectedPath.
+	(item hasChildren and: [ item isExpanded ]) 
+		ifTrue: [ item collapseAndRefresh ]
+		ifFalse: [ 
+			| path |
+			path := treeTable selection selectedPath.
+			path size >= 2 ifTrue: [
+				treeTable selectPath: path allButLast ] ].
+
+	(model at: #collapsedIceNodes)
+		add: treeTable selection selectedItem.
+	(model at: #blockWhenCollapsedIceNodesChanged) value
 ]
 
 { #category : #private }
 RiTreeDiffPresenter >> doExpandSelectedNodeAndSelectFirstChild [
 	(treeTable adapter widget dataSource
-		itemAtPath: treeTable selection selectedPath) expand.
+		itemAtPath: treeTable selection selectedPath) expandAndRefresh.
 	(model at: #collapsedIceNodes)
 		remove: treeTable selection selectedItem
-		ifAbsent: [ ^ self ].
+		ifAbsent: [].
 	(model at: #blockWhenCollapsedIceNodesChanged) value
 ]
 
 { #category : #private }
 RiTreeDiffPresenter >> doUncheck: anIceNode [
-	self shadowedIceNodes add: anIceNode.
-	anIceNode allChildrenDo: [ :each |
-		self shadowedIceNodes add: each ].
+	self shadowedIceNodes
+		add: anIceNode;
+		addAll: anIceNode allChildren.
 
 	"Trigger update in self and in Torch view"
-	(model at: #blockWhenShadowedIceNodesChanged) value.
-
+	(model at: #blockWhenShadowedIceNodesChanged) value
 ]
 
 { #category : #accessing }
@@ -197,7 +214,12 @@ RiTreeDiffPresenter >> refreshOnCheckedIceNodesChanged [
 
 { #category : #accessing }
 RiTreeDiffPresenter >> refreshOnModelUpdate [
-	treeTable roots: (model at: #iceDiff) tree children.
+	"Set tree roots starting at package level."
+	| nodes |
+	nodes := (model at: #iceDiff) tree children.
+	(nodes allSatisfy: [ :each | each value definition isPackageDefinition ])
+		ifFalse: [ nodes := nodes flatCollect: [ :each | each children ] ].
+	treeTable roots: nodes.
 
 	treeTable whenBuiltDo: [ :ann |
 		ann widget dataSource expandAll ]
