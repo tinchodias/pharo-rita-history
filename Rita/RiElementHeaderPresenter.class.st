@@ -1,5 +1,5 @@
 Class {
-	#name : #RiCommitSummaryPresenter,
+	#name : #RiElementHeaderPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
 		'headerText'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #specs }
-RiCommitSummaryPresenter class >> defaultSpec [
+RiElementHeaderPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		add: #headerText;
@@ -16,19 +16,19 @@ RiCommitSummaryPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RiCommitSummaryPresenter >> initializePresenters [
+RiElementHeaderPresenter >> initializePresenters [
 	headerText := self newText
 		beNotEditable;
 		yourself
 ]
 
 { #category : #accessing }
-RiCommitSummaryPresenter >> refreshOnModelUpdate [
+RiElementHeaderPresenter >> refreshOnModelUpdate [
 	model accept: self
 ]
 
 { #category : #private }
-RiCommitSummaryPresenter >> stringForSignature: aLGitSignature role: aString [ 
+RiElementHeaderPresenter >> stringForSignature: aLGitSignature role: aString [ 
 	^ ('{2}: {1} ({3}) @ {4}' format: {
 			aLGitSignature name.
 			aString.
@@ -37,7 +37,7 @@ RiCommitSummaryPresenter >> stringForSignature: aLGitSignature role: aString [
 ]
 
 { #category : #accessing }
-RiCommitSummaryPresenter >> userModelFor: signature roleName: roleName [
+RiElementHeaderPresenter >> userModelFor: signature roleName: roleName [
 	^ {
 		#roleName -> roleName.
 		#signature -> signature.
@@ -46,7 +46,7 @@ RiCommitSummaryPresenter >> userModelFor: signature roleName: roleName [
 ]
 
 { #category : #visiting }
-RiCommitSummaryPresenter >> visitCommit: aRiCommit [ 
+RiElementHeaderPresenter >> visitCommit: aRiCommit [ 
 	| signaturesString |
 	signaturesString := model committer = model author
 		ifTrue: [ self stringForSignature: model author role: 'Author & Committer' ]
@@ -60,6 +60,6 @@ Comment: {3}' format: {model shortId. signaturesString. model comment trimBoth})
 ]
 
 { #category : #visiting }
-RiCommitSummaryPresenter >> visitUncommitedWorkingCopy: aRiUncommitedWorkingCopy [
+RiElementHeaderPresenter >> visitUncommitedWorkingCopy: aRiUncommitedWorkingCopy [
 	headerText text: 'Uncommitted changes in this image.'
 ]

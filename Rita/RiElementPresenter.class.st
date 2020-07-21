@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'diffPresenter',
 		'notebook',
-		'summary'
+		'header'
 	],
 	#category : #'Rita-UI'
 }
@@ -13,7 +13,7 @@ Class {
 RiElementPresenter class >> defaultSpec [
 	^ SpPanedLayout newVertical
 		position: 0.08;
-		add: #summary;
+		add: #header;
 		add: #notebook;
 		yourself
 ]
@@ -45,7 +45,7 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 
 { #category : #initialization }
 RiElementPresenter >> initializePresenters [
-	summary := self instantiate: RiCommitSummaryPresenter.
+	header := self instantiate: RiElementHeaderPresenter.
 	notebook := self newNotebook.
 
 ]
@@ -63,7 +63,7 @@ RiElementPresenter >> refreshOnModelUpdate [
 	| element |
 	element := model at: #element.
 
-	summary model: element.
+	header model: element.
 
 	(model at: #diffModels) do: [ :each |
 		self addPageFor: each to: element ]
