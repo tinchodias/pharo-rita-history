@@ -157,7 +157,7 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 			help: 'Expand this view in a new notebook page.';
 			yourself.
 	
-	onlyChangedButton := self
+"	onlyChangedButton := self
 		newRootModelToggleButtonFor: #considerOnlyChanged
 		label: 'Unchnged'
 		icon: #changeUpdate
@@ -168,7 +168,7 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 		label: 'Wide'
 		icon: #class
 		help: 'Whether use a compact or an expanded representation for classes, traits and extensions.'.
-
+"
 	showMethodsLOCButton := self
 		newRootModelToggleButtonFor: #showMethodsLOC
 		label: 'LOC'
@@ -181,18 +181,18 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 		icon: #hierarchy
 		help: 'Whether connect subclasses or leave them free.'.
 
-	flyDiffButton := self 
+"	flyDiffButton := self 
 		newRootModelToggleButtonFor: #flyDiff
 		label: 'FlyDiff'
 		icon: #announcement
 		help: 'Whether show a fly diff.'.
-
+"
 	^ self newToolbar
-		addItem: onlyChangedButton;
+"		addItem: onlyChangedButton;
 		addItem: isExpandedButton;
-		addItem: connectHierarchiesButton;
+"		addItem: connectHierarchiesButton;
 		addItem: showMethodsLOCButton;
-		addItem: flyDiffButton;
+"		addItem: flyDiffButton;"
 		addItemRight: spawnButton;
 		yourself
 ]
