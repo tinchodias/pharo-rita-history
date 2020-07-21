@@ -1,6 +1,6 @@
 Extension { #name : #IceEmptyNode }
 
 { #category : #'*Rita' }
-IceEmptyNode >> allChildrenNodes [
+IceEmptyNode >> allChildren [
 	^ #()
 ]

@@ -38,7 +38,7 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 	^ (self instantiate: RiFullDiffPresenter)
 			model: (model copy
 				add: #iceDiff -> iceDiff;
-				add: #checkedIceNodes -> (IdentitySet newFrom: iceDiff tree allChildrenNodes);
+				add: #shadowedIceNodes -> IdentitySet new;
 				yourself);
 			yourself
 ]

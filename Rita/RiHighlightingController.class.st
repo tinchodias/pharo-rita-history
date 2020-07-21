@@ -5,9 +5,10 @@ Class {
 		'canvas',
 		'shapeByModel',
 		'selectedModel',
-		'lastOutline',
-		'lastSecondaryOutlines',
-		'aesthetics'
+		'aesthetics',
+		'primaryOutline',
+		'secondaryOutlines',
+		'shadowByIceNode'
 	],
 	#category : #'Rita-Roassal3'
 }
@@ -20,9 +21,9 @@ RiHighlightingController class >> canvas: aRSCanvas aesthetics: aRiAestheticsMod
 ]
 
 { #category : #private }
-RiHighlightingController >> addOutlineFor: aRSShape [
+RiHighlightingController >> addPrimaryOutlineTo: aRSShape [
 
-	lastOutline := RSBox new
+	primaryOutline := RSBox new
 		border: (RSBorder new 
 				joinMiter;
 				color: aesthetics outlineColor;
@@ -36,8 +37,8 @@ RiHighlightingController >> addOutlineFor: aRSShape [
 	"aRSShape when: TSPositionChangedEvent
 		do: [ lastOutline position: aRSShape position ]"
 
-	aRSShape parent add: lastOutline.
-	lastOutline pushBack.
+	aRSShape parent add: primaryOutline.
+	primaryOutline pushBack.
 
 "	camera := canvas camera.
 	canvasRect := Rectangle
@@ -52,10 +53,10 @@ RiHighlightingController >> addOutlineFor: aRSShape [
 ]
 
 { #category : #private }
-RiHighlightingController >> addSecondaryOutlineFor: aRSShape [
+RiHighlightingController >> addSecondaryOutlineTo: aRSShape [
 
-	| outline |
-	outline := RSBox new
+	| newOutline |
+	newOutline := RSBox new
 		border: (RSBorder new 
 				joinMiter;
 				color: aesthetics secondaryOutlineColor;
@@ -66,43 +67,50 @@ RiHighlightingController >> addSecondaryOutlineFor: aRSShape [
 		position: aRSShape position;
 		yourself.
 
-	aRSShape parent add: outline.
-	outline pushBack.
+	aRSShape parent add: newOutline.
+	newOutline pushBack.
 
-	lastSecondaryOutlines add: outline
+	secondaryOutlines add: newOutline
 ]
 
 { #category : #private }
-RiHighlightingController >> addShadowLayerTo: aRSShape [
-"	| shadow | 
-	shadow := RSBox new
-		color: (aesthetics backgroundColor alpha: 0.75);
-		extent: aRSShape extent + self outlineSize;
-		yourself.
-
-	aRSShape parent add: shadow.
-	
-	lastShadows add: shadow.
-"
+RiHighlightingController >> ensureAddShadowLayerOver: aRSShape [
+	shadowByIceNode
+		at: aRSShape model
+		ifAbsentPut: [
+			| shadow |
+			shadow := RSBox new
+				color: (aesthetics backgroundColor alpha: 0.75);
+				extent: aRSShape extent + aesthetics outlineSize;
+				position: aRSShape position;
+				yourself.
+			aRSShape parent add: shadow.
+			shadow ]
 ]
 
-{ #category : #api }
-RiHighlightingController >> highlightAsSecondary: aCollection [ 
-
-	self removeSecondaryOutlines.
-	aCollection do: [ :each |
+{ #category : #private }
+RiHighlightingController >> ensureAddShadowLayerOverAll: iceNodes [ 
+	iceNodes do: [ :each |
 		shapeByModel at: each ifPresent: [ :shape |
-			self addSecondaryOutlineFor: shape ] ].
+			self ensureAddShadowLayerOver: shape ] ].
 	canvas signalUpdate.
 
 ]
 
-{ #category : #api }
-RiHighlightingController >> highlightAsSelected: anIceNode [ 
+{ #category : #private }
+RiHighlightingController >> ensureRemoveShadowLayerFrom: aShape [
+	shadowByIceNode
+		at: aShape
+		ifPresent: [ :shadowShape | 
+			shadowShape remove.
+			shadowByIceNode removeKey: aShape ]
+]
 
-	self removeOutline.
-	shapeByModel at: anIceNode ifPresent: [ :shape |
-		self addOutlineFor: shape ].
+{ #category : #private }
+RiHighlightingController >> ensureRemoveShadowLayerFromAll: iceNodes [ 
+	iceNodes do: [ :each |
+		shapeByModel at: each ifPresent: [ :shape |
+			self ensureRemoveShadowLayerFrom: shape ] ].
 	canvas signalUpdate.
 
 ]
@@ -113,7 +121,8 @@ RiHighlightingController >> initializeWithCanvas: aRSCanvas aesthetics: aRiAesth
 	canvas := aRSCanvas.
 	aesthetics := aRiAestheticsModel.
 	shapeByModel := IdentityDictionary new.
-	self resetLastSecondaryOutlines
+	self resetShadowByIceNode.
+	self resetSecondaryOutlines
 ]
 
 { #category : #hooks }
@@ -122,17 +131,50 @@ RiHighlightingController >> onShape: aRSShape [
 ]
 
 { #category : #private }
-RiHighlightingController >> removeOutline [
-	lastOutline ifNotNil: #remove
+RiHighlightingController >> removePrimaryOutline [
+	primaryOutline ifNotNil: [
+		primaryOutline remove.
+		primaryOutline := nil ]
 ]
 
 { #category : #private }
 RiHighlightingController >> removeSecondaryOutlines [
-	lastSecondaryOutlines do: #remove.
-	self resetLastSecondaryOutlines
+	secondaryOutlines do: #remove.
+	self resetSecondaryOutlines
 ]
 
 { #category : #private }
-RiHighlightingController >> resetLastSecondaryOutlines [
-	lastSecondaryOutlines := OrderedCollection new
+RiHighlightingController >> resetSecondaryOutlines [
+	secondaryOutlines := OrderedCollection new
+]
+
+{ #category : #initialization }
+RiHighlightingController >> resetShadowByIceNode [
+	shadowByIceNode := IdentityDictionary new
+]
+
+{ #category : #public }
+RiHighlightingController >> setPrimaryOutlineTo: anIceNode [ 
+	self removePrimaryOutline.
+	shapeByModel at: anIceNode ifPresent: [ :shape |
+		self addPrimaryOutlineTo: shape ].
+	canvas signalUpdate.
+
+]
+
+{ #category : #public }
+RiHighlightingController >> setSecondaryOutlineToAll: aCollection [ 
+	self removeSecondaryOutlines.
+	aCollection do: [ :each |
+		shapeByModel at: each ifPresent: [ :shape |
+			self addSecondaryOutlineTo: shape ] ].
+	canvas signalUpdate.
+
+]
+
+{ #category : #public }
+RiHighlightingController >> setShadowedIceNodes: iceNodes [
+	shadowByIceNode valuesDo: [ :each | each remove ].
+	self resetShadowByIceNode.
+	self ensureAddShadowLayerOverAll: iceNodes.
 ]

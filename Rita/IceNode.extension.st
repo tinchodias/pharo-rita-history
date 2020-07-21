@@ -1,7 +1,7 @@
 Extension { #name : #IceNode }
 
 { #category : #'*Rita' }
-IceNode >> allChildrenNodes [
+IceNode >> allChildren [
 	^ Array streamContents: [ :stream |
 		self allChildrenDo: [ :each | stream nextPut: each ] ]
 ]

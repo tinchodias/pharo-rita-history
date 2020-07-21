@@ -5,8 +5,8 @@ Class {
 		'spawnButton',
 		'roassalPresenter',
 		'toolBar',
-		'lastCanvas',
-		'lastHighlighingController'
+		'highlighingController',
+		'canvas'
 	],
 	#category : #'Rita-UI-Diff'
 }
@@ -32,17 +32,17 @@ RiTorchDiffPresenter >> buildCanvas [
 
 	shapes := self classShapesFor: query nodesForBehaviors, query nodesForMethodExtensions.
 	shapes := shapes, (self fileShapesFor: query nodesForFiles).
-	lastCanvas addAll: shapes.
+	canvas addAll: shapes.
 	
 	self canvasLayout on: shapes.
 
-	lastCanvas
+	canvas
 		addInteraction: self zoomingInteraction;
 		addInteraction: self packInteraction;
 		when: RSMouseClick do: [
-			lastHighlighingController highlightAsSelected: nil ].
+			highlighingController setPrimaryOutlineTo: nil ].
 
-	lastCanvas color: self aesthetics backgroundColor.
+	canvas color: self aesthetics backgroundColor.
 
 ]
 
@@ -59,13 +59,13 @@ RiTorchDiffPresenter >> classShapesFor: iceNodes [
 
 	| renderer shapes |
 	renderer := RiTorchClassRenderer newWith: model.
-	renderer highlighingController: lastHighlighingController.
+	renderer highlighingController: highlighingController.
 
 	shapes := iceNodes collect: [ :each | renderer shapeFor: each ].
 
 	self rootModel connectHierarchies ifTrue: [
 		renderer edgeBuilder
-			canvas: lastCanvas;
+			canvas: canvas;
 			shapes: shapes;
 			connectFrom: [ :node |
 				node value definition isExtensionDefinition
@@ -78,6 +78,20 @@ RiTorchDiffPresenter >> classShapesFor: iceNodes [
 							ifNone: [ nil ] ] ] ].
 
 	^ shapes
+
+]
+
+{ #category : #accessing }
+RiTorchDiffPresenter >> ensureAddShadowLayerOverAll: iceNodeCollection [
+	highlighingController ifNil: [ ^ self ].
+	highlighingController ensureAddShadowLayerOverAll: iceNodeCollection
+
+]
+
+{ #category : #accessing }
+RiTorchDiffPresenter >> ensureRemoveShadowLayerFromAll: iceNodeCollection [
+	highlighingController ifNil: [ ^ self ].
+	highlighingController ensureRemoveShadowLayerFromAll: iceNodeCollection
 
 ]
 
@@ -95,8 +109,8 @@ RiTorchDiffPresenter >> fileShapesFor: iceNodes [
 
 { #category : #accessing }
 RiTorchDiffPresenter >> highlightIceNode: iceNodeCollection [
-	lastHighlighingController ifNil: [ ^ self ].
-	lastHighlighingController highlightAsSecondary: iceNodeCollection.
+	highlighingController ifNil: [ ^ self ].
+	highlighingController setSecondaryOutlineToAll: iceNodeCollection.
 
 ]
 
@@ -111,11 +125,12 @@ RiTorchDiffPresenter >> initializePresenters [
 RiTorchDiffPresenter >> newRoassalPresenter [
 	^ (self instantiate: SpRoassalPresenter)
 		script: [ :newCanvas | 
-			lastCanvas := newCanvas.
-			lastHighlighingController := RiHighlightingController
-				canvas: lastCanvas
-				aesthetics: self aesthetics.
-			model ifNotNil: [ self buildCanvas ] ];
+			model ifNotNil: [
+				canvas := newCanvas.
+				highlighingController := RiHighlightingController
+					canvas: canvas
+					aesthetics: self aesthetics.
+				self buildCanvas ] ];
 		yourself
 ]
 
@@ -195,7 +210,8 @@ RiTorchDiffPresenter >> packInteraction [
 
 { #category : #accessing }
 RiTorchDiffPresenter >> refreshOnCheckedIceNodesChanged [
-	roassalPresenter refresh
+	highlighingController
+		setShadowedIceNodes: (model at: #shadowedIceNodes)
 ]
 
 { #category : #accessing }
@@ -211,8 +227,8 @@ RiTorchDiffPresenter >> rootModel [
 
 { #category : #accessing }
 RiTorchDiffPresenter >> selectIceNode: anIceNode [
-	lastHighlighingController ifNil: [ ^ self ].
-	lastHighlighingController highlightAsSelected: anIceNode.
+	highlighingController ifNil: [ ^ self ].
+	highlighingController setPrimaryOutlineTo: anIceNode.
 
 ]
 

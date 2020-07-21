@@ -35,11 +35,6 @@ RiTreeDiffPresenter >> changeListColumn [
 		yourself
 ]
 
-{ #category : #private }
-RiTreeDiffPresenter >> checkedNodes [
-	^ model at: #checkedIceNodes
-]
-
 { #category : #accessing }
 RiTreeDiffPresenter >> contextMenuForTable [
 	| menu selected |
@@ -65,12 +60,12 @@ RiTreeDiffPresenter >> contextMenuForTable [
 
 { #category : #private }
 RiTreeDiffPresenter >> doCheck: anIceNode [
-	self checkedNodes add: anIceNode.
+	self shadowedIceNodes remove: anIceNode ifAbsent: [].
 	anIceNode allChildrenDo: [ :each |
-		self checkedNodes add: each ].
+		self shadowedIceNodes remove: each ifAbsent: [] ].
 
 	"Trigger update in self and in Torch view"
-	(model at: #blockWhenCheckedNodesChanged) value.
+	(model at: #blockWhenShadowedIceNodesChanged) value.
 
 ]
 
@@ -86,12 +81,12 @@ RiTreeDiffPresenter >> doExpandSelectedNodeAndSelectFirstChild [
 
 { #category : #private }
 RiTreeDiffPresenter >> doUncheck: anIceNode [
-	self checkedNodes remove: anIceNode ifAbsent: [ ].
+	self shadowedIceNodes add: anIceNode.
 	anIceNode allChildrenDo: [ :each |
-		self checkedNodes remove: each ifAbsent: [ ] ].
+		self shadowedIceNodes add: each ].
 
 	"Trigger update in self and in Torch view"
-	(model at: #blockWhenCheckedNodesChanged) value.
+	(model at: #blockWhenShadowedIceNodesChanged) value.
 
 ]
 
@@ -155,7 +150,7 @@ RiTreeDiffPresenter >> initializeTreeKeyCombinations [
 
 { #category : #private }
 RiTreeDiffPresenter >> isChecked: anIceNode [
-	^ self checkedNodes includes: anIceNode
+	^ (self shadowedIceNodes includes: anIceNode) not
 ]
 
 { #category : #accessing }
@@ -216,6 +211,11 @@ RiTreeDiffPresenter >> selectIceNode: anIceNode [
 	treeTable
 		selectPath: (treeTable selection pathOf: anIceNode)
 		scrollToSelection: true
+]
+
+{ #category : #private }
+RiTreeDiffPresenter >> shadowedIceNodes [
+	^ model at: #shadowedIceNodes
 ]
 
 { #category : #private }

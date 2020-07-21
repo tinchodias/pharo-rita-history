@@ -256,30 +256,15 @@ RiTorchClassRenderer >> shapeForFullClass: iceNode [
 		position: box position x @ title position y;
 		extent: (box width @ title height).
 
-	self flag: #todo.
-	^ ((model at: #checkedIceNodes) includes: iceNode)
-		ifTrue: [
-			RSComposite new
-				model: iceNode;
-				shapes: shapes;
-				when: RSMouseClick do: self blockForMouseClickOnIceNode;
-				when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
-				when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
-				addInteraction: self popupForIceNodeShapes;
-				addInteraction: highlighingController;
-				yourself ]
-		ifFalse: [
-			| c | 
-			c := RSComposite new
-				model: iceNode;
-				shapes: shapes;
-				yourself.
-			c addShape: (RSBox new
-				color: (aesthetics backgroundColor alpha: 0.75);
-				extent: c extent + 6; "A little larger to cover border"
-				yourself).
-			c ].
-
+	^ RSComposite new
+		model: iceNode;
+		shapes: shapes;
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
+		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
+		addInteraction: self popupForIceNodeShapes;
+		addInteraction: highlighingController;
+		yourself
 ]
 
 { #category : #private }
