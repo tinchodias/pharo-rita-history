@@ -2,9 +2,6 @@ Class {
 	#name : #RiCommitSummaryPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
-		'authorPanel',
-		'headerLabel',
-		'committerPanel',
 		'headerText'
 	],
 	#category : #'Rita-UI'
@@ -64,5 +61,5 @@ Comment: {3}' format: {model shortId. signaturesString. model comment trimBoth})
 
 { #category : #visiting }
 RiCommitSummaryPresenter >> visitUncommitedWorkingCopy: aRiUncommitedWorkingCopy [
-	headerLabel text: 'Uncommitted changes in this image.'
+	headerText text: 'Uncommitted changes in this image.'
 ]
