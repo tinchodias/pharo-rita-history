@@ -12,7 +12,7 @@ Class {
 { #category : #specs }
 RiElementPresenter class >> defaultSpec [
 	^ SpPanedLayout newVertical
-		position: 0.15;
+		position: 0.08;
 		add: #summary;
 		add: #notebook;
 		yourself

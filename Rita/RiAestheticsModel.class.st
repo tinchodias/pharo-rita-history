@@ -343,10 +343,10 @@ RiAestheticsModel >> shapeForClassVariable: iceNode [
 RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColor border: aBorder [
 	| shape |
 	shape := RSPolygon new
-			points: {(-0.2500000000000001@1.75). (0.616025403784439@0.2500000000000007). (-1.1160254037844388@0.2500000000000002)};
-			cornerRadii: 1;
+			points: {(-0.25@1.75). (0.616025403784439@0.25). (-1.1160254037844388@0.25)};
+			cornerRadii: 1.5;
 			yourself.
-	"^^^ Generated with: (RSPolygon 
+	"^^^ Generated (initially) by: (RSPolygon 
 			generateUnitNgonPoints: 3
 			rotation: Float pi) collect: [ :each | each + (-0.25@0.75) ]"
 	
