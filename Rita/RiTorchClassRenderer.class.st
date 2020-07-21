@@ -92,15 +92,12 @@ RiTorchClassRenderer >> classPropertiesFor: iceNode [
 
 { #category : #hooks }
 RiTorchClassRenderer >> defaultBoxBorder [
-	^ RSBorder new
-		width: 1.5;
-		joinMiter; 
-		yourself 
+	^ aesthetics classBoxBorder
 ]
 
 { #category : #hooks }
 RiTorchClassRenderer >> defaultClassBoxPadding [
-	^ 10@0
+	^ aesthetics scaleForMethods @ 0
 ]
 
 { #category : #hooks }
@@ -317,7 +314,7 @@ RiTorchClassRenderer >> shapeForSourceCode: iceNode [
 RiTorchClassRenderer >> shapeForTinyClass: iceNode [
 	^ RSBox new
 		noPaint;
-		size: 10;
+		size: aesthetics scaleForMethods;
 		model: iceNode;
 		border: aesthetics tinyBoxBorder;
 		addInteraction: self popupForTinyClassShapes;
@@ -351,7 +348,7 @@ RiTorchClassRenderer >> titleFor: iceNode [
 	label text: (RiTextWidthKeeper
 		middleTruncationFor: title
 		font: label font
-		maxSize: self classBoxMaxWidth - icon width - 10 "paddings").
+		maxSize: self classBoxMaxWidth - icon width - aesthetics scaleForMethods "padding").
 
 	shapes := { icon. label }.
 	RSHorizontalLineLayout new 

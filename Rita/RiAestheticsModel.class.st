@@ -37,6 +37,14 @@ RiAestheticsModel >> backgroundColorFor: node [
 		with: self backgroundColor
 ]
 
+{ #category : #accessing }
+RiAestheticsModel >> classBoxBorder [
+	^ RSBorder new
+		width: 1.5;
+		joinMiter; 
+		yourself 
+]
+
 { #category : #'diff morph creation' }
 RiAestheticsModel >> columnMorphWithAll: someMorphs [
 
