@@ -11,9 +11,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-RiTorchClassRenderer class >> newWith: aModel [
+RiTorchClassRenderer class >> model: aModel highlighingController: highlighingController [
 	^ self basicNew
-		initializeWith: aModel;
+		initializeWithModel: aModel
+			highlighingController: highlighingController;
 		yourself
 ]
 
@@ -30,22 +31,22 @@ RiTorchClassRenderer >> applyVLayoutOn: shapes [
 	self applyMLayoutOn: shapes
 ]
 
-{ #category : #options }
+{ #category : #private }
 RiTorchClassRenderer >> blockForMouseClickOnIceNode [
 	^ [ :clickEvent | (model at: #blockWhenNodeSelected) value: clickEvent shape model ]
 ]
 
-{ #category : #options }
+{ #category : #private }
 RiTorchClassRenderer >> blockForMouseEnterOnIceNode [
 	^ [ :clickEvent | (model at: #blockWhenNodesHighlighted) value: { clickEvent shape model } ]
 ]
 
-{ #category : #options }
+{ #category : #private }
 RiTorchClassRenderer >> blockForMouseLeaveOnIceNode [
 	^ [ :clickEvent | (model at: #blockWhenNodesHighlighted) value: #() ]
 ]
 
-{ #category : #hooks }
+{ #category : #private }
 RiTorchClassRenderer >> classBoxMaxWidth [
 	^ (model at: #root) isExpanded
 		ifTrue: [ 200 ]
@@ -142,8 +143,113 @@ RiTorchClassRenderer >> initializeWith: aDictionary [
 	modelDescriptor := RiTorchModelDescriptor new
 ]
 
+{ #category : #initialization }
+RiTorchClassRenderer >> initializeWithModel: aModel highlighingController: aHighlighingController [
+	self initialize.
+	
+	model := aModel.
+	highlighingController := aHighlighingController.
+	aesthetics := model at: #aesthetics.
+	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor aesthetics: aesthetics.
+	modelDescriptor := RiTorchModelDescriptor new
+]
+
 { #category : #hooks }
 RiTorchClassRenderer >> methodFor: iceNode [
+	^ self shapeForMethod: iceNode
+]
+
+{ #category : #hooks }
+RiTorchClassRenderer >> methodsFor: aClass [
+	^ (super methodsFor: aClass)
+		padding:
+			(Margin
+				left: 0
+				right: 0
+				top: aesthetics gapBetweenMethods
+				bottom: aesthetics gapBetweenMethods);
+		yourself
+]
+
+{ #category : #'private - popup building' }
+RiTorchClassRenderer >> popupForIceNodeShapes [
+	^ (model at: #root) flyDiff
+		ifTrue: [
+			RSMorphicPopup new
+				morphBuilder: [ :iceNode | aesthetics popupDiffMorphFor: iceNode ];
+				yourself ]
+		ifFalse: [ RSPopup text: [ :node | node value ritaKey ] ]
+]
+
+{ #category : #'private - popup building' }
+RiTorchClassRenderer >> popupForTinyClassShapes [
+	^ RSPopup new
+		shapeBuilder: [ :node | 
+			(self shapeForFullClass: node)
+				color: aesthetics backgroundColor;
+				yourself ];
+		yourself
+]
+
+{ #category : #'private - popup building' }
+RiTorchClassRenderer >> popupForVariableShapes [
+	^ RSPopup text: [ :node | 
+		'{1} [{2}]' format: { node value definition name. node value definition typeToShow } ]
+]
+
+{ #category : #hooks }
+RiTorchClassRenderer >> shapeFor: iceNode [
+	^ iceNode hasChanges
+		ifTrue: [ self shapeForFullClass: iceNode ]
+		ifFalse: [ self shapeForTinyClass: iceNode ]
+]
+
+{ #category : #'private - shape building' }
+RiTorchClassRenderer >> shapeForClassProperty: iceNode [
+	^ (aesthetics shapeForClassProperty: iceNode)
+		model: iceNode;
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
+		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
+		addInteraction: self popupForIceNodeShapes;
+		addInteraction: highlighingController;
+		yourself
+
+]
+
+{ #category : #'private - shape building' }
+RiTorchClassRenderer >> shapeForFullClass: iceNode [
+	| shapes box title classProperties vars methods boxTitle |
+	title := self titleFor: iceNode.
+	classProperties := self classPropertiesFor: iceNode.
+	vars := self varsFor: iceNode.
+	methods := self methodsFor: iceNode.
+	shapes := self groupFor: { classProperties. vars. methods }.
+	shapes addFirst: title.
+	box := self classBoxShapeFor: iceNode.
+	boxTitle := self classNameBoxFor: iceNode.
+	self applyLayoutOn: shapes.
+	self adjustTitle: title on: shapes.
+	shapes addFirst: boxTitle.
+	shapes addLast: box.
+	self adjustBox: box on: shapes. 
+	boxTitle
+		position: box position x @ title position y;
+		extent: (box width @ title height).
+
+	^ RSComposite new
+		model: iceNode;
+		shapes: shapes;
+		when: RSMouseClick do: self blockForMouseClickOnIceNode;
+		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
+		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
+		addInteraction: self popupForIceNodeShapes;
+		addInteraction: highlighingController;
+		yourself
+]
+
+{ #category : #'private - shape building' }
+RiTorchClassRenderer >> shapeForMethod: iceNode [
 	| shapes |
 	shapes := OrderedCollection new.
 
@@ -178,96 +284,7 @@ RiTorchClassRenderer >> methodFor: iceNode [
 
 ]
 
-{ #category : #hooks }
-RiTorchClassRenderer >> methodsFor: aClass [
-	^ (super methodsFor: aClass)
-		padding:
-			(Margin
-				left: 0
-				right: 0
-				top: aesthetics gapBetweenMethods
-				bottom: aesthetics gapBetweenMethods);
-		yourself
-]
-
-{ #category : #private }
-RiTorchClassRenderer >> popupForIceNodeShapes [
-	^ (model at: #root) flyDiff
-		ifTrue: [
-			RSMorphicPopup new
-				morphBuilder: [ :iceNode | aesthetics popupDiffMorphFor: iceNode ];
-				yourself ]
-		ifFalse: [ RSPopup text: [ :node | node value ritaKey ] ]
-]
-
-{ #category : #private }
-RiTorchClassRenderer >> popupForTinyClassShapes [
-	^ RSPopup new
-		shapeBuilder: [ :node | 
-			(self shapeForFullClass: node)
-				color: aesthetics backgroundColor;
-				yourself ];
-		yourself
-]
-
-{ #category : #private }
-RiTorchClassRenderer >> popupForVariableShapes [
-	^ RSPopup text: [ :node | 
-		'{1} [{2}]' format: { node value definition name. node value definition typeToShow } ]
-]
-
-{ #category : #hooks }
-RiTorchClassRenderer >> shapeFor: iceNode [
-	^ iceNode hasChanges
-		ifTrue: [ self shapeForFullClass: iceNode ]
-		ifFalse: [ self shapeForTinyClass: iceNode ]
-]
-
-{ #category : #private }
-RiTorchClassRenderer >> shapeForClassProperty: iceNode [
-	^ (aesthetics shapeForClassProperty: iceNode)
-		model: iceNode;
-		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
-		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
-		addInteraction: self popupForIceNodeShapes;
-		addInteraction: highlighingController;
-		yourself
-
-]
-
-{ #category : #hooks }
-RiTorchClassRenderer >> shapeForFullClass: iceNode [
-	| shapes box title classProperties vars methods boxTitle |
-	title := self titleFor: iceNode.
-	classProperties := self classPropertiesFor: iceNode.
-	vars := self varsFor: iceNode.
-	methods := self methodsFor: iceNode.
-	shapes := self groupFor: { classProperties. vars. methods }.
-	shapes addFirst: title.
-	box := self classBoxShapeFor: iceNode.
-	boxTitle := self classNameBoxFor: iceNode.
-	self applyLayoutOn: shapes.
-	self adjustTitle: title on: shapes.
-	shapes addFirst: boxTitle.
-	shapes addLast: box.
-	self adjustBox: box on: shapes. 
-	boxTitle
-		position: box position x @ title position y;
-		extent: (box width @ title height).
-
-	^ RSComposite new
-		model: iceNode;
-		shapes: shapes;
-		when: RSMouseClick do: self blockForMouseClickOnIceNode;
-		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
-		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
-		addInteraction: self popupForIceNodeShapes;
-		addInteraction: highlighingController;
-		yourself
-]
-
-{ #category : #private }
+{ #category : #'private - shape building' }
 RiTorchClassRenderer >> shapeForMethodProperty: iceNode [
 	^ RSShapeFactory box
 		width: aesthetics scaleForMethods;
@@ -284,7 +301,7 @@ RiTorchClassRenderer >> shapeForMethodProperty: iceNode [
 
 ]
 
-{ #category : #hooks }
+{ #category : #'private - shape building' }
 RiTorchClassRenderer >> shapeForSourceCode: iceNode [
 	^ (model at: #root) showMethodsLOC
 		ifTrue: [ iceNode accept: methodShapeCreatorVisitor ]
@@ -295,7 +312,7 @@ RiTorchClassRenderer >> shapeForSourceCode: iceNode [
 				yourself ]
 ]
 
-{ #category : #private }
+{ #category : #'private - shape building' }
 RiTorchClassRenderer >> shapeForTinyClass: iceNode [
 	^ RSBox new
 		noPaint;
@@ -306,7 +323,7 @@ RiTorchClassRenderer >> shapeForTinyClass: iceNode [
 		yourself
 ]
 
-{ #category : #private }
+{ #category : #'private - shape building' }
 RiTorchClassRenderer >> shapeForVariable: iceNode [
 	^ (aesthetics shapeForClassVariable: iceNode)
 		model: iceNode;

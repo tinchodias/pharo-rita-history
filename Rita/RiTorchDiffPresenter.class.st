@@ -6,7 +6,8 @@ Class {
 		'roassalPresenter',
 		'toolBar',
 		'highlighingController',
-		'canvas'
+		'canvas',
+		'renderer'
 	],
 	#category : #'Rita-UI-Diff'
 }
@@ -28,13 +29,15 @@ RiTorchDiffPresenter >> aesthetics [
 RiTorchDiffPresenter >> buildCanvas [
 
 	| query shapes |
-	query := model at: #diffQuery.
+	highlighingController := RiHighlightingController
+		canvas: canvas
+		aesthetics: self aesthetics.
+	renderer := RiTorchClassRenderer model: model highlighingController: highlighingController.
 
-	shapes := self classShapesFor: query nodesForBehaviors, query nodesForMethodExtensions.
-	shapes := shapes, (self fileShapesFor: query nodesForFiles).
-	canvas addAll: shapes.
+	self buildClassesTraitsExtensionsAndConnections.
+	self buildFileStructureAndConnections.
 	
-	self canvasLayout on: shapes.
+	self canvasLayout on: canvas nodes.
 
 	canvas
 		addInteraction: self zoomingInteraction;
@@ -47,20 +50,11 @@ RiTorchDiffPresenter >> buildCanvas [
 ]
 
 { #category : #'canvas building' }
-RiTorchDiffPresenter >> canvasLayout [
-	^ RSTreeLayout new
-		verticalGap: self aesthetics gapFromClassToSubclass;
-		horizontalGap: self aesthetics gapFromSubclassToSibling;
-		yourself
-]
+RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 
-{ #category : #'canvas building' }
-RiTorchDiffPresenter >> classShapesFor: iceNodes [
-
-	| renderer shapes |
-	renderer := RiTorchClassRenderer newWith: model.
-	renderer highlighingController: highlighingController.
-
+	| query shapes iceNodes |
+	query := model at: #diffQuery.	
+	iceNodes := query nodesForBehaviors, query nodesForMethodExtensions.
 	shapes := iceNodes collect: [ :each | renderer shapeFor: each ].
 
 	self rootModel connectHierarchies ifTrue: [
@@ -77,7 +71,55 @@ RiTorchDiffPresenter >> classShapesFor: iceNodes [
 							detect: [:each | each value definition name = superclassName ]
 							ifNone: [ nil ] ] ] ].
 
-	^ shapes
+	canvas addAll: shapes.
+
+]
+
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> buildFileStructureAndConnections [
+	| query iceNodes shapes |
+	query := model at: #diffQuery.
+	iceNodes := query nodesForFiles.
+	shapes := iceNodes
+		collect: [ :each | 
+			RSBox new
+				noPaint;
+				size: self aesthetics scaleForMethods * 2;
+				model: each;
+				border: self aesthetics tinyBoxBorder;
+				addInteraction: (RSPopup text: [ :node | node path pathString ]);
+				yourself ].
+	canvas addAll: shapes
+]
+
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> canvasLayout [
+	^ RSTreeLayout new
+		verticalGap: self aesthetics gapFromClassToSubclass;
+		horizontalGap: self aesthetics gapFromSubclassToSibling;
+		yourself
+]
+
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> classShapesFor: iceNodes [
+
+	| classShapes |
+	classShapes := iceNodes collect: [ :each | renderer shapeFor: each ].
+
+	self rootModel connectHierarchies ifTrue: [
+		renderer edgeBuilder
+			canvas: canvas;
+			shapes: classShapes;
+			connectFrom: [ :node |
+				node value definition isExtensionDefinition
+					ifTrue: [ nil ]
+					ifFalse: [
+						| superclassName |
+						superclassName := node value definition asMCDefinition superclassName.
+						iceNodes
+							detect: [:each | each value definition name = superclassName ]
+							ifNone: [ nil ] ] ] ].
+	^ classShapes
 
 ]
 
@@ -93,18 +135,6 @@ RiTorchDiffPresenter >> ensureRemoveShadowLayerFromAll: iceNodeCollection [
 	highlighingController ifNil: [ ^ self ].
 	highlighingController ensureRemoveShadowLayerFromAll: iceNodeCollection
 
-]
-
-{ #category : #'canvas building' }
-RiTorchDiffPresenter >> fileShapesFor: iceNodes [
-	^ iceNodes collect: [ :each | 
-			RSBox new
-				noPaint;
-				size: self aesthetics scaleForMethods * 2;
-				model: each;
-				border: self aesthetics tinyBoxBorder;
-				addInteraction: (RSPopup text: [ :node | node path pathString ]);
-				yourself ]
 ]
 
 { #category : #accessing }
@@ -127,9 +157,6 @@ RiTorchDiffPresenter >> newRoassalPresenter [
 		script: [ :newCanvas | 
 			model ifNotNil: [
 				canvas := newCanvas.
-				highlighingController := RiHighlightingController
-					canvas: canvas
-					aesthetics: self aesthetics.
 				self buildCanvas ] ];
 		yourself
 ]
