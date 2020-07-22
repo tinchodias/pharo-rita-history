@@ -8,6 +8,13 @@ Class {
 	#category : #'Rita-UI-Diff'
 }
 
+{ #category : #specs }
+RiSingleDiffPresenter class >> defaultSpec [
+	^ SpBoxLayout newVertical
+		add: #diff;
+		yourself
+]
+
 { #category : #initialization }
 RiSingleDiffPresenter >> initializePresenters [
 	diff := self newMorph
