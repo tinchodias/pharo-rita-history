@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'torchDiffPresenter',
 		'treeDiffPresenter',
-		'diffPanel'
+		'sourceCodePanel'
 	],
 	#category : #'Rita-UI-Diff'
 }
@@ -12,22 +12,21 @@ Class {
 { #category : #specs }
 RiFullDiffPresenter class >> defaultSpec [
 	^ SpPanedLayout newHorizontal
-		position: 80 percent;
+		position: 60 percent;
+		add: #torchDiffPresenter;
 		add:
-			(SpPanedLayout newHorizontal
+			(SpPanedLayout newVertical
 				position: 50 percent;
-				add: #torchDiffPresenter;
-				add: #diffPanel;
-				yourself);
-		add: #treeDiffPresenter;
-		yourself
+				add: #treeDiffPresenter;
+				add: #sourceCodePanel;
+				yourself) yourself
 ]
 
 { #category : #initialization }
 RiFullDiffPresenter >> initializePresenters [
 	torchDiffPresenter := self instantiate: RiTorchDiffPresenter.
 	treeDiffPresenter := self instantiate: RiTreeDiffPresenter.
-	diffPanel := self instantiate: RiMultipleDiffsPresenter.
+	sourceCodePanel := self instantiate: RiSingleDiffPresenter.
 
 ]
 
@@ -40,13 +39,15 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 		add: #blockWhenNodeSelected -> [ :iceNode |
 			treeDiffPresenter selectIceNode: iceNode.
 			torchDiffPresenter selectIceNode: iceNode.
-			diffPanel selectIceNode: iceNode.
+			sourceCodePanel selectIceNode: iceNode.
 			];
 		add: #blockWhenNodesHighlighted -> [ :iceNodeCollection |
 			treeDiffPresenter highlightIceNode: iceNodeCollection.
 			torchDiffPresenter highlightIceNode: iceNodeCollection ];
 		add: #blockWhenShadowedIceNodesChanged -> [ 
 			torchDiffPresenter refreshOnCheckedIceNodesChanged.
+			treeDiffPresenter refreshOnCheckedIceNodesChanged ];
+		add: #blockWhenCollapsedIceNodesChanged -> [
 			treeDiffPresenter refreshOnCheckedIceNodesChanged ];
 		add: #diffQuery -> (RiDiffQuery new
 			diff: (model at: #iceDiff);
@@ -56,6 +57,6 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 
 	torchDiffPresenter model: modelCopy.
 	treeDiffPresenter model: modelCopy.
-	diffPanel model: modelCopy.
+	sourceCodePanel model: modelCopy.
 
 ]

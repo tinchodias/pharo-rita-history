@@ -78,6 +78,37 @@ RiAestheticsModel >> fillColorFor: iceNode [
 	^ iceNode value accept: self
 ]
 
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> fillUnifiedDiff: textArea from: from to: to [
+
+	| diff |
+	diff := RiUnifiedStringDiff new
+		oldString: from;
+		newString: to;
+		build;
+		yourself.
+
+	textArea
+		removeAllSegments;
+		setTextWith: diff unifiedString;
+		font: StandardFonts codeFont. "Don't know why it's necessary to set font again"
+
+	diff lineJoins do: [:each |
+		colorMap at: each kindSymbol ifPresent: [ :color |
+			textArea addSegment: ((RiRubricTextSegment from: each fromIndex to: each toIndex)
+				color: color;
+				yourself).
+		] ].
+
+	diff inlineJoins do: [:each |
+		inlinecolorMap at: each kindSymbol ifPresent: [ :color |
+			textArea addSegment: ((RubPlainSegmentMorph from: each fromIndex to: each toIndex)
+				color: color;
+				yourself).
+		] ].
+
+]
+
 { #category : #accessing }
 RiAestheticsModel >> foregroundColor [
 	^ self currentTheme textColor
@@ -303,6 +334,17 @@ RiAestheticsModel >> rowForChange: iceNode [
 { #category : #accessing }
 RiAestheticsModel >> scaleForMethods [
 	^ 10
+]
+
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> scrolledUnifiedDiffMorph [
+	^ RubScrolledTextMorph new
+		beReadOnly;
+		beWrapped;
+		margins: (Margin top: 0 left: 4 bottom: 0 right: 4);
+		hResizing: #spaceFill;
+		vResizing: #spaceFill;
+		yourself
 ]
 
 { #category : #accessing }
