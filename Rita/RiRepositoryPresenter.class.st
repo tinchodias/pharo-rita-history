@@ -123,6 +123,11 @@ RiRepositoryPresenter >> contextMenuForTable [
 				name: ('Checkout (in IMAGE) commit {1}' format: { selected shortId });
 				action: [ self actionLoadCommit: selected ] ] ].
 
+	menu addItem: [ :item |
+		item
+			name: 'Browse code in this commit';
+			action: [ RiCommitBrowseUtility browse: selected iceCommit ] ].
+
 	menu addItem: [ :item | 
 		item
 			name: 'Refresh';

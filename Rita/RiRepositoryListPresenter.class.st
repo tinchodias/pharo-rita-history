@@ -66,6 +66,10 @@ RiRepositoryListPresenter >> contextMenuForTable [
 		item
 			name: 'Open folder';
 			action: [ selected openInNativeBrowser ] ].
+	menu addItem: [ :item |
+		item
+			name: 'Browse HEAD';
+			action: [ RiCommitBrowseUtility browse: selected iceRepository headCommit ] ].
 	menu addItem: [ :item | 
 		item
 			name: 'Inspect object';
