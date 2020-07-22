@@ -32,7 +32,7 @@ RiTorchDiffPresenter >> buildCanvas [
 	highlighingController := RiHighlightingController
 		canvas: canvas
 		aesthetics: self aesthetics.
-	renderer := RiTorchClassRenderer model: model highlighingController: highlighingController.
+	renderer := RiTorchRenderer model: model highlighingController: highlighingController.
 
 	self buildClassesTraitsExtensionsAndConnections.
 	self buildFileStructureAndConnections.
