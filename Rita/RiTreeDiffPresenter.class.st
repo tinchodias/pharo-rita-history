@@ -17,25 +17,7 @@ RiTreeDiffPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #accessing }
-RiTreeDiffPresenter >> changeListColumn [
-	^ SpCompositeTableColumn new
-		addColumn:
-			(SpImageTableColumn new
-				evaluated: [ :each | (model at: #aesthetics) iconForChange: each value ];
-				yourself);
-		addColumn:
-			(SpImageTableColumn new
-				evaluated: [ :each | (model at: #aesthetics) iconForDefinition: each value definition ];
-				yourself);
-		addColumn:
-			(SpImageTableColumn new
-				evaluated: [ :each | (model at: #aesthetics) rowForChange: each value ];
-				yourself);
-		yourself
-]
-
-{ #category : #accessing }
+{ #category : #initialization }
 RiTreeDiffPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := self newMenu.
@@ -113,10 +95,9 @@ RiTreeDiffPresenter >> highlightIceNode: iceNodeCollection [
 	highlightDeferrer schedule.
 ]
 
-{ #category : #accessing }
-RiTreeDiffPresenter >> initializePresenters [
-	treeTable := self newTreeTable.
-	self initializeTree.
+{ #category : #initialization }
+RiTreeDiffPresenter >> initialize [
+	super initialize.
 
 	highlightDeferrer :=
 		OmDeferrer 
@@ -125,14 +106,15 @@ RiTreeDiffPresenter >> initializePresenters [
 			after: 100 milliSeconds
 ]
 
-{ #category : #accessing }
-RiTreeDiffPresenter >> initializeTree [
+{ #category : #initialization }
+RiTreeDiffPresenter >> initializePresenters [
+	treeTable := self newTreeTable.
 	treeTable
 		children: [ :each | each children ];
 		whenSelectionChangedDo: [ :selection |
 			(model at: #blockWhenNodeSelected) value: selection selectedItem ];
 		contextMenu: [ self contextMenuForTable ];
-		addColumn: self newColumn.
+		addColumn: self newColumnWithCheckboxes.
 
 	self initializeTreeKeyCombinations.
 	
@@ -148,7 +130,7 @@ RiTreeDiffPresenter >> initializeTree [
 				(model at: #blockWhenNodesHighlighted) value: #() ] ]
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 RiTreeDiffPresenter >> initializeTreeKeyCombinations [
 		
 	treeTable
@@ -170,19 +152,34 @@ RiTreeDiffPresenter >> isChecked: anIceNode [
 	^ (self shadowedIceNodes includes: anIceNode) not
 ]
 
-{ #category : #accessing }
-RiTreeDiffPresenter >> newColumn [
-	^ SpCompositeTableColumn new
-		title: ' ';
-		addColumn: 
+{ #category : #initialization }
+RiTreeDiffPresenter >> newColumnWithCheckboxes [
+	^ self newColumnWithIceNodes 
+		addColumnFirst:
 			(SpCheckBoxTableColumn new
-				title: ' ';
 				evaluated: [ :iceNode | self isChecked: iceNode ];
 				onActivation: [ :iceNode | self doCheck: iceNode ];
 				onDesactivation: [ :iceNode | self doUncheck: iceNode ];
 				width: 20;
 				yourself);
-		addColumn: self changeListColumn;
+		yourself
+]
+
+{ #category : #initialization }
+RiTreeDiffPresenter >> newColumnWithIceNodes [
+	^ SpCompositeTableColumn new
+		addColumn:
+			(SpImageTableColumn new
+				evaluated: [ :each | (model at: #aesthetics) iconForChange: each value ];
+				yourself);
+		addColumn:
+			(SpImageTableColumn new
+				evaluated: [ :each | (model at: #aesthetics) iconForDefinition: each value definition ];
+				yourself);
+		addColumn:
+			(SpImageTableColumn new
+				evaluated: [ :each | (model at: #aesthetics) rowForChange: each value ];
+				yourself);
 		yourself
 ]
 
@@ -222,7 +219,7 @@ RiTreeDiffPresenter >> refreshOnModelUpdate [
 	treeTable roots: nodes.
 
 	treeTable whenBuiltDo: [ :ann |
-		ann widget dataSource expandAll ]
+		ann widget dataSource expandAllTo: 1 ]
 
 ]
 
