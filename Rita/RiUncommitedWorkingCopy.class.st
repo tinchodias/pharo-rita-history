@@ -52,7 +52,7 @@ RiUncommitedWorkingCopy >> dateAndTime [
 
 { #category : #diff }
 RiUncommitedWorkingCopy >> diffTo: aRiCommit [ 
-	^ self repository iceRepository workingCopy diffTo: aRiCommit iceCommit
+	^ self asIceObject diffTo: aRiCommit iceCommit
 ]
 
 { #category : #testing }

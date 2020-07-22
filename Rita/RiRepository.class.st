@@ -8,7 +8,8 @@ Class {
 		'elementByCommit',
 		'elementMarks',
 		'elements',
-		'iceRepository'
+		'iceRepository',
+		'tips'
 	],
 	#category : #'Rita-Core'
 }
@@ -84,25 +85,11 @@ RiRepository >> printOn: aStream [
 { #category : #processing }
 RiRepository >> process [
 
-	| walk tips |
-	elementMarks := OrderedCollection new.
-	elements := OrderedCollection new.
-	elementByCommit := Dictionary new.
-	
-	tips := self tipCommitishCollection.
+	self processTips.
 
-	"Determine the commits in the proper order via Libgit's revwalk."
-	walk := iceRepository newCommitWalk.
-	walk revwalk
-		beSortedByCommitTime;
-		beSortedParentsBeforeChildren.
-	tips collect: #commitId thenDo: [ :each | walk fromLGitId: each ].
-	walk commitsDo: [:each |
-		| newCommit |
-		newCommit := RiCommit repository: self iceCommit: each.
-		elements add: newCommit.
-		elementByCommit at: each put: newCommit ].
-	self processCommitChildren.
+	"Determine the commit graph."
+	self processCommits.
+	self processCommitGraph.
 
 	"Add our marks to the commit elements."
 	tips do: [ :each | self processMark: each ].
@@ -114,11 +101,35 @@ RiRepository >> process [
 ]
 
 { #category : #processing }
-RiRepository >> processCommitChildren [
+RiRepository >> processCommitGraph [
+	"Connect all collected RiCommits in terms of child/parent."
 
 	elementByCommit valuesDo: [ :each | 
 		each ancestors do: [ :ancestor |
 			ancestor addChildren: each ] ]
+]
+
+{ #category : #processing }
+RiRepository >> processCommits [
+	"Determine the commits in the proper order via Libgit's revwalk."
+
+	| walk |
+	elementMarks := OrderedCollection new.
+	elements := OrderedCollection new.
+	elementByCommit := Dictionary new.
+
+	self processTips.
+	walk := iceRepository newCommitWalk.
+	walk revwalk
+		beSortedByCommitTime;
+		beSortedParentsBeforeChildren.
+	tips collect: #commitId thenDo: [ :each | walk fromLGitId: each ].
+	walk commitsDo: [:each |
+		| newCommit |
+		newCommit := RiCommit repository: self iceCommit: each.
+		elements add: newCommit.
+		elementByCommit at: each put: newCommit ].
+
 ]
 
 { #category : #accessing }
@@ -166,6 +177,17 @@ RiRepository >> processMark: anIceCommitish [
 
 ]
 
+{ #category : #processing }
+RiRepository >> processTips [
+
+	| branches |
+	"Note: /HEAD branches were problematic. And they are unneeded... right?"
+	branches := iceRepository allBranches
+		reject: [ :each | each name endsWith: '/HEAD' ].
+
+	tips := branches , iceRepository tags
+]
+
 { #category : #accessing }
 RiRepository >> processWorkdirMark [
 
@@ -188,12 +210,7 @@ RiRepository >> processWorkdirMark [
 
 ]
 
-{ #category : #processing }
-RiRepository >> tipCommitishCollection [
-	
-	| branches |
-	"Note: /HEAD branches were problematic. And they are unneeded... right?"
-	branches := iceRepository allBranches reject: [ :each | each name endsWith: '/HEAD' ].
-
-	^ branches, iceRepository tags
+{ #category : #accessing }
+RiRepository >> tips [
+	^ tips
 ]
