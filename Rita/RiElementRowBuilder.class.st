@@ -7,10 +7,18 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'hiedraBuilder',
-		'avatarDatabase'
+		'avatarDatabase',
+		'repositoryPresenter'
 	],
 	#category : #'Rita-UI-Morphic'
 }
+
+{ #category : #'instance creation' }
+RiElementRowBuilder class >> newForRepositoryPresenter: aRiRepositoryPresenter [
+	^ self basicNew
+		initializeForRepositoryPresenter: aRiRepositoryPresenter;
+		yourself
+]
 
 { #category : #accessing }
 RiElementRowBuilder >> avatarsFor: item [
@@ -50,10 +58,17 @@ RiElementRowBuilder >> initialize [
 	hiedraBuilder := RiHiedraImageBuilder new.
 ]
 
+{ #category : #initialization }
+RiElementRowBuilder >> initializeForRepositoryPresenter: aRiRepositoryPresenter [
+	self initialize.
+	repositoryPresenter := aRiRepositoryPresenter
+]
+
 { #category : #accessing }
 RiElementRowBuilder >> leftMorphsAt: item [
 	^ 	{ hiedraBuilder morphAt: item. '   ' asMorph },
 		(self avatarsFor: item),
+		(self pinMorphsFor: item),
 		(self markMorphsAt: item),
 		{ item comment asMorph hResizing: #spaceFill }
 
@@ -106,11 +121,18 @@ RiElementRowBuilder >> morphAt: item [
 ]
 
 { #category : #accessing }
-RiElementRowBuilder >> refreshWith: aRiRepositoryPresenter [
-	hiedraBuilder refreshWith: aRiRepositoryPresenter.
+RiElementRowBuilder >> pinMorphsFor: aRiElement [
+	(repositoryPresenter isPinned: aRiElement)
+		ifFalse: [ ^ #() ].
+	^ {(self iconNamed: #breakpoint) asMorph}
+]
+
+{ #category : #accessing }
+RiElementRowBuilder >> refresh [
+	hiedraBuilder refreshWith: repositoryPresenter.
 
 	avatarDatabase := RiAvatarsDatabase new.
-	avatarDatabase refreshWith: aRiRepositoryPresenter.
+	avatarDatabase refreshWith: repositoryPresenter.
 	
 
 ]

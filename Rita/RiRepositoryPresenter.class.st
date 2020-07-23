@@ -74,6 +74,13 @@ RiRepositoryPresenter class >> voyageExample [
 	^ self openOnRepositoryNamed: 'voyage'
 ]
 
+{ #category : #'pin/unpin commits' }
+RiRepositoryPresenter >> actionAddPin: aRiElement [
+	(model at: #pinDiffModels)
+		add: (RiPinDiffModel sourceRiCommit: aRiElement).
+	(model at: #blockWhenPinsChanged) value
+]
+
 { #category : #actions }
 RiRepositoryPresenter >> actionLoadBranch: aRiBranchMark [
 	aRiBranchMark local checkout.
@@ -88,15 +95,17 @@ RiRepositoryPresenter >> actionLoadCommit: aRiCommit [
 	self refreshOnModelUpdate.
 ]
 
+{ #category : #'pin/unpin commits' }
+RiRepositoryPresenter >> actionRemovePin: aRiElement [
+	(model at: #pinDiffModels)
+		removeAllSuchThat: [ :each | each sourceRiCommit = aRiElement ].
+	(model at: #blockWhenPinsChanged) value
+]
+
 { #category : #initialization }
 RiRepositoryPresenter >> blockForElementSelected: aBlock [
 	table whenSelectionChangedDo: [:selection |
 		selection selectedItem ifNotNil: aBlock ]
-]
-
-{ #category : #initialization }
-RiRepositoryPresenter >> blockForPinToCompareFrom: aBlock [
-	blockForPinToCompareFrom := aBlock
 ]
 
 { #category : #initialization }
@@ -106,10 +115,19 @@ RiRepositoryPresenter >> contextMenuForTable [
 	
 	selected := table selection selectedItem.
 
-	menu addItem: [ :item | 
-		item
-			name: 'Pin to compare from';
-			action: [ blockForPinToCompareFrom value: selected ] ].
+	(self isPinned: selected)
+		ifTrue: [
+			menu addItem: [ :item | 
+				item
+					name: 'Remove pin';
+					icon: (self iconNamed: #breakpoint);
+					action: [ self actionRemovePin: selected ] ] ]
+		ifFalse: [
+			menu addItem: [ :item | 
+				item
+					name: 'Pin commit to diff from it';
+					icon: (self iconNamed: #breakpoint);
+					action: [ self actionAddPin: selected ] ] ].
 
 	selected marks select: #isBranchMark thenDo: [ :mark |
 		menu addItem: [ :item | 
@@ -144,7 +162,7 @@ RiRepositoryPresenter >> contextMenuForTable [
 { #category : #initialization }
 RiRepositoryPresenter >> initializePresenters [
 
-	rowBuilder := RiElementRowBuilder new.
+	rowBuilder := RiElementRowBuilder newForRepositoryPresenter: self.
 
 	table := self newTable.
 	table
@@ -158,9 +176,10 @@ RiRepositoryPresenter >> initializePresenters [
 
 ]
 
-{ #category : #accessing }
-RiRepositoryPresenter >> pinDiffModels [
-	^ model at: #pinDiffModels
+{ #category : #'pin/unpin commits' }
+RiRepositoryPresenter >> isPinned: aRiElement [
+	^ (model at: #pinDiffModels)
+		anySatisfy: [ :each | each sourceRiCommit = aRiElement ]
 ]
 
 { #category : #accessing }
@@ -174,9 +193,14 @@ RiRepositoryPresenter >> refreshOnModelUpdate [
 
 	self riRepository ensureProcessed.
 
-	rowBuilder refreshWith: self.
+	rowBuilder refresh.
 
 	table items: self riRepository elements
+]
+
+{ #category : #accessing }
+RiRepositoryPresenter >> refreshOnPinsUpdate [
+	self refreshOnAvatarsUpdate
 ]
 
 { #category : #accessing }

@@ -20,6 +20,11 @@ RiParentDiffModel >> iceDiffTo: targetRiElement [
 ]
 
 { #category : #accessing }
+RiParentDiffModel >> icon [
+	^ self iconNamed: #diff
+]
+
+{ #category : #accessing }
 RiParentDiffModel >> initializeWithParentRiElement: aRiCommit [
 	self initialize.
 	parentRiElement := aRiCommit

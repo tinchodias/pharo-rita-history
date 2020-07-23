@@ -20,6 +20,11 @@ RiPinDiffModel >> iceDiffTo: targetRiCommit [
 ]
 
 { #category : #accessing }
+RiPinDiffModel >> icon [
+	^ self iconNamed: #breakpoint
+]
+
+{ #category : #accessing }
 RiPinDiffModel >> initializeWithSourceRiCommit: aRiCommit [
 	self initialize.
 	sourceRiCommit := aRiCommit
@@ -28,6 +33,11 @@ RiPinDiffModel >> initializeWithSourceRiCommit: aRiCommit [
 { #category : #testing }
 RiPinDiffModel >> shouldCompareTo: aRiElement [
 	^ sourceRiCommit ~= aRiElement
+]
+
+{ #category : #accessing }
+RiPinDiffModel >> sourceRiCommit [
+	^ sourceRiCommit
 ]
 
 { #category : #accessing }

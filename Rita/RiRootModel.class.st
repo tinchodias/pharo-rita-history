@@ -67,7 +67,7 @@ RiRootModel >> initialize [
 	connectHierarchies := true.
 	showMethodsLOC := true.
 	flyDiff := true.
-	showPackages := true.
+	showPackages := false.
 ]
 
 { #category : #accessing }

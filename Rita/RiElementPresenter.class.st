@@ -20,14 +20,11 @@ RiElementPresenter class >> defaultSpec [
 
 { #category : #private }
 RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
-
 	| page |
 	page := SpNotebookPage
 		title: aRiDiffModel title
-		icon: (self iconNamed: #diff)
-		provider: [
-			self diffPresenterFor: aRiDiffModel to: targetRiCommit ].
-
+		icon: aRiDiffModel icon
+		provider: [ self diffPresenterFor: aRiDiffModel to: targetRiCommit ].
 	notebook addPage: page
 ]
 
@@ -40,8 +37,7 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 				add: #iceDiff -> iceDiff;
 				add: #shadowedIceNodes -> IdentitySet new;
 				add: #expandedIceNodes -> (RiVisibleTreeStrategy 
-					expandedIceNodesFrom: iceDiff tree children 
-					limit: 20);
+					expandedIceNodesFrom: iceDiff tree children);
 				yourself);
 			yourself
 ]
@@ -54,20 +50,17 @@ RiElementPresenter >> initializePresenters [
 ]
 
 { #category : #accessing }
-RiElementPresenter >> model: anObject [
-	notebook removeAll.
-	super model: anObject.
-	notebook pages
-		ifNotEmpty: [ notebook selectPage: notebook pages last ]
-]
-
-{ #category : #accessing }
 RiElementPresenter >> refreshOnModelUpdate [
 	| element |
 	element := model at: #element.
-
 	header model: element.
 
-	(model at: #diffModels) do: [ :each |
-		self addPageFor: each to: element ]
+	notebook removeAll.
+	(model at: #parentDiffModels)
+		do: [ :each | self addPageFor: each to: element ].
+	(model at: #pinDiffModels)
+		select: [ :each | each shouldCompareTo: element ]
+		thenDo: [ :each | self addPageFor: each to: element ].
+	notebook pages ifNotEmpty: [
+		notebook selectPage: notebook pages last ]
 ]

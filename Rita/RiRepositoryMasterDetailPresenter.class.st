@@ -1,32 +1,20 @@
 Class {
 	#name : #RiRepositoryMasterDetailPresenter,
 	#superclass : #RiMasterDetailPresenter,
-	#instVars : [
-		'pinDiffModels'
-	],
 	#category : #'Rita-UI'
 }
 
 { #category : #initialization }
 RiRepositoryMasterDetailPresenter >> connectMasterToDetail [
 	masterPresenter blockForElementSelected: [ :targetRiElement |
-		| parentDiffModels diffModels |
+		| parentDiffModels |
 		parentDiffModels := targetRiElement ancestors collect: [:each | 
 			RiParentDiffModel parentRiElement: each ].
-		diffModels := (parentDiffModels, pinDiffModels) select: [:each |
-			each shouldCompareTo: targetRiElement ].
 		detailPresenter model: 
-			(model copy 
-				add: #element -> targetRiElement;
-				add: #diffModels -> diffModels;
-				yourself) ].
-	
-	masterPresenter blockForPinToCompareFrom: [ :sourceRiElement |
-		pinDiffModels add: (RiPinDiffModel sourceRiCommit: sourceRiElement).
-		
-		"Refresh only table to show the pin: the detail will refresh on next table selection."
-		masterPresenter refreshOnModelUpdate ]
-
+			(model
+				at: #element put: targetRiElement;
+				at: #parentDiffModels put: parentDiffModels;
+				yourself) ]
 ]
 
 { #category : #initialization }
@@ -40,12 +28,13 @@ RiRepositoryMasterDetailPresenter >> masterPresenterClass [
 ]
 
 { #category : #initialization }
-RiRepositoryMasterDetailPresenter >> model: aDictionary [
-	pinDiffModels := OrderedCollection new.
-	masterPresenter model: 
-		(aDictionary copy
-			add: #pinDiffModels -> pinDiffModels;
-			yourself).
+RiRepositoryMasterDetailPresenter >> refreshOnModelUpdate [
+	model at: #pinDiffModels put: OrderedCollection new.
+	
+	model at: #blockWhenPinsChanged put: [
+		"Refresh only table to show the pin: the detail will refresh on next table selection."
+		masterPresenter refreshOnPinsUpdate ].
 
-	super model: aDictionary
+	masterPresenter model: model.
+
 ]

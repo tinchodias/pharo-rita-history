@@ -15,6 +15,11 @@ RiDiffModel >> iceDiffTo: targetRiCommit [
 ]
 
 { #category : #accessing }
+RiDiffModel >> icon [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 RiDiffModel >> shouldCompareTo: aRiCommit [ 
 	^ self subclassResponsibility
 ]

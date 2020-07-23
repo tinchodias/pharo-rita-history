@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #accessing }
+RiVisibleTreeStrategy class >> defaultLimit [
+	^ 20
+]
+
+{ #category : #accessing }
+RiVisibleTreeStrategy class >> expandedIceNodesFrom: initialIceNodes [
+	^ self expandedIceNodesFrom: initialIceNodes limit: self defaultLimit
+]
+
+{ #category : #accessing }
 RiVisibleTreeStrategy class >> expandedIceNodesFrom: initialIceNodes limit: limit [
 	| result nextTreeLevel |
 	result := IdentitySet withAll: initialIceNodes.
