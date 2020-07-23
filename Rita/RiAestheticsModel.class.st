@@ -66,7 +66,7 @@ RiAestheticsModel >> colorForLineModification [
 	^ self modificationColor mixed: 0.75 with: self foregroundColor
 ]
 
-{ #category : #coolors }
+{ #category : #colors }
 RiAestheticsModel >> colorForLineNoModification [
 	^ Color gray
 ]
