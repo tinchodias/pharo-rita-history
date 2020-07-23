@@ -30,11 +30,9 @@ RiMethodShapeCreatorVisitor >> initialize: aRiAestheticsModel [
 	self initialize.
 	aesthetics := aRiAestheticsModel.
 
-	self flag: #fix.
-
 	colorMap := {
-		#insert -> ((aesthetics visitAddition: nil) "alpha: 0.5").
-		#remove -> ((aesthetics visitRemoval: nil) "alpha: 0.5").
+		#insert -> (aesthetics colorForLineInsert).
+		#remove -> (aesthetics colorForLineRemove).
 		} asDictionary
 ]
 
