@@ -21,8 +21,18 @@ RiHiedraImageBuilder >> doRefreshWith: aRiRepositoryPresenter [
 		nodeBorderWidth: 3.0;
 		arrowSize: 0;
 		nodeConnectionOffset: 3;
-		cellWidth: 6.75.
-	
+		cellWidth: 6.75;
+		useUniformColorStrategy.
+	hiedraColumnController renderer colorStrategy
+		linkColor: Smalltalk ui theme textColor;
+		nodeColor: Smalltalk ui theme textColor.
+"	hiedraColumnController renderer colorStrategy
+		colorWheel: ((Color 
+			wheel: 5
+			saturation: 0.45 
+			brightness: 0.95)
+		collect: [ :each | each mixed: 0.75 with: Smalltalk ui theme textColor ]).
+"		
 	"Create a new ruler model with current table elements"
 	hiedraColumnController ruler: (HiRulerBuilder
 		newRulerValues: aRiRepositoryPresenter riRepository elements
