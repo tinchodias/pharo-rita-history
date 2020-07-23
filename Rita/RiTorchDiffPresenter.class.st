@@ -7,7 +7,8 @@ Class {
 		'toolBar',
 		'highlighingController',
 		'canvas',
-		'renderer'
+		'renderer',
+		'showPackagesButton'
 	],
 	#category : #'Rita-UI-Diff'
 }
@@ -52,26 +53,40 @@ RiTorchDiffPresenter >> buildCanvas [
 { #category : #'canvas building' }
 RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 
-	| query shapes iceNodes |
+	| query classShapes classIceNodes |
 	query := model at: #diffQuery.	
-	iceNodes := query nodesForBehaviors, query nodesForMethodExtensions.
-	shapes := iceNodes collect: [ :each | renderer shapeFor: each ].
+
+	"First, add classes (and traits)."
+	classIceNodes := query nodesForBehaviors.
+	classShapes := classIceNodes collect: [ :each | renderer shapeForClass: each ].
 
 	self rootModel connectHierarchies ifTrue: [
 		renderer edgeBuilder
 			canvas: canvas;
-			shapes: shapes;
+			shapes: classShapes;
 			connectFrom: [ :node |
-				node value definition isExtensionDefinition
-					ifTrue: [ nil ]
-					ifFalse: [
-						| superclassName |
-						superclassName := node value definition asMCDefinition superclassName.
-						iceNodes
-							detect: [:each | each value definition name = superclassName ]
-							ifNone: [ nil ] ] ] ].
+				| superclassName |
+				superclassName := node value definition asMCDefinition superclassName.
+				classIceNodes
+					detect: [:each | each value definition name = superclassName ]
+					ifNone: [ nil ] ] ].
+	canvas addAll: classShapes.
 
-	canvas addAll: shapes.
+	"Add method extensions"
+	canvas addAll: (query nodesForMethodExtensions
+		collect: [ :each | renderer shapeForClass: each ]).
+
+	"Add packages"
+	self rootModel showPackages ifTrue: [
+		| packageShapes |
+		packageShapes := query nodesForPackages
+			collect: [ :each | renderer shapeForPackage: each ].
+		RSEdgeBuilder line
+			border: self aesthetics innerBorder;
+			canvas: canvas;
+			shapes: packageShapes;
+			connectFrom: [ :node | node children ].
+		canvas addAll: packageShapes ].
 
 ]
 
@@ -98,29 +113,6 @@ RiTorchDiffPresenter >> canvasLayout [
 		verticalGap: self aesthetics gapFromClassToSubclass;
 		horizontalGap: self aesthetics gapFromSubclassToSibling;
 		yourself
-]
-
-{ #category : #'canvas building' }
-RiTorchDiffPresenter >> classShapesFor: iceNodes [
-
-	| classShapes |
-	classShapes := iceNodes collect: [ :each | renderer shapeFor: each ].
-
-	self rootModel connectHierarchies ifTrue: [
-		renderer edgeBuilder
-			canvas: canvas;
-			shapes: classShapes;
-			connectFrom: [ :node |
-				node value definition isExtensionDefinition
-					ifTrue: [ nil ]
-					ifFalse: [
-						| superclassName |
-						superclassName := node value definition asMCDefinition superclassName.
-						iceNodes
-							detect: [:each | each value definition name = superclassName ]
-							ifNone: [ nil ] ] ] ].
-	^ classShapes
-
 ]
 
 { #category : #accessing }
@@ -196,17 +188,23 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 		icon: #class
 		help: 'Whether use a compact or an expanded representation for classes, traits and extensions.'.
 "
-	showMethodsLOCButton := self
+"	showMethodsLOCButton := self
 		newRootModelToggleButtonFor: #showMethodsLOC
 		label: 'LOC'
 		icon: #tinyMenu
-		help: 'Whether use a compact or an expanded representation for methods.'.
+		help: 'Whether use a compact or an expanded representation for methods.'."
 
 	connectHierarchiesButton := self
 		newRootModelToggleButtonFor: #connectHierarchies
 		label: 'Hier'
 		icon: #hierarchy
 		help: 'Whether connect subclasses or leave them free.'.
+
+	showPackagesButton := self
+		newRootModelToggleButtonFor: #showPackages
+		label: 'Pkgs'
+		icon: #package
+		help: 'Whether group classes in packages or leave them free.'.
 
 "	flyDiffButton := self 
 		newRootModelToggleButtonFor: #flyDiff
@@ -218,7 +216,8 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 "		addItem: onlyChangedButton;
 		addItem: isExpandedButton;
 "		addItem: connectHierarchiesButton;
-		addItem: showMethodsLOCButton;
+		addItem: showPackagesButton;
+"		addItem: showMethodsLOCButton;"
 "		addItem: flyDiffButton;"
 		addItemRight: spawnButton;
 		yourself

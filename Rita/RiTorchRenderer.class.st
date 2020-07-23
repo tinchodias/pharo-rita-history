@@ -143,12 +143,7 @@ RiTorchRenderer >> methodFor: iceNode [
 { #category : #hooks }
 RiTorchRenderer >> methodsFor: aClass [
 	^ (super methodsFor: aClass)
-		padding:
-			(Margin
-				left: 0
-				right: 0
-				top: 0
-				bottom: aesthetics gapBetweenMethods);
+		padding: aesthetics classRowMargin;
 		yourself
 ]
 
@@ -197,7 +192,7 @@ RiTorchRenderer >> shapeForClass: iceNode [
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForClassInCollapsedMode: iceNode [
 	| shapes outerBox title titleBox |
-	shapes := self groupFor: { }.
+	shapes := self groupFor: { self shapeForContentsOfCollapsedClass: iceNode }.
 	"Do some magic to adjust title on top-center"
 	title := self titleFor: iceNode.
 	shapes addFirst: title.
@@ -255,8 +250,11 @@ RiTorchRenderer >> shapeForClassInTinyMode: iceNode [
 RiTorchRenderer >> shapeForClassName: iceNode [
 	^ (self classBoxShapeFor: iceNode)
 		model: iceNode;
-		yourself	
-	"RSBox new
+		yourself
+		
+	"Previous version, with no border but a background color:
+	
+	RSBox new
 		model: iceNode;
 		color: (aesthetics backgroundColorFor: iceNode);
 		yourself"
@@ -271,12 +269,7 @@ RiTorchRenderer >> shapeForClassProperties: iceNode [
 
 	^ RSComposite new
 		shapes: shapes;
-		padding:
-			(Margin
-				left: 0
-				right: 0
-				top: 0
-				bottom: aesthetics gapBetweenMethods);
+		padding: aesthetics classRowMargin;
 		yourself
 ]
 
@@ -285,6 +278,24 @@ RiTorchRenderer >> shapeForClassProperty: iceNode [
 	^ self
 		configuredWithInteractions: (aesthetics shapeForClassProperty: iceNode)
 		model: iceNode
+]
+
+{ #category : #hooks }
+RiTorchRenderer >> shapeForContentsOfCollapsedClass: iceNode [
+	| group |
+	group := RSGroup streamContents: [ :stream |
+		(modelDescriptor classProperties rsValue: iceNode)
+			do: [ :each | stream nextPut: (self shapeForClassProperty: each) ].
+		(modelDescriptor instVars rsValue: iceNode)
+			do: [ :each | stream nextPut: (self varFor: each) ].
+		(modelDescriptor methods rsValue: iceNode)
+			do: [ :each | stream nextPut: (self methodFor: each) ] ].
+
+	self applyVLayoutOn: group.
+	^ group asShape
+		scaleBy: 0.5 asPoint;
+		padding: aesthetics classRowMargin;
+		yourself
 ]
 
 { #category : #'shape building' }
@@ -371,6 +382,27 @@ RiTorchRenderer >> shapeForMethodProperty: iceNode [
 ]
 
 { #category : #'shape building' }
+RiTorchRenderer >> shapeForPackage: iceNode [
+	| shapes outerBox title titleBox |
+	shapes := self groupFor: { }.
+	"Do some magic to adjust title on top-center"
+	title := self titleFor: iceNode.
+	shapes addFirst: title.
+	self applyLayoutOn: shapes.
+	self adjustTitle: title on: shapes.
+	shapes addFirst: (titleBox := self shapeForClassName: iceNode).
+	shapes addLast: (outerBox := self classBoxShapeFor: iceNode).
+	self adjustBox: outerBox on: shapes. 
+	titleBox
+		position: outerBox position x @ title position y;
+		extent: (outerBox width @ title height).
+
+	^ self 
+		configuredWithInteractions: shapes asShape
+		model: iceNode
+]
+
+{ #category : #'shape building' }
 RiTorchRenderer >> shapeForVariable: iceNode [
 	^ self
 		configuredWithInteractions: (aesthetics shapeForClassVariable: iceNode)
@@ -413,11 +445,6 @@ RiTorchRenderer >> varFor: iceNode [
 { #category : #hooks }
 RiTorchRenderer >> varsFor: iceNode [
 	^ (super varsFor: iceNode)
-		padding:
-			(Margin
-				left: 0
-				right: 0
-				top: aesthetics gapBetweenMethods
-				bottom: 0);
+		padding: aesthetics classRowMargin;
 		yourself
 ]

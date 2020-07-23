@@ -10,7 +10,8 @@ Class {
 		'isExpanded',
 		'connectHierarchies',
 		'showMethodsLOC',
-		'flyDiff'
+		'flyDiff',
+		'showPackages'
 	],
 	#category : #'Rita-UI-Models'
 }
@@ -66,6 +67,7 @@ RiRootModel >> initialize [
 	connectHierarchies := true.
 	showMethodsLOC := true.
 	flyDiff := true.
+	showPackages := true.
 ]
 
 { #category : #accessing }
@@ -96,6 +98,16 @@ RiRootModel >> showMethodsLOC [
 { #category : #accessing }
 RiRootModel >> showMethodsLOC: anObject [
 	showMethodsLOC := anObject
+]
+
+{ #category : #accessing }
+RiRootModel >> showPackages [
+	^ showPackages
+]
+
+{ #category : #accessing }
+RiRootModel >> showPackages: aBoolean [
+	showPackages := aBoolean
 ]
 
 { #category : #accessing }

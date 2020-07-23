@@ -45,6 +45,15 @@ RiAestheticsModel >> classBoxBorder [
 		yourself 
 ]
 
+{ #category : #accessing }
+RiAestheticsModel >> classRowMargin [
+	^ Margin
+		left: 0
+		right: 0
+		top: 0
+		bottom: self gapBetweenMethods
+]
+
 { #category : #'diff morph creation' }
 RiAestheticsModel >> columnMorphWithAll: someMorphs [
 
@@ -155,6 +164,20 @@ RiAestheticsModel >> gapFromSubclassToSibling [
 ]
 
 { #category : #accessing }
+RiAestheticsModel >> geometryForClassProperty [
+	^ RSShapeFactory pentagon
+		cornerRadii: 1;
+		yourself
+]
+
+{ #category : #accessing }
+RiAestheticsModel >> geometryForClassVariable [
+	^ RSShapeFactory triangle
+		cornerRadii: 1;
+		yourself
+]
+
+{ #category : #accessing }
 RiAestheticsModel >> iconForChange: iceNode [
 	^ iceNode icon
 ]
@@ -165,7 +188,7 @@ RiAestheticsModel >> iconForClassPropertyDefinition: iceDefinition [
 		extent: 12 asPoint;
 		foregroundColor: self foregroundColor;
 		backgroundColor: self backgroundColor;
-		bordered: RSShapeFactory square
+		bordered: self geometryForClassProperty
 			with: (self iconTitleForClassPropertyDefinition: iceDefinition);
 		newForm
 ]
@@ -173,10 +196,10 @@ RiAestheticsModel >> iconForClassPropertyDefinition: iceDefinition [
 { #category : #accessing }
 RiAestheticsModel >> iconForClassVariableDefinition: iceDefinition [
 	^ RiIconGenerator new
-		extent: 10 asPoint;
+		extent: 12 asPoint;
 		foregroundColor: self foregroundColor;
 		backgroundColor: self backgroundColor;
-		bordered: RSShapeFactory circle
+		bordered: self geometryForClassVariable
 			with: (self iconTitleForClassVariableDefinition: iceDefinition);
 		newForm
 
@@ -198,9 +221,9 @@ RiAestheticsModel >> iconTitleForClassPropertyDefinition: iceDefinition [
 
 	| mapping |
 	mapping := {
-		#source -> '>'.
+		#source -> ' '.
 		#superclassName -> 'S'.
-		#category -> 'P'.
+		#category -> ' '.
 		#type -> 'K'.
 		#comment -> 'C'.
 		#traitComposition -> 'T'.
@@ -278,14 +301,14 @@ RiAestheticsModel >> modificationColor [
 	| reference |
 	reference := self removeColor.
 	^ Color
-		h: 240
+		h: 220
 		s: reference saturation
 		v: reference brightness
 ]
 
 { #category : #colors }
 RiAestheticsModel >> outlineColor [
-	^ Smalltalk ui theme selectionColor
+	^ self currentTheme selectionColor
 ]
 
 { #category : #accessing }
@@ -365,7 +388,8 @@ RiAestheticsModel >> shapeForClassPropertyDefinition: iceDefinition color: aColo
 		extent: self widthForMethod asPoint;
 		foregroundColor: self foregroundColor;
 		border: aBorder;
-		fillShape: RSShapeFactory square
+		labelScale: 0.08;
+		fillShape: self geometryForClassProperty
 			colored: aColor
 			labeled: (self iconTitleForClassPropertyDefinition: iceDefinition);
 		newRSComposite
@@ -382,21 +406,21 @@ RiAestheticsModel >> shapeForClassVariable: iceNode [
 
 { #category : #accessing }
 RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColor border: aBorder [
-	| shape |
+"	| shape |
 	shape := RSPolygon new
 			points: {(-0.25@1.75). (0.616025403784439@0.25). (-1.1160254037844388@0.25)};
 			cornerRadii: 1.5;
-			yourself.
+			yourself."
 	"^^^ Generated (initially) by: (RSPolygon 
 			generateUnitNgonPoints: 3
 			rotation: Float pi) collect: [ :each | each + (-0.25@0.75) ]"
 	
 	^ RiIconGenerator new
-		extent: (self widthForMethod * 1.2) asPoint;
+		extent: self widthForMethod asPoint;
 		foregroundColor: self foregroundColor;
 		border: aBorder;
 		labelScale: 0.05;
-		fillShape: shape
+		fillShape: self geometryForClassVariable
 			colored: aColor
 			labeled: (self iconTitleForClassVariableDefinition: iceDefinition);
 		newRSComposite
@@ -465,7 +489,7 @@ RiAestheticsModel >> visitModification: anIceModification [
 
 { #category : #visiting }
 RiAestheticsModel >> visitNoModification: anIceNoModification [ 
-	^ Color transparent
+	^ Color gray
 ]
 
 { #category : #visiting }
@@ -475,5 +499,5 @@ RiAestheticsModel >> visitRemoval: anIceRemoval [
 
 { #category : #accessing }
 RiAestheticsModel >> widthForMethod [
-	^ 12
+	^ 14
 ]

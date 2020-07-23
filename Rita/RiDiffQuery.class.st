@@ -73,6 +73,14 @@ RiDiffQuery >> nodesForMethodExtensions [
 ]
 
 { #category : #accessing }
+RiDiffQuery >> nodesForPackages [
+	^ Array streamContents: [ :stream |
+		self treeToQuery allChildrenDo: [ :node |
+			node value definition isPackageDefinition
+				ifTrue: [ stream nextPut: node ] ] ]
+]
+
+{ #category : #accessing }
 RiDiffQuery >> onlyConsiderChanged [
 	^ onlyConsiderChanged
 ]
