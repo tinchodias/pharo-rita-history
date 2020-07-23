@@ -17,7 +17,7 @@ RiMethodShapeCreatorVisitor class >> aesthetics: anObject [
 
 { #category : #accessing }
 RiMethodShapeCreatorVisitor >> heightForMethod: node [
-	^ node definition linesOfCode * self heightScale
+	^ node definition containerIceDefinition linesOfCode * self heightScale
 ]
 
 { #category : #accessing }
@@ -29,13 +29,13 @@ RiMethodShapeCreatorVisitor >> heightScale [
 RiMethodShapeCreatorVisitor >> initialize: aRiAestheticsModel [
 	self initialize.
 	aesthetics := aRiAestheticsModel.
+
+	self flag: #fix.
+
 	colorMap := {
-		"FIX!"
-		#insert -> ((aesthetics visitAddition: nil) alpha: 0.5).
-		#remove -> ((aesthetics visitRemoval: nil) alpha: 0.5).
-		} asDictionary.
-
-
+		#insert -> ((aesthetics visitAddition: nil) "alpha: 0.5").
+		#remove -> ((aesthetics visitRemoval: nil) "alpha: 0.5").
+		} asDictionary
 ]
 
 { #category : #accessing }
@@ -71,8 +71,8 @@ RiMethodShapeCreatorVisitor >> visitModification: anIceModification [
 	^ self
 		newForPatchSequence:
 			(RiTextDiffBuilder
-				from: anIceModification rightDefinition sourceCode
-				to: anIceModification leftDefinition sourceCode)
+				from: anIceModification rightDefinition containerIceDefinition sourceCode
+				to: anIceModification leftDefinition containerIceDefinition sourceCode)
 				buildPatchSequence
 ]
 
@@ -88,5 +88,5 @@ RiMethodShapeCreatorVisitor >> visitRemoval: anIceRemoval [
 
 { #category : #accessing }
 RiMethodShapeCreatorVisitor >> widthForMethod [
-	^ aesthetics scaleForMethods
+	^ aesthetics widthForMethod
 ]

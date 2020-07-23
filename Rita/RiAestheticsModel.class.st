@@ -25,15 +25,15 @@ RiAestheticsModel >> asContentsToDiff: aString [
 				nextPutAll: '...etc...' ]
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> backgroundColor [
 	^ self currentTheme backgroundColor
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> backgroundColorFor: node [
 	^ (node value accept: self)
-		alphaMixed: 0.1
+		mixed: 0.2
 		with: self backgroundColor
 ]
 
@@ -60,6 +60,11 @@ RiAestheticsModel >> columnMorphWithAll: someMorphs [
 		yourself
 ]
 
+{ #category : #private }
+RiAestheticsModel >> copyOfColorWithoutAlphaMixedWithBackground: aColor [ 
+	^ aColor mixed: aColor alpha with: self backgroundColor
+]
+
 { #category : #accessing }
 RiAestheticsModel >> currentTheme [
 	^ Smalltalk ui theme
@@ -73,7 +78,7 @@ RiAestheticsModel >> diffMorphFor: iceNode [
 	^ self unifiedDiffFrom: oldString to: newString
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> fillColorFor: iceNode [
 	^ iceNode value accept: self
 ]
@@ -109,17 +114,17 @@ RiAestheticsModel >> fillUnifiedDiff: textArea from: from to: to [
 
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> foregroundColor [
 	^ self currentTheme textColor
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> foregroundColorFor: iceNode [
 	^ self foregroundColorMixedWith: (iceNode value accept: self)
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> foregroundColorMixedWith: aColor [
 	^ aColor
 		mixed: 0.8
@@ -263,9 +268,9 @@ RiAestheticsModel >> innerBorderLowImpact [
 	^ innerBorderLowImpact
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> insertColor [
-	^ self currentTheme diffAdditionalLineBackgroundColor
+	^ self copyOfColorWithoutAlphaMixedWithBackground: self currentTheme diffAdditionalLineBackgroundColor
 ]
 
 { #category : #accessing }
@@ -273,20 +278,19 @@ RiAestheticsModel >> modificationColor [
 	| reference |
 	reference := self removeColor.
 	^ Color
-		h: 205
+		h: 240
 		s: reference saturation
 		v: reference brightness
-		alpha: reference alpha
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> outlineColor [
 	^ Smalltalk ui theme selectionColor
 ]
 
 { #category : #accessing }
 RiAestheticsModel >> outlineSize [
-	^ 5
+	^ 4
 ]
 
 { #category : #'diff morph creation' }
@@ -321,19 +325,14 @@ RiAestheticsModel >> popupDiffMorphFor: iceNode [
 		
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> removeColor [
-	^ self currentTheme diffRemovedLinesBackgroundColor
+	^ self copyOfColorWithoutAlphaMixedWithBackground: self currentTheme diffRemovedLinesBackgroundColor
 ]
 
 { #category : #accessing }
 RiAestheticsModel >> rowForChange: iceNode [
 	^ iceNode ritaKey asMorph
-]
-
-{ #category : #accessing }
-RiAestheticsModel >> scaleForMethods [
-	^ 10
 ]
 
 { #category : #'diff morph creation' }
@@ -347,7 +346,7 @@ RiAestheticsModel >> scrolledUnifiedDiffMorph [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> secondaryOutlineColor [
 	^ self outlineColor alpha: 0.7
 ]
@@ -363,7 +362,7 @@ RiAestheticsModel >> shapeForClassProperty: iceNode [
 { #category : #accessing }
 RiAestheticsModel >> shapeForClassPropertyDefinition: iceDefinition color: aColor border: aBorder [
 	^ RiIconGenerator new
-		extent: self scaleForMethods * 1.3 asPoint;
+		extent: self widthForMethod asPoint;
 		foregroundColor: self foregroundColor;
 		border: aBorder;
 		fillShape: RSShapeFactory square
@@ -393,7 +392,7 @@ RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColo
 			rotation: Float pi) collect: [ :each | each + (-0.25@0.75) ]"
 	
 	^ RiIconGenerator new
-		extent: (self scaleForMethods * 1.5) asPoint;
+		extent: (self widthForMethod * 1.2) asPoint;
 		foregroundColor: self foregroundColor;
 		border: aBorder;
 		labelScale: 0.05;
@@ -461,7 +460,7 @@ RiAestheticsModel >> visitAddition: anIceAddition [
 
 { #category : #visiting }
 RiAestheticsModel >> visitModification: anIceModification [ 
-	^ self modificationColor alphaMixed: 0.75 with: self foregroundColor
+	^ self modificationColor mixed: 0.75 with: self foregroundColor
 ]
 
 { #category : #visiting }
@@ -472,4 +471,9 @@ RiAestheticsModel >> visitNoModification: anIceNoModification [
 { #category : #visiting }
 RiAestheticsModel >> visitRemoval: anIceRemoval [ 
 	^ self removeColor alphaMixed: 0.75 with: self foregroundColor
+]
+
+{ #category : #accessing }
+RiAestheticsModel >> widthForMethod [
+	^ 12
 ]

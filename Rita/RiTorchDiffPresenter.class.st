@@ -84,7 +84,7 @@ RiTorchDiffPresenter >> buildFileStructureAndConnections [
 		collect: [ :each | 
 			RSBox new
 				noPaint;
-				size: self aesthetics scaleForMethods * 2;
+				size: self aesthetics widthForMethod * 2;
 				model: each;
 				border: self aesthetics tinyBoxBorder;
 				addInteraction: (RSPopup text: [ :node | node path pathString ]);

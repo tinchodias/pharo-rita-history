@@ -47,7 +47,7 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 		add: #blockWhenShadowedIceNodesChanged -> [ 
 			torchDiffPresenter refreshOnCheckedIceNodesChanged.
 			treeDiffPresenter refreshOnCheckedIceNodesChanged ];
-		add: #blockWhenCollapsedIceNodesChanged -> [
+		add: #blockWhenExpandedIceNodesChanged -> [
 			torchDiffPresenter refreshOnModelUpdate.
 			treeDiffPresenter refreshOnCheckedIceNodesChanged ];
 		add: #diffQuery -> (RiDiffQuery new

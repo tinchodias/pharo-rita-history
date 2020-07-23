@@ -24,15 +24,15 @@ RiTreeDiffPresenter >> contextMenuForTable [
 	
 	selected := treeTable selection selectedItem.
 
-"	menu addItem: [ :item |
-		item
-			name: 'Check all children';
-			action: [ self doCheckAllChildrenOf: selected  ] ].
 	menu addItem: [ :item |
 		item
-			name: 'Uncheck all children';
-			action: [ self doUncheckAllChildrenOf: selected  ] ].
-"	menu addItem: [ :item | 
+			name: 'Collapse with all children';
+			action: [ self doCollapseSelectedNode  ] ].
+	menu addItem: [ :item |
+		item
+			name: 'Expand with all children';
+			action: [ self doExpandSelectedNode ] ].
+	menu addItem: [ :item | 
 		item
 			name: 'Inspect object';
 			action: [ selected inspect ] ].
@@ -40,7 +40,7 @@ RiTreeDiffPresenter >> contextMenuForTable [
 	^ menu
 ]
 
-{ #category : #private }
+{ #category : #'check/uncheck' }
 RiTreeDiffPresenter >> doCheck: anIceNode [
 	self shadowedIceNodes
 		removeAllFoundIn: anIceNode allChildren;
@@ -51,35 +51,40 @@ RiTreeDiffPresenter >> doCheck: anIceNode [
 
 ]
 
-{ #category : #private }
+{ #category : #'expand/collapse' }
 RiTreeDiffPresenter >> doCollapseSelectedNode [
-	| item |
-	item := treeTable adapter widget dataSource
-		itemAtPath: treeTable selection selectedPath.
-	(item hasChildren and: [ item isExpanded ]) 
-		ifTrue: [ item collapseAndRefresh ]
-		ifFalse: [ 
-			| path |
-			path := treeTable selection selectedPath.
-			path size >= 2 ifTrue: [
-				treeTable selectPath: path allButLast ] ].
-
-	(model at: #collapsedIceNodes)
-		add: treeTable selection selectedItem.
-	(model at: #blockWhenCollapsedIceNodesChanged) value
+	self doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | 
+		(fastTableItem hasChildren and: [ fastTableItem isExpanded ]) 
+			ifTrue: [ fastTableItem collapse ]
+			ifFalse: [ 
+				| path |
+				path := treeTable selection selectedPath.
+				path size >= 2 ifTrue: [
+					treeTable selectPath: path allButLast ] ] ]
 ]
 
-{ #category : #private }
-RiTreeDiffPresenter >> doExpandSelectedNodeAndSelectFirstChild [
-	(treeTable adapter widget dataSource
-		itemAtPath: treeTable selection selectedPath) expandAndRefresh.
-	(model at: #collapsedIceNodes)
-		remove: treeTable selection selectedItem
-		ifAbsent: [].
-	(model at: #blockWhenCollapsedIceNodesChanged) value
+{ #category : #'expand/collapse' }
+RiTreeDiffPresenter >> doExpandSelectedNode [
+	self doValueOnSelectedFastTableItemToExpandOrCollapse: [ :item | item expand ]
 ]
 
-{ #category : #private }
+{ #category : #'expand/collapse' }
+RiTreeDiffPresenter >> doInitialTreeExpansion [
+	| expanded items |
+	expanded := model at: #expandedIceNodes.
+	
+	items := OrderedCollection withAll: treeTable adapter widget dataSource rootsItems.
+	[ items notEmpty ] whileTrue: [
+		| aFastTableItem |
+		aFastTableItem := items removeFirst.
+		(expanded includes: aFastTableItem data) ifTrue: [
+			aFastTableItem expand.
+			items addAll: aFastTableItem children ] ].
+
+	treeTable adapter widget refresh.
+]
+
+{ #category : #'check/uncheck' }
 RiTreeDiffPresenter >> doUncheck: anIceNode [
 	self shadowedIceNodes
 		add: anIceNode;
@@ -89,7 +94,19 @@ RiTreeDiffPresenter >> doUncheck: anIceNode [
 	(model at: #blockWhenShadowedIceNodesChanged) value
 ]
 
-{ #category : #accessing }
+{ #category : #'expand/collapse' }
+RiTreeDiffPresenter >> doValueOnSelectedFastTableItemToExpandOrCollapse: aBlock [
+	| fastTableItem |
+	fastTableItem := treeTable adapter widget dataSource
+		itemAtPath: treeTable selection selectedPath.
+
+	aBlock value: fastTableItem.
+
+	(model at: #expandedIceNodes) add: fastTableItem data.
+	(model at: #blockWhenExpandedIceNodesChanged) value
+]
+
+{ #category : #highlighting }
 RiTreeDiffPresenter >> highlightIceNode: iceNodeCollection [
 	iceNodeCollectionToHighlight := iceNodeCollection.
 	highlightDeferrer schedule.
@@ -143,11 +160,11 @@ RiTreeDiffPresenter >> initializeTreeKeyCombinations [
 
 	treeTable
 		bindKeyCombination: Character arrowRight
-			toAction: [ self doExpandSelectedNodeAndSelectFirstChild ].
+			toAction: [ self doExpandSelectedNode ].
 
 ]
 
-{ #category : #private }
+{ #category : #'check/uncheck' }
 RiTreeDiffPresenter >> isChecked: anIceNode [
 	^ (self shadowedIceNodes includes: anIceNode) not
 ]
@@ -183,7 +200,7 @@ RiTreeDiffPresenter >> newColumnWithIceNodes [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : #highlighting }
 RiTreeDiffPresenter >> refreshHighlight [
 	| table indices |
 	table := treeTable adapter widget.
@@ -204,26 +221,20 @@ RiTreeDiffPresenter >> refreshHighlight [
 			refresh ]
 ]
 
-{ #category : #private }
+{ #category : #'check/uncheck' }
 RiTreeDiffPresenter >> refreshOnCheckedIceNodesChanged [
 	self defer: [ treeTable adapter widget refresh ]
 ]
 
 { #category : #accessing }
 RiTreeDiffPresenter >> refreshOnModelUpdate [
-	"Set tree roots starting at package level."
-	| nodes |
-	nodes := (model at: #iceDiff) tree children.
-	(nodes allSatisfy: [ :each | each value definition isPackageDefinition ])
-		ifFalse: [ nodes := nodes flatCollect: [ :each | each children ] ].
-	treeTable roots: nodes.
-
-	treeTable whenBuiltDo: [ :ann |
-		ann widget dataSource expandAllTo: 1 ]
-
+	| iceNodes |
+	iceNodes := (model at: #iceDiff) tree children.
+	treeTable roots: iceNodes.
+	treeTable whenBuiltDo: [ :ann | self doInitialTreeExpansion ]
 ]
 
-{ #category : #accessing }
+{ #category : #highlighting }
 RiTreeDiffPresenter >> selectIceNode: anIceNode [
 	treeTable selectedItem = anIceNode
 		ifTrue: [ ^ self ].
@@ -232,12 +243,12 @@ RiTreeDiffPresenter >> selectIceNode: anIceNode [
 		scrollToSelection: true
 ]
 
-{ #category : #private }
+{ #category : #'check/uncheck' }
 RiTreeDiffPresenter >> shadowedIceNodes [
 	^ model at: #shadowedIceNodes
 ]
 
-{ #category : #private }
+{ #category : #'check/uncheck' }
 RiTreeDiffPresenter >> toggleSelection [
 	| anIceNode |
 	anIceNode := treeTable selection selectedItem.
