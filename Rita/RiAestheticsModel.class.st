@@ -6,9 +6,11 @@ Class {
 		'innerBorderLowImpact',
 		'tinyBoxBorder',
 		'colorMap',
-		'inlinecolorMap'
+		'inlinecolorMap',
+		'iceDefinitionIconVisitor',
+		'iceOperationColorVisitor'
 	],
-	#category : #'Rita-UI-Models'
+	#category : #'Rita-Roassal3'
 }
 
 { #category : #'diff morph creation' }
@@ -54,6 +56,26 @@ RiAestheticsModel >> classRowMargin [
 		bottom: self gapBetweenMethods
 ]
 
+{ #category : #colors }
+RiAestheticsModel >> colorForLineInsert [
+	^ self insertColor alphaMixed: 0.75 with: self foregroundColor
+]
+
+{ #category : #colors }
+RiAestheticsModel >> colorForLineModification [
+	^ self modificationColor mixed: 0.75 with: self foregroundColor
+]
+
+{ #category : #coolors }
+RiAestheticsModel >> colorForLineNoModification [
+	^ Color gray
+]
+
+{ #category : #colors }
+RiAestheticsModel >> colorForLineRemove [
+	^ self removeColor alphaMixed: 0.75 with: self foregroundColor
+]
+
 { #category : #'diff morph creation' }
 RiAestheticsModel >> columnMorphWithAll: someMorphs [
 
@@ -89,7 +111,7 @@ RiAestheticsModel >> diffMorphFor: iceNode [
 
 { #category : #colors }
 RiAestheticsModel >> fillColorFor: iceNode [
-	^ iceNode value accept: self
+	^ iceNode value accept: iceOperationColorVisitor
 ]
 
 { #category : #'diff morph creation' }
@@ -130,7 +152,7 @@ RiAestheticsModel >> foregroundColor [
 
 { #category : #colors }
 RiAestheticsModel >> foregroundColorFor: iceNode [
-	^ self foregroundColorMixedWith: (iceNode value accept: self)
+	^ self foregroundColorMixedWith: (iceNode value accept: iceOperationColorVisitor)
 ]
 
 { #category : #colors }
@@ -207,13 +229,7 @@ RiAestheticsModel >> iconForClassVariableDefinition: iceDefinition [
 
 { #category : #accessing }
 RiAestheticsModel >> iconForDefinition: iceDefinition [
-	(iceDefinition isKindOf: IcePropertyDefinition)
-		ifTrue: [ ^ self iconForClassPropertyDefinition: iceDefinition ].
-
-	(iceDefinition isKindOf: IceVariableDefinition)
-		ifTrue: [ ^ self iconForClassVariableDefinition: iceDefinition ].
-
-	^ iceDefinition icon
+	^ iceDefinition accept: iceDefinitionIconVisitor
 ]
 
 { #category : #accessing }
@@ -255,6 +271,8 @@ RiAestheticsModel >> initialize [
 
 	innerBorder := RSBorder new color: self foregroundColor; width: 0.75; yourself.
 	innerBorderLowImpact := innerBorder copy dashArray: #(2); yourself.
+	iceOperationColorVisitor := RiIceOperationColorVisitor newForAesthetics: self.
+	iceDefinitionIconVisitor := RiIceDefinitionIconVisitor newForAesthetics: self.
 
 	tinyBoxBorder := RSBorder new
 		width: 1;
@@ -475,26 +493,6 @@ RiAestheticsModel >> unifiedDiffFrom: from to: to [
 		] ].
 
 	^ textArea
-]
-
-{ #category : #visiting }
-RiAestheticsModel >> visitAddition: anIceAddition [ 
-	^ self insertColor alphaMixed: 0.75 with: self foregroundColor
-]
-
-{ #category : #visiting }
-RiAestheticsModel >> visitModification: anIceModification [ 
-	^ self modificationColor mixed: 0.75 with: self foregroundColor
-]
-
-{ #category : #visiting }
-RiAestheticsModel >> visitNoModification: anIceNoModification [ 
-	^ Color gray
-]
-
-{ #category : #visiting }
-RiAestheticsModel >> visitRemoval: anIceRemoval [ 
-	^ self removeColor alphaMixed: 0.75 with: self foregroundColor
 ]
 
 { #category : #accessing }
