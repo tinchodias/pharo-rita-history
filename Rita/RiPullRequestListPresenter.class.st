@@ -30,20 +30,24 @@ RiPullRequestListPresenter >> contextMenuForTable [
 
 	menu addItem: [ :item |
 		item
-			name: 'View Diff to Repository Head';
+			name: 'View Diff to Repository HEAD';
+			icon: (self iconNamed: #diff);
 			action: [ self openDiffFor: selected ] ].
 	menu addItem: [ :item |
 		item
 			name: 'Open in Web Browser';
+			icon: (self iconNamed: #remote);
 			action: [ self openInWebBrowser: selected ] ].
 	menu addItem: [ :item | 
 		item
-			name: 'Inspect object';
-			action: [ selected inspect ] ].
+			name: 'Refresh list';
+			icon: (self iconNamed: #smallUpdate);
+			action: [ self refreshOnModelUpdate ] ].
 	menu addItem: [ :item | 
 		item
-			name: 'Refresh';
-			action: [ self refreshOnModelUpdate ] ].
+			name: 'Inspect object';
+			icon: (self iconNamed: #smallInspectIt);
+			action: [ selected inspect ] ].
 
 	^ menu
 ]

@@ -115,46 +115,52 @@ RiRepositoryPresenter >> contextMenuForTable [
 	
 	selected := table selection selectedItem.
 
-	(self isPinned: selected)
-		ifTrue: [
-			menu addItem: [ :item | 
-				item
-					name: 'Remove pin';
-					icon: (self iconNamed: #breakpoint);
-					action: [ self actionRemovePin: selected ] ] ]
-		ifFalse: [
-			menu addItem: [ :item | 
-				item
-					name: 'Pin commit to diff from it';
-					icon: (self iconNamed: #breakpoint);
-					action: [ self actionAddPin: selected ] ] ].
+	menu addGroup: [ :aGroup | 
+		(self isPinned: selected)
+			ifTrue: [
+				aGroup addItem: [ :item | 
+					item
+						name: 'Remove pin';
+						icon: (self iconNamed: #breakpoint);
+						action: [ self actionRemovePin: selected ] ] ]
+			ifFalse: [
+				aGroup addItem: [ :item | 
+					item
+						name: 'Pin commit (to diff from it)';
+						icon: (self iconNamed: #breakpoint);
+						action: [ self actionAddPin: selected ] ] ] ].
 
-	selected marks select: #isBranchMark thenDo: [ :mark |
-		menu addItem: [ :item | 
+
+	menu addGroup: [ :aGroup | 
+		aGroup addItem: [ :item |
 			item
-				name: ('Checkout (in IMAGE) branch {1}' format: { mark shortname }); 
-				action: [ self actionLoadBranch: mark ] ] ].
+				name: 'Browse code in this commit';
+				action: [ RiCommitBrowseUtility browse: selected iceCommit ] ].
 
-	selected isUncommited ifFalse: [
-		menu addItem: [ :item | 
+		selected marks select: #isBranchMark thenDo: [ :mark |
+			aGroup addItem: [ :item | 
+				item
+					name: ('Checkout (in IMAGE) branch {1}' format: { mark shortname }); 
+					action: [ self actionLoadBranch: mark ] ] ].
+
+		selected isUncommited ifFalse: [
+			aGroup addItem: [ :item | 
+				item
+					name: ('Checkout (in IMAGE) commit {1}' format: { selected shortId });
+					action: [ self actionLoadCommit: selected ] ] ] ].
+
+	menu addGroup: [ :aGroup |
+		aGroup addItem: [ :item | 
 			item
-				name: ('Checkout (in IMAGE) commit {1}' format: { selected shortId });
-				action: [ self actionLoadCommit: selected ] ] ].
+				name: 'Refresh list';
+				icon: (self iconNamed: #smallUpdate);
+				action: [ self refreshOnModelUpdate ] ].
 
-	menu addItem: [ :item |
-		item
-			name: 'Browse code in this commit';
-			action: [ RiCommitBrowseUtility browse: selected iceCommit ] ].
-
-	menu addItem: [ :item | 
-		item
-			name: 'Refresh';
-			action: [ self refreshOnModelUpdate ] ].
-
-	menu addItem: [ :item | 
-		item
-			name: 'Inspect object';
-			action: [ selected inspect ] ].
+		aGroup addItem: [ :item | 
+			item
+				name: 'Inspect object';
+				icon: (self iconNamed: #smallInspectIt);
+				action: [ selected inspect ] ] ].
 
 	^ menu
 ]

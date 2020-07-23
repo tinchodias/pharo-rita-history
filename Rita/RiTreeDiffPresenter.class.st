@@ -24,7 +24,7 @@ RiTreeDiffPresenter >> contextMenuForTable [
 	
 	selected := treeTable selection selectedItem.
 
-	menu addItem: [ :item |
+"	menu addItem: [ :item |
 		item
 			name: 'Collapse with all children';
 			action: [ self doCollapseSelectedNode  ] ].
@@ -32,9 +32,10 @@ RiTreeDiffPresenter >> contextMenuForTable [
 		item
 			name: 'Expand with all children';
 			action: [ self doExpandSelectedNode ] ].
-	menu addItem: [ :item | 
+"	menu addItem: [ :item | 
 		item
 			name: 'Inspect object';
+			icon: (self iconNamed: #smallInspectIt);
 			action: [ selected inspect ] ].
 
 	^ menu

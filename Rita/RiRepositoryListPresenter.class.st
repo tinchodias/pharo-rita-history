@@ -68,16 +68,18 @@ RiRepositoryListPresenter >> contextMenuForTable [
 			action: [ selected openInNativeBrowser ] ].
 	menu addItem: [ :item |
 		item
-			name: 'Browse HEAD';
+			name: 'Browse code in HEAD';
 			action: [ RiCommitBrowseUtility browse: selected iceRepository headCommit ] ].
 	menu addItem: [ :item | 
 		item
-			name: 'Inspect object';
-			action: [ selected inspect ] ].
+			name: 'Refresh list';
+			icon: (self iconNamed: #smallUpdate);
+			action: [ self refreshOnModelUpdate ] ].
 	menu addItem: [ :item | 
 		item
-			name: 'Refresh';
-			action: [ self refreshOnModelUpdate ] ].
+			name: 'Inspect object';
+			icon: (self iconNamed: #smallInspectIt);
+			action: [ selected inspect ] ].
 
 	^ menu
 ]
