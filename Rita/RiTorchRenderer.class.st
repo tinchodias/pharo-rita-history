@@ -193,8 +193,7 @@ RiTorchRenderer >> shapeForClass: iceNode [
 RiTorchRenderer >> shapeForClassInCollapsedMode: iceNode [
 	^ self
 		shapeForTitledBox: iceNode
-		shapes: {
-			self shapeForContentsOfCollapsedClass: iceNode}
+		shapes: { }
 ]
 
 { #category : #'shape building' }
