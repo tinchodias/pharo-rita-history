@@ -107,7 +107,7 @@ RiTorchRenderer >> defaultEdgeBuilder [
 	^ RSEdgeBuilder orthoVertical
 		attachPoint: RSVerticalAttachPoint new;
 		border: aesthetics innerBorder;
-		"markerStart: self marker;"
+		markerStart: self marker;
 		yourself
 ]
 
@@ -117,9 +117,9 @@ RiTorchRenderer >> defaultMarker [
 		shape: (RSShapeFactory triangle
 			color: aesthetics backgroundColor;
 			border: self border;
-			size: aesthetics gapFromClassToSubclass / 6;
+			size: aesthetics gapFromClassToSubclass / 3;
 			yourself);
-		offset: aesthetics gapFromClassToSubclass / 12;
+		offset: aesthetics gapFromClassToSubclass / 6;
 		yourself
 
 ]
