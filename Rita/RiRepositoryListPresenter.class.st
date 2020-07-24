@@ -18,6 +18,12 @@ RiRepositoryListPresenter class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #commands }
+RiRepositoryListPresenter >> actionFetch [
+	table selection selectedItem fetch.
+	self refreshOnModelUpdate
+]
+
 { #category : #accessing }
 RiRepositoryListPresenter >> blockForOpenPullRequests: aBlock [
 	blockForOpenPullRequests:= aBlock
@@ -51,6 +57,11 @@ RiRepositoryListPresenter >> contextMenuForTable [
 		item
 			name: 'Browse code in HEAD';
 			action: [ RiCommitBrowseUtility browse: selected iceRepository headCommit ] ].
+	menu addItem: [ :item | 
+		item
+			name: 'Fetch';
+			icon: (self iconNamed: #smallUpdate);
+			action: [ self actionFetch ] ].
 	menu addItem: [ :item | 
 		item
 			name: 'Refresh list';
