@@ -410,13 +410,14 @@ RiTorchRenderer >> shapeForMethodProperty: iceNode [
 
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForPackage: iceNode [
-	| outerBox aGroup |
+	| outerBox aGroup h |
 	aGroup := {
 		self titleFor: iceNode.
 		outerBox := self classBoxShapeFor: iceNode } asGroup.
+	h := (10 + (iceNode allChildren size / 2)) min: 500.
 	outerBox
 		position: aGroup encompassingRectangle floatCenter;
-		extent: aGroup encompassingRectangle extent + (40 @ 30).
+		extent: aGroup encompassingRectangle extent + (20 @ h).
 	^ self configuredWithInteractions: aGroup asShape model: iceNode
 ]
 
