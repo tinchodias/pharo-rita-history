@@ -69,7 +69,11 @@ RiTreeDiffPresenter >> doCollapseOneLevel [
 { #category : #'expanding-collapsing' }
 RiTreeDiffPresenter >> doCollapseWithAllChildren [
 	self
-		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | fastTableItem collapseAll ]
+		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | 
+			treeTable unselectAll. "This seems to avoid a random error"
+			fastTableItem
+				collapseAll";
+				refreshTable" ]
 ]
 
 { #category : #'expand/collapse' }
@@ -81,7 +85,11 @@ RiTreeDiffPresenter >> doExpandOneLevel [
 { #category : #'collapse/expand' }
 RiTreeDiffPresenter >> doExpandWithAllChildren [
 	self
-		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | fastTableItem expandAll ]
+		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | 
+			treeTable unselectAll. "This seems to avoid a random error"
+			fastTableItem
+				expandAll";
+				refreshTable" ]
 ]
 
 { #category : #'expand/collapse' }
@@ -170,7 +178,7 @@ RiTreeDiffPresenter >> initialize [
 		OmDeferrer 
 			send: #refreshExpand
 			to: self
-			after: 250 milliSeconds
+			after: 100 milliSeconds
 ]
 
 { #category : #initialization }
@@ -271,6 +279,8 @@ RiTreeDiffPresenter >> onHackyExpand: anAnnouncement [
 
 { #category : #'expand/collapse' }
 RiTreeDiffPresenter >> refreshExpand [
+	self flag: #todo. "Try to avoid race conditions..."
+	highlightDeferrer flush.
 	(model at: #blockWhenExpandedIceNodesChanged) value
 ]
 

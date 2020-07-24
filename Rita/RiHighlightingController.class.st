@@ -23,6 +23,8 @@ RiHighlightingController class >> canvas: aRSCanvas aesthetics: aRiAestheticsMod
 { #category : #private }
 RiHighlightingController >> addPrimaryOutlineTo: aRSShape [
 
+	aRSShape parent ifNil: [ ^self ]. "Race"
+	
 	primaryOutline := RSBox new
 		border: (RSBorder new 
 				joinMiter;
@@ -56,6 +58,9 @@ RiHighlightingController >> addPrimaryOutlineTo: aRSShape [
 RiHighlightingController >> addSecondaryOutlineTo: aRSShape [
 
 	| newOutline |
+	self flag: #todo. "Race..."
+	aRSShape parent ifNil: [ ^self ].
+
 	newOutline := RSBox new
 		border: (RSBorder new 
 				joinMiter;
