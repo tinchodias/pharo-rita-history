@@ -141,6 +141,7 @@ RiRepository >> processCommits [
 RiRepository >> processImageMark [
 
 	| aRiCommit |
+	iceRepository hasLoadedPackages ifFalse: [ ^self ].
 	aRiCommit := elementByCommit at: iceRepository workingCopy referenceCommit.
 	
 	iceRepository workingCopy isModified
