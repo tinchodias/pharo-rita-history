@@ -39,6 +39,11 @@ RiAestheticsModel >> backgroundColorFor: node [
 		with: self backgroundColor
 ]
 
+{ #category : #colors }
+RiAestheticsModel >> backgroundColorMixedWith: aColor [ 
+	^ aColor mixed: 0.4 with: self backgroundColor
+]
+
 { #category : #accessing }
 RiAestheticsModel >> classBoxBorder [
 	^ RSBorder new
@@ -58,12 +63,12 @@ RiAestheticsModel >> classRowMargin [
 
 { #category : #colors }
 RiAestheticsModel >> colorForLineInsert [
-	^ self insertColor alphaMixed: 0.75 with: self foregroundColor
+	^ self insertColor mixed: 0.7 with: self foregroundColor
 ]
 
 { #category : #colors }
 RiAestheticsModel >> colorForLineModification [
-	^ self modificationColor mixed: 0.75 with: self foregroundColor
+	^ self modificationColor mixed: 0.7 with: self foregroundColor
 ]
 
 { #category : #colors }
@@ -73,7 +78,7 @@ RiAestheticsModel >> colorForLineNoModification [
 
 { #category : #colors }
 RiAestheticsModel >> colorForLineRemove [
-	^ self removeColor alphaMixed: 0.75 with: self foregroundColor
+	^ self removeColor mixed: 0.7 with: self foregroundColor
 ]
 
 { #category : #'diff morph creation' }
@@ -89,11 +94,6 @@ RiAestheticsModel >> columnMorphWithAll: someMorphs [
 		color: self currentTheme lightBackgroundColor;
 		addAllMorphs: someMorphs;
 		yourself
-]
-
-{ #category : #private }
-RiAestheticsModel >> copyOfColorWithoutAlphaMixedWithBackground: aColor [ 
-	^ aColor mixed: aColor alpha with: self backgroundColor
 ]
 
 { #category : #accessing }
@@ -198,26 +198,26 @@ RiAestheticsModel >> gapFromSubclassToSibling [
 	^ self gapFromClassToSubclass / 2
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> geometryForClassProperty [
 	^ RSShapeFactory pentagon
 		cornerRadii: 1;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> geometryForClassVariable [
 	^ RSShapeFactory triangle
 		cornerRadii: 1;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> iconForChange: iceNode [
 	^ iceNode icon
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> iconForClassPropertyDefinition: iceDefinition [
 	^ RiIconGenerator new
 		extent: 12 asPoint;
@@ -228,7 +228,7 @@ RiAestheticsModel >> iconForClassPropertyDefinition: iceDefinition [
 		newForm
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> iconForClassVariableDefinition: iceDefinition [
 	^ RiIconGenerator new
 		extent: 12 asPoint;
@@ -240,7 +240,7 @@ RiAestheticsModel >> iconForClassVariableDefinition: iceDefinition [
 
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> iconForDefinition: iceDefinition [
 	^ iceDefinition accept: iceDefinitionIconVisitor
 ]
@@ -250,7 +250,7 @@ RiAestheticsModel >> iconForFiles [
 	^ self iconNamed: #book
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> iconTitleForClassPropertyDefinition: iceDefinition [
 
 	| mapping |
@@ -269,7 +269,7 @@ RiAestheticsModel >> iconTitleForClassPropertyDefinition: iceDefinition [
 		ifAbsent: [ iceDefinition propertyName first: 1 ]
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> iconTitleForClassVariableDefinition: iceDefinition [
 
 	| mapping |
@@ -329,17 +329,19 @@ RiAestheticsModel >> innerBorderLowImpact [
 
 { #category : #colors }
 RiAestheticsModel >> insertColor [
-	^ self copyOfColorWithoutAlphaMixedWithBackground: self currentTheme diffAdditionalLineBackgroundColor
+	^ self backgroundColorMixedWith: self currentTheme diffAdditionalLineBackgroundColor
 ]
 
-{ #category : #accessing }
+{ #category : #colors }
 RiAestheticsModel >> modificationColor [
 	| reference |
-	reference := self removeColor.
-	^ Color
-		h: 220
-		s: reference saturation
-		v: reference brightness
+	reference := self currentTheme diffRemovedLinesBackgroundColor.
+	^ self backgroundColorMixedWith: 
+		(Color
+			h: 240
+			s: reference saturation
+			v: reference brightness
+			alpha: reference alpha)
 ]
 
 { #category : #colors }
@@ -391,7 +393,7 @@ RiAestheticsModel >> popupDiffMorphFor: iceNode [
 
 { #category : #colors }
 RiAestheticsModel >> removeColor [
-	^ self copyOfColorWithoutAlphaMixedWithBackground: self currentTheme diffRemovedLinesBackgroundColor
+	^ self backgroundColorMixedWith: self currentTheme diffRemovedLinesBackgroundColor
 ]
 
 { #category : #accessing }
@@ -423,7 +425,7 @@ RiAestheticsModel >> secondaryOutlineColor [
 	^ self outlineColor alpha: 0.7
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> shapeForClassProperty: iceNode [
 	^ self
 		shapeForClassPropertyDefinition: iceNode value definition
@@ -431,7 +433,7 @@ RiAestheticsModel >> shapeForClassProperty: iceNode [
 		border: (self innerBorderFor: iceNode)
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> shapeForClassPropertyDefinition: iceDefinition color: aColor border: aBorder [
 	^ RiIconGenerator new
 		extent: self widthForMethod asPoint;
@@ -445,7 +447,7 @@ RiAestheticsModel >> shapeForClassPropertyDefinition: iceDefinition color: aColo
 
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> shapeForClassVariable: iceNode [
 	^ self
 		shapeForClassVariableDefinition: iceNode value definition
@@ -453,7 +455,7 @@ RiAestheticsModel >> shapeForClassVariable: iceNode [
 		border: (self innerBorderFor: iceNode)
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColor border: aBorder [
 "	| shape |
 	shape := RSPolygon new
@@ -476,12 +478,12 @@ RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColo
 
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> shapeForDefinition: iceDefinition [
 	^ self shapeForIcon: (self iconForDefinition: iceDefinition)
 ]
 
-{ #category : #accessing }
+{ #category : #icons }
 RiAestheticsModel >> shapeForIcon: aForm [
 	^ RSBitmap new
 		form: aForm;
