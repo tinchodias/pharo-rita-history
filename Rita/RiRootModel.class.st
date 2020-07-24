@@ -20,8 +20,9 @@ Class {
 RiRootModel class >> newWithRegisteredRepositories [
 
 	| repositories |
-	repositories := IceRepository registry collect: [ :anIceRepository | 
-		RiRepository iceRepository: anIceRepository ].
+	repositories := (IceRepository registry 
+		sorted: [ :a :b | a name asLowercase < b name asLowercase ])
+		collect: [ :each | RiRepository iceRepository: each ].
 
 	^ self new
 		repositories: repositories;

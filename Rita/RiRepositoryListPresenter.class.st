@@ -18,25 +18,6 @@ RiRepositoryListPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #examples }
-RiRepositoryListPresenter class >> newWithRegistry [
-	^ self new
-		model: IceRepository registry;
-		yourself
-]
-
-{ #category : #examples }
-RiRepositoryListPresenter class >> open [
-	<example>
-
-	self newWithRegistry
-		openWithSpec;
-		withWindowDo: [ :window | 
-			window
-				extent: 500 @ 800;
-				title: 'Repositories' ]
-]
-
 { #category : #accessing }
 RiRepositoryListPresenter >> blockForOpenPullRequests: aBlock [
 	blockForOpenPullRequests:= aBlock
@@ -91,8 +72,7 @@ RiRepositoryListPresenter >> initializePresenters [
 
 	"Set up columns"
 	table
-		showColumnHeaders;
-		addColumn: ((SpImageTableColumn evaluated: [ :each | self iconNamed: #git ]) width: 20);
+		addColumn: ((SpImageTableColumn title: '' evaluated: [ :each | self iconNamed: #git ]) width: 20);
 		addColumn: (SpStringTableColumn title: 'Name' evaluated: #name);
 		addColumn: (SpStringTableColumn title: 'Description' evaluated: #description).
 
