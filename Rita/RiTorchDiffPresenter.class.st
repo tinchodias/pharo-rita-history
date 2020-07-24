@@ -101,19 +101,17 @@ RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 
 { #category : #'canvas building' }
 RiTorchDiffPresenter >> buildFileStructureAndConnections [
-	| query iceNodes shapes |
+	| query iceNodes |
 	query := model at: #diffQuery.
-	iceNodes := query nodesForFiles.
-	shapes := iceNodes
-		collect: [ :each | 
-			RSBox new
-				noPaint;
-				size: self aesthetics widthForMethod * 2;
-				model: each;
-				border: self aesthetics tinyBoxBorder;
-				addInteraction: (RSPopup text: [ :node | node path pathString ]);
-				yourself ].
-	canvas addAll: shapes
+
+	iceNodes := query nodesForFiles
+		select: [ :each | each allParentNodes
+			allSatisfy: [ :each2 | renderer isExpanded: each2 ] ].
+
+	iceNodes ifNotEmpty: [
+		canvas add: (renderer shapeForFilesBox: iceNodes) ]
+	
+	
 ]
 
 { #category : #'canvas building' }

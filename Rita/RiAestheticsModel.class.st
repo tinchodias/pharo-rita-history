@@ -232,6 +232,11 @@ RiAestheticsModel >> iconForDefinition: iceDefinition [
 	^ iceDefinition accept: iceDefinitionIconVisitor
 ]
 
+{ #category : #icons }
+RiAestheticsModel >> iconForFiles [
+	^ self iconNamed: #book
+]
+
 { #category : #accessing }
 RiAestheticsModel >> iconTitleForClassPropertyDefinition: iceDefinition [
 
@@ -447,8 +452,13 @@ RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColo
 
 { #category : #accessing }
 RiAestheticsModel >> shapeForDefinition: iceDefinition [
+	^ self shapeForIcon: (self iconForDefinition: iceDefinition)
+]
+
+{ #category : #accessing }
+RiAestheticsModel >> shapeForIcon: aForm [
 	^ RSBitmap new
-		form: (self iconForDefinition: iceDefinition);
+		form: aForm;
 		scaleBy: 0.7;
 		yourself
 ]

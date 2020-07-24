@@ -280,6 +280,56 @@ RiTorchRenderer >> shapeForContentsOfCollapsedClass: iceNode [
 ]
 
 { #category : #'shape building' }
+RiTorchRenderer >> shapeForFiles: iceNodes [
+	
+	| shapes |
+	shapes := iceNodes collect: [ :each | 
+		(self shapeForMethodCodeInTinyMode: each)
+			model: each;
+			border: aesthetics innerBorder;
+			addInteraction: (RSPopup text: [ :node | node path pathString ]);
+			yourself ].
+	self applyVLayoutOn: shapes.
+
+	^ RSComposite new
+		shapes: shapes;
+		padding: aesthetics classRowMargin;
+		yourself.
+
+]
+
+{ #category : #'shape building' }
+RiTorchRenderer >> shapeForFilesBox: iceNodes [
+
+	| aGroup title titleBox outerBox |
+	aGroup := self groupFor: { self shapeForFiles: iceNodes }.
+	title := self
+		titleForString: 'Files'
+		icon: (aesthetics shapeForIcon: aesthetics iconForFiles).
+	aGroup addFirst: title.
+	
+	"Distribute vertically"
+	RSVerticalLineLayout new gapSize: 0; on: aGroup.
+	
+	self adjustTitle: title on: aGroup.
+	
+	aGroup addFirst: (titleBox := RSBox new
+		noPaint;
+		border: self boxBorder;
+		yourself).
+	aGroup addLast: (outerBox := RSBox new
+		noPaint;
+		border: self boxBorder;
+		yourself).
+	self adjustBox: outerBox on: aGroup.
+	titleBox
+		position: outerBox position x @ (title position y);
+		extent: (outerBox width @ (title height)).
+
+	^ aGroup asShape
+]
+
+{ #category : #'shape building' }
 RiTorchRenderer >> shapeForMethod: iceNode [
 	^ (self isExpanded: iceNode)
 		ifTrue: [ self shapeForMethodInExpandedMode: iceNode ]
@@ -408,15 +458,19 @@ RiTorchRenderer >> shapeForVariable: iceNode [
 
 { #category : #hooks }
 RiTorchRenderer >> titleFor: iceNode [
-	| icon title label shapes |
-	icon := aesthetics shapeForDefinition: iceNode value definition.
+	^ self
+		titleForString: (modelDescriptor classname rsValue: iceNode) asString
+		icon: (aesthetics shapeForDefinition: iceNode value definition)
+]
 
+{ #category : #hooks }
+RiTorchRenderer >> titleForString: title icon: icon [
+	| label shapes |
 	label := (RSLabel new
 		color: self textColor;
 		scaleBy: 1@1.1
 		yourself).
 	label fontSize: label fontSize * 0.6.
-	title := (modelDescriptor classname rsValue: iceNode) asString.
 	label text: (RiTextWidthKeeper
 		middleTruncationFor: title
 		font: label font
