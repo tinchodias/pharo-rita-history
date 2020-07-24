@@ -37,7 +37,7 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 				add: #iceDiff -> iceDiff;
 				add: #shadowedIceNodes -> IdentitySet new;
 				add: #expandedIceNodes -> (RiVisibleTreeStrategy 
-					expandedIceNodesFrom: iceDiff tree children);
+					expandedIceNodesFrom: {iceDiff tree});
 				yourself);
 			yourself
 ]

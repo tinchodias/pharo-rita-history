@@ -16,7 +16,7 @@ RiVisibleTreeStrategy class >> expandedIceNodesFrom: initialIceNodes [
 
 { #category : #accessing }
 RiVisibleTreeStrategy class >> expandedIceNodesFrom: initialIceNodes limit: limit [
-	| result nextTreeLevel |
+	| result nextTreeLevel next2Levels |
 	result := IdentitySet withAll: initialIceNodes.
 	nextTreeLevel := initialIceNodes.
 	
@@ -25,9 +25,11 @@ RiVisibleTreeStrategy class >> expandedIceNodesFrom: initialIceNodes limit: limi
 		"No more children so finish"
 		nextTreeLevel ifEmpty: [ ^ result ].
 
+		next2Levels := nextTreeLevel flatCollect: [ :each | each children ].
+
 		"Limit would be exceeded with next level expanded, 
 		so collapse them and all their children."
-		nextTreeLevel size + result size > limit ifTrue: [ ^ result ].
+		nextTreeLevel size + next2Levels size + result size > limit ifTrue: [ ^ result ].
 
 		"Then expand and iterate on next tree level"
 		result addAll: nextTreeLevel ] repeat.

@@ -46,6 +46,11 @@ RiTorchRenderer >> blockForMouseClickOnIceNode [
 ]
 
 { #category : #private }
+RiTorchRenderer >> blockForMouseDoubleClickOnIceNode [
+	^ [ :clickEvent | (model at: #blockWhenNodeExpandToggle) value: clickEvent shape model ]
+]
+
+{ #category : #private }
 RiTorchRenderer >> blockForMouseEnterOnIceNode [
 	^ [ :clickEvent | (model at: #blockWhenNodesHighlighted) value: { clickEvent shape model } ]
 ]
@@ -81,6 +86,7 @@ RiTorchRenderer >> configuredWithInteractions: aShape model: iceNode [
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
 		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
+		when: RSMouseDoubleClick do: self blockForMouseDoubleClickOnIceNode;
 		addInteraction: self popupForIceNodeShapes;
 		addInteraction: highlighingController;
 		yourself

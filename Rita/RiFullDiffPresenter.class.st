@@ -39,8 +39,10 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 		add: #blockWhenNodeSelected -> [ :iceNode |
 			treeDiffPresenter selectIceNode: iceNode.
 			torchDiffPresenter selectIceNode: iceNode.
-			sourceCodePanel selectIceNode: iceNode.
-			];
+			sourceCodePanel selectIceNode: iceNode ];
+		add: #blockWhenNodeExpandToggle -> [ :iceNode |
+			treeDiffPresenter selectIceNode: iceNode.
+			treeDiffPresenter doToggleExpandOneLevel ];
 		add: #blockWhenNodesHighlighted -> [ :iceNodeCollection |
 			treeDiffPresenter highlightIceNode: iceNodeCollection.
 			torchDiffPresenter highlightIceNode: iceNodeCollection ];

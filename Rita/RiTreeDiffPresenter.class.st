@@ -109,6 +109,13 @@ RiTreeDiffPresenter >> doInitialTreeExpansionOn: aFastTable [
 	aFastTable refresh.
 ]
 
+{ #category : #'expand/collapse' }
+RiTreeDiffPresenter >> doToggleExpandOneLevel [
+	self
+		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | 
+			fastTableItem toggle ]
+]
+
 { #category : #'check/uncheck' }
 RiTreeDiffPresenter >> doUncheck: anIceNode [
 	self shadowedIceNodes
