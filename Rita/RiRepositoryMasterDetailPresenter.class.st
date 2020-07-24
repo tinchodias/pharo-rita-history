@@ -8,8 +8,11 @@ Class {
 RiRepositoryMasterDetailPresenter >> connectMasterToDetail [
 	masterPresenter blockForElementSelected: [ :targetRiElement |
 		| parentDiffModels |
-		parentDiffModels := targetRiElement ancestors collect: [:each | 
-			RiParentDiffModel parentRiElement: each ].
+		"Other tools only show diff to first ancestor"
+		parentDiffModels := targetRiElement ancestors 
+			ifEmpty: [ #() ]
+			ifNotEmpty: [:col | 
+				{ RiParentDiffModel parentRiElement: col first } ].
 		detailPresenter model: 
 			(model
 				at: #element put: targetRiElement;
