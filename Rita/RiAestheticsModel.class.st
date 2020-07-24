@@ -52,7 +52,7 @@ RiAestheticsModel >> classRowMargin [
 	^ Margin
 		left: 0
 		right: 0
-		top: 0
+		top: self gapBetweenMethods / 2
 		bottom: self gapBetweenMethods
 ]
 

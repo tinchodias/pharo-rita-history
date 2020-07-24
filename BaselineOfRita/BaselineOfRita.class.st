@@ -11,7 +11,7 @@ BaselineOfRita >> baseline: spec [
 		for: #pharo
 		do: [
 			spec baseline: 'Roassal3' with: [
-				spec repository: 'github://ObjectProfile/Roassal3:master/src' ].
+				spec repository: 'github://tinchodias/Roassal3:old-text-extent/src' ].
 			spec baseline: 'TaskIt' with: [
 				spec repository: 'github://sbragagnolo/taskit:v1.1.0' ].
 			spec baseline: 'Iceberg' with: [

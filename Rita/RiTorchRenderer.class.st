@@ -18,6 +18,15 @@ RiTorchRenderer class >> model: aModel highlighingController: highlighingControl
 		yourself
 ]
 
+{ #category : #private }
+RiTorchRenderer >> adjustTitle: title on: aGroup [
+	super adjustTitle: title on: aGroup.
+
+	title position: title position - (0@1).
+	title height: title height - 2.
+
+]
+
 { #category : #hooks }
 RiTorchRenderer >> applyMLayoutOn: shapes [
 	RSFlowLayout new 
@@ -191,48 +200,20 @@ RiTorchRenderer >> shapeForClass: iceNode [
 
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForClassInCollapsedMode: iceNode [
-	| shapes outerBox title titleBox |
-	shapes := self groupFor: { self shapeForContentsOfCollapsedClass: iceNode }.
-	"Do some magic to adjust title on top-center"
-	title := self titleFor: iceNode.
-	shapes addFirst: title.
-	self applyLayoutOn: shapes.
-	self adjustTitle: title on: shapes.
-	shapes addFirst: (titleBox := self shapeForClassName: iceNode).
-	shapes addLast: (outerBox := self classBoxShapeFor: iceNode).
-	self adjustBox: outerBox on: shapes. 
-	titleBox
-		position: outerBox position x @ title position y;
-		extent: (outerBox width @ title height).
-
-	^ self 
-		configuredWithInteractions: shapes asShape
-		model: iceNode
+	^ self
+		shapeForTitledBox: iceNode
+		shapes: {
+			self shapeForContentsOfCollapsedClass: iceNode}
 ]
 
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForClassInExpandedMode: iceNode [
-	| shapes outerBox title titleBox |
-	shapes := self groupFor: {
-		self shapeForClassProperties: iceNode.
-		self varsFor: iceNode.
-		self methodsFor: iceNode }.
-
-	"Do some magic to adjust title on top-center"
-	title := self titleFor: iceNode.
-	shapes addFirst: title.
-	self applyLayoutOn: shapes.
-	self adjustTitle: title on: shapes.
-	shapes addFirst: (titleBox := self shapeForClassName: iceNode).
-	shapes addLast: (outerBox := self classBoxShapeFor: iceNode).
-	self adjustBox: outerBox on: shapes. 
-	titleBox
-		position: outerBox position x @ title position y;
-		extent: (outerBox width @ title height).
-
-	^ self 
-		configuredWithInteractions: shapes asShape
-		model: iceNode
+	^ self
+		shapeForTitledBox: iceNode
+		shapes: {
+			self shapeForClassProperties: iceNode.
+			self varsFor: iceNode.
+			self methodsFor: iceNode }
 ]
 
 { #category : #'shape building' }
@@ -383,22 +364,34 @@ RiTorchRenderer >> shapeForMethodProperty: iceNode [
 
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForPackage: iceNode [
-	| shapes outerBox title titleBox |
-	shapes := self groupFor: { }.
+	^ self
+		shapeForTitledBox: iceNode
+		shapes: #()
+
+]
+
+{ #category : #'shape building' }
+RiTorchRenderer >> shapeForTitledBox: iceNode shapes: shapesArray [
+	| outerBox title titleBox aGroup |
 	"Do some magic to adjust title on top-center"
+	aGroup := self groupFor: shapesArray.
 	title := self titleFor: iceNode.
-	shapes addFirst: title.
-	self applyLayoutOn: shapes.
-	self adjustTitle: title on: shapes.
-	shapes addFirst: (titleBox := self shapeForClassName: iceNode).
-	shapes addLast: (outerBox := self classBoxShapeFor: iceNode).
-	self adjustBox: outerBox on: shapes. 
+	aGroup addFirst: title.
+	
+	"Distribute vertically"
+	RSVerticalLineLayout new gapSize: 0; on: aGroup.
+	
+	self adjustTitle: title on: aGroup.
+	
+	aGroup addFirst: (titleBox := self shapeForClassName: iceNode).
+	aGroup addLast: (outerBox := self classBoxShapeFor: iceNode).
+	self adjustBox: outerBox on: aGroup.
 	titleBox
-		position: outerBox position x @ title position y;
-		extent: (outerBox width @ title height).
+		position: outerBox position x @ (title position y);
+		extent: (outerBox width @ (title height)).
 
 	^ self 
-		configuredWithInteractions: shapes asShape
+		configuredWithInteractions: aGroup asShape
 		model: iceNode
 ]
 
@@ -416,7 +409,7 @@ RiTorchRenderer >> titleFor: iceNode [
 
 	label := (RSLabel new
 		color: self textColor;
-		scaleBy: 1@1.2
+		scaleBy: 1@1.1
 		yourself).
 	label fontSize: label fontSize * 0.6.
 	title := (modelDescriptor classname rsValue: iceNode) asString.
