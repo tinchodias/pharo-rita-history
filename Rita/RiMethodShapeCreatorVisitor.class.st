@@ -31,8 +31,8 @@ RiMethodShapeCreatorVisitor >> initialize: aRiAestheticsModel [
 	aesthetics := aRiAestheticsModel.
 
 	colorMap := {
-		#insert -> aesthetics insertColor.
-		#remove -> aesthetics removeColor.
+		#insert -> (aesthetics colorForLineInsert).
+		#remove -> (aesthetics colorForLineRemove).
 		} asDictionary
 ]
 

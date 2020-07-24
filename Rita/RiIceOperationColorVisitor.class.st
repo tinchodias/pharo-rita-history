@@ -23,12 +23,12 @@ RiIceOperationColorVisitor >> initializeForAesthetics: aRiAestheticsModel [
 
 { #category : #visiting }
 RiIceOperationColorVisitor >> visitAddition: anIceAddition [ 
-	^ aesthetics insertColor
+	^ aesthetics colorForLineInsert
 ]
 
 { #category : #visiting }
 RiIceOperationColorVisitor >> visitModification: anIceModification [ 
-	^ aesthetics modificationColor 
+	^ aesthetics colorForLineModification
 ]
 
 { #category : #visiting }
@@ -38,5 +38,5 @@ RiIceOperationColorVisitor >> visitNoModification: anIceNoModification [
 
 { #category : #visiting }
 RiIceOperationColorVisitor >> visitRemoval: anIceRemoval [
-	^ aesthetics removeColor
+	^ aesthetics colorForLineRemove
 ]
