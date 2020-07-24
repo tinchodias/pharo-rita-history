@@ -249,7 +249,7 @@ RiTreeDiffPresenter >> newColumnWithIceNodes [
 				yourself);
 		addColumn:
 			(SpImageTableColumn new
-				evaluated: [ :each | (model at: #aesthetics) rowForChange: each value ];
+				evaluated: [ :each | (model at: #aesthetics) rowForChange: each ];
 				yourself);
 		yourself
 ]

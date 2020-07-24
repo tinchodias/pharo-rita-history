@@ -396,7 +396,15 @@ RiAestheticsModel >> removeColor [
 
 { #category : #accessing }
 RiAestheticsModel >> rowForChange: iceNode [
-	^ iceNode ritaKey asMorph
+	^ (String streamContents: [:stream |
+		stream
+			space;
+			nextPutAll: iceNode value ritaKey.
+		iceNode children ifNotEmpty: [ :c |
+			stream
+				nextPutAll: '  (';
+				print: c size;
+				nextPutAll: ')' ] ]) asMorph
 ]
 
 { #category : #'diff morph creation' }
