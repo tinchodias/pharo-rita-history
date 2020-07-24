@@ -102,6 +102,19 @@ RiAestheticsModel >> currentTheme [
 ]
 
 { #category : #'diff morph creation' }
+RiAestheticsModel >> diffMorphFor2: iceNode [
+	| oldString newString morph |
+	oldString := self asContentsToDiff: iceNode value rightContents.
+	newString := self asContentsToDiff: iceNode value leftContents.
+	morph := self scrolledUnifiedDiffMorph.
+	self
+		fillUnifiedDiff: morph textArea
+		from: oldString
+		to: newString.
+	^ morph
+]
+
+{ #category : #'diff morph creation' }
 RiAestheticsModel >> diffMorphFor: iceNode [
 	| oldString newString |
 	oldString := self asContentsToDiff: iceNode value rightContents.
@@ -361,14 +374,19 @@ RiAestheticsModel >> pathMorphWith: iceNode [
 { #category : #'diff morph creation' }
 RiAestheticsModel >> popupDiffMorphFor: iceNode [
 
-	^ "self columnMorphWithAll: {
-			self pathMorphWith: iceNode allPathSegments.
-			"(self diffMorphFor: iceNode)
-				font: (LogicalFont 
-					familyName: StandardFonts codeFont familyName
-					pointSize: 7);
+	| topText font |
+	font := LogicalFont 
+		familyName: StandardFonts codeFont familyName
+		pointSize: 7.
+	topText := iceNode value definition ritaDescription.
+	^ (self columnMorphWithAll: {
+			topText asMorph.
+			(self diffMorphFor2: iceNode)
+				font: font;
 				yourself
-		
+		})
+		extent: 500@250;
+		yourself
 ]
 
 { #category : #colors }

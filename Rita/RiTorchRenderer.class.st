@@ -158,12 +158,9 @@ RiTorchRenderer >> methodsFor: aClass [
 
 { #category : #'popup building' }
 RiTorchRenderer >> popupForIceNodeShapes [
-	^ (model at: #root) flyDiff
-		ifTrue: [
-			RSMorphicPopup new
-				morphBuilder: [ :iceNode | aesthetics popupDiffMorphFor: iceNode ];
-				yourself ]
-		ifFalse: [ RSPopup text: [ :node | node value ritaKey ] ]
+	^ RSMorphicPopup new
+		morphBuilder: [ :iceNode | aesthetics popupDiffMorphFor: iceNode ];
+		yourself
 ]
 
 { #category : #'popup building' }
@@ -174,12 +171,6 @@ RiTorchRenderer >> popupForTinyClassShapes [
 				color: aesthetics backgroundColor;
 				yourself ];
 		yourself
-]
-
-{ #category : #'popup building' }
-RiTorchRenderer >> popupForVariableShapes [
-	^ RSPopup text: [ :node | 
-		'{1} [{2}]' format: { node value definition name. node value definition typeToShow } ]
 ]
 
 { #category : #hooks }
