@@ -5,7 +5,7 @@ Class {
 		'treeTable',
 		'highlightDeferrer',
 		'iceNodeCollectionToHighlight',
-		'checkedNodes'
+		'expandDeferrer'
 	],
 	#category : #'Rita-UI-Diff'
 }
@@ -24,15 +24,15 @@ RiTreeDiffPresenter >> contextMenuForTable [
 	
 	selected := treeTable selection selectedItem.
 
-"	menu addItem: [ :item |
+	menu addItem: [ :item |
 		item
 			name: 'Collapse with all children';
-			action: [ self doCollapseSelectedNode  ] ].
+			action: [ self doCollapseWithAllChildren  ] ].
 	menu addItem: [ :item |
 		item
 			name: 'Expand with all children';
-			action: [ self doExpandSelectedNode ] ].
-"	menu addItem: [ :item | 
+			action: [ self doExpandWithAllChildren ] ].
+	menu addItem: [ :item | 
 		item
 			name: 'Inspect object';
 			icon: (self iconNamed: #smallInspectIt);
@@ -53,7 +53,7 @@ RiTreeDiffPresenter >> doCheck: anIceNode [
 ]
 
 { #category : #'expand/collapse' }
-RiTreeDiffPresenter >> doCollapseSelectedNode [
+RiTreeDiffPresenter >> doCollapseOneLevel [
 	self doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | 
 		(fastTableItem hasChildren and: [ fastTableItem isExpanded ]) 
 			ifTrue: [ fastTableItem collapse ]
@@ -61,20 +61,36 @@ RiTreeDiffPresenter >> doCollapseSelectedNode [
 				| path |
 				path := treeTable selection selectedPath.
 				path size >= 2 ifTrue: [
-					treeTable selectPath: path allButLast ] ] ]
+					treeTable
+						selectPath: path allButLast
+						scrollToSelection: true ] ] ]
+]
+
+{ #category : #'expanding-collapsing' }
+RiTreeDiffPresenter >> doCollapseWithAllChildren [
+	self
+		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | fastTableItem collapseAll ]
 ]
 
 { #category : #'expand/collapse' }
-RiTreeDiffPresenter >> doExpandSelectedNode [
-	self doValueOnSelectedFastTableItemToExpandOrCollapse: [ :item | item expand ]
+RiTreeDiffPresenter >> doExpandOneLevel [
+	self
+		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | fastTableItem expand ]
+]
+
+{ #category : #'collapse/expand' }
+RiTreeDiffPresenter >> doExpandWithAllChildren [
+	self
+		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | fastTableItem expandAll ]
 ]
 
 { #category : #'expand/collapse' }
-RiTreeDiffPresenter >> doInitialTreeExpansion [
+RiTreeDiffPresenter >> doInitialTreeExpansionOn: aFastTable [
 	| expanded items |
 	expanded := model at: #expandedIceNodes.
 	
-	items := OrderedCollection withAll: treeTable adapter widget dataSource rootsItems.
+	"Initially, all items are collapsed. Iterate from roots to expand those marked in the model."
+	items := OrderedCollection withAll: aFastTable dataSource rootsItems.
 	[ items notEmpty ] whileTrue: [
 		| aFastTableItem |
 		aFastTableItem := items removeFirst.
@@ -82,7 +98,7 @@ RiTreeDiffPresenter >> doInitialTreeExpansion [
 			aFastTableItem expand.
 			items addAll: aFastTableItem children ] ].
 
-	treeTable adapter widget refresh.
+	aFastTable refresh.
 ]
 
 { #category : #'check/uncheck' }
@@ -101,10 +117,37 @@ RiTreeDiffPresenter >> doValueOnSelectedFastTableItemToExpandOrCollapse: aBlock 
 	fastTableItem := treeTable adapter widget dataSource
 		itemAtPath: treeTable selection selectedPath.
 
-	aBlock value: fastTableItem.
+	aBlock value: fastTableItem
+]
 
-	(model at: #expandedIceNodes) add: fastTableItem data.
-	(model at: #blockWhenExpandedIceNodesChanged) value
+{ #category : #'expand/collapse' }
+RiTreeDiffPresenter >> hackFastTableForExpandCollapse: aFastTable [
+	RiFTRootItem adoptInstance: aFastTable dataSource rootItem.
+	aFastTable dataSource rootItem
+		allChildrenDo: [ :each | RiFTBasicItem adoptInstance: each ].
+
+	RiFTBasicItem hackyAnnouncer weak
+		when: RiFTHackyExpand
+		send: #onHackyExpand:
+		to: self.
+		
+	RiFTBasicItem hackyAnnouncer weak
+		when: RiFTHackyCollapse
+		send: #onHackyCollapse:
+		to: self
+]
+
+{ #category : #highlighting }
+RiTreeDiffPresenter >> hackFastTableForSecondaryHighligthing: table [
+	table beRitaContainer.
+	table container
+		blockForMouseEnter: [ :rowIndex | 
+			(model at: #blockWhenNodesHighlighted)
+				value: {(table dataSource realElementAt: rowIndex)} ];
+		blockForMouseLeave: [ :rowIndex |
+			(model at: #blockWhenNodesHighlighted) value: #() ].
+
+
 ]
 
 { #category : #highlighting }
@@ -121,7 +164,13 @@ RiTreeDiffPresenter >> initialize [
 		OmDeferrer 
 			send: #refreshHighlight
 			to: self
-			after: 100 milliSeconds
+			after: 100 milliSeconds.
+
+	expandDeferrer :=
+		OmDeferrer 
+			send: #refreshExpand
+			to: self
+			after: 30 milliSeconds
 ]
 
 { #category : #initialization }
@@ -133,19 +182,15 @@ RiTreeDiffPresenter >> initializePresenters [
 			(model at: #blockWhenNodeSelected) value: selection selectedItem ];
 		contextMenu: [ self contextMenuForTable ];
 		addColumn: self newColumnWithCheckboxes.
-
-	self initializeTreeKeyCombinations.
 	
 	treeTable whenBuiltDo: [:ann |
-		| table | 
+		"Note: All items are already instantiated at this point"
+		| table |
 		table := ann widget.
-		table beRitaContainer.
-		table container
-			blockForMouseEnter: [ :rowIndex | 
-				(model at: #blockWhenNodesHighlighted) value: {
-					table dataSource realElementAt: rowIndex } ];
-			blockForMouseLeave: [ :rowIndex | 
-				(model at: #blockWhenNodesHighlighted) value: #() ] ]
+		self hackFastTableForSecondaryHighligthing: table.
+		self doInitialTreeExpansionOn: table.
+		self hackFastTableForExpandCollapse: table.
+		self initializeTreeKeyCombinations ]
 ]
 
 { #category : #initialization }
@@ -157,11 +202,11 @@ RiTreeDiffPresenter >> initializeTreeKeyCombinations [
 
 	treeTable
 		bindKeyCombination: Character arrowLeft
-			toAction: [ self doCollapseSelectedNode ].
+			toAction: [ self doCollapseOneLevel ].
 
 	treeTable
 		bindKeyCombination: Character arrowRight
-			toAction: [ self doExpandSelectedNode ].
+			toAction: [ self doExpandOneLevel ].
 
 ]
 
@@ -201,6 +246,32 @@ RiTreeDiffPresenter >> newColumnWithIceNodes [
 		yourself
 ]
 
+{ #category : #'expand/collapse' }
+RiTreeDiffPresenter >> onHackyCollapse: anAnnouncement [
+	(anAnnouncement belongsToSpTableTree: treeTable) ifFalse: [ ^ self ].
+	anAnnouncement traceCr.
+	self defer: [
+		(model at: #expandedIceNodes)
+			remove: anAnnouncement fastTableItem data
+			ifAbsent: [].
+		expandDeferrer schedule ]
+]
+
+{ #category : #'expand/collapse' }
+RiTreeDiffPresenter >> onHackyExpand: anAnnouncement [
+	(anAnnouncement belongsToSpTableTree: treeTable) ifFalse: [ ^ self ].
+	anAnnouncement traceCr.
+	self defer: [
+		(model at: #expandedIceNodes)
+			add: anAnnouncement fastTableItem data.
+		(model at: #blockWhenExpandedIceNodesChanged) value ]
+]
+
+{ #category : #'expand/collapse' }
+RiTreeDiffPresenter >> refreshExpand [
+	(model at: #blockWhenExpandedIceNodesChanged) value
+]
+
 { #category : #highlighting }
 RiTreeDiffPresenter >> refreshHighlight [
 	| table indices |
@@ -232,7 +303,7 @@ RiTreeDiffPresenter >> refreshOnModelUpdate [
 	| iceNodes |
 	iceNodes := (model at: #iceDiff) tree children.
 	treeTable roots: iceNodes.
-	treeTable whenBuiltDo: [ :ann | self doInitialTreeExpansion ]
+
 ]
 
 { #category : #highlighting }
