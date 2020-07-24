@@ -53,11 +53,13 @@ RiTorchDiffPresenter >> buildCanvas [
 { #category : #'canvas building' }
 RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 
-	| query classShapes classIceNodes |
+	| query classShapes classIceNodes packageShapes |
 	query := model at: #diffQuery.	
 
-	"First, add classes (and traits)."
-	classIceNodes := query nodesForBehaviors.
+	"First, add classes (and traits) with expanded parents."
+	classIceNodes := query nodesForBehaviors
+		select: [ :each | each allParentNodes
+			allSatisfy: [ :each2 | renderer isExpanded: each2 ] ].
 	classShapes := classIceNodes collect: [ :each | renderer shapeForClass: each ].
 
 	self rootModel connectHierarchies ifTrue: [
@@ -72,12 +74,19 @@ RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 					ifNone: [ nil ] ] ].
 	canvas addAll: classShapes.
 
-	"Add method extensions"
+	"Add method extensions with expanded parents"
 	canvas addAll: (query nodesForMethodExtensions
-		collect: [ :each | renderer shapeForClass: each ]).
+		select: [ :each | each allParentNodes
+			allSatisfy: [ :each2 | renderer isExpanded: each2 ] ]
+		thenCollect: [ :each | renderer shapeForClass: each ]).
 
 	"Add packages"
-	self rootModel showPackages ifTrue: [
+	packageShapes := query nodesForPackages
+		select: [ :each | (renderer isExpanded: each) not ]
+		thenCollect: [ :each | renderer shapeForPackage: each ].
+	canvas addAll: packageShapes.
+
+"	self rootModel showPackages ifTrue: [
 		| packageShapes |
 		packageShapes := query nodesForPackages
 			collect: [ :each | renderer shapeForPackage: each ].
@@ -85,9 +94,9 @@ RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 			border: self aesthetics innerBorder;
 			canvas: canvas;
 			shapes: packageShapes;
-			connectFrom: [ :node | node children ].
+			connectFromAll: [ :node | node children ].
 		canvas addAll: packageShapes ].
-
+"
 ]
 
 { #category : #'canvas building' }
