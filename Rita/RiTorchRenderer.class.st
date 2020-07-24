@@ -282,6 +282,10 @@ RiTorchRenderer >> shapeForFiles: iceNodes [
 	shapes := iceNodes collect: [ :each | 
 		(self shapeForMethodCodeInTinyMode: each)
 			model: each;
+			when: RSMouseClick do: self blockForMouseClickOnIceNode;
+			when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
+			when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
+			addInteraction: highlighingController;
 			border: aesthetics innerBorder;
 			addInteraction: (RSPopup text: [ :node | node path pathString ]);
 			yourself ].
