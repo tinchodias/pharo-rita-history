@@ -22,9 +22,14 @@ In Pharo 8:
     Metacello new 
         baseline: 'Rita'; 
         repository: 'github://tinchodias/pharo-rita-history/';
-        onConflictUseLoaded;
+        onConflict: [ :e | e useLoaded ];
+        onUpgrade: [ :e | e useLoaded ];
+        ignoreImage;
         load.
 ~~~
+
+**NOTE**: A window will ask if you want to Load or Merge the project named Hiedra. Load is good.
+
 
 ## Execute
 
