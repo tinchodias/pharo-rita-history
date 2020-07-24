@@ -16,8 +16,8 @@ Class {
 { #category : #specs }
 RiTorchDiffPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
+		add: #toolBar withConstraints: [ :constraints | constraints height: self toolbarHeight + 8];
 		add: #roassalPresenter;
-		add: #toolBar withConstraints: [ :constraints | constraints height: self toolbarHeight + 16 ];
 		yourself
 ]
 
@@ -171,9 +171,9 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 
 	| onlyChangedButton isExpandedButton connectHierarchiesButton showMethodsLOCButton flyDiffButton |
 	spawnButton := (self instantiate: SpToolbarButtonPresenter)
-			label: 'Expand';
+			label: 'Maximize';
 			icon: (self iconNamed: #smallRemoteOpen);
-			help: 'Expand this view in a new notebook page.';
+			help: 'Open this diff view in a new notebook page.';
 			yourself.
 	
 "	onlyChangedButton := self
@@ -200,12 +200,12 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 		icon: #hierarchy
 		help: 'Whether connect subclasses or leave them free.'.
 
-	showPackagesButton := self
+"	showPackagesButton := self
 		newRootModelToggleButtonFor: #showPackages
 		label: 'Pkgs'
 		icon: #package
 		help: 'Whether group classes in packages or leave them free.'.
-
+"
 "	flyDiffButton := self 
 		newRootModelToggleButtonFor: #flyDiff
 		label: 'FlyDiff'
@@ -216,10 +216,11 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 "		addItem: onlyChangedButton;
 		addItem: isExpandedButton;
 "		addItem: connectHierarchiesButton;
-		addItem: showPackagesButton;
+"		addItem: showPackagesButton;"
 "		addItem: showMethodsLOCButton;"
 "		addItem: flyDiffButton;"
-		addItemRight: spawnButton;
+		"addItemRight:" 
+		addItem: spawnButton;
 		yourself
 ]
 
