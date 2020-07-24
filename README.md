@@ -33,9 +33,9 @@ In Pharo 8:
 
 ## Execute
 
-World Menu -> Tools -> Rita
+Click on `World Menu -> Tools -> Rita`.
 
-or:
+or evaluate:
 
 ~~~Smalltalk
 RiRootPresenter open
