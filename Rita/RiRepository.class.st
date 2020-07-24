@@ -51,7 +51,7 @@ RiRepository >> ensureProcessed [
 	elements ifNil: [ self process ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 RiRepository >> fetch [
 	iceRepository fetch
 ]
