@@ -12,8 +12,8 @@ Class {
 { #category : #accessing }
 RiDiffQuery >> allLeafChildren [
 	^ Array streamContents: [ :stream |
-		self treeToQuery allLeavesDo: [ :node |
-			stream nextPut: node ] ]
+		self treeToQuery allLeavesDo: [ :iceNode |
+			stream nextPut: iceNode ] ]
 ]
 
 { #category : #private }
@@ -35,8 +35,8 @@ RiDiffQuery >> diff [
 ]
 
 { #category : #accessing }
-RiDiffQuery >> diff: anObject [
-	diff := anObject
+RiDiffQuery >> diff: anIceDiff [
+	diff := anIceDiff
 ]
 
 { #category : #initialization }
@@ -48,36 +48,37 @@ RiDiffQuery >> initialize [
 
 { #category : #accessing }
 RiDiffQuery >> nodesForBehaviors [
-	^ Array streamContents: [ :stream |
-		self treeToQuery allChildrenDo: [ :node |
-			node value definition isClassDefinition
-				ifTrue: [ stream nextPut: node ] ] ]
+	^ self nodesThatSatisfy: [ :iceNode |
+		iceNode value definition isClassDefinition or: [
+		iceNode value definition isTraitDefinition ] ]
+
 ]
 
 { #category : #accessing }
 RiDiffQuery >> nodesForFiles [
-	^ Array streamContents: [ :stream |
-		self treeToQuery allChildrenDo: [ :node |
-			node value definition isFileDefinition
-				ifTrue: [ stream nextPut: node ] ] ]
+	^ self nodesThatSatisfy: [ :iceNode |
+		iceNode value definition isFileDefinition ]
+
 ]
 
 { #category : #accessing }
 RiDiffQuery >> nodesForMethodExtensions [
-	^ Array
-		streamContents: [ :stream | 
-			self treeToQuery
-				allChildrenDo: [ :node | 
-					node value definition isExtensionDefinition
-						ifTrue: [ stream nextPut: node ] ] ]
+	^ self nodesThatSatisfy: [ :iceNode |
+		iceNode value definition isExtensionDefinition ]
 ]
 
 { #category : #accessing }
 RiDiffQuery >> nodesForPackages [
+	^ self nodesThatSatisfy: [ :iceNode |
+		iceNode value definition isPackageDefinition ]
+]
+
+{ #category : #accessing }
+RiDiffQuery >> nodesThatSatisfy: aBlock [
 	^ Array streamContents: [ :stream |
-		self treeToQuery allChildrenDo: [ :node |
-			node value definition isPackageDefinition
-				ifTrue: [ stream nextPut: node ] ] ]
+		self treeToQuery allChildrenDo: [ :iceNode |
+			(aBlock value: iceNode) ifTrue: [
+				stream nextPut: iceNode ] ] ]
 ]
 
 { #category : #accessing }
