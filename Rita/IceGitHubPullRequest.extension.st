@@ -1,6 +1,11 @@
 Extension { #name : #IceGitHubPullRequest }
 
 { #category : #'*Rita' }
+IceGitHubPullRequest >> baseCommit [
+	^ repository commitAt: self baseSHA
+]
+
+{ #category : #'*Rita' }
 IceGitHubPullRequest >> comments [
 	| jsons |
 	jsons := (IceGitHubAPI new
@@ -20,10 +25,15 @@ IceGitHubPullRequest >> createdAt [
 ]
 
 { #category : #'*Rita' }
+IceGitHubPullRequest >> diffToBase [
+	^ self branch commit diffTo: self baseCommit
+]
+
+{ #category : #'*Rita' }
 IceGitHubPullRequest >> diffToRepositoryHead [
 	"Inspired on IceMerge>>calculateChanges"
 
-	^ self branch head diffTo: self repository head
+	^ self branch commit diffTo: self repository headCommit
 ]
 
 { #category : #'*Rita' }

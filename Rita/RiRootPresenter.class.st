@@ -79,6 +79,7 @@ RiRootPresenter >> newPullRequestsPageFor: anIceRemote [
 			(self instantiate: RiPullRequestMasterDetailPresenter)
 				model: { 
 					#githubRemote -> anIceRemote. 
+					#repository -> anIceRemote localRepository.
 					#root -> model. 
 					#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ].
 					} asDictionary;

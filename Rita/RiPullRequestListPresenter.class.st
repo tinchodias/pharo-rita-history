@@ -30,9 +30,14 @@ RiPullRequestListPresenter >> contextMenuForTable [
 
 	menu addItem: [ :item |
 		item
+			name: 'View Diff to Base';
+			icon: (self iconNamed: #diff);
+			action: [ self openDiffToBaseOf: selected ] ].
+	menu addItem: [ :item |
+		item
 			name: 'View Diff to Repository HEAD';
 			icon: (self iconNamed: #diff);
-			action: [ self openDiffFor: selected ] ].
+			action: [ self openDiffToHeadOf: selected ] ].
 	menu addItem: [ :item |
 		item
 			name: 'Open in Web Browser';
@@ -69,10 +74,25 @@ RiPullRequestListPresenter >> initializePresenters [
 ]
 
 { #category : #initialization }
-RiPullRequestListPresenter >> openDiffFor: aPR [ 
+RiPullRequestListPresenter >> openDiffToBaseOf: aPR [ 
 	| iceDiff |
+	iceDiff := aPR diffToBase.
+	(model at: #blockForSpawn) value: (model copy
+		at: #iceDiff put: iceDiff;
+		add: #shadowedIceNodes -> IdentitySet new;
+		add: #expandedIceNodes -> OrderedCollection new;
+		yourself)
+]
+
+{ #category : #initialization }
+RiPullRequestListPresenter >> openDiffToHeadOf: aPR [ 
+	| iceDiff | 
 	iceDiff := aPR diffToRepositoryHead.
-	(model at: #blockForSpawn) value: iceDiff
+	(model at: #blockForSpawn) value: (model copy
+		at: #iceDiff put: iceDiff;
+		add: #shadowedIceNodes -> IdentitySet new;
+		add: #expandedIceNodes -> OrderedCollection new;
+		yourself)
 ]
 
 { #category : #initialization }
@@ -82,6 +102,5 @@ RiPullRequestListPresenter >> openInWebBrowser: aPR [
 
 { #category : #accessing }
 RiPullRequestListPresenter >> refreshOnModelUpdate [
-	listPresenter items: model
-
+	listPresenter items: (model at: #pullRequestsToShow)
 ]

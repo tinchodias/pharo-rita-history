@@ -41,6 +41,7 @@ RiPullRequestMasterDetailPresenter >> refreshOnModelUpdate [
 				repository: iceRepo;
 				yourself ].
 
-	masterPresenter model: prs.
-
+	masterPresenter model: (model copy
+		at: #pullRequestsToShow put: prs;
+		yourself)
 ]
