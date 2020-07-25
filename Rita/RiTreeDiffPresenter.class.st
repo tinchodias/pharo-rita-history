@@ -334,6 +334,11 @@ RiTreeDiffPresenter >> selectIceNode: anIceNode [
 		scrollToSelection: true
 ]
 
+{ #category : #'as yet unclassified' }
+RiTreeDiffPresenter >> selectedIceNode [
+	^ treeTable selectedItem
+]
+
 { #category : #'check/uncheck' }
 RiTreeDiffPresenter >> shadowedIceNodes [
 	^ model at: #shadowedIceNodes

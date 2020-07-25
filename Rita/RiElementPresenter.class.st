@@ -64,3 +64,8 @@ RiElementPresenter >> refreshOnModelUpdate [
 	notebook pages ifNotEmpty: [
 		notebook selectPage: notebook pages last ]
 ]
+
+{ #category : #private }
+RiElementPresenter >> selectedDiffModelIfFound: aBlockClosure [ 
+	^ aBlockClosure value: notebook selectedPage activePresenter 
+]

@@ -30,6 +30,11 @@ RiFullDiffPresenter >> initializePresenters [
 
 ]
 
+{ #category : #private }
+RiFullDiffPresenter >> nodesToIterate [
+	^ (treeDiffPresenter model at: #diffQuery) allLeafChildren
+]
+
 { #category : #initialization }
 RiFullDiffPresenter >> refreshOnModelUpdate [
 
@@ -37,9 +42,7 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 	modelCopy := model copy
 		add: #aesthetics -> RiAestheticsModel new;
 		add: #blockWhenNodeSelected -> [ :iceNode |
-			treeDiffPresenter selectIceNode: iceNode.
-			torchDiffPresenter selectIceNode: iceNode.
-			sourceCodePanel selectIceNode: iceNode ];
+			self selectIceNode: iceNode ];
 		add: #blockWhenNodeExpandToggle -> [ :iceNode |
 			treeDiffPresenter selectIceNode: iceNode.
 			treeDiffPresenter doToggleExpandOneLevel ];
@@ -64,4 +67,45 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 	treeDiffPresenter model: modelCopy.
 	sourceCodePanel model: modelCopy.
 
+]
+
+{ #category : #actions }
+RiFullDiffPresenter >> selectBackIceNode [
+| iceNodes index iceNode |
+	iceNodes := self nodesToIterate.
+	iceNodes ifEmpty: [ ^self ].
+	iceNode := treeDiffPresenter selectedIceNode
+		ifNil: [ iceNodes first.] 
+		ifNotNil: [ :currentIceNode |
+			index := iceNodes detectIndex: [ :each |
+				each == currentIceNode ].
+			index = 1 ifTrue: [
+				^ self inform: 'At start' ].
+			iceNodes at: index - 1 ].
+
+	self selectIceNode: iceNode
+]
+
+{ #category : #initialization }
+RiFullDiffPresenter >> selectIceNode: iceNode [
+	treeDiffPresenter selectIceNode: iceNode.
+	torchDiffPresenter selectIceNode: iceNode.
+	sourceCodePanel selectIceNode: iceNode
+]
+
+{ #category : #actions }
+RiFullDiffPresenter >> selectNextIceNode [
+	| iceNodes index iceNode |
+	iceNodes := self nodesToIterate.
+	iceNodes ifEmpty: [ ^self ].
+	iceNode := treeDiffPresenter selectedIceNode
+		ifNil: [ iceNodes first.] 
+		ifNotNil: [ :currentIceNode |
+			index := iceNodes detectIndex: [ :each |
+				each == currentIceNode ].
+			index = iceNodes size ifTrue: [
+				^ self inform: 'At end' ].
+			iceNodes at: index + 1 ].
+
+	self selectIceNode: iceNode
 ]
