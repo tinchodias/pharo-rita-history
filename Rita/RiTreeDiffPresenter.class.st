@@ -264,7 +264,6 @@ RiTreeDiffPresenter >> newColumnWithIceNodes [
 { #category : #'expand/collapse' }
 RiTreeDiffPresenter >> onHackyCollapse: anAnnouncement [
 	(anAnnouncement belongsToSpTableTree: treeTable) ifFalse: [ ^ self ].
-
 "	self defer: ["
 		(model at: #expandedIceNodes)
 			remove: anAnnouncement fastTableItem data
@@ -276,7 +275,6 @@ RiTreeDiffPresenter >> onHackyCollapse: anAnnouncement [
 { #category : #'expand/collapse' }
 RiTreeDiffPresenter >> onHackyExpand: anAnnouncement [
 	(anAnnouncement belongsToSpTableTree: treeTable) ifFalse: [ ^ self ].
-	anAnnouncement traceCr.
 "	self defer: ["
 		(model at: #expandedIceNodes)
 			add: anAnnouncement fastTableItem data.
