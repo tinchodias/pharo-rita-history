@@ -25,13 +25,11 @@ RiPullRequestMasterDetailPresenter >> masterPresenterClass [
 ]
 
 { #category : #accessing }
-RiPullRequestMasterDetailPresenter >> model: anObject [
+RiPullRequestMasterDetailPresenter >> refreshOnModelUpdate [
 	| iceRepo githubRemote jsons prs |
 
-	iceRepo := (anObject at: #repository) iceRepository.
-	githubRemote := (iceRepo remotes 
-		select: [ :each | each host = 'github.com' ])
-		last.
+	githubRemote := model at: #githubRemote.
+	iceRepo := githubRemote localRepository.
 
 	"List all PRs"
 	jsons := (IceGitHubAPI new
@@ -44,6 +42,5 @@ RiPullRequestMasterDetailPresenter >> model: anObject [
 				yourself ].
 
 	masterPresenter model: prs.
-	super model: anObject.	"Note: refreshOnUpdate shouldn't refresh masterPresenter again "
 
 ]

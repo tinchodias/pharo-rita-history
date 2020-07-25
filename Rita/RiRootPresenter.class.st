@@ -65,25 +65,24 @@ RiRootPresenter >> newHomePage [
 				model: model repositories;
 				blockForOpenRepository: [ :aRiRepository |
 					self openRepository: aRiRepository ];
-				blockForOpenPullRequests: [ :aRiRepository |
-					self openPullRequestsOf: aRiRepository ];
+				blockForOpenPullRequests: [ :anIceRemote |
+					self openPullRequestsOf: anIceRemote ];
 				yourself ]
 ]
 
 { #category : #private }
-RiRootPresenter >> newPullRequestsPageFor: aRiRepository [ 
+RiRootPresenter >> newPullRequestsPageFor: anIceRemote [
 	^ SpNotebookPage
 		title: ''
 		icon: (self iconNamed: #github)
 		provider: [
 			(self instantiate: RiPullRequestMasterDetailPresenter)
 				model: { 
-					#repository -> aRiRepository. 
+					#githubRemote -> anIceRemote. 
 					#root -> model. 
 					#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ].
 					} asDictionary;
 				yourself ]
-
 ]
 
 { #category : #private }
@@ -131,11 +130,11 @@ RiRootPresenter >> openPage: anObject title: aString ifAbsentBuildWith: aBlock [
 ]
 
 { #category : #private }
-RiRootPresenter >> openPullRequestsOf: aRiRepository [
+RiRootPresenter >> openPullRequestsOf: anIceRemote [
 	self
-		openPage: aRiRepository
-		title: (self titleForPullRequestsPage: aRiRepository)
-		ifAbsentBuildWith: [ self newPullRequestsPageFor: aRiRepository ]
+		openPage: anIceRemote
+		title: (self titleForPullRequestsPage: anIceRemote)
+		ifAbsentBuildWith: [ self newPullRequestsPageFor: anIceRemote ]
 ]
 
 { #category : #private }
@@ -155,8 +154,8 @@ RiRootPresenter >> openSpawnFor: modelToSpawn [
 ]
 
 { #category : #private }
-RiRootPresenter >> titleForPullRequestsPage: aRiRepository [
-	^ '{1}: Pull Requests' format: {aRiRepository name}
+RiRootPresenter >> titleForPullRequestsPage: anIceRemote [
+	^ 'Pull Requests on {1}' format: {anIceRemote displayString}
 ]
 
 { #category : #private }

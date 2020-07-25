@@ -35,6 +35,21 @@ RiRepositoryListPresenter >> blockForOpenRepository: aBlock [
 ]
 
 { #category : #initialization }
+RiRepositoryListPresenter >> contextMenuForPullRequestsFor: aRiRepository [
+	| menu |
+	menu := self newMenu.
+	aRiRepository iceRepository remotes
+		select: [ :each | each host = 'github.com' ]
+		thenDo: [ :each | 
+			menu
+				addItem: [ :item | 
+					item
+						name: each name;
+						action: [ blockForOpenPullRequests value: each ] ] ].
+	^ menu
+]
+
+{ #category : #initialization }
 RiRepositoryListPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := self newMenu.
@@ -48,7 +63,7 @@ RiRepositoryListPresenter >> contextMenuForTable [
 	menu addItem: [ :item |
 		item
 			name: 'View Pull Requests';
-			action: [ blockForOpenPullRequests value: selected ] ].
+			subMenu: (self contextMenuForPullRequestsFor: selected) ].
 	menu addItem: [ :item |
 		item
 			name: 'Open folder';
