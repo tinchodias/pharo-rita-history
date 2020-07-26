@@ -1,5 +1,5 @@
 Class {
-	#name : #RiPullRequestPresenter,
+	#name : #RiOldPullRequestPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
 		'table'
@@ -8,14 +8,14 @@ Class {
 }
 
 { #category : #specs }
-RiPullRequestPresenter class >> defaultSpec [
+RiOldPullRequestPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #table;
 		yourself
 ]
 
 { #category : #initialization }
-RiPullRequestPresenter >> initializePresenters [
+RiOldPullRequestPresenter >> initializePresenters [
 
 	table := self newTable
 		hideColumnHeaders;
@@ -27,7 +27,7 @@ RiPullRequestPresenter >> initializePresenters [
 ]
 
 { #category : #initialization }
-RiPullRequestPresenter >> morphFor: aPRComment [
+RiOldPullRequestPresenter >> morphFor: aPRComment [
 
 	| aesthetics timestamp timestampHumanReadable |
 	self flag: #todo.	
@@ -45,7 +45,7 @@ RiPullRequestPresenter >> morphFor: aPRComment [
 ]
 
 { #category : #initialization }
-RiPullRequestPresenter >> refreshOnModelUpdate [
+RiOldPullRequestPresenter >> refreshOnModelUpdate [
 	| aPR items |
 	aPR := model at: #pullRequest.
 	items := {aPR}, aPR comments.

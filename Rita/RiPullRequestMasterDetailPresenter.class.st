@@ -16,7 +16,7 @@ RiPullRequestMasterDetailPresenter >> connectMasterToDetail [
 
 { #category : #initialization }
 RiPullRequestMasterDetailPresenter >> detailPresenterClass [
-	^ RiPullRequestPresenter2
+	^ RiPullRequestDetailPresenter
 ]
 
 { #category : #initialization }
@@ -27,7 +27,6 @@ RiPullRequestMasterDetailPresenter >> masterPresenterClass [
 { #category : #accessing }
 RiPullRequestMasterDetailPresenter >> refreshOnModelUpdate [
 	| iceRepo githubRemote jsons prs |
-
 	githubRemote := model at: #githubRemote.
 	iceRepo := githubRemote localRepository.
 

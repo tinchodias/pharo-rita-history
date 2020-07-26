@@ -1,5 +1,5 @@
 Class {
-	#name : #RiPullRequestPresenter2,
+	#name : #RiPRConversationPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
 		'textPresenter',
@@ -9,14 +9,14 @@ Class {
 }
 
 { #category : #specs }
-RiPullRequestPresenter2 class >> defaultSpec [
+RiPRConversationPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #textPresenter;
 		yourself
 ]
 
 { #category : #private }
-RiPullRequestPresenter2 >> hunkTextFor: aPRComment [
+RiPRConversationPresenter >> hunkTextFor: aPRComment [
 	^ Text streamContents: [ :stream |
 		| path line |
 		path := aPRComment path asText makeAllColor: (self theme textColor alpha: 0.7).
@@ -33,13 +33,13 @@ RiPullRequestPresenter2 >> hunkTextFor: aPRComment [
 ]
 
 { #category : #initialization }
-RiPullRequestPresenter2 >> initializePresenters [
+RiPRConversationPresenter >> initializePresenters [
 	textPresenter := self newText.
 	printer := RiDateAndTimePrinter new
 ]
 
 { #category : #initialization }
-RiPullRequestPresenter2 >> refreshOnModelUpdate [
+RiPRConversationPresenter >> refreshOnModelUpdate [
 	| aPR sortedComments commentsToSort |
 	aPR := model at: #pullRequest.
 	commentsToSort := aPR reviewComments.
@@ -58,7 +58,7 @@ RiPullRequestPresenter2 >> refreshOnModelUpdate [
 ]
 
 { #category : #initialization }
-RiPullRequestPresenter2 >> textFor: aPRComment [
+RiPRConversationPresenter >> textFor: aPRComment [
 	| timestamp text timestampHumanReadable |
 	timestamp := aPRComment createdAt asDateAndTime.
 	timestampHumanReadable := printer stringFor: timestamp.
@@ -82,7 +82,7 @@ RiPullRequestPresenter2 >> textFor: aPRComment [
 ]
 
 { #category : #initialization }
-RiPullRequestPresenter2 >> textForAll: aListOfPRComments [
+RiPRConversationPresenter >> textForAll: aListOfPRComments [
 	^ Text
 		streamContents: [ :stream | 
 			aListOfPRComments
