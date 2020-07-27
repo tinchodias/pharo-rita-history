@@ -264,22 +264,20 @@ RiTreeDiffPresenter >> newColumnWithIceNodes [
 { #category : #'expand/collapse' }
 RiTreeDiffPresenter >> onHackyCollapse: anAnnouncement [
 	(anAnnouncement belongsToSpTableTree: treeTable) ifFalse: [ ^ self ].
-"	self defer: ["
-		(model at: #expandedIceNodes)
-			remove: anAnnouncement fastTableItem data
-			ifAbsent: [].
-"		(model at: #blockWhenExpandedIceNodesChanged) value"
-		expandDeferrer schedule 
+	(model at: #expandedIceNodes)
+		remove: anAnnouncement fastTableItem data
+		ifAbsent: [].
+	expandDeferrer schedule.
+	#onHackyCollapse: traceCr.
 ]
 
 { #category : #'expand/collapse' }
 RiTreeDiffPresenter >> onHackyExpand: anAnnouncement [
 	(anAnnouncement belongsToSpTableTree: treeTable) ifFalse: [ ^ self ].
-"	self defer: ["
-		(model at: #expandedIceNodes)
-			add: anAnnouncement fastTableItem data.
-"		(model at: #blockWhenExpandedIceNodesChanged) value."
-		expandDeferrer schedule 
+	(model at: #expandedIceNodes)
+		add: anAnnouncement fastTableItem data.
+	expandDeferrer schedule.
+	#onHackyExpand: traceCr.
 ]
 
 { #category : #'expand/collapse' }

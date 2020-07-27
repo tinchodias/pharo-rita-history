@@ -26,12 +26,14 @@ RiFTBasicItem >> childrenDo: aBlockClosure [
 
 { #category : #'expanding-collapsing' }
 RiFTBasicItem >> collapse [
+	isExpanded ifFalse: [ ^self ]. "Already collapsed"
 	self class hackyAnnouncer announce: (RiFTHackyCollapse source: self).
 	^ super collapse
 ]
 
 { #category : #'expanding-collapsing' }
 RiFTBasicItem >> expand [
+	isExpanded ifTrue: [ ^self ]. "Already expanded"
 	self class hackyAnnouncer announce: (RiFTHackyExpand source: self).
 	^ super expand
 ]
