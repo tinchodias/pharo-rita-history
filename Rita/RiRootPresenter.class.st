@@ -80,7 +80,8 @@ RiRootPresenter >> newPullRequestsPageFor: anIceRemote [
 				model: { 
 					#githubRemote -> anIceRemote. 
 					#repository -> anIceRemote localRepository.
-					#root -> model. 
+					#root -> model.
+					#aesthetics -> model aesthetics.
 					#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ].
 					} asDictionary;
 				yourself ]
@@ -95,7 +96,8 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 			RiRepositoryMasterDetailPresenter new
 				model: { 
 					#repository -> aRiRepository. 
-					#root -> model. 
+					#root -> model.
+					#aesthetics -> model aesthetics.
 					#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ]
 					} asDictionary;
 				yourself ]

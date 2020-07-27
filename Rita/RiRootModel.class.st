@@ -11,7 +11,8 @@ Class {
 		'connectHierarchies',
 		'showMethodsLOC',
 		'flyDiff',
-		'showPackages'
+		'showPackages',
+		'aesthetics'
 	],
 	#category : #'Rita-UI-Models'
 }
@@ -28,6 +29,11 @@ RiRootModel class >> newWithRegisteredRepositories [
 		repositories: repositories;
 		yourself.
 
+]
+
+{ #category : #accessing }
+RiRootModel >> aesthetics [
+	^ aesthetics
 ]
 
 { #category : #accessing }
@@ -63,6 +69,7 @@ RiRootModel >> flyDiff: anObject [
 { #category : #initialization }
 RiRootModel >> initialize [
 	super initialize.
+	aesthetics := RiAestheticsModel new.
 	considerOnlyChanged := true.
 	isExpanded := true.
 	connectHierarchies := true.

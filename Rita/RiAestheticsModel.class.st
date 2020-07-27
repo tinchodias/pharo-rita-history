@@ -81,6 +81,11 @@ RiAestheticsModel >> colorForLineRemove [
 	^ self removeColor mixed: 0.7 with: self foregroundColor
 ]
 
+{ #category : #colors }
+RiAestheticsModel >> colorForNames [
+	^ self currentTheme caretColor mixed: 0.5 with: self currentTheme textColor
+]
+
 { #category : #'diff morph creation' }
 RiAestheticsModel >> columnMorphWithAll: someMorphs [
 

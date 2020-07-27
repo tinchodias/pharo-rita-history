@@ -15,6 +15,25 @@ RiPRConversationPresenter class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #initialization }
+RiPRConversationPresenter >> conversationItems [
+	| aPR commentsToSort sortedComments |
+	aPR := model at: #pullRequest.
+	commentsToSort := aPR reviewComments.
+
+	sortedComments := (commentsToSort select: [:each | each repliedId isNil ]) asOrderedCollection.
+	sortedComments := (sortedComments, aPR comments) sorted: [ :a :b | a createdAt asDateAndTime < b createdAt asDateAndTime ].
+	sortedComments := sortedComments asOrderedCollection.
+
+	commentsToSort
+		select: [:each | each repliedId notNil ]
+		thenDo: [ :each |
+			| repliedComment |
+			repliedComment := sortedComments detect: [ :c | c id = each repliedId ].
+			sortedComments add: each after: repliedComment ].
+	^ {aPR}, sortedComments
+]
+
 { #category : #private }
 RiPRConversationPresenter >> hunkTextFor: aPRComment [
 	^ Text streamContents: [ :stream |
@@ -40,21 +59,7 @@ RiPRConversationPresenter >> initializePresenters [
 
 { #category : #initialization }
 RiPRConversationPresenter >> refreshOnModelUpdate [
-	| aPR sortedComments commentsToSort |
-	aPR := model at: #pullRequest.
-	commentsToSort := aPR reviewComments.
-
-	sortedComments := (commentsToSort select: [:each | each repliedId isNil ]) asOrderedCollection.
-	sortedComments := (sortedComments, aPR comments) sorted: [ :a :b | a createdAt asDateAndTime < b createdAt asDateAndTime ].
-	sortedComments := sortedComments asOrderedCollection.
-
-	commentsToSort
-		select: [:each | each repliedId notNil ]
-		thenDo: [ :each |
-			| repliedComment |
-			repliedComment := sortedComments detect: [ :c | c id = each repliedId ].
-			sortedComments add: each after: repliedComment ].
-	textPresenter text: (self textForAll: ({aPR}, sortedComments))
+	textPresenter text: (self textForAll: self conversationItems)
 ]
 
 { #category : #initialization }
@@ -67,7 +72,7 @@ RiPRConversationPresenter >> textFor: aPRComment [
 		append: ' · ' , timestampHumanReadable;
 		append: String lf;
 		yourself.
-	text := text allBold makeAllColor: self theme warningTextColor.
+	text := text allBold makeAllColor: (model at: #aesthetics) colorForNames.
 	
 	aPRComment path ifNotNil: [
 		self flag: #todo.
@@ -77,6 +82,7 @@ RiPRConversationPresenter >> textFor: aPRComment [
 			text prepend: (self hunkTextFor: aPRComment) ]].
 		
 	text append: (MicroDownParser asText: aPRComment body).
+	text append: String lf.
 	text append: String lf.
 	^ text
 ]

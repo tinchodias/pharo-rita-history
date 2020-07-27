@@ -12,12 +12,6 @@ RiPRTreeDiffPresenter >> boldPartFor: iceNode [
 ]
 
 { #category : #initialization }
-RiPRTreeDiffPresenter >> colorForNames [
-		
-	^ self theme caretColor mixed: 0.5 with: self theme textColor
-]
-
-{ #category : #initialization }
 RiPRTreeDiffPresenter >> descriptionPartsFor: iceNode [
 	| description |
 	description := iceNode value definition ritaDescription asString.
@@ -43,14 +37,16 @@ RiPRTreeDiffPresenter >> initializePresenters [
 
 { #category : #initialization }
 RiPRTreeDiffPresenter >> newColumnWithIceNodes [
+	| aesthetics |
+	aesthetics := model at: #aesthetics.
 	^ SpCompositeTableColumn new
 		addColumn:
 			(SpImageTableColumn new
-				evaluated: [ :each | (model at: #aesthetics) iconForChange: each value ];
+				evaluated: [ :each | aesthetics iconForChange: each value ];
 				yourself);
 		addColumn:
 			(SpStringTableColumn new
-				evaluated: [ :each | (' ', (self normalPartFor: each)) asText makeAllColor: self colorForNames ];
+				evaluated: [ :each | (' ', (self normalPartFor: each)) asText makeAllColor: aesthetics colorForNames ];
 				yourself);
 		addColumn:
 			(SpStringTableColumn new

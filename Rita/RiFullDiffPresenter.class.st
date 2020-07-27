@@ -40,7 +40,6 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 
 	| modelCopy |
 	modelCopy := model copy
-		add: #aesthetics -> RiAestheticsModel new;
 		add: #blockWhenNodeSelected -> [ :iceNode |
 			self selectIceNode: iceNode ];
 		add: #blockWhenNodeExpandToggle -> [ :iceNode |
