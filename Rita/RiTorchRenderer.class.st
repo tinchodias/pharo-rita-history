@@ -301,7 +301,8 @@ RiTorchRenderer >> shapeForFiles: iceNodes [
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForFilesBox: iceNodes [
 
-	| aGroup title titleBox outerBox |
+	| aGroup title titleBox outerBox aBorder |
+	aBorder := self boxBorder copy color: (aesthetics iceOperationColorVisitor visitNoModification: nil).
 	aGroup := self groupFor: { self shapeForFiles: iceNodes }.
 	title := self
 		titleForString: 'Files'
@@ -315,11 +316,11 @@ RiTorchRenderer >> shapeForFilesBox: iceNodes [
 	
 	aGroup addFirst: (titleBox := RSBox new
 		noPaint;
-		border: self boxBorder;
+		border: aBorder;
 		yourself).
 	aGroup addLast: (outerBox := RSBox new
 		noPaint;
-		border: self boxBorder;
+		border: aBorder;
 		yourself).
 	self adjustBox: outerBox on: aGroup.
 	titleBox

@@ -217,6 +217,11 @@ RiAestheticsModel >> geometryForClassVariable [
 		yourself
 ]
 
+{ #category : #colors }
+RiAestheticsModel >> iceOperationColorVisitor [
+	^ iceOperationColorVisitor
+]
+
 { #category : #icons }
 RiAestheticsModel >> iconForChange: iceNode [
 	^ iceNode icon
