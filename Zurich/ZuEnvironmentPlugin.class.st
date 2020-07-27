@@ -2,7 +2,7 @@ Class {
 	#name : #ZuEnvironmentPlugin,
 	#superclass : #ClySystemEnvironmentPlugin,
 	#instVars : [
-		'tmpSelectors'
+		'iceDiff'
 	],
 	#category : #Zurich
 }
@@ -38,7 +38,14 @@ ZuEnvironmentPlugin >> doesClassHaveChange: arg1 [
 
 { #category : #'item decoration' }
 ZuEnvironmentPlugin >> doesMethodHaveChange: arg1 [
-	^ self tmpSelectors includes: arg1 selector
+	iceDiff tree allChildrenDo: [ :each |
+		| def |
+		def := each value definition.
+		(def isMethodDefinition and: [ 
+		def selector = arg1 selector and: [ 
+		def className = arg1 origin name ] ]) ifTrue: [ ^ true ] ].
+	
+	^ false
 ]
 
 { #category : #'item decoration' }
@@ -50,13 +57,11 @@ ZuEnvironmentPlugin >> doesPackageHaveChange: arg1 [
 ]
 
 { #category : #accessing }
-ZuEnvironmentPlugin >> tmpSelectors [
-	| tmp2 |
-	tmp2 := tmpSelectors.
-	^ tmp2 ifNil: [ #() ] ifNotNil: [ tmp2 ]
+ZuEnvironmentPlugin >> iceDiff [
+	^ iceDiff
 ]
 
 { #category : #accessing }
-ZuEnvironmentPlugin >> tmpSelectors: arg1 [
-	tmpSelectors := arg1
+ZuEnvironmentPlugin >> iceDiff: anIceDiff [
+	iceDiff := anIceDiff
 ]

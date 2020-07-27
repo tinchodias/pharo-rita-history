@@ -8,8 +8,8 @@ Class {
 ZuChangedMethodQuery >> decorateMethodGroupTableCell: arg1 of: arg2 [
 	super decorateMethodGroupTableCell: arg1 of: arg2.
 	arg1
-		color: ZuTheme current cellBackgroundColor;
-		definitionIcon: ZuTheme current changeIconSelector
+		color: ZuTheme current cellBackgroundColor";
+		definitionIcon: ZuTheme current changeIconSelector"
 ]
 
 { #category : #printing }

@@ -9,6 +9,11 @@ IceGitHubPullRequest >> basicBranch [
 ]
 
 { #category : #'*Rita' }
+IceGitHubPullRequest >> basicHeadCommit [
+	^ self basicBranch commit
+]
+
+{ #category : #'*Rita' }
 IceGitHubPullRequest >> comments [
 	| jsons |
 	jsons := (IceGitHubAPI new
@@ -30,7 +35,7 @@ IceGitHubPullRequest >> createdAt [
 
 { #category : #'*Rita' }
 IceGitHubPullRequest >> diffToBase [
-	^ self basicBranch commit diffTo: self baseCommit
+	^ self basicHeadCommit diffTo: self baseCommit
 ]
 
 { #category : #'*Rita' }

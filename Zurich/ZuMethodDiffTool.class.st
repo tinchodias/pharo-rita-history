@@ -27,7 +27,7 @@ ZuMethodDiffTool class >> tabOrder [
 
 { #category : #accessing }
 ZuMethodDiffTool >> activationPriority [
-	^ 0
+	^ leftMethod = rightMethod ifTrue: [ 0 ] ifFalse: [ ClyClassDefinitionEditorToolMorph tabOrder + 1  ]
 ]
 
 { #category : #controlling }
@@ -50,19 +50,18 @@ ZuMethodDiffTool >> belongsToCurrentBrowserContext [
 
 { #category : #testing }
 ZuMethodDiffTool >> belongsToRemovedBrowserContext [
-	^ self leftMethod isInstalled not
-		or: [ self rightMethod isInstalled not ]
+	^ false
 ]
 
 { #category : #building }
 ZuMethodDiffTool >> build [
 	| tmp2 |
 	diffMorph := DiffMorph
-		from: self leftMethod sourceCode
-		to: self rightMethod sourceCode.
+		from: self leftMethod
+		to: self rightMethod.
 	tmp2 := diffMorph.
 	tmp2
-		contextClass: self rightMethod sourceCode;
+		contextClass: self rightMethod;
 		hResizing: #spaceFill;
 		vResizing: #spaceFill;
 		showOptions: false.
@@ -119,8 +118,22 @@ ZuMethodDiffTool >> rightMethod [
 
 { #category : #initialization }
 ZuMethodDiffTool >> setUpModelFromContext [
-	leftMethod := context firstSelectedMethod.
-	rightMethod := context lastSelectedMethod
+
+	| tmp1 arg1|
+	arg1 := context lastSelectedMethod.
+	tmp1 := LastZuEnvironmentPlugin.
+	tmp1 iceDiff tree allChildrenDo: [ :each |
+		| def |
+		def := each value definition.
+		(def isMethodDefinition and: [ 
+		def selector = arg1 selector and: [ 
+		def className = arg1 origin name ] ]) ifTrue: [
+			leftMethod := each value rightContents.
+			rightMethod := each value leftContents .
+			^ self ] ].
+
+	leftMethod := context lastSelectedMethod sourceCode.
+	rightMethod := context lastSelectedMethod sourceCode
 ]
 
 { #category : #updating }

@@ -28,7 +28,7 @@ RiPullRequestListPresenter >> contextMenuForTable [
 	
 	selected := listPresenter selection selectedItem.
 
-	menu addItem: [ :item |
+"	menu addItem: [ :item |
 		item
 			name: 'View Diff to Base';
 			icon: (self iconNamed: #diff);
@@ -37,7 +37,18 @@ RiPullRequestListPresenter >> contextMenuForTable [
 		item
 			name: 'View Diff to Repository HEAD';
 			icon: (self iconNamed: #diff);
-			action: [ self openDiffToHeadOf: selected ] ].
+			action: [ self openDiffToHeadOf: selected ] ]."
+
+	menu addItem: [ :item |
+		item
+			name: 'Open code in this commit in System Browser';
+			action: [ RiCommitBrowseUtility browse: selected basicHeadCommit ] ].
+
+	menu addItem: [ :item |
+		item
+			name: 'Open diff to base in System Browser';
+			action: [ self openBrowserWithDiff: selected ] ].
+			
 	menu addItem: [ :item |
 		item
 			name: 'Open in Web Browser';
@@ -71,6 +82,11 @@ RiPullRequestListPresenter >> initializePresenters [
 			selection selectedItem ifNotNil: blockForPRSelected ];
 		contextMenu: [ self contextMenuForTable ].
 
+]
+
+{ #category : #actions }
+RiPullRequestListPresenter >> openBrowserWithDiff: anIceGitHubPullRequest [ 
+	RiCommitBrowseUtility browseDiff: anIceGitHubPullRequest diffToBase 
 ]
 
 { #category : #initialization }
