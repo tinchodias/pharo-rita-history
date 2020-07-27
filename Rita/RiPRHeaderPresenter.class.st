@@ -24,7 +24,17 @@ RiPRHeaderPresenter >> initializePresenters [
 
 { #category : #accessing }
 RiPRHeaderPresenter >> refreshOnModelUpdate [
-	model accept: self
+	| text pr |
+	pr := model at: #pullRequest.
+	text := Text streamContents: [ :stream |
+		stream
+			nextPutAll: 'Author: ' asText allBold;
+			nextPutAll: pr author;
+			nextPutAll: ' - ';
+			nextPutAll: 'State: ' asText allBold; 
+			nextPutAll: pr state ].
+	
+	headerText text: text
 ]
 
 { #category : #private }
@@ -37,26 +47,4 @@ RiPRHeaderPresenter >> textForSignature: aLGitSignature role: aString [
 				aLGitSignature name.
 				aLGitSignature email.
 				aLGitSignature dateAndTime asEmailString}) ]
-]
-
-{ #category : #visiting }
-RiPRHeaderPresenter >> visitCommit: aRiCommit [ 
-	| signaturesText text |
-	signaturesText := model committer = model author
-		ifTrue: [ self textForSignature: model author role: 'Author & Committer' ]
-		ifFalse: [ 
-			(self textForSignature: model author role: 'Author'), ' - ',
-			(self textForSignature: model committer role: 'Committer'). ].
-	
-	text := Text streamContents: [ :stream |
-		stream
-			nextPutAll: 'SHA: ' asText allBold; 
-			nextPutAll: model shortId;
-			nextPutAll: ' - ';
-			nextPutAll: signaturesText;
-			cr;
-			nextPutAll: 'Comment: ' asText allBold;
-			nextPutAll: model comment trimBoth ].
-	
-	headerText text: text
 ]

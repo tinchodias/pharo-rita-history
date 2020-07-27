@@ -24,7 +24,9 @@ RiPullRequestDetailPresenter >> initializeConversationPage [
 	page := SpNotebookPage
 		title: 'Conversation'
 		icon: (self iconNamed: #announcement)
-		provider: [ self newConversationPresenter ].
+		provider: [ model
+				ifNil: [ self newNullPresenter ]
+				ifNotNil: [ self newConversationPresenter ] ].
 	notebook addPage: page
 ]
 
@@ -34,7 +36,9 @@ RiPullRequestDetailPresenter >> initializeDiffPage [
 	page := SpNotebookPage
 		title: 'Diff'
 		icon: (self iconNamed: #diff)
-		provider: [ self newDiffPresenter ].
+		provider: [ model
+				ifNil: [ self newNullPresenter ]
+				ifNotNil: [ self newDiffPresenter ] ].
 	notebook addPage: page
 ]
 
@@ -48,7 +52,9 @@ RiPullRequestDetailPresenter >> initializePresenters [
 
 { #category : #private }
 RiPullRequestDetailPresenter >> newConversationPresenter [
-	RiPRConversationPresenter
+	^ (self instantiate: RiPRConversationPresenter)
+		model: model;
+		yourself
 ]
 
 { #category : #private }

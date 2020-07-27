@@ -332,7 +332,7 @@ RiTreeDiffPresenter >> selectIceNode: anIceNode [
 		scrollToSelection: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 RiTreeDiffPresenter >> selectedIceNode [
 	^ treeTable selectedItem
 ]

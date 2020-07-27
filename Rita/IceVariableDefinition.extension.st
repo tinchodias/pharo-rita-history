@@ -7,5 +7,5 @@ IceVariableDefinition >> ritaBasicDescription [
 
 { #category : #'*Rita' }
 IceVariableDefinition >> ritaDescription [
-	^ (self typeToShow, ' Variable') asText allBold, ': ', mcVariableDefinition name
+	^ (self typeToShow capitalized, ' Variable') asText allBold, ': ', mcVariableDefinition name
 ]

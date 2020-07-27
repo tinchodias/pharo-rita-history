@@ -329,14 +329,14 @@ RiAestheticsModel >> innerBorderLowImpact [
 
 { #category : #colors }
 RiAestheticsModel >> insertColor [
-	^ self backgroundColorMixedWith: self currentTheme diffAdditionalLineBackgroundColor
+	^ "self backgroundColorMixedWith:" self currentTheme diffAdditionalLineBackgroundColor
 ]
 
 { #category : #colors }
 RiAestheticsModel >> modificationColor [
 	| reference |
 	reference := self currentTheme diffRemovedLinesBackgroundColor.
-	^ self backgroundColorMixedWith: 
+	^ "self backgroundColorMixedWith: "
 		(Color
 			h: 240
 			s: reference saturation
@@ -393,7 +393,7 @@ RiAestheticsModel >> popupDiffMorphFor: iceNode [
 
 { #category : #colors }
 RiAestheticsModel >> removeColor [
-	^ self backgroundColorMixedWith: self currentTheme diffRemovedLinesBackgroundColor
+	^ "self backgroundColorMixedWith:" self currentTheme diffRemovedLinesBackgroundColor
 ]
 
 { #category : #accessing }
