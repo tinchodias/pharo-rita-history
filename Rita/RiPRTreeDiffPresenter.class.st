@@ -37,16 +37,14 @@ RiPRTreeDiffPresenter >> initializePresenters [
 
 { #category : #initialization }
 RiPRTreeDiffPresenter >> newColumnWithIceNodes [
-	| aesthetics |
-	aesthetics := model at: #aesthetics.
 	^ SpCompositeTableColumn new
 		addColumn:
 			(SpImageTableColumn new
-				evaluated: [ :each | aesthetics iconForChange: each value ];
+				evaluated: [ :each | (model at: #aesthetics) iconForChange: each value ];
 				yourself);
 		addColumn:
 			(SpStringTableColumn new
-				evaluated: [ :each | (' ', (self normalPartFor: each)) asText makeAllColor: aesthetics colorForNames ];
+				evaluated: [ :each | (' ', (self normalPartFor: each)) asText makeAllColor: (model at: #aesthetics) colorForNames ];
 				yourself);
 		addColumn:
 			(SpStringTableColumn new
