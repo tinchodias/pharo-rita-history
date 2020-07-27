@@ -34,6 +34,20 @@ RiPRConversationPresenter >> conversationItems [
 	^ {aPR}, sortedComments
 ]
 
+{ #category : #initialization }
+RiPRConversationPresenter >> headerLineFor: aPRComment [
+	| timestamp text timestampHumanReadable |
+	timestamp := aPRComment createdAt asDateAndTime.
+	timestampHumanReadable := printer stringFor: timestamp.
+
+	text := aPRComment author asText
+		append: ' · ' , timestampHumanReadable;
+		append: String lf;
+		yourself.
+	^ text allBold makeAllColor: (model at: #aesthetics) colorForNames.
+
+]
+
 { #category : #private }
 RiPRConversationPresenter >> hunkTextFor: aPRComment [
 	^ Text streamContents: [ :stream |
@@ -64,24 +78,19 @@ RiPRConversationPresenter >> refreshOnModelUpdate [
 
 { #category : #initialization }
 RiPRConversationPresenter >> textFor: aPRComment [
-	| timestamp text timestampHumanReadable |
-	timestamp := aPRComment createdAt asDateAndTime.
-	timestampHumanReadable := printer stringFor: timestamp.
-
-	text := aPRComment author asText
-		append: ' · ' , timestampHumanReadable;
-		append: String lf;
-		yourself.
-	text := text allBold makeAllColor: (model at: #aesthetics) colorForNames.
+	| text indentationString body |
+	text := self headerLineFor: aPRComment.
+	indentationString := ''.
 	
 	aPRComment path ifNotNil: [
-		self flag: #todo.
-		text append: String tab.
-		text prepend: String tab.
+		text prepend: (indentationString := String tab).
 		aPRComment repliedId ifNil: [ 
 			text prepend: (self hunkTextFor: aPRComment) ]].
-		
-	text append: (MicroDownParser asText: aPRComment body).
+
+	body := (MicroDownParser asText: aPRComment body, String cr, '***').
+	body := body copyReplaceAll: String cr with: String cr, indentationString.
+	text append: body.
+
 	text append: String lf.
 	text append: String lf.
 	^ text
