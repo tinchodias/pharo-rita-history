@@ -10,3 +10,8 @@ IceDefinition >> ritaBasicDescription [
 IceDefinition >> ritaDescription [
 	^ self ritaBasicDescription asText allBold , ': ' , self name
 ]
+
+{ #category : #'*Rita' }
+IceDefinition >> ritaGlobalDescription [
+	^ self ritaDescription asString
+]

@@ -14,7 +14,7 @@ IceGitHubPullRequestComment class >> fromJSON: aDictionary [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 IceGitHubPullRequestComment >> author [
 	^ (json at: #user) at: #login
 ]
@@ -29,7 +29,7 @@ IceGitHubPullRequestComment >> createdAt [
 	^ (json at: #created_at) asDateAndTime 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 IceGitHubPullRequestComment >> diffHunk [
 	^ json at: 'diff_hunk' ifAbsent: [ nil ]
 ]
@@ -55,12 +55,32 @@ IceGitHubPullRequestComment >> inspectBodyOn: composite [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+IceGitHubPullRequestComment >> isSideOfAddition [
+	^ self side = 'RIGHT'
+]
+
+{ #category : #accessing }
+IceGitHubPullRequestComment >> line [
+	^ json at: 'line'
+]
+
+{ #category : #accessing }
+IceGitHubPullRequestComment >> originalCommitSHA [
+	^ json at: 'original_commit_id'
+]
+
+{ #category : #accessing }
+IceGitHubPullRequestComment >> originalLine [
+	^ json at: 'original_line'
+]
+
+{ #category : #accessing }
 IceGitHubPullRequestComment >> originalPosition [
 	^ json at: 'original_position' ifAbsent: [ nil ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 IceGitHubPullRequestComment >> path [
 	^ json at: 'path' ifAbsent: [ nil ]
 ]
@@ -90,6 +110,11 @@ IceGitHubPullRequestComment >> projectName [
 { #category : #accessing }
 IceGitHubPullRequestComment >> repliedId [
 	^ json at: 'in_reply_to_id' ifAbsent: [ nil ]
+]
+
+{ #category : #accessing }
+IceGitHubPullRequestComment >> side [
+	^ json at: 'side'
 ]
 
 { #category : #accessing }

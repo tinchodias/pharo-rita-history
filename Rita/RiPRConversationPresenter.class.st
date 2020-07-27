@@ -49,26 +49,55 @@ RiPRConversationPresenter >> headerLineFor: aPRComment [
 ]
 
 { #category : #private }
-RiPRConversationPresenter >> hunkTextFor: aPRComment [
+RiPRConversationPresenter >> hunkTextFor: anIceGitHubPullRequestComment [
 	^ Text streamContents: [ :stream |
 		| path line |
-		path := aPRComment path asText makeAllColor: (self theme textColor alpha: 0.7).
-		line := (aPRComment originalPosition asString, ':	', (aPRComment diffHunk lines at: (aPRComment originalPosition+1))) asText
-						addAttribute: (TextFontReference
-						toFont: (LogicalFont 
-							familyName: 'Source Code Pro' 
-							pointSize: StandardFonts defaultFont pointSize)).
+		path := self linkToIceNodePointedBy: anIceGitHubPullRequestComment.
+		line := anIceGitHubPullRequestComment diffHunk lines
+			at: (anIceGitHubPullRequestComment originalLine+1). "GH is zero-based"
 		stream
 			nextPutAll: path; lf;
 			nextPutAll: line; lf; lf.
 		 ].
 
+
+
 ]
 
 { #category : #initialization }
 RiPRConversationPresenter >> initializePresenters [
-	textPresenter := self newText.
+	textPresenter := self newText
+		beNotEditable;
+		yourself.
 	printer := RiDateAndTimePrinter new
+]
+
+{ #category : #private }
+RiPRConversationPresenter >> linkToIceNodePointedBy: anIceGitHubPullRequestComment [
+	| iceDiff file originalSHA commitToResolve mapping lineNumber |
+	"Get diff"
+	originalSHA := anIceGitHubPullRequestComment originalCommitSHA.
+	iceDiff := ((model at: #repository) commitAt: originalSHA) diffTo: (model at: #pullRequest) baseCommit.
+
+	"Parse file"
+	commitToResolve := anIceGitHubPullRequestComment isSideOfAddition
+		ifTrue: [ iceDiff sourceVersion ] ifFalse: [ iceDiff targetVersion ].
+	file := commitToResolve fileSystem resolveString: anIceGitHubPullRequestComment path.
+	lineNumber := anIceGitHubPullRequestComment originalLine.
+
+	mapping := file extension = 'st'
+		ifTrue: [ RiTonelToDiffMapping new ] 
+		ifFalse: [ RiFileToDiffMapping new ].
+	
+	mapping
+		file: file;
+		lineNumber: lineNumber;
+		iceDiff: iceDiff; 
+		calculate;
+		yourself.
+
+	^ (mapping iceNode value definition ritaGlobalDescription", ', line ' , mapping iceNodeLineNumber asString") asText
+		addAttribute: (TextAction new actOnClickBlock: [ { mapping iceNode. mapping iceNodeLineNumber. iceDiff. anIceGitHubPullRequestComment } inspect ])
 ]
 
 { #category : #initialization }
@@ -98,8 +127,7 @@ RiPRConversationPresenter >> textFor: aPRComment [
 
 { #category : #initialization }
 RiPRConversationPresenter >> textForAll: aListOfPRComments [
-	^ Text
-		streamContents: [ :stream | 
-			aListOfPRComments
-				do: [ :each | stream nextPutAll: (self textFor: each) ] ]
+	^ Text streamContents: [ :stream | 
+			aListOfPRComments do: [ :each |
+				stream nextPutAll: (self textFor: each) ] ]
 ]

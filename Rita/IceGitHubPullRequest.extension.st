@@ -1,17 +1,26 @@
 Extension { #name : #IceGitHubPullRequest }
 
 { #category : #'*Rita' }
+IceGitHubPullRequest >> basicBranch [
+	^ branch ifNil: [
+		branch := (self repository
+			remoteNamed: self remote name )
+				remoteBranchNamed: self headRef ]
+]
+
+{ #category : #'*Rita' }
 IceGitHubPullRequest >> comments [
 	| jsons |
 	jsons := (IceGitHubAPI new
+"		useComfortFadeAcceptMediaType; --> for multi-line comment support"
 		beAnonymous;
 		getListPullRequestComments: self owner 
 			project: self projectName
 			number: self number) all.
 	^ jsons collect: [ :each |
 		(IceGitHubPullRequestComment fromJSON: each)
-			"repository: self repository entity;
-			yourself" ]
+"			repository: self repository
+			yourself "]
 ]
 
 { #category : #'*Rita' }
@@ -21,14 +30,14 @@ IceGitHubPullRequest >> createdAt [
 
 { #category : #'*Rita' }
 IceGitHubPullRequest >> diffToBase [
-	^ self branch commit diffTo: self baseCommit
+	^ self basicBranch commit diffTo: self baseCommit
 ]
 
 { #category : #'*Rita' }
 IceGitHubPullRequest >> diffToRepositoryHead [
 	"Inspired on IceMerge>>calculateChanges"
 
-	^ self branch commit diffTo: self repository headCommit
+	^ self basicBranch commit diffTo: self repository headCommit
 ]
 
 { #category : #'*Rita' }
@@ -54,15 +63,16 @@ IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 { #category : #'*Rita' }
 IceGitHubPullRequest >> reviewComments [
 	| jsons |
-	jsons := (IceGitHubAPI new 
+	jsons := (IceGitHubAPI new
+		"useComfortFadeAcceptMediaType; --> for multi-line comment support"
 		beAnonymous;
 		getListPullRequestReviewComments: self owner 
 			project: self projectName
 			number: self number) all.
 	^ jsons collect: [ :each |
 		(IceGitHubPullRequestComment fromJSON: each)
-			"repository: self repository entity;
-			yourself" ]
+"			repository: self repository;
+			yourself "]
 ]
 
 { #category : #'*Rita' }
