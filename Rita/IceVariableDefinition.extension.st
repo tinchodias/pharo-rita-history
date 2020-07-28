@@ -1,11 +1,13 @@
 Extension { #name : #IceVariableDefinition }
 
 { #category : #'*Rita' }
-IceVariableDefinition >> ritaBasicDescription [
-	^ self typeToShow, ' Variable'
+IceVariableDefinition >> ritaAsTextForTree0 [
+	^ mcVariableDefinition name
 ]
 
 { #category : #'*Rita' }
-IceVariableDefinition >> ritaDescription [
-	^ (self typeToShow capitalized, ' Variable') asText allBold, ': ', mcVariableDefinition name
+IceVariableDefinition >> ritaBasicAsText [
+	^ self typeToShow = 'instance'
+		ifTrue: [ 'Variable' ]
+		ifFalse: [ self typeToShow capitalized , ' Variable' ]
 ]

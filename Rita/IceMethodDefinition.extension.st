@@ -6,8 +6,8 @@ IceMethodDefinition >> linesOfCode [
 ]
 
 { #category : #'*Rita' }
-IceMethodDefinition >> ritaDescription [
+IceMethodDefinition >> ritaBasicAsText [
 	^ (classIsMeta
 		ifTrue: [ 'Class ' ]
-		ifFalse: [ 'Instance ' ]) asText allBold, super ritaDescription
+		ifFalse: [ '' ]) asText allBold, super ritaBasicAsText
 ]

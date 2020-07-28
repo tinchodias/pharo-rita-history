@@ -1,16 +1,18 @@
 Extension { #name : #IcePropertyDefinition }
 
 { #category : #'*Rita' }
-IcePropertyDefinition >> ritaDescription [
-
-	^ (self containerIceDefinition ritaBasicDescription , ' ' , self ritaNameToShow)
-		asText allBold
+IcePropertyDefinition >> ritaAsTextForPRConversation [
+	^ self containerIceDefinition ritaAsTextForPRConversation, ' (', self ritaAsText, ')'
 ]
 
 { #category : #'*Rita' }
-IcePropertyDefinition >> ritaGlobalDescription [
+IcePropertyDefinition >> ritaAsTextForTree0 [
+	^ self ritaNameToShow
+]
 
-	^ self containerIceDefinition ritaGlobalDescription, ' (', self ritaDescription, ')'
+{ #category : #'*Rita' }
+IcePropertyDefinition >> ritaAsTextForTree1 [
+	^ super ritaAsTextForTree1, ' of ', self containerIceDefinition ritaBasicAsText
 ]
 
 { #category : #'*Rita' }

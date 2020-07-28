@@ -81,11 +81,6 @@ RiAestheticsModel >> colorForLineRemove [
 	^ self removeColor mixed: 0.7 with: self foregroundColor
 ]
 
-{ #category : #colors }
-RiAestheticsModel >> colorForNames [
-	^ self currentTheme caretColor mixed: 0.5 with: self currentTheme textColor
-]
-
 { #category : #'diff morph creation' }
 RiAestheticsModel >> columnMorphWithAll: someMorphs [
 
@@ -390,7 +385,8 @@ RiAestheticsModel >> popupDiffMorphFor: iceNode [
 	font := LogicalFont 
 		familyName: StandardFonts codeFont familyName
 		pointSize: 7.
-	topText := iceNode value definition ritaDescription.
+	topText := iceNode value definition ritaAsText.
+	topText := topText asText allBold.
 	^ (self columnMorphWithAll: {
 			topText asMorph.
 			(self diffMorphFor2: iceNode)
@@ -433,6 +429,12 @@ RiAestheticsModel >> scrolledUnifiedDiffMorph [
 { #category : #colors }
 RiAestheticsModel >> secondaryOutlineColor [
 	^ self outlineColor alpha: 0.7
+]
+
+{ #category : #colors }
+RiAestheticsModel >> secondaryTextColor [
+	^ "self currentTheme caretColor mixed: 0.3 with: "
+	self currentTheme textColor alpha: 0.6
 ]
 
 { #category : #icons }

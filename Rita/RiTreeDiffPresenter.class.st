@@ -245,6 +245,21 @@ RiTreeDiffPresenter >> newColumnWithCheckboxes [
 
 { #category : #initialization }
 RiTreeDiffPresenter >> newColumnWithIceNodes [
+	^ SpCompositeTableColumn withAll: {
+		(SpImageTableColumn evaluated: [ :each |
+			(model at: #aesthetics) iconForChange: each value ]).
+		(SpStringTableColumn evaluated: [ :each |
+			' ', each value definition ritaAsTextForTree0 ]).
+		(SpStringTableColumn evaluated: [ :each |
+			(' ·  ', each value definition ritaAsTextForTree1) asText
+				addAttribute: (TextFontReference toFont: StandardFonts balloonFont);
+				makeAllColor: (model at: #aesthetics) secondaryTextColor;
+				yourself]) }
+]
+
+{ #category : #initialization }
+RiTreeDiffPresenter >> newColumnWithIceNodesOld [
+	self flag: #todo. "Delete with unused methods"
 	^ SpCompositeTableColumn new
 		addColumn:
 			(SpImageTableColumn new

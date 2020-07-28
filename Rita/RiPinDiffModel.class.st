@@ -42,5 +42,5 @@ RiPinDiffModel >> sourceRiCommit [
 
 { #category : #accessing }
 RiPinDiffModel >> title [
-	^ 'Pin (', sourceRiCommit shortId, ')'
+	^ 'Diff to Pin (', sourceRiCommit shortId, ')'
 ]

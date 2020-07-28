@@ -34,7 +34,7 @@ RiPullRequestDetailPresenter >> initializeConversationPage [
 RiPullRequestDetailPresenter >> initializeDiffPage [
 	| page |
 	page := SpNotebookPage
-		title: 'Diff'
+		title: 'Diff to base'
 		icon: (self iconNamed: #diff)
 		provider: [ model
 				ifNil: [ self newNullPresenter ]
@@ -66,7 +66,7 @@ RiPullRequestDetailPresenter >> newDiffPresenter [
 				add: #iceDiff -> iceDiff;
 				add: #shadowedIceNodes -> IdentitySet new;
 				add: #expandedIceNodes -> (RiVisibleTreeStrategy 
-					expandedIceNodesFrom: ({iceDiff tree}, iceDiff tree children));
+					expandedIceNodesFrom: {iceDiff tree});
 				yourself);
 			yourself
 ]

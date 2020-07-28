@@ -44,7 +44,7 @@ RiPRConversationPresenter >> headerLineFor: aPRComment [
 		append: ' · ' , timestampHumanReadable;
 		append: String lf;
 		yourself.
-	^ text allBold makeAllColor: (model at: #aesthetics) colorForNames.
+	^ text allBold makeAllColor: (model at: #aesthetics) secondaryTextColor.
 
 ]
 
@@ -96,7 +96,7 @@ RiPRConversationPresenter >> linkToIceNodePointedBy: anIceGitHubPullRequestComme
 		calculate;
 		yourself.
 
-	^ (mapping iceNode value definition ritaGlobalDescription", ', line ' , mapping iceNodeLineNumber asString") asText
+	^ mapping iceNode value definition ritaAsTextForPRConversation asText
 		addAttribute: (TextAction new actOnClickBlock: [ { mapping iceNode. mapping iceNodeLineNumber. iceDiff. anIceGitHubPullRequestComment } inspect ])
 ]
 

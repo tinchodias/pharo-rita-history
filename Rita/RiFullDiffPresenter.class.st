@@ -77,7 +77,7 @@ RiFullDiffPresenter >> selectBackIceNode [
 		ifNil: [ iceNodes first.] 
 		ifNotNil: [ :currentIceNode |
 			index := iceNodes detectIndex: [ :each |
-				each == currentIceNode ].
+				each == currentIceNode ] ifNone: [ 1 ].
 			index = 1 ifTrue: [
 				^ self inform: 'At start' ].
 			iceNodes at: index - 1 ].
@@ -98,10 +98,10 @@ RiFullDiffPresenter >> selectNextIceNode [
 	iceNodes := self nodesToIterate.
 	iceNodes ifEmpty: [ ^self ].
 	iceNode := treeDiffPresenter selectedIceNode
-		ifNil: [ iceNodes first.] 
+		ifNil: [ iceNodes first ] 
 		ifNotNil: [ :currentIceNode |
 			index := iceNodes detectIndex: [ :each |
-				each == currentIceNode ].
+				each == currentIceNode ] ifNone: [ 0 ].
 			index = iceNodes size ifTrue: [
 				^ self inform: 'At end' ].
 			iceNodes at: index + 1 ].

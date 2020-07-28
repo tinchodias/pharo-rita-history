@@ -37,5 +37,5 @@ RiParentDiffModel >> shouldCompareTo: aRiCommit [
 
 { #category : #accessing }
 RiParentDiffModel >> title [
-	^ 'Parent ({1})' format: { parentRiElement shortId } 
+	^ 'Diff to Parent ({1})' format: { parentRiElement shortId } 
 ]

@@ -5,20 +5,6 @@ Class {
 }
 
 { #category : #initialization }
-RiPRTreeDiffPresenter >> boldPartFor: iceNode [
-	| parts |
-	parts := (self descriptionPartsFor: iceNode).
-	^ parts size > 1 ifTrue: [ ('· ', parts first) asText addAttribute: (TextFontReference toFont: StandardFonts balloonFont)] ifFalse: [ ' ' join: parts ].
-]
-
-{ #category : #initialization }
-RiPRTreeDiffPresenter >> descriptionPartsFor: iceNode [
-	| description |
-	description := iceNode value definition ritaDescription asString.
-	^ ':' split: description
-]
-
-{ #category : #initialization }
 RiPRTreeDiffPresenter >> initializePresenters [
 	treeTable := self newTreeTable.
 	treeTable
@@ -33,29 +19,4 @@ RiPRTreeDiffPresenter >> initializePresenters [
 		| table |
 		table := ann widget.
 		self doInitialTreeExpansionOn: table ]
-]
-
-{ #category : #initialization }
-RiPRTreeDiffPresenter >> newColumnWithIceNodes [
-	^ SpCompositeTableColumn new
-		addColumn:
-			(SpImageTableColumn new
-				evaluated: [ :each | (model at: #aesthetics) iconForChange: each value ];
-				yourself);
-		addColumn:
-			(SpStringTableColumn new
-				evaluated: [ :each | (' ', (self normalPartFor: each)) asText makeAllColor: (model at: #aesthetics) colorForNames ];
-				yourself);
-		addColumn:
-			(SpStringTableColumn new
-				evaluated: [ :each | (self boldPartFor: each) "asText allBold "];
-				yourself);
-		yourself
-]
-
-{ #category : #initialization }
-RiPRTreeDiffPresenter >> normalPartFor: iceNode [
-	| parts |
-	parts := (self descriptionPartsFor: iceNode).
-	^ parts size > 1 ifTrue: [ parts second ] ifFalse: [ '' ].
 ]
