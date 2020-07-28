@@ -68,7 +68,7 @@ RiAestheticsModel >> colorForLineInsert [
 
 { #category : #colors }
 RiAestheticsModel >> colorForLineModification [
-	^ self modificationColor mixed: 0.7 with: self foregroundColor
+	^ self modificationColor alphaMixed: 0.7 with: self foregroundColor
 ]
 
 { #category : #colors }
