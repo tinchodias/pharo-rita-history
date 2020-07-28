@@ -70,7 +70,7 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 
 { #category : #actions }
 RiFullDiffPresenter >> selectBackIceNode [
-| iceNodes index iceNode |
+	| iceNodes index iceNode |
 	iceNodes := self nodesToIterate.
 	iceNodes ifEmpty: [ ^self ].
 	iceNode := treeDiffPresenter selectedIceNode

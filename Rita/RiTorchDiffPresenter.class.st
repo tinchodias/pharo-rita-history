@@ -176,57 +176,34 @@ RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: 
 { #category : #initialization }
 RiTorchDiffPresenter >> newSettingsToolBar [
 
-	| onlyChangedButton isExpandedButton connectHierarchiesButton showMethodsLOCButton flyDiffButton |
+	| connectHierarchiesButton iterateNextButton iterateBackButton |
 	spawnButton := (self instantiate: SpToolbarButtonPresenter)
 			label: 'Maximize';
 			icon: (self iconNamed: #smallRemoteOpen);
 			help: 'Open this diff view in a new notebook page.';
 			yourself.
-	
-"	onlyChangedButton := self
-		newRootModelToggleButtonFor: #considerOnlyChanged
-		label: 'Unchnged'
-		icon: #changeUpdate
-		help: 'Whether show only changed elements or all the elements, to have context.'.
-
-	isExpandedButton := self
-		newRootModelToggleButtonFor: #isExpanded
-		label: 'Wide'
-		icon: #class
-		help: 'Whether use a compact or an expanded representation for classes, traits and extensions.'.
-"
-"	showMethodsLOCButton := self
-		newRootModelToggleButtonFor: #showMethodsLOC
-		label: 'LOC'
-		icon: #tinyMenu
-		help: 'Whether use a compact or an expanded representation for methods.'."
-
 	connectHierarchiesButton := self
 		newRootModelToggleButtonFor: #connectHierarchies
 		label: 'Hier'
 		icon: #hierarchy
 		help: 'Whether connect subclasses or leave them free.'.
+	iterateNextButton := (self instantiate: SpToolbarButtonPresenter)
+			label: 'Next';
+			icon: (self iconNamed: #forward);
+			help: 'Select next leaf in the tree';
+			action: [ (model at: #blockForIterateNext) value ];
+			yourself.
+	iterateBackButton := (self instantiate: SpToolbarButtonPresenter)
+			label: 'Back';
+			icon: (self iconNamed: #back);
+			help: 'Select previous leaf in the tree';
+			action: [ (model at: #blockForIterateBack) value ];
+			yourself.
 
-"	showPackagesButton := self
-		newRootModelToggleButtonFor: #showPackages
-		label: 'Pkgs'
-		icon: #package
-		help: 'Whether group classes in packages or leave them free.'.
-"
-"	flyDiffButton := self 
-		newRootModelToggleButtonFor: #flyDiff
-		label: 'FlyDiff'
-		icon: #announcement
-		help: 'Whether show a fly diff.'.
-"
 	^ self newToolbar
-"		addItem: onlyChangedButton;
-		addItem: isExpandedButton;
-"		addItem: connectHierarchiesButton;
-"		addItem: showPackagesButton;"
-"		addItem: showMethodsLOCButton;"
-"		addItem: flyDiffButton;"
-		"addItemRight:" 
+		addItem: connectHierarchiesButton;
+		addItemRight: iterateNextButton;
+		addItemRight: iterateBackButton;
 		addItem: spawnButton;
 		yourself
 ]
