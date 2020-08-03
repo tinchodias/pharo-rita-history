@@ -16,8 +16,8 @@ BaselineOfRita >> baseline: spec [
 				spec repository: 'github://sbragagnolo/taskit:v1.1.0' ].
 			spec baseline: 'Iceberg' with: [
 				spec
-					repository: 'github://tinchodias/iceberg:rita'";
-					loads: 'development'" ].
+					repository: 'github://tinchodias/iceberg:rita';
+					loads: 'development' ].
 			spec baseline: 'Hiedra' with: [
 				spec repository: 'github://tinchodias/hiedra:master/src' ].
 			spec baseline: 'Microdown' with: [
