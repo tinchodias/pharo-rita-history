@@ -71,6 +71,19 @@ RiRepository >> name [
 	^ iceRepository name
 ]
 
+{ #category : #private }
+RiRepository >> newCommitWalk [
+	"Answer a IceLibgitCommitWalk. Requires that #processTips was executed before."
+
+	| walk |
+	walk := iceRepository newCommitWalk.
+	walk revwalk
+		beSortedByCommitTime;
+		beSortedParentsBeforeChildren.
+	tips collect: #commitId thenDo: [ :each | walk fromLGitId: each ].
+	^ walk
+]
+
 { #category : #actions }
 RiRepository >> openInNativeBrowser [
 	iceRepository location openInNativeBrowser
@@ -118,18 +131,12 @@ RiRepository >> processCommitGraph [
 RiRepository >> processCommits [
 	"Determine the commits in the proper order via Libgit's revwalk."
 
-	| walk |
 	elementMarks := OrderedCollection new.
 	elements := OrderedCollection new.
 	elementByCommit := Dictionary new.
 
 	self processTips.
-	walk := iceRepository newCommitWalk.
-	walk revwalk
-		beSortedByCommitTime;
-		beSortedParentsBeforeChildren.
-	tips collect: #commitId thenDo: [ :each | walk fromLGitId: each ].
-	walk commitsDo: [:each |
+	self newCommitWalk commitsDo: [:each |
 		| newCommit |
 		newCommit := RiCommit repository: self iceCommit: each.
 		elements add: newCommit.
