@@ -62,7 +62,7 @@ RiElementPresenter >> refreshOnModelUpdate [
 		select: [ :each | each shouldCompareTo: element ]
 		thenDo: [ :each | self addPageFor: each to: element ].
 	notebook pages ifNotEmpty: [
-		notebook selectPage: notebook pages last ]
+		notebook selectPage: notebook pages first ]
 ]
 
 { #category : #private }
