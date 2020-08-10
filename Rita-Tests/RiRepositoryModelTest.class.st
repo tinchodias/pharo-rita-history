@@ -5,6 +5,80 @@ Class {
 }
 
 { #category : #tests }
+RiRepositoryModelTest >> testAllAncestors [
+	"
+	input:
+
+	4 		B
+	|
+	3
+	|\
+	| 2   A
+	|/
+	1
+
+	"
+	
+	| c1 c2 c3 c4 e1 e2 e3 e4 tagA tagB |
+	c1 := self commitWithMessage: '1'.
+	c2 := self commitWithMessage: '2'.
+	tagA := self createTag: 'A'.
+	c3 := self commitWithMessage: '3' andParents: { c2. c1 }.
+	c4 := self commitWithMessage: '4'.
+	tagB := self createTag: 'B'.
+
+	self buildRepository.
+
+	e1 := repository elementByCommit at: c1.
+	e2 := repository elementByCommit at: c2.
+	e3 := repository elementByCommit at: c3.
+	e4 := repository elementByCommit at: c4.
+
+	self assert: e1 allAncestors isEmpty.
+	self assertCollection: e2 allAncestors hasSameElements: { e1 }.
+	self assertCollection: e3 allAncestors hasSameElements: { e2. e1 }.
+	self assertCollection: e4 allAncestors hasSameElements: { e3. e2. e1. }.
+
+]
+
+{ #category : #tests }
+RiRepositoryModelTest >> testAllChildren [
+	"
+	input:
+
+	4 		B
+	|
+	3
+	|\
+	| 2   A
+	|/
+	1
+
+	"
+	
+	| c1 c2 c3 c4 e1 e2 e3 e4 tagA tagB |
+	c1 := self commitWithMessage: '1'.
+	c2 := self commitWithMessage: '2'.
+	tagA := self createTag: 'A'.
+	c3 := self commitWithMessage: '3' andParents: { c2. c1 }.
+	c4 := self commitWithMessage: '4'.
+	tagB := self createTag: 'B'.
+
+	self buildRepository.
+
+	e1 := repository elementByCommit at: c1.
+	e2 := repository elementByCommit at: c2.
+	e3 := repository elementByCommit at: c3.
+	e4 := repository elementByCommit at: c4.
+
+	self assertCollection: e1 allChildren hasSameElements: { e3. e4. e2. }.
+	self assertCollection: e2 allChildren hasSameElements: { e3. e4 }.
+	self assertCollection: e3 allChildren hasSameElements: { e4 }.
+	self assert: e4 allChildren asArray isEmpty.
+
+]
+
+{ #category : #tests }
 RiRepositoryModelTest >> testMerge [
 	"
 	input:

@@ -22,12 +22,54 @@ RiElement >> addMark: aRiMark [
 	^ aRiMark
 ]
 
+{ #category : #accessing }
+RiElement >> allAncestorMarks [
+	| result |
+	result := Set new.
+	self allAncestorsDo: [ :each | result addAll: each marks ].
+	^ result
+]
+
+{ #category : #accessing }
+RiElement >> allAncestors [
+	| ancestors |
+	ancestors := OrderedCollection new.
+	self allAncestorsDo: [ :each | ancestors addIfNotPresent: each ].
+	^ ancestors
+
+]
+
 { #category : #enumeration }
 RiElement >> allAncestorsDo: aBlockClosure [
 	self ancestors do: [ :each |
 		aBlockClosure value: each.
 		each allAncestorsDo: aBlockClosure ].
 
+]
+
+{ #category : #accessing }
+RiElement >> allChildren [
+	| children |
+	children := OrderedCollection new.
+	self allChildrenDo: [ :each | children addIfNotPresent: each ].
+	^ children
+
+]
+
+{ #category : #accessing }
+RiElement >> allChildrenDo: aBlockClosure [ 
+	self children do: [ :each |
+		aBlockClosure value: each.
+		each allChildrenDo: aBlockClosure ]
+
+]
+
+{ #category : #accessing }
+RiElement >> allChildrenMarks [
+	| result |
+	result := Set new.
+	self allChildrenDo: [ :each | result addAll: each marks ].
+	^ result
 ]
 
 { #category : #accessing }
