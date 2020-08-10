@@ -12,6 +12,11 @@ RiTagMark >> accept: aVisitor [
 	^ aVisitor visitTagMark: self
 ]
 
+{ #category : #accessing }
+RiTagMark >> description [
+	^ self name surroundedBySingleQuotes, ' tag'
+]
+
 { #category : #testing }
 RiTagMark >> isTagMark [
 	^ true

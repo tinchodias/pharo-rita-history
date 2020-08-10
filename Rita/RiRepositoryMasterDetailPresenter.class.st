@@ -7,16 +7,10 @@ Class {
 { #category : #initialization }
 RiRepositoryMasterDetailPresenter >> connectMasterToDetail [
 	masterPresenter blockForElementSelected: [ :targetRiElement |
-		| parentDiffModels |
-		"Other tools only show diff to first ancestor"
-		parentDiffModels := targetRiElement ancestors 
-			ifEmpty: [ #() ]
-			ifNotEmpty: [:col | 
-				{ RiParentDiffModel parentRiElement: col first } ].
 		detailPresenter model: 
 			(model
 				at: #element put: targetRiElement;
-				at: #parentDiffModels put: parentDiffModels;
+				at: #parentDiffModels put: (self parentDiffModelsFor: targetRiElement);
 				yourself) ].
 	
 	"Bindings are not added before building."
@@ -42,6 +36,16 @@ RiRepositoryMasterDetailPresenter >> initializeKeyBindings [
 { #category : #initialization }
 RiRepositoryMasterDetailPresenter >> masterPresenterClass [
 	^ RiRepositoryPresenter
+]
+
+{ #category : #initialization }
+RiRepositoryMasterDetailPresenter >> parentDiffModelsFor: targetRiElement [
+	"IMPORTANT: As other tools only answer the diff to the first ancestor (potentially ignoring others, in case of merge)."
+
+	^ targetRiElement
+		ancestorToDiffIfPresent: [ :ancestor | {
+			RiParentDiffModel parentRiElement: ancestor } ]
+		ifAbsent: [ #() ]
 ]
 
 { #category : #initialization }

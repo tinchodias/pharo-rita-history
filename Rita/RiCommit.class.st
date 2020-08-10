@@ -125,6 +125,11 @@ RiCommit >> repository: anObject [
 ]
 
 { #category : #accessing }
+RiCommit >> shortDescription [
+	^ ' ' join: { self shortId. self comment printStringLimitedTo: 50. self dateAndTime }
+]
+
+{ #category : #accessing }
 RiCommit >> shortId [
 	^ iceCommit shortId
 ]

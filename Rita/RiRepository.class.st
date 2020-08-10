@@ -223,6 +223,34 @@ RiRepository >> processWorkdirMark [
 
 ]
 
+{ #category : #processing }
+RiRepository >> selectLibgitCommitsWithChangesAt: aPath [
+	"Based on IceLog>>#collectCommitsFor:path:"
+
+	| pathSpec diffOptions results |
+	pathSpec := LGitPathSpec withAll: { aPath }.
+	diffOptions := LGitDiffOptions defaults.
+	diffOptions pathspec: (LGitStringArray withAll: { aPath }).
+
+	results := OrderedCollection new.
+	self newCommitWalk commitsDo: [:each |
+		| tree commit |
+		commit := each libgitCommit.
+		tree := commit tree.
+		commit numberOfParents = 0
+			ifTrue: [
+				(tree matchesPathSpec: pathSpec)
+					ifTrue: [ results add: commit id hexString ] ]
+			ifFalse: [
+				| parent diff |
+				parent := commit parentAt: 1.
+				diff := tree diffTo: parent tree options: diffOptions. 
+				diff numberOfDeltas > 0 ifTrue: [
+					results add: commit id hexString ] ] ].
+
+	^ results
+]
+
 { #category : #accessing }
 RiRepository >> tips [
 	^ tips

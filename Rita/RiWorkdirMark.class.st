@@ -8,3 +8,8 @@ Class {
 RiWorkdirMark >> accept: aVisitor [
 	^ aVisitor visitWorkdirMark: self
 ]
+
+{ #category : #accessing }
+RiWorkdirMark >> description [
+	^ 'Workdir mark'
+]

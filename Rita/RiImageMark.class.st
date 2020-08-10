@@ -8,3 +8,8 @@ Class {
 RiImageMark >> accept: aVisitor [
 	^ aVisitor visitImageMark: self
 ]
+
+{ #category : #accessing }
+RiImageMark >> description [
+	^ 'Image mark'
+]

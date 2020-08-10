@@ -73,6 +73,15 @@ RiElement >> allChildrenMarks [
 ]
 
 { #category : #accessing }
+RiElement >> ancestorToDiffIfPresent: presentBlockClosure ifAbsent: absentBlockClosure [
+	"Detect the first ancestor (potentially ignores other ancestors, in case of merge, as usually tools do)."
+
+	^ self ancestors
+		ifEmpty: absentBlockClosure
+		ifNotEmpty: [ :col | presentBlockClosure value: col first ]
+]
+
+{ #category : #accessing }
 RiElement >> ancestors [
 	"Answer a collection of RiElement sub-instances."
 
@@ -108,6 +117,11 @@ RiElement >> marks [
 RiElement >> repository [
 	"Answer the RiRepository that contains me."
 
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+RiElement >> shortDescription [
 	^ self subclassResponsibility
 ]
 

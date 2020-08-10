@@ -16,6 +16,11 @@ RiMark >> accept: aVisitor [
 ]
 
 { #category : #accessing }
+RiMark >> description [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 RiMark >> element [
 	^ element
 ]

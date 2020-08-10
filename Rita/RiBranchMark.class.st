@@ -13,6 +13,11 @@ RiBranchMark >> accept: aVisitor [
 	^ aVisitor visitBranchMark: self
 ]
 
+{ #category : #accessing }
+RiBranchMark >> description [
+	^ self shortname surroundedBySingleQuotes, ' branch'
+]
+
 { #category : #testing }
 RiBranchMark >> isBranchMark [
 	^ true

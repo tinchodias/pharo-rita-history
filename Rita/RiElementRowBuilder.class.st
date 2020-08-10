@@ -70,8 +70,10 @@ RiElementRowBuilder >> leftMorphsAt: item [
 		(self avatarsFor: item),
 		(self pinMorphsFor: item),
 		(self markMorphsAt: item),
-		{ item comment asMorph hResizing: #spaceFill }
-
+		{ item comment asMorph
+				color: (self textColorFor: item);
+				hResizing: #spaceFill;
+				yourself }
 ]
 
 { #category : #'mark morph building' }
@@ -145,6 +147,15 @@ RiElementRowBuilder >> remoteMarkMorphText: text icon: icon [
 			color: self markMorphBorderColor;
 			yourself);
 		yourself
+]
+
+{ #category : #accessing }
+RiElementRowBuilder >> textColorFor: item [
+	^ (repositoryPresenter hasSearchResults not or: [
+		repositoryPresenter searchResultIncudes: item ])
+			ifTrue: [ self theme textColor ]
+			ifFalse: [ self theme disabledColor ]
+
 ]
 
 { #category : #accessing }

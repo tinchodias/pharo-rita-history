@@ -55,6 +55,11 @@ RiUncommitedWorkingCopy >> diffTo: aRiCommit [
 	^ self asIceObject diffTo: aRiCommit iceCommit
 ]
 
+{ #category : #accessing }
+RiUncommitedWorkingCopy >> id [
+	^ '---'
+]
+
 { #category : #testing }
 RiUncommitedWorkingCopy >> isUncommited [
 	^ true
@@ -73,6 +78,11 @@ RiUncommitedWorkingCopy >> referenceCommit: aRiCommit [
 { #category : #accessing }
 RiUncommitedWorkingCopy >> repository [
 	^ referenceCommit repository
+]
+
+{ #category : #accessing }
+RiUncommitedWorkingCopy >> shortDescription [
+	^ 'Uncommited changes'
 ]
 
 { #category : #accessing }

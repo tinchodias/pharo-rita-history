@@ -8,7 +8,11 @@ Class {
 	#instVars : [
 		'table',
 		'blockForPinToCompareFrom',
-		'rowBuilder'
+		'rowBuilder',
+		'actionBar',
+		'cleanSearchButton',
+		'nextJumpToNextButton',
+		'nextJumpToPreviousButton'
 	],
 	#category : #'Rita-UI'
 }
@@ -16,9 +20,9 @@ Class {
 { #category : #examples }
 RiRepositoryPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
-"		add: #menuBar
-			withConstraints: [ :constraints | constraints height: self toolbarHeight ];"
 		add: #table;
+		add: #actionBar
+			withConstraints: [ :constraints | constraints height: self toolbarHeight ];
 		yourself
 ]
 
@@ -81,6 +85,46 @@ RiRepositoryPresenter >> actionAddPin: aRiElement [
 	(model at: #blockWhenPinsChanged) value
 ]
 
+{ #category : #search }
+RiRepositoryPresenter >> actionCleanSearchResults [
+	model at: #shasInSearchResult put: #().
+	self refreshOnSearchResultsUpdate
+]
+
+{ #category : #actions }
+RiRepositoryPresenter >> actionForceRefresh [
+	self riRepository process.
+	self refreshOnModelUpdate
+]
+
+{ #category : #search }
+RiRepositoryPresenter >> actionJumpToNextInSearchResults [
+	| shas shaToJump indexToJump |
+	shas := model at: #shasInSearchResult.
+	shaToJump := table selection isEmpty
+		ifTrue: [ shas first ]
+		ifFalse: [ | selectedSha |
+			selectedSha := table selection selectedItem id.
+			shas after: selectedSha ifAbsent: [ shas first ] ].
+	indexToJump := table items
+		detectIndex: [ :each | each id = shaToJump ].
+	table selectIndex: indexToJump scrollToSelection: true
+]
+
+{ #category : #search }
+RiRepositoryPresenter >> actionJumpToPreviousInSearchResults [
+	| shas shaToJump indexToJump |
+	shas := model at: #shasInSearchResult.
+	shaToJump := table selection isEmpty
+		ifTrue: [ shas last ]
+		ifFalse: [ | selectedSha |
+			selectedSha := table selection selectedItem id.
+			shas before: selectedSha ifAbsent: [ shas last ] ].
+	indexToJump := table items
+		detectIndex: [ :each | each id = shaToJump ].
+	table selectIndex: indexToJump scrollToSelection: true
+]
+
 { #category : #actions }
 RiRepositoryPresenter >> actionLoadBranch: aRiBranchMark [
 	aRiBranchMark local checkout.
@@ -100,6 +144,29 @@ RiRepositoryPresenter >> actionRemovePin: aRiElement [
 	(model at: #pinDiffModels)
 		removeAllSuchThat: [ :each | each sourceRiCommit = aRiElement ].
 	(model at: #blockWhenPinsChanged) value
+]
+
+{ #category : #search }
+RiRepositoryPresenter >> actionSearch [
+	| searchPresenter searchDialog results |
+	searchPresenter := self instantiate: RiRepositorySearchPresenter.
+	searchPresenter model: model.
+	searchDialog := searchPresenter openModalWithSpec.
+	searchDialog isCancelled ifTrue: [ ^ self ].
+	searchPresenter checkIfInvalid: [ :message |
+		^ self inform: message ].
+
+	UIManager default
+		informUser: 'Searching in repository'
+		during: [
+			results := searchPresenter searchResults ].
+
+	self inform: results size asString, ' commits found'.
+	model at: #shasInSearchResult put: results.
+	self refreshOnSearchResultsUpdate.
+	results ifNotEmpty: [
+		self actionJumpToNextInSearchResults ].
+
 ]
 
 { #category : #initialization }
@@ -130,6 +197,17 @@ RiRepositoryPresenter >> contextMenuForTable [
 						icon: (self iconNamed: #breakpoint);
 						action: [ self actionAddPin: selected ] ] ] ].
 
+	menu addItem: [ :item |
+		item
+			name: 'Jump Up';
+			icon: (self iconNamed: #up);
+			subMenu: (self contextMenuToJumpUpFor: selected) ].
+	menu addItem: [ :item |
+		item
+			name: 'Jump Down';
+			icon: (self iconNamed: #down);
+			subMenu: (self contextMenuToJumpDownFor: selected) ].
+
 
 	menu addGroup: [ :aGroup | 
 		aGroup addItem: [ :item |
@@ -152,12 +230,6 @@ RiRepositoryPresenter >> contextMenuForTable [
 	menu addGroup: [ :aGroup |
 		aGroup addItem: [ :item | 
 			item
-				name: 'Refresh list';
-				icon: (self iconNamed: #smallUpdate);
-				action: [ self refreshOnModelUpdate ] ].
-
-		aGroup addItem: [ :item | 
-			item
 				name: 'Inspect object';
 				icon: (self iconNamed: #smallInspectIt);
 				action: [ selected inspect ] ] ].
@@ -166,17 +238,119 @@ RiRepositoryPresenter >> contextMenuForTable [
 ]
 
 { #category : #initialization }
+RiRepositoryPresenter >> contextMenuToJumpDownFor: aRiElement [
+	| menu |
+	menu := self newMenu.
+	
+	aRiElement ancestors do: [ :each | 
+		menu
+			addItem: [ :item | 
+				item
+					name: 'Previous commit'; "each shortDescription"
+					icon: (self iconNamed: #down);
+					action: [ self selectRiElement: each ] ] ].
+
+	aRiElement allAncestorMarks do: [ :each | 
+		menu
+			addItem: [ :item | 
+				item
+					name: each description;
+					icon: (self iconNamed: #down);
+					action: [ self selectRiElement: each element ] ] ].
+
+	^ menu
+]
+
+{ #category : #initialization }
+RiRepositoryPresenter >> contextMenuToJumpUpFor: aRiElement [
+	| menu |
+	menu := self newMenu.
+	
+	aRiElement children do: [ :each | 
+		menu
+			addItem: [ :item | 
+				item
+					name: 'Next commit';
+					icon: (self iconNamed: #up);
+					action: [ self selectRiElement: each ] ] ].
+
+	aRiElement allChildrenMarks do: [ :each | 
+		menu
+			addItem: [ :item | 
+				item
+					name: each description;
+					icon: (self iconNamed: #up);
+					action: [ self selectRiElement: each element ] ] ].
+
+	^ menu
+]
+
+{ #category : #search }
+RiRepositoryPresenter >> hasSearchResults [
+	^ (model at: #shasInSearchResult) notEmpty
+]
+
+{ #category : #initialization }
+RiRepositoryPresenter >> initializeActionBar [
+	
+	cleanSearchButton := self newButton
+			label: 'Clean';
+			icon: (self iconNamed: #windowClose);
+			help: 'Clean search results.';
+			action: [ self actionCleanSearchResults ];
+			enabled: false;
+			yourself.
+	nextJumpToNextButton := self newButton
+"			label: 'Next';"
+			icon: (self iconNamed: #down);
+			help: 'Jump to next commit in search results.';
+			action: [ self actionJumpToNextInSearchResults ];
+			enabled: false;
+			yourself.
+	nextJumpToPreviousButton := self newButton
+"			label: 'Prev';"
+			icon: (self iconNamed: #up);
+			help: 'Jump to previous commit in search results.';
+			action: [ self actionJumpToPreviousInSearchResults ];
+			enabled: false;
+			yourself.
+
+	actionBar := self newActionBar
+		add: (self newButton
+			label: 'Search';
+			icon: (self iconNamed: #glamorousSearch);
+			help: 'Search in the commits of this repository.';
+			action: [ self actionSearch ];
+			yourself);
+		add: nextJumpToNextButton;
+		add: nextJumpToPreviousButton;
+		add: cleanSearchButton;
+		addLast: (self newButton
+"			label: 'Refresh';"
+			icon: (self iconNamed: #smallUpdate);
+			help: 'Process again this repository and reload the list of commits.';
+			action: [ self actionForceRefresh ];
+			yourself);
+		yourself.
+
+]
+
+{ #category : #initialization }
 RiRepositoryPresenter >> initializePresenters [
+	self initializeTable.
+	self initializeActionBar
+]
+
+{ #category : #initialization }
+RiRepositoryPresenter >> initializeTable [
 
 	rowBuilder := RiElementRowBuilder newForRepositoryPresenter: self.
-
 	table := self newTable.
 	table
 		hideColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
 		addColumn: (SpImageTableColumn
 			evaluated: [ :item | rowBuilder morphAt: item ]).
-
 	table whenBuiltDo: [ :ann |
 		self refreshOnModelUpdate ].
 
@@ -199,6 +373,7 @@ RiRepositoryPresenter >> refreshOnModelUpdate [
 
 	self riRepository ensureProcessed.
 
+	model at: #shasInSearchResult put: #().
 	rowBuilder refresh.
 
 	table items: self riRepository elements
@@ -209,6 +384,17 @@ RiRepositoryPresenter >> refreshOnPinsUpdate [
 	self refreshOnAvatarsUpdate
 ]
 
+{ #category : #search }
+RiRepositoryPresenter >> refreshOnSearchResultsUpdate [
+	{	cleanSearchButton.
+		nextJumpToPreviousButton.
+		nextJumpToNextButton}
+			do: [ :each | each enabled: self hasSearchResults ].
+
+	"Redraw table cells"
+	rowBuilder refresh.
+]
+
 { #category : #accessing }
 RiRepositoryPresenter >> riRepository [
 	^ model at: #repository
@@ -217,4 +403,15 @@ RiRepositoryPresenter >> riRepository [
 { #category : #accessing }
 RiRepositoryPresenter >> rowHeightForHiedra [
 	^ table adapter widget rowHeight floor
+]
+
+{ #category : #search }
+RiRepositoryPresenter >> searchResultIncudes: item [
+	^ item isUncommited not
+		and: [ (model at: #shasInSearchResult) includes: item id ]
+]
+
+{ #category : #actions }
+RiRepositoryPresenter >> selectRiElement: aRiElement [
+	table selectItem: aRiElement scrollToSelection: true
 ]
