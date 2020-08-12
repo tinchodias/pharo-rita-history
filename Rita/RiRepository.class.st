@@ -16,8 +16,8 @@ Class {
 
 { #category : #'instance creation' }
 RiRepository class >> iceRepository: anIceLibgitRepository [
-	^ self new
-		iceRepository: anIceLibgitRepository;
+	^ self basicNew
+		initializeWithIceRepository: anIceLibgitRepository;
 		yourself
 ]
 
@@ -62,7 +62,8 @@ RiRepository >> iceRepository [
 ]
 
 { #category : #accessing }
-RiRepository >> iceRepository: anIceLibgitRepository [
+RiRepository >> initializeWithIceRepository: anIceLibgitRepository [
+	self initialize.
 	iceRepository := anIceLibgitRepository
 ]
 
@@ -122,9 +123,13 @@ RiRepository >> process [
 RiRepository >> processCommitGraph [
 	"Connect all collected RiCommits in terms of child/parent."
 
-	elementByCommit valuesDo: [ :each | 
-		each ancestors do: [ :ancestor |
-			ancestor addChildren: each ] ]
+	self commits do: [ :each | 
+		each iceCommit ancestors
+			collect: [ :iceAncestor |
+				elementByCommit at: iceAncestor ]
+			thenDo: [ :ancestor |
+				ancestor addChildren: each.
+				each addAncestor: ancestor ] ]
 ]
 
 { #category : #processing }

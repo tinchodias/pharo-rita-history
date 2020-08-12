@@ -36,6 +36,11 @@ RiUncommitedWorkingCopy >> authorEmail [
 ]
 
 { #category : #accessing }
+RiUncommitedWorkingCopy >> children [
+	^ #()
+]
+
+{ #category : #accessing }
 RiUncommitedWorkingCopy >> comment [
 	^ '---'
 ]

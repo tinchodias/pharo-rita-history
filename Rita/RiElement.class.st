@@ -94,6 +94,11 @@ RiElement >> author [
 ]
 
 { #category : #accessing }
+RiElement >> children [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 RiElement >> comment [
 	^ self subclassResponsibility
 ]

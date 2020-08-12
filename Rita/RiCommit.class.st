@@ -15,9 +15,8 @@ Class {
 
 { #category : #'instance creation' }
 RiCommit class >> repository: aRiRepository iceCommit: anIceCommit [
-	^ self new
-		repository: aRiRepository;
-		iceCommit: anIceCommit;
+	^ self basicNew
+		initializeWithRepository: aRiRepository iceCommit: anIceCommit;
 		yourself
 ]
 
@@ -27,15 +26,18 @@ RiCommit >> accept: aVisitor [
 ]
 
 { #category : #accessing }
+RiCommit >> addAncestor: aRiElement [
+	ancestors add: aRiElement
+]
+
+{ #category : #accessing }
 RiCommit >> addChildren: aRiElement [
-	self children add: aRiElement
+	children add: aRiElement
 ]
 
 { #category : #accessing }
 RiCommit >> ancestors [
-	^ ancestors ifNil: [ 
-		ancestors := iceCommit ancestors
-			collect: [ :each | repository elementByCommit at: each ] ]
+	^ ancestors
 ]
 
 { #category : #converting }
@@ -60,8 +62,7 @@ RiCommit >> authorName [
 
 { #category : #accessing }
 RiCommit >> children [
-	^ children ifNil: [ 
-		children := OrderedCollection new ]
+	^ children
 ]
 
 { #category : #accessing }
@@ -95,13 +96,17 @@ RiCommit >> iceCommit [
 ]
 
 { #category : #accessing }
-RiCommit >> iceCommit: anObject [
-	iceCommit := anObject
-]
-
-{ #category : #accessing }
 RiCommit >> id [
 	^ iceCommit id
+]
+
+{ #category : #initialization }
+RiCommit >> initializeWithRepository: aRiRepository iceCommit: anIceCommit [
+	self initialize.
+	repository := aRiRepository.
+	iceCommit := anIceCommit.
+	children := OrderedCollection new.
+	ancestors := OrderedCollection new
 ]
 
 { #category : #printing }
