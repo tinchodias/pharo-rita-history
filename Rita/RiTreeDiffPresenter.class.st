@@ -237,7 +237,7 @@ RiTreeDiffPresenter >> newColumnWithCheckboxes [
 			(SpCheckBoxTableColumn new
 				evaluated: [ :iceNode | self isChecked: iceNode ];
 				onActivation: [ :iceNode | self doCheck: iceNode ];
-				onDesactivation: [ :iceNode | self doUncheck: iceNode ];
+				onDeactivation: [ :iceNode | self doUncheck: iceNode ];
 				width: 20;
 				yourself);
 		yourself
