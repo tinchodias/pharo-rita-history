@@ -19,7 +19,7 @@ BaselineOfRita >> baseline: spec [
 					repository: 'github://tinchodias/iceberg:rita';
 					loads: 'development' ].
 			spec baseline: 'Hiedra' with: [
-				spec repository: 'github://tinchodias/hiedra:master/src' ].
+				spec repository: 'github://tinchodias/hiedra:v3.0.0/src' ].
 			spec baseline: 'Microdown' with: [
 				spec repository: 'github://pillar-markup/MicroDown:v1.0.3/src' ].
 
