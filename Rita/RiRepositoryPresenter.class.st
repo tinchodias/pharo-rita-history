@@ -247,13 +247,15 @@ RiRepositoryPresenter >> contextMenuToJumpDownFor: aRiElement [
 					icon: (self iconNamed: #down);
 					action: [ self selectRiElement: each ] ] ].
 
-	aRiElement allAncestorMarks do: [ :each | 
-		menu
-			addItem: [ :item | 
-				item
-					name: each description;
-					icon: (self iconNamed: #down);
-					action: [ self selectRiElement: each element ] ] ].
+	aRiElement
+		detectInAllAncestors: [:each | each marks notEmpty ]
+		ifFound: [ :each | 
+			menu
+				addItem: [ :item | 
+					item
+						name: (self printStringForMarksOf: each);
+						icon: (self iconNamed: #down);
+						action: [ self selectRiElement: each ] ] ].
 
 	^ menu
 ]
@@ -271,13 +273,15 @@ RiRepositoryPresenter >> contextMenuToJumpUpFor: aRiElement [
 					icon: (self iconNamed: #up);
 					action: [ self selectRiElement: each ] ] ].
 
-	aRiElement allChildrenMarks do: [ :each | 
-		menu
-			addItem: [ :item | 
-				item
-					name: each description;
-					icon: (self iconNamed: #up);
-					action: [ self selectRiElement: each element ] ] ].
+	aRiElement
+		detectInAllChildren: [:each | each marks notEmpty ]
+		ifFound: [ :each | 
+			menu
+				addItem: [ :item | 
+					item
+						name: (self printStringForMarksOf: each);
+						icon: (self iconNamed: #up);
+						action: [ self selectRiElement: each ] ] ].
 
 	^ menu
 ]
@@ -357,6 +361,15 @@ RiRepositoryPresenter >> initializeTable [
 RiRepositoryPresenter >> isPinned: aRiElement [
 	^ (model at: #pinDiffModels)
 		anySatisfy: [ :each | each sourceRiCommit = aRiElement ]
+]
+
+{ #category : #initialization }
+RiRepositoryPresenter >> printStringForMarksOf: aRiElement [
+	^ String
+		streamContents: [ :stream | 
+			aRiElement marks
+				do: [ :mark | stream << mark description ]
+				separatedBy: [ stream << ', ' ] ]
 ]
 
 { #category : #accessing }

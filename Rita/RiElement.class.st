@@ -23,14 +23,6 @@ RiElement >> addMark: aRiMark [
 ]
 
 { #category : #accessing }
-RiElement >> allAncestorMarks [
-	| result |
-	result := Set new.
-	self allAncestorsDo: [ :each | result addAll: each marks ].
-	^ result
-]
-
-{ #category : #accessing }
 RiElement >> allAncestors [
 	| ancestors |
 	ancestors := OrderedCollection new.
@@ -62,14 +54,6 @@ RiElement >> allChildrenDo: aBlockClosure [
 		aBlockClosure value: each.
 		each allChildrenDo: aBlockClosure ]
 
-]
-
-{ #category : #accessing }
-RiElement >> allChildrenMarks [
-	| result |
-	result := Set new.
-	self allChildrenDo: [ :each | result addAll: each marks ].
-	^ result
 ]
 
 { #category : #accessing }
@@ -106,6 +90,20 @@ RiElement >> comment [
 { #category : #accessing }
 RiElement >> dateAndTime [
 	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+RiElement >> detectInAllAncestors: aBlockClosure ifFound: foundBlockClosure [
+	self allAncestorsDo: [ :each | 
+		(aBlockClosure value: each)
+			ifTrue: [ ^ foundBlockClosure cull: each ] ]
+]
+
+{ #category : #accessing }
+RiElement >> detectInAllChildren: aBlockClosure ifFound: foundBlockClosure [
+	self allChildrenDo: [ :each | 
+		(aBlockClosure value: each)
+			ifTrue: [ ^ foundBlockClosure cull: each ] ]
 ]
 
 { #category : #testing }
