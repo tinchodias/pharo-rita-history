@@ -280,7 +280,7 @@ RiTorchRenderer >> shapeForFiles: iceNodes [
 	
 	| shapes |
 	shapes := iceNodes collect: [ :each | 
-		(self shapeForMethodCodeInTinyMode: each)
+		(self shapeForTinyBox: each)
 			model: each;
 			when: RSMouseClick do: self blockForMouseClickOnIceNode;
 			when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
@@ -338,33 +338,9 @@ RiTorchRenderer >> shapeForMethod: iceNode [
 ]
 
 { #category : #'shape building' }
-RiTorchRenderer >> shapeForMethodCode: iceNode [
-	| shape |
-	shape := ((model at: #root) showMethodsLOC
-		ifTrue: [ self shapeForMethodCodeInLOCMode: iceNode ]
-		ifFalse: [ self shapeForMethodCodeInTinyMode: iceNode ])
-		border: (aesthetics innerBorderFor: iceNode);
-		yourself.
-	^ self configuredWithInteractions: shape model: iceNode
-]
-
-{ #category : #'shape building' }
-RiTorchRenderer >> shapeForMethodCodeInLOCMode: iceNode [
-	^ iceNode accept: methodShapeCreatorVisitor
-]
-
-{ #category : #'shape building' }
-RiTorchRenderer >> shapeForMethodCodeInTinyMode: iceNode [
-	^ RSBox new
-		extent: methodShapeCreatorVisitor widthForMethod asPoint;
-		color: (aesthetics fillColorFor: iceNode);
-		yourself
-]
-
-{ #category : #'shape building' }
 RiTorchRenderer >> shapeForMethodInCollapsedMode: iceNode [
 	| shape |
-	shape := (self shapeForMethodCodeInTinyMode: iceNode)
+	shape := (self shapeForTinyBox: iceNode)
 		border: (aesthetics innerBorderFor: iceNode);
 		yourself.
 	^ self configuredWithInteractions: shape model: iceNode
@@ -372,45 +348,11 @@ RiTorchRenderer >> shapeForMethodInCollapsedMode: iceNode [
 
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForMethodInExpandedMode: iceNode [
-	| shapes |
-	shapes := OrderedCollection new.
-
-	iceNode
-		nextNodeSuchThat: [ :each | each value name = #category ]
-		ifFound: [:found | shapes add: (self shapeForMethodProperty: found) ].
-	shapes ifEmpty: [
-		shapes add: (RSShapeFactory box 
-			width: aesthetics widthForMethod;
-			height: aesthetics widthForMethod / 1.4;
-			color: aesthetics backgroundColor; 
-			border: aesthetics innerBorderLowImpact;
-			yourself) ].
-	iceNode
-		nextNodeSuchThat: [ :each | each value name = #source ]
-		ifFound: [:found |
-			shapes add: (self shapeForMethodCode: found) ].
-	
-	RSVerticalLineLayout new gapSize: 0; on: shapes.
-	
-	^ RSComposite new
-		model: iceNode;
-		shapes: shapes;
-		addInteraction: highlighingController;
+	| shape |
+	shape := (iceNode accept: methodShapeCreatorVisitor)
+		border: (aesthetics innerBorderFor: iceNode);
 		yourself.
-
-]
-
-{ #category : #'shape building' }
-RiTorchRenderer >> shapeForMethodProperty: iceNode [
-	^ self
-		configuredWithInteractions:
-			(RSShapeFactory box
-				width: aesthetics widthForMethod;
-				height: aesthetics widthForMethod / 1.4;
-				border: (aesthetics innerBorderFor: iceNode);
-				color: (aesthetics fillColorFor: iceNode);
-				yourself)
-		model: iceNode
+	^ self configuredWithInteractions: shape model: iceNode
 ]
 
 { #category : #'shape building' }
@@ -424,6 +366,14 @@ RiTorchRenderer >> shapeForPackage: iceNode [
 		position: aGroup encompassingRectangle floatCenter;
 		extent: aGroup encompassingRectangle extent + (20 @ h).
 	^ self configuredWithInteractions: aGroup asShape model: iceNode
+]
+
+{ #category : #'shape building' }
+RiTorchRenderer >> shapeForTinyBox: iceNode [
+	^ RSBox new
+		extent: methodShapeCreatorVisitor widthForMethod asPoint;
+		color: (aesthetics fillColorFor: iceNode);
+		yourself
 ]
 
 { #category : #'shape building' }

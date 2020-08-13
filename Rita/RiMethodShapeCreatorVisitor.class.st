@@ -17,7 +17,7 @@ RiMethodShapeCreatorVisitor class >> aesthetics: anObject [
 
 { #category : #accessing }
 RiMethodShapeCreatorVisitor >> heightForMethod: node [
-	^ node definition containerIceDefinition linesOfCode * self heightScale
+	^ node definition linesOfCode * self heightScale
 ]
 
 { #category : #accessing }
@@ -69,8 +69,8 @@ RiMethodShapeCreatorVisitor >> visitModification: anIceModification [
 	^ self
 		newForPatchSequence:
 			(RiTextDiffBuilder
-				from: anIceModification rightDefinition containerIceDefinition sourceCode
-				to: anIceModification leftDefinition containerIceDefinition sourceCode)
+				from: anIceModification rightDefinition sourceCode
+				to: anIceModification leftDefinition sourceCode)
 				buildPatchSequence
 ]
 

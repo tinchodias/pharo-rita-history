@@ -9,7 +9,6 @@ Class {
 		'considerOnlyChanged',
 		'isExpanded',
 		'connectHierarchies',
-		'showMethodsLOC',
 		'flyDiff',
 		'showPackages',
 		'aesthetics'
@@ -73,7 +72,6 @@ RiRootModel >> initialize [
 	considerOnlyChanged := true.
 	isExpanded := true.
 	connectHierarchies := true.
-	showMethodsLOC := true.
 	flyDiff := true.
 	showPackages := false.
 ]
@@ -96,16 +94,6 @@ RiRootModel >> repositories [
 { #category : #accessing }
 RiRootModel >> repositories: aCollection [ 
 	repositories := aCollection
-]
-
-{ #category : #accessing }
-RiRootModel >> showMethodsLOC [
-	^ showMethodsLOC
-]
-
-{ #category : #accessing }
-RiRootModel >> showMethodsLOC: anObject [
-	showMethodsLOC := anObject
 ]
 
 { #category : #accessing }
