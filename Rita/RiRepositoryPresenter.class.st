@@ -87,7 +87,7 @@ RiRepositoryPresenter >> actionAddPin: aRiElement [
 
 { #category : #search }
 RiRepositoryPresenter >> actionCleanSearchResults [
-	model at: #shasInSearchResult put: #().
+	model at: #elementsInSearchResult put: #().
 	self refreshOnSearchResultsUpdate
 ]
 
@@ -99,30 +99,27 @@ RiRepositoryPresenter >> actionForceRefresh [
 
 { #category : #search }
 RiRepositoryPresenter >> actionJumpToNextInSearchResults [
-	| shas shaToJump indexToJump |
-	shas := model at: #shasInSearchResult.
-	shaToJump := table selection isEmpty
-		ifTrue: [ shas first ]
-		ifFalse: [ | selectedSha |
-			selectedSha := table selection selectedItem id.
-			shas after: selectedSha ifAbsent: [ shas first ] ].
-	indexToJump := table items
-		detectIndex: [ :each | each id = shaToJump ].
-	table selectIndex: indexToJump scrollToSelection: true
+	| results elementToJump |
+	results := model at: #elementsInSearchResult.
+	elementToJump := table selection isEmpty
+		ifTrue: [ results first ]
+		ifFalse: [ | selectedElement |
+			selectedElement := table selection selectedItem.
+			results after: selectedElement ifAbsent: [ results first ] ].
+	table selectItem: elementToJump scrollToSelection: true
 ]
 
 { #category : #search }
 RiRepositoryPresenter >> actionJumpToPreviousInSearchResults [
-	| shas shaToJump indexToJump |
-	shas := model at: #shasInSearchResult.
-	shaToJump := table selection isEmpty
-		ifTrue: [ shas last ]
-		ifFalse: [ | selectedSha |
-			selectedSha := table selection selectedItem id.
-			shas before: selectedSha ifAbsent: [ shas last ] ].
-	indexToJump := table items
-		detectIndex: [ :each | each id = shaToJump ].
-	table selectIndex: indexToJump scrollToSelection: true
+	| results elementToJump |
+	results := model at: #elementsInSearchResult.
+	elementToJump := table selection isEmpty
+		ifTrue: [ results last ]
+		ifFalse: [ | selectedElement |
+			selectedElement := table selection selectedItem.
+			results before: selectedElement ifAbsent: [ results last ] ].
+	table selectItem: elementToJump scrollToSelection: true
+
 ]
 
 { #category : #actions }
@@ -162,7 +159,7 @@ RiRepositoryPresenter >> actionSearch [
 			results := searchPresenter searchResults ].
 
 	self inform: results size asString, ' commits found'.
-	model at: #shasInSearchResult put: results.
+	model at: #elementsInSearchResult put: results.
 	self refreshOnSearchResultsUpdate.
 	results ifNotEmpty: [
 		self actionJumpToNextInSearchResults ].
@@ -287,7 +284,7 @@ RiRepositoryPresenter >> contextMenuToJumpUpFor: aRiElement [
 
 { #category : #search }
 RiRepositoryPresenter >> hasSearchResults [
-	^ (model at: #shasInSearchResult) notEmpty
+	^ (model at: #elementsInSearchResult) notEmpty
 ]
 
 { #category : #initialization }
@@ -373,7 +370,7 @@ RiRepositoryPresenter >> refreshOnModelUpdate [
 
 	self riRepository ensureProcessed.
 
-	model at: #shasInSearchResult put: #().
+	model at: #elementsInSearchResult put: #().
 	rowBuilder refresh.
 
 	table items: self riRepository elements
@@ -406,9 +403,9 @@ RiRepositoryPresenter >> rowHeightForHiedra [
 ]
 
 { #category : #search }
-RiRepositoryPresenter >> searchResultIncudes: item [
-	^ item isUncommited not
-		and: [ (model at: #shasInSearchResult) includes: item id ]
+RiRepositoryPresenter >> searchResultIncudes: aRiElement [
+	^ aRiElement isUncommited not
+		and: [ (model at: #elementsInSearchResult) includes: aRiElement ]
 ]
 
 { #category : #actions }

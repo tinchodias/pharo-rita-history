@@ -21,6 +21,11 @@ RiRepository class >> iceRepository: anIceLibgitRepository [
 		yourself
 ]
 
+{ #category : #processing }
+RiRepository >> commitAtSha: hexString [
+	^ self commits detect: [ :each | each id = hexString ]
+]
+
 { #category : #accessing }
 RiRepository >> commits [
 	^ elements reject: #isUncommited
@@ -245,13 +250,13 @@ RiRepository >> selectLibgitCommitsWithChangesAt: aPath [
 		commit numberOfParents = 0
 			ifTrue: [
 				(tree matchesPathSpec: pathSpec)
-					ifTrue: [ results add: commit id hexString ] ]
+					ifTrue: [ results add: (self commitAtSha: commit id hexString) ] ]
 			ifFalse: [
 				| parent diff |
 				parent := commit parentAt: 1.
 				diff := tree diffTo: parent tree options: diffOptions. 
 				diff numberOfDeltas > 0 ifTrue: [
-					results add: commit id hexString ] ] ].
+					results add: (self commitAtSha: commit id hexString) ] ] ].
 
 	^ results
 ]
