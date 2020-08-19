@@ -20,7 +20,7 @@ RiTonelToDiffMapping >> calculate [
 		(each value definition isMethodDefinition) and: [
 		each value definition asMCDefinition description = mcDefinition description
 			ifTrue: [
-				iceNode := each children second.
+				iceNode := each.
 				iceNodeLineNumber := lineNumber - (parser methodBodyOffsetAtLine: lineNumber).
 				^ self ] ]].
 
