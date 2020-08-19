@@ -27,23 +27,23 @@ RiSingleDiffPresenter >> limitForDiff [
 
 { #category : #initialization }
 RiSingleDiffPresenter >> selectIceNode: anIceNode [
-	| aesthetics |
+	| aesthetics left right |
 	anIceNode ifNil: [ ^ self ].
+
 	aesthetics := model at: #aesthetics.
 	diff morph ifNil: [
 		diff morph: aesthetics scrolledUnifiedDiffMorph ].
+
 	(anIceNode value rightContents size + anIceNode value leftContents size) <= self limitForDiff
-		ifTrue: [ 
-			aesthetics
-				fillUnifiedDiff: diff morph textArea
-				from: anIceNode value rightContents
-				to: anIceNode value leftContents ]
-		ifFalse: [ 
-			| msg |
-			msg := 'Too large to compare'.
-			aesthetics
-				fillUnifiedDiff: diff morph textArea
-				from: msg
-				to: msg ]
+		ifTrue: [
+			right := anIceNode value rightContents.
+			left := anIceNode value leftContents ]
+		ifFalse: [
+			left := right := 'Too large to compare' ].
+		
+	aesthetics
+		fillUnifiedDiff: diff morph textArea
+		from: right
+		to: left
 
 ]
