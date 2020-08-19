@@ -23,13 +23,14 @@ RiRootPresenter class >> defaultSpec [
 RiRootPresenter class >> open [
 	<script>
 
-	self new
+	self openWithApplication: RiSpApplication new
+]
+
+{ #category : #examples }
+RiRootPresenter class >> openWithApplication: aSpApplication [
+	(self newApplication: aSpApplication)
 		model: RiRootModel newWithRegisteredRepositories;
-		openWithSpec;
-		withWindowDo: [ :window |
-			window
-				extent: 1000 @ 800;
-				title: 'History Explorer' ]
+		openWithSpec
 ]
 
 { #category : #accessing }
@@ -50,9 +51,23 @@ RiRootPresenter class >> worldMenuItemOn: aBuilder [
 ]
 
 { #category : #initialization }
+RiRootPresenter >> initialize [
+	super initialize.
+
+	self model: RiRootModel newWithRegisteredRepositories
+]
+
+{ #category : #initialization }
 RiRootPresenter >> initializePresenters [
 	notebook := self newNotebook.
 	notebook addPage: self newHomePage
+]
+
+{ #category : #initialization }
+RiRootPresenter >> initializeWindow: aSpWindowPresenter [
+	aSpWindowPresenter
+		initialExtent: 1000 @ 800;
+		title: 'History Explorer'
 ]
 
 { #category : #private }

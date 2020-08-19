@@ -294,28 +294,37 @@ RiRepositoryPresenter >> hasSearchResults [
 { #category : #initialization }
 RiRepositoryPresenter >> initializeActionBar [
 	
+	| refreshButton |
 	cleanSearchButton := self newButton
 			label: 'Clean';
 			icon: (self iconNamed: #windowClose);
 			help: 'Clean search results.';
 			action: [ self actionCleanSearchResults ];
+			addStyle: 'ritaNarrow';
 			enabled: false;
 			yourself.
 	nextJumpToNextButton := self newButton
-"			label: 'Next';"
 			icon: (self iconNamed: #down);
 			help: 'Jump to next commit in search results.';
 			action: [ self actionJumpToNextInSearchResults ];
+			addStyle: 'ritaNarrow';
 			enabled: false;
 			yourself.
 	nextJumpToPreviousButton := self newButton
-"			label: 'Prev';"
 			icon: (self iconNamed: #up);
 			help: 'Jump to previous commit in search results.';
 			action: [ self actionJumpToPreviousInSearchResults ];
+			addStyle: 'ritaNarrow';
 			enabled: false;
 			yourself.
 
+	refreshButton := self newButton
+			icon: (self iconNamed: #smallUpdate);
+			help: 'Process again this repository and reload the list of commits.';
+			action: [ self actionForceRefresh ];
+			addStyle: 'ritaNarrow';
+			yourself.
+		
 	actionBar := self newActionBar
 		add: (self newButton
 			label: 'Search';
@@ -326,12 +335,7 @@ RiRepositoryPresenter >> initializeActionBar [
 		add: nextJumpToNextButton;
 		add: nextJumpToPreviousButton;
 		add: cleanSearchButton;
-		addLast: (self newButton
-"			label: 'Refresh';"
-			icon: (self iconNamed: #smallUpdate);
-			help: 'Process again this repository and reload the list of commits.';
-			action: [ self actionForceRefresh ];
-			yourself);
+		addLast: refreshButton;
 		yourself.
 
 ]
