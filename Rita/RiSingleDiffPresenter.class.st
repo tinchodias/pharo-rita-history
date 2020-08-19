@@ -2,8 +2,7 @@ Class {
 	#name : #RiSingleDiffPresenter,
 	#superclass : #RiPresenter,
 	#instVars : [
-		'diff',
-		'diffMorph'
+		'diffMorphPresenter'
 	],
 	#category : #'Rita-UI-Diff'
 }
@@ -17,7 +16,7 @@ RiSingleDiffPresenter class >> defaultSpec [
 
 { #category : #initialization }
 RiSingleDiffPresenter >> initializePresenters [
-	diff := self newMorph
+	diffMorphPresenter := self newMorph
 ]
 
 { #category : #accessing }
@@ -31,18 +30,16 @@ RiSingleDiffPresenter >> selectIceNode: anIceNode [
 	anIceNode ifNil: [ ^ self ].
 
 	aesthetics := model at: #aesthetics.
-	diff morph ifNil: [
-		diff morph: aesthetics scrolledUnifiedDiffMorph ].
+	diffMorphPresenter morph ifNil: [
+		diffMorphPresenter morph: aesthetics scrolledUnifiedDiffMorph ].
 
-	(anIceNode value rightContents size + anIceNode value leftContents size) <= self limitForDiff
-		ifTrue: [
-			right := anIceNode value rightContents.
-			left := anIceNode value leftContents ]
-		ifFalse: [
-			left := right := 'Too large to compare' ].
+	right := anIceNode value rightContents.
+	left := anIceNode value leftContents.
+	(right size + left size) > self limitForDiff
+		ifTrue: [ left := right := 'Too large to compare' ].
 		
 	aesthetics
-		fillUnifiedDiff: diff morph textArea
+		fillUnifiedDiff: diffMorphPresenter morph textArea
 		from: right
 		to: left
 
