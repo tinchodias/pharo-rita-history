@@ -16,25 +16,6 @@ RiPRConversationPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RiPRConversationPresenter >> conversationItems [
-	| aPR commentsToSort sortedComments |
-	aPR := model at: #pullRequest.
-	commentsToSort := aPR reviewComments.
-
-	sortedComments := (commentsToSort select: [:each | each repliedId isNil ]) asOrderedCollection.
-	sortedComments := (sortedComments, aPR comments) sorted: [ :a :b | a createdAt asDateAndTime < b createdAt asDateAndTime ].
-	sortedComments := sortedComments asOrderedCollection.
-
-	commentsToSort
-		select: [:each | each repliedId notNil ]
-		thenDo: [ :each |
-			| repliedComment |
-			repliedComment := sortedComments detect: [ :c | c id = each repliedId ].
-			sortedComments add: each after: repliedComment ].
-	^ {aPR}, sortedComments
-]
-
-{ #category : #initialization }
 RiPRConversationPresenter >> headerLineFor: aPRComment [
 	| timestamp text timestampHumanReadable |
 	timestamp := aPRComment createdAt asDateAndTime.
@@ -49,10 +30,11 @@ RiPRConversationPresenter >> headerLineFor: aPRComment [
 ]
 
 { #category : #private }
-RiPRConversationPresenter >> hunkTextFor: anIceGitHubPullRequestComment [
+RiPRConversationPresenter >> hunkTextForComment: anIceGitHubPullRequestComment mapping: mappingOrNil [
+
 	^ Text streamContents: [ :stream |
 		| path line |
-		path := self linkToIceNodePointedBy: anIceGitHubPullRequestComment.
+		path := self linkToIceNodePointedBy: mappingOrNil.
 		line := anIceGitHubPullRequestComment diffHunk lines
 			at: (anIceGitHubPullRequestComment originalLine+1). "GH is zero-based"
 		stream
@@ -73,48 +55,31 @@ RiPRConversationPresenter >> initializePresenters [
 ]
 
 { #category : #private }
-RiPRConversationPresenter >> linkToIceNodePointedBy: anIceGitHubPullRequestComment [
-	| iceDiff file originalSHA commitToResolve mapping lineNumber |
-	"Get diff"
-	originalSHA := anIceGitHubPullRequestComment originalCommitSHA.
-	iceDiff := ((model at: #repository) commitAt: originalSHA) diffTo: (model at: #pullRequest) baseCommit.
-
-	"Parse file"
-	commitToResolve := anIceGitHubPullRequestComment isSideOfAddition
-		ifTrue: [ iceDiff sourceVersion ] ifFalse: [ iceDiff targetVersion ].
-	file := commitToResolve fileSystem resolveString: anIceGitHubPullRequestComment path.
-	lineNumber := anIceGitHubPullRequestComment originalLine.
-
-	mapping := file extension = 'st'
-		ifTrue: [ RiTonelToDiffMapping new ] 
-		ifFalse: [ RiFileToDiffMapping new ].
-	
-	mapping
-		file: file;
-		lineNumber: lineNumber;
-		iceDiff: iceDiff; 
-		calculate;
-		yourself.
+RiPRConversationPresenter >> linkToIceNodePointedBy: mapping [
 
 	^ mapping iceNode value definition ritaAsTextForPRConversation asText
-		addAttribute: (TextAction new actOnClickBlock: [ { mapping iceNode. mapping iceNodeLineNumber. iceDiff. anIceGitHubPullRequestComment } inspect ])
+		addAttribute: (TextAction new actOnClickBlock: [ mapping inspect ]);
+		yourself
 ]
 
 { #category : #initialization }
 RiPRConversationPresenter >> refreshOnModelUpdate [
-	textPresenter text: (self textForAll: self conversationItems)
+	textPresenter text: self textForAllConversationItems
 ]
 
 { #category : #initialization }
-RiPRConversationPresenter >> textFor: aPRComment [
-	| text indentationString body |
+RiPRConversationPresenter >> textFor: itemAssociation [
+	| aPRComment mappingOrNil text indentationString body |
+	aPRComment := itemAssociation key.
+	mappingOrNil := itemAssociation value.
+	
 	text := self headerLineFor: aPRComment.
 	indentationString := ''.
 	
-	aPRComment path ifNotNil: [
+	aPRComment isHunkComment ifTrue: [
 		text prepend: (indentationString := String tab).
-		aPRComment repliedId ifNil: [ 
-			text prepend: (self hunkTextFor: aPRComment) ]].
+		aPRComment isReplyComment ifFalse: [
+			text prepend: (self hunkTextForComment: aPRComment mapping: mappingOrNil) ]].
 
 	body := (MicroDownParser asText: aPRComment body, String cr, '***').
 	body := body copyReplaceAll: String cr with: String cr, indentationString.
@@ -126,8 +91,8 @@ RiPRConversationPresenter >> textFor: aPRComment [
 ]
 
 { #category : #initialization }
-RiPRConversationPresenter >> textForAll: aListOfPRComments [
+RiPRConversationPresenter >> textForAllConversationItems [
 	^ Text streamContents: [ :stream | 
-			aListOfPRComments do: [ :each |
+			(model at: #pullRequestConversationItems) do: [ :each |
 				stream nextPutAll: (self textFor: each) ] ]
 ]

@@ -56,6 +56,16 @@ IceGitHubPullRequestComment >> inspectBodyOn: composite [
 ]
 
 { #category : #testing }
+IceGitHubPullRequestComment >> isHunkComment [
+	^ json includesKey: 'path'
+]
+
+{ #category : #'*Rita' }
+IceGitHubPullRequestComment >> isReplyComment [
+	^ json includesKey: 'in_reply_to_id'
+]
+
+{ #category : #testing }
 IceGitHubPullRequestComment >> isSideOfAddition [
 	^ self side = 'RIGHT'
 ]
@@ -94,10 +104,10 @@ IceGitHubPullRequestComment >> printOn: aStream [
 		nextPut: $(;
 		print: self id.
 	
-	self repliedId ifNotNil: [ :repliedId |
+	self isReplyComment ifTrue: [ :repliedId |
 		aStream
 			nextPutAll: ' - reply to: ';
-			print: repliedId ].
+			print: self repliedId ].
 	aStream
 		nextPut: $).
 ]

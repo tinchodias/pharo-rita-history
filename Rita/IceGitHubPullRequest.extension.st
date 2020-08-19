@@ -45,6 +45,11 @@ IceGitHubPullRequest >> diffToRepositoryHead [
 	^ self basicBranch commit diffTo: self repository headCommit
 ]
 
+{ #category : #'*Rita-PullRequests' }
+IceGitHubPullRequest >> isHunkComment [
+	^ false
+]
+
 { #category : #'*Rita' }
 IceGitHubPullRequest >> path [
 	^ nil
@@ -89,4 +94,23 @@ IceGitHubPullRequest >> reviews [
 			project: self projectName
 			number: self number) all.
 	^ jsons "reify"
+]
+
+{ #category : #'*Rita' }
+IceGitHubPullRequest >> sortedConversationItems [
+	| commentsToSort sortedComments |
+	commentsToSort := self reviewComments.
+
+	sortedComments := (commentsToSort reject: [:each | each isReplyComment ]) asOrderedCollection.
+	sortedComments := (sortedComments, self comments) sorted: [ :a :b | a createdAt asDateAndTime < b createdAt asDateAndTime ].
+	sortedComments := sortedComments asOrderedCollection.
+
+	commentsToSort
+		select: [:each | each isReplyComment ]
+		thenDo: [ :each |
+			| repliedComment |
+			repliedComment := sortedComments detect: [ :c | c id = each repliedId ].
+			sortedComments add: each after: repliedComment ].
+
+	^ {self}, sortedComments
 ]

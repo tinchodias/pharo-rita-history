@@ -4,12 +4,24 @@ Class {
 	#category : #'Rita-UI-PullRequests'
 }
 
+{ #category : #private }
+RiPullRequestMasterDetailPresenter >> allConversationItemsOf: anIceGitHubPullRequest iceDiff: anIceDiff [ 
+	
+	^ anIceGitHubPullRequest sortedConversationItems collect: [ :each | each -> (self mappingOf: each in: anIceDiff) ]
+]
+
 { #category : #initialization }
 RiPullRequestMasterDetailPresenter >> connectMasterToDetail [
 	masterPresenter blockForPRSelected: [ :aPR |
-		detailPresenter model: 
+		| iceDiff conversationItems |
+		iceDiff := aPR diffToBase.
+		conversationItems := self allConversationItemsOf: aPR iceDiff: iceDiff.
+		
+		detailPresenter model:
 			(model copy 
 				add: #pullRequest -> aPR;
+				add: #pullRequestDiff -> iceDiff;
+				add: #pullRequestConversationItems -> conversationItems;
 				yourself) ].
 
 ]
@@ -17,6 +29,33 @@ RiPullRequestMasterDetailPresenter >> connectMasterToDetail [
 { #category : #initialization }
 RiPullRequestMasterDetailPresenter >> detailPresenterClass [
 	^ RiPullRequestDetailPresenter
+]
+
+{ #category : #private }
+RiPullRequestMasterDetailPresenter >> mappingOf: anIceGitHubPullRequestComment in: iceDiff [ 
+
+	| commitToResolve file lineNumber mapping |
+	self flag: #todo. "FIX FIX FIX"
+	(anIceGitHubPullRequestComment isKindOf: IceGitHubPullRequestComment)
+		ifFalse: [ ^ nil ].
+	anIceGitHubPullRequestComment isHunkComment
+		ifFalse: [ ^ nil ].
+
+	"Parse file"
+	commitToResolve := anIceGitHubPullRequestComment isSideOfAddition
+		ifTrue: [ iceDiff sourceVersion ]
+		ifFalse: [ iceDiff targetVersion ].
+	file := commitToResolve fileSystem resolveString: anIceGitHubPullRequestComment path.
+	lineNumber := anIceGitHubPullRequestComment originalLine. "line ?"
+
+	^(file extension = 'st'
+		ifTrue: [ RiTonelToDiffMapping new ] 
+		ifFalse: [ RiFileToDiffMapping new ])
+			file: file;
+			lineNumber: lineNumber;
+			iceDiff: iceDiff; 
+			calculate;
+			yourself
 ]
 
 { #category : #initialization }

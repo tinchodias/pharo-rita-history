@@ -60,7 +60,7 @@ RiPullRequestDetailPresenter >> newConversationPresenter [
 { #category : #private }
 RiPullRequestDetailPresenter >> newDiffPresenter [
 	| iceDiff |
-	iceDiff := (model at: #pullRequest) diffToBase.
+	iceDiff := model at: #pullRequestDiff.
 	^ (self instantiate: RiPRDiffPresenter)
 			model: (model copy
 				add: #iceDiff -> iceDiff;
