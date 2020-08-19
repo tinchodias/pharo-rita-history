@@ -21,7 +21,7 @@ BaselineOfRita >> baseline: spec [
 			spec baseline: 'Hiedra' with: [
 				spec repository: 'github://tinchodias/hiedra:v3.0.0/src' ].
 			spec baseline: 'Microdown' with: [
-				spec repository: 'github://pillar-markup/MicroDown:v1.0.3/src' ].
+				spec repository: 'github://pillar-markup/MicroDown:v1.0.4/src' ].
 
 			spec
 				package: 'Rita' with: [ spec requires: #('Roassal3' 'TaskIt' 'Iceberg' 'Hiedra' 'Microdown') ];
