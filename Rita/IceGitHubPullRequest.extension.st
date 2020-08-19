@@ -51,16 +51,6 @@ IceGitHubPullRequest >> isHunkComment [
 ]
 
 { #category : #'*Rita' }
-IceGitHubPullRequest >> path [
-	^ nil
-]
-
-{ #category : #'*Rita' }
-IceGitHubPullRequest >> repliedId [
-	^ nil
-]
-
-{ #category : #'*Rita' }
 IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 	IceGitHubAPI new 
 		addCommentOn: self owner 
