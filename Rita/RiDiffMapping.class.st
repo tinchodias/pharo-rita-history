@@ -6,7 +6,8 @@ Class {
 		'iceDiff',
 		'lineNumber',
 		'iceNode',
-		'iceNodeLineNumber'
+		'iceNodeLineNumber',
+		'iceComment'
 	],
 	#category : #'Rita-UI-PullRequests'
 }
@@ -14,6 +15,16 @@ Class {
 { #category : #accessing }
 RiDiffMapping >> file: aFileReference [ 
 	file := aFileReference
+]
+
+{ #category : #accessing }
+RiDiffMapping >> hunkString [
+	^ iceComment diffHunk lines at: iceComment originalLine + 1	"GH is zero-based"
+]
+
+{ #category : #accessing }
+RiDiffMapping >> iceComment: anIceComment [
+	iceComment := anIceComment
 ]
 
 { #category : #accessing }

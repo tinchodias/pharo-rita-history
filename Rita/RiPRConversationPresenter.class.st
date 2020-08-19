@@ -30,17 +30,15 @@ RiPRConversationPresenter >> headerLineFor: aPRComment [
 ]
 
 { #category : #private }
-RiPRConversationPresenter >> hunkTextForComment: anIceGitHubPullRequestComment mapping: mappingOrNil [
+RiPRConversationPresenter >> hunkTextForMapping: mapping [
 
 	^ Text streamContents: [ :stream |
 		| path line |
-		path := self linkToIceNodePointedBy: mappingOrNil.
-		line := anIceGitHubPullRequestComment diffHunk lines
-			at: (anIceGitHubPullRequestComment originalLine+1). "GH is zero-based"
+		path := self linkToIceNodePointedBy: mapping.
+		line := mapping hunkString.
 		stream
 			nextPutAll: path; lf;
-			nextPutAll: line; lf; lf.
-		 ].
+			nextPutAll: line; lf; lf ].
 
 
 
@@ -58,7 +56,7 @@ RiPRConversationPresenter >> initializePresenters [
 RiPRConversationPresenter >> linkToIceNodePointedBy: mapping [
 
 	^ mapping iceNode value definition ritaAsTextForPRConversation asText
-		addAttribute: (TextAction new actOnClickBlock: [ mapping inspect ]);
+		addAttribute: (TextAction new actOnClickBlock: [ self selectIceNodePointedBy: mapping ]);
 		yourself
 ]
 
@@ -67,11 +65,16 @@ RiPRConversationPresenter >> refreshOnModelUpdate [
 	textPresenter text: self textForAllConversationItems
 ]
 
+{ #category : #private }
+RiPRConversationPresenter >> selectIceNodePointedBy: mapping [
+
+	mapping halt
+]
+
 { #category : #initialization }
 RiPRConversationPresenter >> textFor: itemAssociation [
-	| aPRComment mappingOrNil text indentationString body |
+	| aPRComment text indentationString body |
 	aPRComment := itemAssociation key.
-	mappingOrNil := itemAssociation value.
 	
 	text := self headerLineFor: aPRComment.
 	indentationString := ''.
@@ -79,7 +82,7 @@ RiPRConversationPresenter >> textFor: itemAssociation [
 	aPRComment isHunkComment ifTrue: [
 		text prepend: (indentationString := String tab).
 		aPRComment isReplyComment ifFalse: [
-			text prepend: (self hunkTextForComment: aPRComment mapping: mappingOrNil) ]].
+			text prepend: (self hunkTextForMapping: itemAssociation value) ]].
 
 	body := (MicroDownParser asText: aPRComment body, String cr, '***').
 	body := body copyReplaceAll: String cr with: String cr, indentationString.

@@ -55,6 +55,7 @@ RiPullRequestMasterDetailPresenter >> mappingOf: anIceGitHubPullRequestComment i
 			lineNumber: lineNumber;
 			iceDiff: iceDiff; 
 			calculate;
+			iceComment: anIceGitHubPullRequestComment;
 			yourself
 ]
 
