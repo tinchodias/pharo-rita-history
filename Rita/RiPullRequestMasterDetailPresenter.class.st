@@ -5,9 +5,29 @@ Class {
 }
 
 { #category : #private }
-RiPullRequestMasterDetailPresenter >> allConversationItemsOf: anIceGitHubPullRequest iceDiff: anIceDiff [ 
-	
-	^ anIceGitHubPullRequest sortedConversationItems collect: [ :each | each -> (self mappingOf: each in: anIceDiff) ]
+RiPullRequestMasterDetailPresenter >> allConversationItemsOf: aPullRequest iceDiff: anIceDiff [
+
+	| groupedComments reviewCommentsThatBegin reviewCommentsThatReply items |
+	groupedComments := aPullRequest reviewComments
+		groupedBy: [:each | each isReplyComment ].
+	reviewCommentsThatBegin := groupedComments at: false ifAbsent: [ #() ].
+	reviewCommentsThatReply := groupedComments at: true ifAbsent: [ #() ].
+
+	items := ((reviewCommentsThatBegin, aPullRequest comments, { aPullRequest })
+		sorted: [ :a :b | a createdAt < b createdAt ])
+		collect: [ :each |
+			RiPullRequestConversationItem
+				withComment: each
+				pullRequest: aPullRequest
+				iceDiff: anIceDiff ].
+
+	reviewCommentsThatReply do: [ :each |
+		items 
+			detect: [ :item | item includesCommentWithId: each repliedId ]
+			ifFound: [ :item | item addReply: each ]
+			ifNone: [ self error: 'Replied comment not found' ] ].
+
+	^ items
 ]
 
 { #category : #initialization }
@@ -32,21 +52,17 @@ RiPullRequestMasterDetailPresenter >> detailPresenterClass [
 ]
 
 { #category : #private }
-RiPullRequestMasterDetailPresenter >> mappingOf: anIceGitHubPullRequestComment in: iceDiff [ 
+RiPullRequestMasterDetailPresenter >> mappingOf: aPullRequestComment in: iceDiff [ 
 
-	| commitToResolve file lineNumber mapping |
-	self flag: #todo. "FIX FIX FIX"
-	(anIceGitHubPullRequestComment isKindOf: IceGitHubPullRequestComment)
-		ifFalse: [ ^ nil ].
-	anIceGitHubPullRequestComment isHunkComment
-		ifFalse: [ ^ nil ].
+	| commitToResolve file lineNumber |
+	aPullRequestComment isHunkComment ifFalse: [ ^ nil ].
 
 	"Parse file"
-	commitToResolve := anIceGitHubPullRequestComment isSideOfAddition
+	commitToResolve := aPullRequestComment isSideOfAddition
 		ifTrue: [ iceDiff sourceVersion ]
 		ifFalse: [ iceDiff targetVersion ].
-	file := commitToResolve fileSystem resolveString: anIceGitHubPullRequestComment path.
-	lineNumber := anIceGitHubPullRequestComment originalLine. "line ?"
+	file := commitToResolve fileSystem resolveString: aPullRequestComment path.
+	lineNumber := aPullRequestComment originalLine. "line ?"
 
 	^(file extension = 'st'
 		ifTrue: [ RiTonelToDiffMapping new ] 
@@ -55,7 +71,7 @@ RiPullRequestMasterDetailPresenter >> mappingOf: anIceGitHubPullRequestComment i
 			lineNumber: lineNumber;
 			iceDiff: iceDiff; 
 			calculate;
-			iceComment: anIceGitHubPullRequestComment;
+			iceComment: aPullRequestComment;
 			yourself
 ]
 

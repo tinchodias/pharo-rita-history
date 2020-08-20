@@ -104,6 +104,7 @@ RiAestheticsModel >> currentTheme [
 { #category : #'diff morph creation' }
 RiAestheticsModel >> diffMorphFor2: iceNode [
 	| oldString newString morph |
+	self flag: #todo. "Duplicated code"
 	oldString := self asContentsToDiff: iceNode value rightContents.
 	newString := self asContentsToDiff: iceNode value leftContents.
 	morph := self scrolledUnifiedDiffMorph.
@@ -131,11 +132,37 @@ RiAestheticsModel >> fillColorFor: iceNode [
 RiAestheticsModel >> fillUnifiedDiff: textArea from: from to: to [
 
 	| diff |
+	self flag: #todo. "Duplicated code"
+	
 	diff := RiUnifiedStringDiff new
 		oldString: from;
 		newString: to;
 		build;
 		yourself.
+
+	textArea
+		removeAllSegments;
+		setTextWith: diff unifiedString;
+		font: StandardFonts codeFont. "Don't know why it's necessary to set font again"
+
+	diff lineJoins do: [:each |
+		colorMap at: each kindSymbol ifPresent: [ :color |
+			textArea addSegment: ((RiRubricTextSegment from: each fromIndex to: each toIndex)
+				color: color;
+				yourself).
+		] ].
+
+	diff inlineJoins do: [:each |
+		inlinecolorMap at: each kindSymbol ifPresent: [ :color |
+			textArea addSegment: ((RubPlainSegmentMorph from: each fromIndex to: each toIndex)
+				color: color;
+				yourself).
+		] ].
+
+]
+
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> fillUnifiedDiff: textArea with: diff [
 
 	textArea
 		removeAllSegments;

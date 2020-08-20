@@ -30,7 +30,7 @@ IceGitHubPullRequest >> comments [
 
 { #category : #'*Rita' }
 IceGitHubPullRequest >> createdAt [
-	^ json at: 'created_at'
+	^ (json at: #created_at) asDateAndTime
 ]
 
 { #category : #'*Rita' }
@@ -43,6 +43,11 @@ IceGitHubPullRequest >> diffToRepositoryHead [
 	"Inspired on IceMerge>>calculateChanges"
 
 	^ self basicBranch commit diffTo: self repository headCommit
+]
+
+{ #category : #'*Rita' }
+IceGitHubPullRequest >> id [
+	^ json at: #id
 ]
 
 { #category : #'*Rita-PullRequests' }
@@ -84,23 +89,4 @@ IceGitHubPullRequest >> reviews [
 			project: self projectName
 			number: self number) all.
 	^ jsons "reify"
-]
-
-{ #category : #'*Rita' }
-IceGitHubPullRequest >> sortedConversationItems [
-	| commentsToSort sortedComments |
-	commentsToSort := self reviewComments.
-
-	sortedComments := (commentsToSort reject: [:each | each isReplyComment ]) asOrderedCollection.
-	sortedComments := (sortedComments, self comments) sorted: [ :a :b | a createdAt asDateAndTime < b createdAt asDateAndTime ].
-	sortedComments := sortedComments asOrderedCollection.
-
-	commentsToSort
-		select: [:each | each isReplyComment ]
-		thenDo: [ :each |
-			| repliedComment |
-			repliedComment := sortedComments detect: [ :c | c id = each repliedId ].
-			sortedComments add: each after: repliedComment ].
-
-	^ {self}, sortedComments
 ]

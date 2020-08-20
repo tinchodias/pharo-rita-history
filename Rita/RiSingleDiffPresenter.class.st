@@ -19,28 +19,16 @@ RiSingleDiffPresenter >> initializePresenters [
 	diffMorphPresenter := self newMorph
 ]
 
-{ #category : #accessing }
-RiSingleDiffPresenter >> limitForDiff [
-	^ 20000
-]
-
 { #category : #initialization }
 RiSingleDiffPresenter >> selectIceNode: anIceNode [
-	| aesthetics left right |
+	| aesthetics|
 	anIceNode ifNil: [ ^ self ].
 
 	aesthetics := model at: #aesthetics.
 	diffMorphPresenter morph ifNil: [
 		diffMorphPresenter morph: aesthetics scrolledUnifiedDiffMorph ].
 
-	right := anIceNode value rightContents.
-	left := anIceNode value leftContents.
-	(right size + left size) > self limitForDiff
-		ifTrue: [ left := right := 'Too large to compare' ].
-		
 	aesthetics
 		fillUnifiedDiff: diffMorphPresenter morph textArea
-		from: right
-		to: left
-
+		with: anIceNode value newUnifiedStringDiff
 ]

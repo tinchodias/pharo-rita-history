@@ -18,11 +18,6 @@ RiDiffMapping >> file: aFileReference [
 ]
 
 { #category : #accessing }
-RiDiffMapping >> hunkString [
-	^ iceComment diffHunk lines at: iceComment originalLine + 1	"GH is zero-based"
-]
-
-{ #category : #accessing }
 RiDiffMapping >> iceComment: anIceComment [
 	iceComment := anIceComment
 ]
@@ -40,6 +35,11 @@ RiDiffMapping >> iceNode [
 { #category : #accessing }
 RiDiffMapping >> iceNodeLineNumber [
 	^ iceNodeLineNumber
+]
+
+{ #category : #accessing }
+RiDiffMapping >> lineNumber [
+	^ lineNumber
 ]
 
 { #category : #accessing }
