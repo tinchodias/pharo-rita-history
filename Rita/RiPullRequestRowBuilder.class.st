@@ -25,5 +25,5 @@ RiPullRequestRowBuilder >> morphAt: item [
 
 { #category : #accessing }
 RiPullRequestRowBuilder >> timestampStringFor: item [
-	^ datePrinter stringFor: item createdAt asDate
+	^ datePrinter stringFor: item creationDateAndTime asDate
 ]

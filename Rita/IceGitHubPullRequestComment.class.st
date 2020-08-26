@@ -25,7 +25,7 @@ IceGitHubPullRequestComment >> body [
 ]
 
 { #category : #accessing }
-IceGitHubPullRequestComment >> createdAt [
+IceGitHubPullRequestComment >> creationDateAndTime [
 	^ (json at: #created_at) asDateAndTime 
 ]
 
@@ -92,7 +92,7 @@ IceGitHubPullRequestComment >> originalPosition [
 
 { #category : #accessing }
 IceGitHubPullRequestComment >> path [
-	^ json at: 'path' ifAbsent: [ nil ]
+	^ json at: 'path'
 ]
 
 { #category : #printing }
@@ -128,7 +128,7 @@ IceGitHubPullRequestComment >> side [
 ]
 
 { #category : #accessing }
-IceGitHubPullRequestComment >> updatedAt [
+IceGitHubPullRequestComment >> updateDateAndTime [
 	^ (json at: #updated_at) asDateAndTime 
 ]
 

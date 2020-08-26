@@ -19,7 +19,7 @@ RiPRConversationPrinter class >> defaultSpec [
 { #category : #initialization }
 RiPRConversationPrinter >> headerLineFor: aPRComment [
 	| timestamp text timestampHumanReadable |
-	timestamp := aPRComment createdAt asDateAndTime.
+	timestamp := aPRComment creationDateAndTime.
 	timestampHumanReadable := printer stringFor: timestamp.
 
 	text := aPRComment author asText

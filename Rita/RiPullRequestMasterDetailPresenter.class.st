@@ -14,7 +14,7 @@ RiPullRequestMasterDetailPresenter >> allConversationItemsOf: aPullRequest iceDi
 	reviewCommentsThatReply := groupedComments at: true ifAbsent: [ #() ].
 
 	items := ((reviewCommentsThatBegin, aPullRequest comments, { aPullRequest })
-		sorted: [ :a :b | a createdAt < b createdAt ])
+		sorted: [ :a :b | a creationDateAndTime < b creationDateAndTime ])
 		collect: [ :each |
 			RiPullRequestConversationItem
 				withComment: each

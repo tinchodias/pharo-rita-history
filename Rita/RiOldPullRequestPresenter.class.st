@@ -33,7 +33,7 @@ RiOldPullRequestPresenter >> morphFor: aPRComment [
 	self flag: #todo.	
 	aesthetics := RiAestheticsModel new.
 "	aesthetics := model at: #aesthetics."
-	timestamp := aPRComment createdAt asDateAndTime.
+	timestamp := aPRComment creationDateAndTime.
 " 	timestampHumanReadable := timestamp epiceaBrowsersAsString."
 	timestampHumanReadable := RiDateAndTimePrinter new stringFor: timestamp.
 

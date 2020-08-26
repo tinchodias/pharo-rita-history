@@ -1,19 +1,6 @@
 Extension { #name : #IceGitHubPullRequest }
 
 { #category : #'*Rita' }
-IceGitHubPullRequest >> basicBranch [
-	^ branch ifNil: [
-		branch := (self repository
-			remoteNamed: self remote name )
-				remoteBranchNamed: self headRef ]
-]
-
-{ #category : #'*Rita' }
-IceGitHubPullRequest >> basicHeadCommit [
-	^ self basicBranch commit
-]
-
-{ #category : #'*Rita' }
 IceGitHubPullRequest >> comments [
 	| jsons |
 	jsons := (IceGitHubAPI new
@@ -26,28 +13,6 @@ IceGitHubPullRequest >> comments [
 		(IceGitHubPullRequestComment fromJSON: each)
 "			repository: self repository
 			yourself "]
-]
-
-{ #category : #'*Rita' }
-IceGitHubPullRequest >> createdAt [
-	^ (json at: #created_at) asDateAndTime
-]
-
-{ #category : #'*Rita' }
-IceGitHubPullRequest >> diffToBase [
-	^ self basicHeadCommit diffTo: self baseCommit
-]
-
-{ #category : #'*Rita' }
-IceGitHubPullRequest >> diffToRepositoryHead [
-	"Inspired on IceMerge>>calculateChanges"
-
-	^ self basicBranch commit diffTo: self repository headCommit
-]
-
-{ #category : #'*Rita' }
-IceGitHubPullRequest >> id [
-	^ json at: #id
 ]
 
 { #category : #'*Rita-PullRequests' }
