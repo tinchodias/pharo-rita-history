@@ -9,31 +9,31 @@ Class {
 
 { #category : #'method groups' }
 ZuEnvironmentPlugin >> collectMethodGroupProviders [
-	^ {ZuChangedMethodGroupProvider new}
+	^ { ZuChangedMethodGroupProvider new }
 ]
 
 { #category : #'item decoration' }
-ZuEnvironmentPlugin >> decorateBrowserItem: arg1 ofClass: arg2 [
-	(self doesClassHaveChange: arg2)
-		ifTrue: [ arg1 markWith: ZuChangedTag ]
+ZuEnvironmentPlugin >> decorateBrowserItem: anItem ofClass: aClass [
+	(self doesClassHaveChange: aClass)
+		ifTrue: [ anItem markWith: ZuChangedTag ]
 ]
 
 { #category : #'item decoration' }
-ZuEnvironmentPlugin >> decorateBrowserItem: arg1 ofMethod: arg2 [
-	(self doesMethodHaveChange: arg2)
-		ifTrue: [ arg1 markWith: ZuChangedTag ]
+ZuEnvironmentPlugin >> decorateBrowserItem: anItem ofMethod: aMethod [
+	(self doesMethodHaveChange: aMethod)
+		ifTrue: [ anItem markWith: ZuChangedTag ]
 ]
 
 { #category : #'item decoration' }
-ZuEnvironmentPlugin >> decorateBrowserItem: arg1 ofPackage: arg2 [
-	(self doesPackageHaveChange: arg2)
-		ifTrue: [ arg1 markWith: ZuChangedTag ]
+ZuEnvironmentPlugin >> decorateBrowserItem: anItem ofPackage: aPackage [
+	(self doesPackageHaveChange: aPackage)
+		ifTrue: [ anItem markWith: ZuChangedTag ]
 ]
 
 { #category : #'item decoration' }
-ZuEnvironmentPlugin >> doesClassHaveChange: arg1 [
-	^ arg1 localMethods
-		anySatisfy: [ :arg2 | self doesMethodHaveChange: arg2 ]
+ZuEnvironmentPlugin >> doesClassHaveChange: aClass [
+	^ aClass localMethods
+		anySatisfy: [ :each | self doesMethodHaveChange: each ]
 ]
 
 { #category : #'item decoration' }
@@ -49,11 +49,9 @@ ZuEnvironmentPlugin >> doesMethodHaveChange: arg1 [
 ]
 
 { #category : #'item decoration' }
-ZuEnvironmentPlugin >> doesPackageHaveChange: arg1 [
-	^ (arg1 definedClasses
-		anySatisfy: [ :arg2 | self doesClassHaveChange: arg2 ])
-		or: [ arg1 extensionMethods
-				anySatisfy: [ :arg3 | self doesMethodHaveChange: arg3 ] ]
+ZuEnvironmentPlugin >> doesPackageHaveChange: aPackage [
+	^ (aPackage definedClasses anySatisfy: [ :each | self doesClassHaveChange: each ]) or: [
+		aPackage extensionMethods anySatisfy: [ :each | self doesMethodHaveChange: each ] ]
 ]
 
 { #category : #accessing }

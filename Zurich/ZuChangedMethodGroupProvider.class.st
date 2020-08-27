@@ -5,11 +5,11 @@ Class {
 }
 
 { #category : #'building groups' }
-ZuChangedMethodGroupProvider >> createMethodGroupFor: arg1 from: arg2 [
-	^ ClyMethodGroup named: 'changed' priority: 8.45 on: arg1
+ZuChangedMethodGroupProvider >> createMethodGroupFor: aMethodQuery from: aClassScope [
+	^ ClyMethodGroup named: 'changed' priority: 8.45 on: aMethodQuery
 ]
 
 { #category : #'building groups' }
-ZuChangedMethodGroupProvider >> createMethodQueryFrom: arg1 [
-	^ ZuChangedMethodQuery from: arg1
+ZuChangedMethodGroupProvider >> createMethodQueryFrom: aClassScope [
+	^ ZuChangedMethodQuery from: aClassScope
 ]

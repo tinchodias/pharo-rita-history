@@ -5,11 +5,11 @@ Class {
 }
 
 { #category : #accessing }
-ZuChangedMethodQuery >> decorateMethodGroupTableCell: arg1 of: arg2 [
-	super decorateMethodGroupTableCell: arg1 of: arg2.
-	arg1
-		color: ZuTheme current cellBackgroundColor";
-		definitionIcon: ZuTheme current changeIconSelector"
+ZuChangedMethodQuery >> decorateMethodGroupTableCell: anItemCellMorph of: groupItem [
+	super decorateMethodGroupTableCell: anItemCellMorph of: groupItem.
+	
+	anItemCellMorph color: ZuTheme current cellBackgroundColor.
+	anItemCellMorph definitionIcon: ZuTheme current changeIconSelector.
 ]
 
 { #category : #printing }
@@ -18,8 +18,8 @@ ZuChangedMethodQuery >> description [
 ]
 
 { #category : #testing }
-ZuChangedMethodQuery >> selectsMethod: arg1 [
-	| tmp1 |
-	tmp1 := self environment getPlugin: ZuEnvironmentPlugin.
-	^ tmp1 doesMethodHaveChange: arg1
+ZuChangedMethodQuery >> selectsMethod: aMethod [
+	| plugin |
+	plugin := self environment getPlugin: ZuEnvironmentPlugin.
+	^ plugin doesMethodHaveChange: aMethod
 ]

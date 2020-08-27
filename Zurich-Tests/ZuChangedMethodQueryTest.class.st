@@ -14,21 +14,22 @@ ZuChangedMethodQueryTest >> createQuery [
 
 { #category : #running }
 ZuChangedMethodQueryTest >> methodWithChange [
-	
+
 ]
 
 { #category : #running }
 ZuChangedMethodQueryTest >> methodWithoutChange [
-	
+
 ]
 
 { #category : #running }
 ZuChangedMethodQueryTest >> setUpEnvironment [
-	| tmp2 |
 	super setUpEnvironment.
-	tmp2 := ZuEnvironmentPlugin new.
-	tmp2 tmpSelectors: #(#methodWithChange).
-	environment addPlugin: tmp2 yourself
+	environment
+		addPlugin:
+			(ZuEnvironmentPlugin new
+				tmpSelectors: #(methodWithChange);
+				yourself)
 ]
 
 { #category : #tests }

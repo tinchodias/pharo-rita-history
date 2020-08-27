@@ -1,25 +1,26 @@
 Extension { #name : #RGEnvironment }
 
 { #category : #'*Zurich' }
-RGEnvironment >> zurichBrowseAs: arg1 extraEnvironmentPlugin: arg2 [
-	| tmp1 tmp2 tmp3 tmp5 tmp7 |
+RGEnvironment >> zurichBrowseAs: browserTitleString extraEnvironmentPlugin: extraEnvironmentPlugin [
+	 | clyEnv clyNavEnv browser |
 	self adoptForBrowser.
-	tmp1 := ClyRing2Environment new.
-	tmp1
-		environment: self;
-		name: arg1.
-	tmp5 := ClyNavigationEnvironment over: tmp1.
-	tmp5
+	clyEnv := ClyRing2Environment new.
+	clyEnv environment: self.
+	clyEnv name: browserTitleString.
+
+	clyNavEnv := (ClyNavigationEnvironment over: clyEnv)
 		addPlugin: ClyDefaultSystemEnvironmentPlugin new;
-		addPlugin: arg2.
-	tmp2 := tmp5 attachToSystem.
-	tmp7 := ClyFullBrowser new.
-	tmp7 navigationEnvironment: tmp2.
-	tmp3 := tmp7 addPlugin: ClyStandardBrowserPlugin new.
-	^ tmp3 open
+		addPlugin: extraEnvironmentPlugin;
+	   attachToSystem.
+
+	browser := ClyFullBrowser new 
+		navigationEnvironment: clyNavEnv;
+		addPlugin: ClyStandardBrowserPlugin new.
+
+	^ browser open.
 ]
 
 { #category : #'*Zurich' }
-RGEnvironment >> zurichBrowseAs: arg1 extraPlugin: arg2 [
+RGEnvironment >> zurichBrowseAs: browserTitleString extraPlugin: extraEnvironmentPlugin [
 	self flag: #remove
 ]

@@ -11,13 +11,15 @@ Class {
 
 { #category : #activation }
 ZuMethodDiffTool class >> browserTabActivation [
+	"This declaration specifies that in any browser when methods are selected, a diff tool will be available in a tab."
+
 	<classAnnotation>
 	^ ClyTabActivationStrategy for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #accessing }
-ZuMethodDiffTool class >> shouldBeActivatedInContext: arg1 [
-	^ arg1 lastSelectedItem hasProperty: ZuChangedTag
+ZuMethodDiffTool class >> shouldBeActivatedInContext: aBrowserContext [
+	^ aBrowserContext lastSelectedItem hasProperty: ZuChangedTag
 ]
 
 { #category : #accessing }
@@ -32,19 +34,15 @@ ZuMethodDiffTool >> activationPriority [
 
 { #category : #controlling }
 ZuMethodDiffTool >> attachToSystem [
-	browser system
-		when:
-			(ClyMethodChange
-				ofAll:
-					{self leftMethod.
-					self rightMethod})
-		send: #triggerUpdate
-		to: self
+
+	browser system 
+		when: (ClyMethodChange ofAll: {self leftMethod. self rightMethod}) 
+		send: #triggerUpdate to: self
 ]
 
 { #category : #testing }
 ZuMethodDiffTool >> belongsToCurrentBrowserContext [
-	^ (browser isMethodSelected: leftMethod)
+	^(browser isMethodSelected: leftMethod) 
 		and: [ browser isMethodSelected: rightMethod ]
 ]
 
@@ -84,36 +82,32 @@ ZuMethodDiffTool >> detachFromSystem [
 ]
 
 { #category : #testing }
-ZuMethodDiffTool >> isSimilarTo: arg1 [
-	(super isSimilarTo: arg1)
-		ifFalse: [ ^ false ].
-	^ {leftMethod.
-	rightMethod} asIdentitySet
-		=
-			{arg1 leftMethod.
-			arg1 rightMethod} asIdentitySet
+ZuMethodDiffTool >> isSimilarTo: anotherBrowserTool [
+	(super isSimilarTo: anotherBrowserTool) ifFalse: [ ^false ].
+	
+	^{leftMethod. rightMethod} asIdentitySet = {anotherBrowserTool leftMethod. anotherBrowserTool rightMethod  } asIdentitySet
 ]
 
 { #category : #accessing }
 ZuMethodDiffTool >> leftMethod [
-	^ leftMethod
+	^leftMethod
 ]
 
 { #category : #printing }
 ZuMethodDiffTool >> printContext [
-	^ 'left / ' , leftMethod printSystemPath , ' vs right / '
-		, rightMethod printSystemPath
+	^'left / ', leftMethod printSystemPath , ' vs right / ', rightMethod printSystemPath
 ]
 
 { #category : #initialization }
 ZuMethodDiffTool >> resetStateForSnapshot [
 	super resetStateForSnapshot.
+	
 	diffMorph := nil
 ]
 
 { #category : #accessing }
 ZuMethodDiffTool >> rightMethod [
-	^ rightMethod
+	^rightMethod
 ]
 
 { #category : #initialization }
@@ -138,12 +132,12 @@ ZuMethodDiffTool >> setUpModelFromContext [
 
 { #category : #updating }
 ZuMethodDiffTool >> update [
-	leftMethod := leftMethod origin
-		localMethodNamed: leftMethod selector
-		ifAbsent: [ ^ self ].
-	rightMethod := rightMethod origin
-		localMethodNamed: rightMethod selector
-		ifAbsent: [ ^ self ].
+	leftMethod := leftMethod origin 
+		localMethodNamed: leftMethod selector ifAbsent: [^self].
+	rightMethod := rightMethod origin 
+		localMethodNamed: rightMethod selector ifAbsent: [^self].
+	
 	super update.
+	
 	diffMorph from: leftMethod sourceCode to: rightMethod sourceCode
 ]

@@ -9,9 +9,7 @@ Class {
 
 { #category : #accessing }
 ZuTheme class >> current [
-	| tmp2 |
-	tmp2 := currentInstance.
-	^ tmp2 ifNil: [ currentInstance := self new ] ifNotNil: [ tmp2 ]
+	^ currentInstance ifNil: [ currentInstance := self new ]
 ]
 
 { #category : #accessing }
