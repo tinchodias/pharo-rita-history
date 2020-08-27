@@ -82,13 +82,14 @@ RiPullRequestMasterDetailPresenter >> masterPresenterClass [
 
 { #category : #accessing }
 RiPullRequestMasterDetailPresenter >> refreshOnModelUpdate [
-	| iceRepo githubRemote jsons prs |
+	| iceRepo githubRemote jsons prs credentials |
 	githubRemote := model at: #githubRemote.
 	iceRepo := githubRemote localRepository.
+	credentials := IceGitHubAPI ensureCredentials.
 
 	"List all PRs"
 	jsons := (IceGitHubAPI new
-		beAnonymous;
+		credentials: credentials;
 		getPullRequests: githubRemote owner
 		project: githubRemote projectName) all.
 	prs := jsons collect: [ :each |
