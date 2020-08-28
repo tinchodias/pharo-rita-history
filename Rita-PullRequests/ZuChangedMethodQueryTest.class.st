@@ -1,7 +1,7 @@
 Class {
 	#name : #ZuChangedMethodQueryTest,
 	#superclass : #ClyMethodQueryTestCase,
-	#category : #'Zurich-Tests'
+	#category : #'Rita-PullRequests-Tests'
 }
 
 { #category : #running }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'iceDiff'
 	],
-	#category : #Zurich
+	#category : #'Rita-PullRequests-Calypso'
 }
 
 { #category : #'method groups' }

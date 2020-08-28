@@ -1,6 +1,6 @@
 Extension { #name : #RGEnvironment }
 
-{ #category : #'*Zurich' }
+{ #category : #'*Rita-PullRequests' }
 RGEnvironment >> zurichBrowseAs: browserTitleString extraEnvironmentPlugin: extraEnvironmentPlugin [
 	 | clyEnv clyNavEnv browser |
 	self adoptForBrowser.
@@ -20,7 +20,7 @@ RGEnvironment >> zurichBrowseAs: browserTitleString extraEnvironmentPlugin: extr
 	^ browser open.
 ]
 
-{ #category : #'*Zurich' }
+{ #category : #'*Rita-PullRequests' }
 RGEnvironment >> zurichBrowseAs: browserTitleString extraPlugin: extraEnvironmentPlugin [
 	self flag: #remove
 ]

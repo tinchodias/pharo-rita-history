@@ -6,7 +6,7 @@ Class {
 		'blockForPRSelected',
 		'rowBuilder'
 	],
-	#category : #'Rita-UI-PullRequests'
+	#category : #'Rita-PullRequests-UI'
 }
 
 { #category : #specs }

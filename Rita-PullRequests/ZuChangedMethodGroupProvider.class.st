@@ -1,7 +1,7 @@
 Class {
 	#name : #ZuChangedMethodGroupProvider,
 	#superclass : #ClySingleMethodGroupProvider,
-	#category : #Zurich
+	#category : #'Rita-PullRequests-Calypso'
 }
 
 { #category : #'building groups' }

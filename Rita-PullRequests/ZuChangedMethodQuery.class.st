@@ -1,7 +1,7 @@
 Class {
 	#name : #ZuChangedMethodQuery,
 	#superclass : #ClyMethodQuery,
-	#category : #Zurich
+	#category : #'Rita-PullRequests-Calypso'
 }
 
 { #category : #accessing }

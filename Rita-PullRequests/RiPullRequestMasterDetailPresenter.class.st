@@ -1,7 +1,7 @@
 Class {
 	#name : #RiPullRequestMasterDetailPresenter,
 	#superclass : #RiMasterDetailPresenter,
-	#category : #'Rita-UI-PullRequests'
+	#category : #'Rita-PullRequests-UI'
 }
 
 { #category : #private }

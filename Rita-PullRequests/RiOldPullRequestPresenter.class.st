@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'table'
 	],
-	#category : #'Rita-UI-PullRequests'
+	#category : #'Rita-PullRequests-UI'
 }
 
 { #category : #specs }

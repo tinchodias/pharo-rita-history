@@ -10,19 +10,6 @@ RiCommitBrowseUtility class >> browse: iceCommit [
 ]
 
 { #category : #opening }
-RiCommitBrowseUtility class >> browseDiff: iceDiff [
-	| env |
-	env := self ringEnvironmentFor: iceDiff sourceVersion.
-	
-	LastZuEnvironmentPlugin := (ZuEnvironmentPlugin new iceDiff: iceDiff; yourself).
-	
-	env
-		zurichBrowseAs: 'Changes'
-		extraEnvironmentPlugin: LastZuEnvironmentPlugin.
-
-]
-
-{ #category : #opening }
 RiCommitBrowseUtility class >> ringEnvironmentFor: iceCommit [
 	| aRGEnvironment |
 	aRGEnvironment := RGEnvironment new.

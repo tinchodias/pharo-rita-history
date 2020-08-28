@@ -1,6 +1,6 @@
 Extension { #name : #RGBehavior }
 
-{ #category : #'*Zurich' }
+{ #category : #'*Rita-PullRequests' }
 RGBehavior >> allSubclasses [
 	"Answer an orderedCollection of the receiver's and the receiver's descendent's subclasses. "
 
@@ -13,7 +13,7 @@ RGBehavior >> allSubclasses [
 	^ scan
 ]
 
-{ #category : #'*Zurich' }
+{ #category : #'*Rita-PullRequests' }
 RGBehavior >> withAllSubclasses [
 	"Answer a Set of the receiver, the receiver's descendent's, and the  
 	receiver's descendent's subclasses."
@@ -22,7 +22,7 @@ RGBehavior >> withAllSubclasses [
 		 yourself
 ]
 
-{ #category : #'*Zurich' }
+{ #category : #'*Rita-PullRequests' }
 RGBehavior >> withAllSuperAndSubclasses [
 	"Answer the receiver's class hierarchy"
 

@@ -1,7 +1,7 @@
 Class {
 	#name : #RiTonelToDiffMapping,
 	#superclass : #RiDiffMapping,
-	#category : #'Rita-UI-PullRequests'
+	#category : #'Rita-PullRequests-Model'
 }
 
 { #category : #mapping }

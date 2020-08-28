@@ -1,7 +1,7 @@
 Class {
 	#name : #RiPRTreeDiffPresenter,
 	#superclass : #RiTreeDiffPresenter,
-	#category : #'Rita-UI-PullRequests'
+	#category : #'Rita-PullRequests-UI'
 }
 
 { #category : #initialization }

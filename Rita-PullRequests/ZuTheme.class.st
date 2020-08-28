@@ -4,7 +4,7 @@ Class {
 	#classInstVars : [
 		'currentInstance'
 	],
-	#category : #Zurich
+	#category : #'Rita-PullRequests-Calypso'
 }
 
 { #category : #accessing }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'json'
 	],
-	#category : #'Rita-Iceberg'
+	#category : #'Rita-PullRequests-Model'
 }
 
 { #category : #'instance creation' }
@@ -60,7 +60,7 @@ IceGitHubPullRequestComment >> isHunkComment [
 	^ json includesKey: 'path'
 ]
 
-{ #category : #'*Rita' }
+{ #category : #'as yet unclassified' }
 IceGitHubPullRequestComment >> isReplyComment [
 	^ json includesKey: 'in_reply_to_id'
 ]

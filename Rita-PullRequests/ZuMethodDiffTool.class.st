@@ -6,7 +6,7 @@ Class {
 		'leftMethod',
 		'rightMethod'
 	],
-	#category : #Zurich
+	#category : #'Rita-PullRequests-Calypso'
 }
 
 { #category : #activation }

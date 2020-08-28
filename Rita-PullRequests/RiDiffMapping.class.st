@@ -9,7 +9,7 @@ Class {
 		'iceNodeLineNumber',
 		'iceComment'
 	],
-	#category : #'Rita-UI-PullRequests'
+	#category : #'Rita-PullRequests-Model'
 }
 
 { #category : #accessing }

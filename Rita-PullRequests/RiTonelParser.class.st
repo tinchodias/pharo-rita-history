@@ -6,7 +6,7 @@ Class {
 		'string',
 		'defRecordings'
 	],
-	#category : #'Rita-UI-PullRequests'
+	#category : #'Rita-PullRequests-Model'
 }
 
 { #category : #parsing }

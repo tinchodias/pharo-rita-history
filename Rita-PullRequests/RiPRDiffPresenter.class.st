@@ -5,7 +5,7 @@ Class {
 		'treeDiffPresenter',
 		'sourceCodePanel'
 	],
-	#category : #'Rita-UI-PullRequests'
+	#category : #'Rita-PullRequests-UI'
 }
 
 { #category : #specs }

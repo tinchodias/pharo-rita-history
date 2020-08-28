@@ -1,7 +1,7 @@
 Class {
 	#name : #ZuMethodTableDecorator,
 	#superclass : #ClyTableDecorator,
-	#category : #Zurich
+	#category : #'Rita-PullRequests-Calypso'
 }
 
 { #category : #decoration }
