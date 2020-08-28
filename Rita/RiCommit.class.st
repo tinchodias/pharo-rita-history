@@ -27,12 +27,12 @@ RiCommit >> accept: aVisitor [
 
 { #category : #accessing }
 RiCommit >> addAncestor: aRiElement [
-	ancestors add: aRiElement
+	ancestors := ancestors copyWith: aRiElement
 ]
 
 { #category : #accessing }
 RiCommit >> addChildren: aRiElement [
-	children add: aRiElement
+	children := children copyWith: aRiElement
 ]
 
 { #category : #accessing }
@@ -105,8 +105,8 @@ RiCommit >> initializeWithRepository: aRiRepository iceCommit: anIceCommit [
 	self initialize.
 	repository := aRiRepository.
 	iceCommit := anIceCommit.
-	children := OrderedCollection new.
-	ancestors := OrderedCollection new
+	children := #().
+	ancestors := #()
 ]
 
 { #category : #printing }

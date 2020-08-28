@@ -113,9 +113,9 @@ RiRepositoryModelTest >> testMerge [
 	self assert: e3 ancestors equals: { e2. e1 }.
 	
 	"children"
-	self assert: e1 children asArray equals: { e2. e3 }.
-	self assert: e2 children asArray equals: { e3 }.
-	self assert: e3 children asArray isEmpty.
+	self assert: e1 children equals: { e3. e2 }.
+	self assert: e2 children equals: { e3 }.
+	self assert: e3 children isEmpty.
 
 ]
 
