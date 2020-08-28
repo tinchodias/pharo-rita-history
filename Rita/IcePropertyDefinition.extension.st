@@ -18,11 +18,8 @@ IcePropertyDefinition >> ritaAsTextForTree1 [
 { #category : #'*Rita' }
 IcePropertyDefinition >> ritaNameToShow [
 	| nameToShow |
-	self flag: #fix.
 	nameToShow := self name.
 	nameToShow = 'superclassName'
 		ifTrue: [ nameToShow := 'superclass' ].
-	nameToShow = 'source'
-		ifTrue: [ nameToShow := 'source code' ].
 	^ nameToShow
 ]
