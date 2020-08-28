@@ -332,18 +332,8 @@ RiTorchRenderer >> shapeForFilesBox: iceNodes [
 
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForMethod: iceNode [
-	^ (self isExpanded: iceNode)
-		ifTrue: [ self shapeForMethodInExpandedMode: iceNode ]
-		ifFalse: [ self shapeForMethodInCollapsedMode: iceNode ]
-]
+	^ self shapeForMethodInExpandedMode: iceNode
 
-{ #category : #'shape building' }
-RiTorchRenderer >> shapeForMethodInCollapsedMode: iceNode [
-	| shape |
-	shape := (self shapeForTinyBox: iceNode)
-		border: (aesthetics innerBorderFor: iceNode);
-		yourself.
-	^ self configuredWithInteractions: shape model: iceNode
 ]
 
 { #category : #'shape building' }
