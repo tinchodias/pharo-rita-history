@@ -50,7 +50,8 @@ BaselineOfRita >> baselineForPharo9: spec [
 
 	spec
 		package: 'Rita' with: [ spec requires: #('Roassal3' 'TaskIt' 'Iceberg') ];
-		package: 'Rita-Tests' with: [ spec requires: #('Rita') ].
+		package: 'Rita-Tests' with: [ spec requires: #('Rita') ];
+		package: 'Rita-PullRequests' with: [ spec requires: #('Rita') ].
 	spec
-		group: 'default' with: #('Rita' 'Rita-Tests')
+		group: 'default' with: #('Rita' 'Rita-Tests' 'Rita-PullRequests')
 ]
