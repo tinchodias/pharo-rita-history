@@ -47,6 +47,10 @@ RiTorchDiffPresenter >> buildCanvas [
 		when: RSMouseClick do: [
 			highlighingController setPrimaryOutlineTo: nil ].
 
+	self flag: #todo. "Hacky: Update help icon"
+	(canvas fixedShapes detect: [ :each | each class = RSLabel ])
+		text: '?'";
+		fontSize: 10."
 ]
 
 { #category : #'canvas building' }
