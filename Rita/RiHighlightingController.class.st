@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'canvas',
 		'shapeByModel',
-		'selectedModel',
 		'aesthetics',
 		'primaryOutline',
 		'secondaryOutlines',
@@ -24,8 +23,12 @@ RiHighlightingController class >> canvas: aRSCanvas aesthetics: aRiAestheticsMod
 RiHighlightingController >> addPrimaryOutlineTo: aRSShape [
 
 	aRSShape parent ifNil: [ ^self ]. "Race"
+
+	"Primary outline has precedence"
+	self removeSecondaryOutlines.
 	
 	primaryOutline := RSBox new
+		model: aRSShape;
 		border: (RSBorder new 
 				joinMiter;
 				color: aesthetics outlineColor;
@@ -36,8 +39,11 @@ RiHighlightingController >> addPrimaryOutlineTo: aRSShape [
 		position: aRSShape position;
 		yourself.
 
-	"aRSShape when: TSPositionChangedEvent
-		do: [ lastOutline position: aRSShape position ]"
+	"Follow any movement of the target shape"
+	aRSShape announcer weak
+		when: RSPositionChangedEvent
+		send: #ritaUpdatePositionFromModelShape
+		to: primaryOutline.
 
 	aRSShape parent add: primaryOutline.
 	primaryOutline pushBack.
@@ -61,7 +67,13 @@ RiHighlightingController >> addSecondaryOutlineTo: aRSShape [
 	self flag: #todo. "Race..."
 	aRSShape parent ifNil: [ ^self ].
 
+	"Primary outline has precedence"
+	(primaryOutline notNil and: [ 
+		primaryOutline model == aRSShape ])
+			ifTrue: [ ^ self ].
+
 	newOutline := RSBox new
+		model: aRSShape;
 		border: (RSBorder new 
 				joinMiter;
 				color: aesthetics secondaryOutlineColor;
@@ -71,6 +83,14 @@ RiHighlightingController >> addSecondaryOutlineTo: aRSShape [
 		extent: aRSShape extent + aesthetics outlineSize;
 		position: aRSShape position;
 		yourself.
+
+	"Follow any movement of the target shape"
+	aRSShape announcer weak
+		when: RSPositionChangedEvent
+		send: #ritaUpdatePositionFromModelShape
+		to: newOutline.
+"	aRSShape removeInteractionIfPresent: RSLocation.
+	RSLocation new stick: newOutline on: aRSShape."
 
 	aRSShape parent add: newOutline.
 	newOutline pushBack.

@@ -80,6 +80,14 @@ RiTorchRenderer >> classBoxShapeFor: iceNode [
 ]
 
 { #category : #'shape building' }
+RiTorchRenderer >> configuredAsDraggable: aShape [
+
+	^ aShape
+		  addInteraction: RSDraggable;
+		  yourself
+]
+
+{ #category : #'shape building' }
 RiTorchRenderer >> configuredWithInteractions: aShape model: iceNode [
 	^ aShape
 		model: iceNode;
@@ -186,13 +194,12 @@ RiTorchRenderer >> shapeFor: iceNode [
 
 { #category : #hooks }
 RiTorchRenderer >> shapeForClass: iceNode [
-	^ (self isExpanded: iceNode)
+	^ self configuredAsDraggable: ((self isExpanded: iceNode)
 		ifTrue: [
 			iceNode hasChanges
 				ifTrue: [ self shapeForClassInExpandedMode: iceNode ]
 				ifFalse: [ self shapeForClassInTinyMode: iceNode ] ]
-		ifFalse: [ self shapeForClassInCollapsedMode: iceNode ]
-
+		ifFalse: [ self shapeForClassInCollapsedMode: iceNode ])
 ]
 
 { #category : #'shape building' }
@@ -327,7 +334,7 @@ RiTorchRenderer >> shapeForFilesBox: iceNodes [
 		position: outerBox position x @ (title position y);
 		extent: (outerBox width @ (title height)).
 
-	^ aGroup asShape
+	^ self configuredAsDraggable: aGroup asShape
 ]
 
 { #category : #'shape building' }
@@ -355,7 +362,9 @@ RiTorchRenderer >> shapeForPackage: iceNode [
 	outerBox
 		position: aGroup encompassingRectangle floatCenter;
 		extent: aGroup encompassingRectangle extent + (20 @ h).
-	^ self configuredWithInteractions: aGroup asShape model: iceNode
+	^ self configuredAsDraggable: (self
+		configuredWithInteractions: aGroup asShape
+		model: iceNode)
 ]
 
 { #category : #'shape building' }
