@@ -17,10 +17,22 @@ RiPRDiffPresenter class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #private }
+RiPRDiffPresenter >> conversationItemsByIceNode [
+
+	| dictionary |
+	dictionary := (model at: #pullRequestConversationItems) 
+		groupedBy: [ :each | each hasMapping
+			ifTrue: [ each mapping iceNode ]
+			ifFalse: [ nil ] ].
+	dictionary removeKey: nil.
+	^ IdentityDictionary newFrom: dictionary
+]
+
 { #category : #initialization }
 RiPRDiffPresenter >> initializePresenters [
 	treeDiffPresenter := self instantiate: RiPRTreeDiffPresenter.
-	sourceCodePanel := self instantiate: RiSingleDiffPresenter.
+	sourceCodePanel := self instantiate: RiPRSingleDiffPresenter.
 
 ]
 
@@ -29,6 +41,7 @@ RiPRDiffPresenter >> refreshOnModelUpdate [
 
 	| modelCopy |
 	modelCopy := model copy
+		add: #conversationItemsByIceNode -> self conversationItemsByIceNode;
 		add: #blockWhenNodeSelected -> [ :iceNode |
 			self selectIceNode: iceNode ];
 		add: #blockWhenNodeExpandToggle -> [ :iceNode |

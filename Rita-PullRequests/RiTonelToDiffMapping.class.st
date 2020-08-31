@@ -22,6 +22,8 @@ RiTonelToDiffMapping >> calculate [
 			ifTrue: [
 				iceNode := each.
 				iceNodeLineNumber := lineNumber - (parser methodBodyOffsetAtLine: lineNumber).
+				iceNodeLineNumber := iceNodeLineNumber + 1. 
+				"Fix because of protocol showed in first line"
 				^ self ] ]].
 
 	self notYetImplemented

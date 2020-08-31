@@ -33,6 +33,11 @@ RiPullRequestConversationItem >> comments [
 ]
 
 { #category : #testing }
+RiPullRequestConversationItem >> hasMapping [
+	^ mapping isNotNil
+]
+
+{ #category : #testing }
 RiPullRequestConversationItem >> includesCommentWithId: anInteger [ 
 	^ comments anySatisfy: [ :each | each id = anInteger ]
 ]

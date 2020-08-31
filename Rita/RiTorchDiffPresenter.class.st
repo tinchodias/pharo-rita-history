@@ -29,7 +29,8 @@ RiTorchDiffPresenter >> aesthetics [
 { #category : #'canvas building' }
 RiTorchDiffPresenter >> buildCanvas [
 
-	| query shapes |
+	canvas color: self aesthetics backgroundColor.
+
 	highlighingController := RiHighlightingController
 		canvas: canvas
 		aesthetics: self aesthetics.
@@ -45,8 +46,6 @@ RiTorchDiffPresenter >> buildCanvas [
 		addInteraction: self packInteraction;
 		when: RSMouseClick do: [
 			highlighingController setPrimaryOutlineTo: nil ].
-
-	canvas color: self aesthetics backgroundColor.
 
 ]
 
