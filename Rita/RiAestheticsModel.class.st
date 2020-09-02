@@ -255,8 +255,10 @@ RiAestheticsModel >> iconForClassPropertyDefinition: iceDefinition [
 		extent: 12 asPoint;
 		foregroundColor: self foregroundColor;
 		backgroundColor: self backgroundColor;
-		bordered: self geometryForClassProperty
-			with: (self iconTitleForClassPropertyDefinition: iceDefinition);
+		addBordered: self geometryForClassProperty
+			color: self foregroundColor;
+		addLabel: (self iconTitleForClassPropertyDefinition: iceDefinition)
+			color: self foregroundColor;
 		newForm
 ]
 
@@ -266,8 +268,10 @@ RiAestheticsModel >> iconForClassVariableDefinition: iceDefinition [
 		extent: 12 asPoint;
 		foregroundColor: self foregroundColor;
 		backgroundColor: self backgroundColor;
-		bordered: self geometryForClassVariable
-			with: (self iconTitleForClassVariableDefinition: iceDefinition);
+		addBordered: self geometryForClassVariable
+			color: self foregroundColor;
+		addLabel: (self iconTitleForClassVariableDefinition: iceDefinition)
+			color: self foregroundColor;
 		newForm
 
 ]
@@ -476,12 +480,12 @@ RiAestheticsModel >> shapeForClassProperty: iceNode [
 RiAestheticsModel >> shapeForClassPropertyDefinition: iceDefinition color: aColor border: aBorder [
 	^ RiIconGenerator new
 		extent: self widthForMethod asPoint;
-		foregroundColor: self foregroundColor;
 		border: aBorder;
 		labelScale: 0.08;
-		fillShape: self geometryForClassProperty
-			colored: aColor
-			labeled: (self iconTitleForClassPropertyDefinition: iceDefinition);
+		addFilled: self geometryForClassProperty
+			color: aColor;
+		addLabel: (self iconTitleForClassPropertyDefinition: iceDefinition)
+			color: self foregroundColor;
 		newRSComposite
 
 ]
@@ -507,12 +511,12 @@ RiAestheticsModel >> shapeForClassVariableDefinition: iceDefinition color: aColo
 	
 	^ RiIconGenerator new
 		extent: self widthForMethod asPoint;
-		foregroundColor: self foregroundColor;
 		border: aBorder;
 		labelScale: 0.05;
-		fillShape: self geometryForClassVariable
-			colored: aColor
-			labeled: (self iconTitleForClassVariableDefinition: iceDefinition);
+		addFilled: self geometryForClassVariable
+			color: aColor;
+		addLabel: (self iconTitleForClassVariableDefinition: iceDefinition)
+			color: self foregroundColor;
 		newRSComposite
 
 ]

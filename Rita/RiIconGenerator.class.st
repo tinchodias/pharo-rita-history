@@ -12,18 +12,64 @@ Class {
 	#category : #'Rita-Roassal3'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 RiIconGenerator class >> examples [
-	| shapeSelectors instances |
+	| shapeSelectors instances textColor backColor |
+	textColor := Smalltalk ui theme textColor.
+	backColor := Smalltalk ui theme backgroundColor.
+	
 	shapeSelectors := #(circle diamond square hexagon).
 
 	instances := #(S P T) flatCollect: [ :letter |
-		shapeSelectors flatCollect: [ :s | {
-			self new filled: (RSShapeFactory perform: s) with: letter.
-			self new bordered: (RSShapeFactory perform: s) with: letter.
-		} ]].
+		shapeSelectors flatCollect: [ :s |
+			| shape |
+			shape := RSShapeFactory perform: s.
+			{
+			self new
+				addFilled: shape color: textColor;
+				addLabel: letter color: backColor;
+				yourself.
+			self new
+				addBordered: shape color: textColor;
+				addLabel: letter color: textColor;
+				yourself.
+			} ]].
 	
 	(instances collect: #newForm) inspect
+
+]
+
+{ #category : #drawing }
+RiIconGenerator >> addBordered: aRSShape color: aColor [
+
+	shapes add: 
+		(aRSShape
+			size: (extent - 1 asPoint);
+			noPaint;
+			border: (RSBorder new width: 1; color: aColor);
+			yourself)
+
+]
+
+{ #category : #drawing }
+RiIconGenerator >> addFilled: aRSShape color: aColor [
+
+	shapes add: 
+		(aRSShape
+			size: extent;
+			color: aColor;
+			border: border;
+			yourself)
+
+]
+
+{ #category : #drawing }
+RiIconGenerator >> addLabel: aString color: aColor [
+
+	shapes add: 
+		((self labelWith: aString)
+			color: aColor;
+			yourself).
 
 ]
 
@@ -33,8 +79,8 @@ RiIconGenerator >> backgroundColor [
 ]
 
 { #category : #accessing }
-RiIconGenerator >> backgroundColor: anObject [
-	backgroundColor := anObject
+RiIconGenerator >> backgroundColor: aColor [
+	backgroundColor := aColor
 ]
 
 { #category : #accessing }
@@ -43,25 +89,8 @@ RiIconGenerator >> border [
 ]
 
 { #category : #accessing }
-RiIconGenerator >> border: anObject [
-	border := anObject
-]
-
-{ #category : #drawing }
-RiIconGenerator >> bordered: shape with: aString [
-
-	shapes add: 
-		(shape
-			size: (extent - 1 asPoint);
-			noPaint;
-			border: (RSBorder new width: 1; color: foregroundColor);
-			yourself).
-
-	shapes add: 
-		((self labelWith: aString)
-			color: foregroundColor;
-			yourself).
-
+RiIconGenerator >> border: aRSBorder [
+	border := aRSBorder
 ]
 
 { #category : #accessing }
@@ -70,59 +99,8 @@ RiIconGenerator >> extent [
 ]
 
 { #category : #accessing }
-RiIconGenerator >> extent: anObject [
-	extent := anObject
-]
-
-{ #category : #drawing }
-RiIconGenerator >> fillShape: shape colored: aColor labeled: aString [
-
-	shapes add: 
-		(shape
-			size: extent;
-			color: aColor;
-			border: border;
-			yourself).
-
-	shapes add: 
-		((self labelWith: aString)
-			color: foregroundColor;
-			yourself).
-
-]
-
-{ #category : #drawing }
-RiIconGenerator >> filled2: shape with: aString [
-
-	shapes add: 
-		(shape
-			size: extent;
-			color: backgroundColor;
-			border: border;
-			yourself).
-
-	shapes add: 
-		((self labelWith: aString)
-			color: foregroundColor;
-			yourself).
-
-]
-
-{ #category : #drawing }
-RiIconGenerator >> filled: shape with: aString [
-
-	shapes add: 
-		(shape
-			size: extent;
-			color: foregroundColor;
-			border: border;
-			yourself).
-
-	shapes add: 
-		((self labelWith: aString)
-			color: backgroundColor;
-			yourself).
-
+RiIconGenerator >> extent: aPoint [
+	extent := aPoint
 ]
 
 { #category : #accessing }
@@ -131,8 +109,8 @@ RiIconGenerator >> foregroundColor [
 ]
 
 { #category : #accessing }
-RiIconGenerator >> foregroundColor: anObject [
-	foregroundColor := anObject
+RiIconGenerator >> foregroundColor: aColor [
+	foregroundColor := aColor
 ]
 
 { #category : #initialization }

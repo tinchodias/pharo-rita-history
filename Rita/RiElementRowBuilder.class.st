@@ -52,16 +52,12 @@ RiElementRowBuilder >> iconForWorkingCopy [
 ]
 
 { #category : #initialization }
-RiElementRowBuilder >> initialize [
-	super initialize.
-	
-	hiedraBuilder := RiHiedraImageBuilder new.
-]
-
-{ #category : #initialization }
 RiElementRowBuilder >> initializeForRepositoryPresenter: aRiRepositoryPresenter [
 	self initialize.
-	repositoryPresenter := aRiRepositoryPresenter
+
+	hiedraBuilder := RiHiedraImageBuilder new.
+	avatarDatabase := RiAvatarsDatabase new.
+	repositoryPresenter := aRiRepositoryPresenter.
 ]
 
 { #category : #accessing }
@@ -131,11 +127,17 @@ RiElementRowBuilder >> pinMorphsFor: aRiElement [
 
 { #category : #accessing }
 RiElementRowBuilder >> refresh [
-	hiedraBuilder refreshWith: repositoryPresenter.
+	[ hiedraBuilder
+		process: repositoryPresenter riRepository 
+		rowHeight: repositoryPresenter rowHeightForHiedra ] future
+			onSuccessDo: [ :_ | repositoryPresenter refreshOnAvatarsUpdate ];
+			onFailureDo: [ :error | repositoryPresenter reportWarning: error ].
 
-	avatarDatabase := RiAvatarsDatabase new.
-	avatarDatabase refreshWith: repositoryPresenter.
-	
+	[ avatarDatabase
+		riRepository: repositoryPresenter riRepository;
+		process ] future
+			onSuccessDo: [ :_ | repositoryPresenter refreshOnAvatarsUpdate ];
+			onFailureDo: [ :error | repositoryPresenter reportWarning: error ]
 
 ]
 

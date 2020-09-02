@@ -9,10 +9,17 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'avatarByEmail',
-		'riRepository'
+		'riRepository',
+		'avatarSize',
+		'mockAvatar'
 	],
 	#category : #'Rita-Avatars'
 }
+
+{ #category : #accessing }
+RiAvatarsDatabase >> avatarByEmail [
+	^ avatarByEmail
+]
 
 { #category : #accessing }
 RiAvatarsDatabase >> avatarFor: emailString [
@@ -23,12 +30,48 @@ RiAvatarsDatabase >> avatarFor: emailString [
 
 { #category : #accessing }
 RiAvatarsDatabase >> avatarSize [
-	^ 16
+	^ avatarSize
+]
+
+{ #category : #accessing }
+RiAvatarsDatabase >> avatarSize: anInteger [
+	"Set the desired size for the next retrieved avatars."
+
+	avatarSize := anInteger.
+	self buildMockAvatar.
+]
+
+{ #category : #accessing }
+RiAvatarsDatabase >> buildMockAvatar [
+
+"	mockAvatar := self iconNamed: #user"
+	mockAvatar := RiIconGenerator new
+		extent: avatarSize asPoint;
+		addBordered: RSShapeFactory circle
+			color: Color gray;
+		addLabel: '?'
+			color: Color gray;
+		newForm
+
+]
+
+{ #category : #accessing }
+RiAvatarsDatabase >> initialize [
+	super initialize.
+
+	self avatarSize: 16.
+	avatarByEmail := Dictionary new.
+
 ]
 
 { #category : #accessing }
 RiAvatarsDatabase >> mockAvatar [
-	^ self iconNamed: #user
+	^ mockAvatar
+]
+
+{ #category : #accessing }
+RiAvatarsDatabase >> mockAvatar: aForm [
+	mockAvatar := aForm
 ]
 
 { #category : #private }
@@ -95,14 +138,15 @@ RiAvatarsDatabase >> newNullAvatarClient [
 ]
 
 { #category : #refreshing }
-RiAvatarsDatabase >> refreshWith: aRiRepositoryPresenter [
+RiAvatarsDatabase >> process [
 	| client |
-	riRepository := aRiRepositoryPresenter riRepository.
-	avatarByEmail := Dictionary new.
 	client := self newAvatarClient.
-	[ client process ] future
-		onSuccessDo: [ :_ |
-			avatarByEmail := client avatarByEmail.
-			aRiRepositoryPresenter refreshOnAvatarsUpdate ];
-		onFailureDo: [ :error | aRiRepositoryPresenter reportWarning: error ]
+	client process.
+	avatarByEmail := client avatarByEmail.
+]
+
+{ #category : #accessing }
+RiAvatarsDatabase >> riRepository: aRiRepository [
+	riRepository := aRiRepository
+
 ]
