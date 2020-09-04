@@ -43,8 +43,12 @@ RiRootPresenter open
 
 ---
 
+
+## License
+The code is licensed under [MIT](LICENSE).
+
 ## What's *rita*?
 
-It comes from Santa Rita, the name of [this plant](https://es.wikipedia.org/wiki/Bougainvillea) in Argentina:
+It comes from "Santa Rita", the name of [this plant](https://es.wikipedia.org/wiki/Bougainvillea) in Argentina:
 
 ![Plant](https://live.staticflickr.com/115/309565575_0945045e03_m_d.jpg)
