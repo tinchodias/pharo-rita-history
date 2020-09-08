@@ -3,8 +3,9 @@ Class {
 	#superclass : #ClyBrowserToolMorph,
 	#instVars : [
 		'diffMorph',
-		'leftMethod',
-		'rightMethod'
+		'model',
+		'diffPresenter',
+		'selectedMethod'
 	],
 	#category : #'Rita-PullRequests-Calypso'
 }
@@ -24,45 +25,46 @@ ZuMethodDiffTool class >> shouldBeActivatedInContext: aBrowserContext [
 
 { #category : #accessing }
 ZuMethodDiffTool class >> tabOrder [
-	^ 100000
+	^ 100
 ]
 
 { #category : #accessing }
 ZuMethodDiffTool >> activationPriority [
-	^ leftMethod = rightMethod ifTrue: [ 0 ] ifFalse: [ ClyClassDefinitionEditorToolMorph tabOrder + 1  ]
-]
-
-{ #category : #controlling }
-ZuMethodDiffTool >> attachToSystem [
-
-	browser system 
-		when: (ClyMethodChange ofAll: {self leftMethod. self rightMethod}) 
-		send: #triggerUpdate to: self
+	^ model isNil
+		ifTrue: [ 0 ]
+		ifFalse: [ self tabOrder ]
 ]
 
 { #category : #testing }
 ZuMethodDiffTool >> belongsToCurrentBrowserContext [
-	^(browser isMethodSelected: leftMethod) 
-		and: [ browser isMethodSelected: rightMethod ]
+
+	^ browser methodSelection isEmpty
+		  ifTrue: [ browser isClassSelected: selectedMethod origin ]
+		  ifFalse: [ browser isMethodSelected: selectedMethod ]
 ]
 
 { #category : #testing }
 ZuMethodDiffTool >> belongsToRemovedBrowserContext [
+
+	super belongsToRemovedBrowserContext ifTrue: [ ^ true ].
+
+	selectedMethod := selectedMethod origin
+		                localMethodNamed: selectedMethod selector
+		                ifAbsent: [ ^ true ].
 	^ false
 ]
 
 { #category : #building }
 ZuMethodDiffTool >> build [
-	| tmp2 |
-	diffMorph := DiffMorph
-		from: self leftMethod
-		to: self rightMethod.
-	tmp2 := diffMorph.
-	tmp2
-		contextClass: self rightMethod;
-		hResizing: #spaceFill;
-		vResizing: #spaceFill;
-		showOptions: false.
+
+	diffPresenter := RiPRSingleDiffPresenter new.
+	diffMorph := diffPresenter buildWithSpec.
+
+	diffPresenter
+		model: model;
+		selectIceNode: (model at: #selectedIceNode);
+		yourself.
+	
 	self addMorph: diffMorph fullFrame: LayoutFrame identity
 ]
 
@@ -76,68 +78,46 @@ ZuMethodDiffTool >> defaultTitle [
 	^ 'Diff'
 ]
 
-{ #category : #controlling }
-ZuMethodDiffTool >> detachFromSystem [
-	browser system unsubscribe: self
-]
-
 { #category : #testing }
 ZuMethodDiffTool >> isSimilarTo: anotherBrowserTool [
+
 	(super isSimilarTo: anotherBrowserTool) ifFalse: [ ^false ].
 	
-	^{leftMethod. rightMethod} asIdentitySet = {anotherBrowserTool leftMethod. anotherBrowserTool rightMethod  } asIdentitySet
-]
-
-{ #category : #accessing }
-ZuMethodDiffTool >> leftMethod [
-	^leftMethod
+	^ selectedMethod == anotherBrowserTool selectedMethod or: 
+		[ selectedMethod selector == anotherBrowserTool selectedMethod selector
+			and: [ selectedMethod origin == anotherBrowserTool selectedMethod origin ] ]
 ]
 
 { #category : #printing }
 ZuMethodDiffTool >> printContext [
-	^'left / ', leftMethod printSystemPath , ' vs right / ', rightMethod printSystemPath
+	^ selectedMethod printSystemPath
 ]
 
 { #category : #initialization }
 ZuMethodDiffTool >> resetStateForSnapshot [
 	super resetStateForSnapshot.
 	
-	diffMorph := nil
+	diffPresenter := diffMorph := nil.
+	"Needed?"
 ]
 
-{ #category : #accessing }
-ZuMethodDiffTool >> rightMethod [
-	^rightMethod
+{ #category : #testing }
+ZuMethodDiffTool >> selectedMethod [
+	^ selectedMethod
 ]
 
 { #category : #initialization }
 ZuMethodDiffTool >> setUpModelFromContext [
 
-	| tmp1 arg1|
-	arg1 := context lastSelectedMethod.
-	tmp1 := LastZuEnvironmentPlugin.
-	tmp1 iceDiff tree allChildrenDo: [ :each |
-		| def |
-		def := each value definition.
-		(def isMethodDefinition and: [ 
-		def selector = arg1 selector and: [ 
-		def className = arg1 origin name ] ]) ifTrue: [
-			leftMethod := each value rightContents.
-			rightMethod := each value leftContents .
-			^ self ] ].
-
-	leftMethod := context lastSelectedMethod sourceCode.
-	rightMethod := context lastSelectedMethod sourceCode
-]
-
-{ #category : #updating }
-ZuMethodDiffTool >> update [
-	leftMethod := leftMethod origin 
-		localMethodNamed: leftMethod selector ifAbsent: [^self].
-	rightMethod := rightMethod origin 
-		localMethodNamed: rightMethod selector ifAbsent: [^self].
+	| aPlugin |
 	
-	super update.
-	
-	diffMorph from: leftMethod sourceCode to: rightMethod sourceCode
+	self flag: #todo. "How to access this plugin correctly?"
+	aPlugin := LastZuEnvironmentPlugin.
+
+	selectedMethod := context lastSelectedMethod.
+	model := aPlugin
+		toolModelFor: selectedMethod
+		ifPresent: [ :m | m ]
+		ifAbsent: [ nil ].
+
 ]

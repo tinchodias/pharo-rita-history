@@ -2,7 +2,7 @@ Class {
 	#name : #ZuEnvironmentPlugin,
 	#superclass : #ClySystemEnvironmentPlugin,
 	#instVars : [
-		'iceDiff'
+		'pullRequestModel'
 	],
 	#category : #'Rita-PullRequests-Calypso'
 }
@@ -37,13 +37,13 @@ ZuEnvironmentPlugin >> doesClassHaveChange: aClass [
 ]
 
 { #category : #'item decoration' }
-ZuEnvironmentPlugin >> doesMethodHaveChange: arg1 [
-	iceDiff tree allChildrenDo: [ :each |
+ZuEnvironmentPlugin >> doesMethodHaveChange: aMethod [
+	self pullRequestDiff tree allChildrenDo: [ :each |
 		| def |
 		def := each value definition.
 		(def isMethodDefinition and: [ 
-		def selector = arg1 selector and: [ 
-		def className = arg1 origin name ] ]) ifTrue: [ ^ true ] ].
+		def selector = aMethod selector and: [ 
+		def className = aMethod origin name ] ]) ifTrue: [ ^ true ] ].
 	
 	^ false
 ]
@@ -55,11 +55,32 @@ ZuEnvironmentPlugin >> doesPackageHaveChange: aPackage [
 ]
 
 { #category : #accessing }
-ZuEnvironmentPlugin >> iceDiff [
-	^ iceDiff
+ZuEnvironmentPlugin >> pullRequestConversationItems [
+	^ pullRequestModel at: #pullRequestConversationItems
 ]
 
 { #category : #accessing }
-ZuEnvironmentPlugin >> iceDiff: anIceDiff [
-	iceDiff := anIceDiff
+ZuEnvironmentPlugin >> pullRequestDiff [
+	^ pullRequestModel at: #pullRequestDiff
+]
+
+{ #category : #initialization }
+ZuEnvironmentPlugin >> pullRequestModel: aCollection [ 
+	pullRequestModel := aCollection
+]
+
+{ #category : #'as yet unclassified' }
+ZuEnvironmentPlugin >> toolModelFor: aRGMethod ifPresent: presentBlock ifAbsent: absentBlock [ 
+
+	self pullRequestDiff tree allChildrenDo: [ :each |
+		| def |
+		def := each value definition.
+		(def isMethodDefinition and: [ 
+		def selector = aRGMethod selector and: [ 
+		def className = aRGMethod origin name ] ]) ifTrue: [
+			^ presentBlock value: (pullRequestModel copy
+				at: #selectedIceNode put: each;
+				yourself) ] ].
+
+	^ absentBlock value
 ]

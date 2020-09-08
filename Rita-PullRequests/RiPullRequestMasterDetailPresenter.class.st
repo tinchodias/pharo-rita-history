@@ -33,17 +33,31 @@ RiPullRequestMasterDetailPresenter >> allConversationItemsOf: aPullRequest iceDi
 { #category : #initialization }
 RiPullRequestMasterDetailPresenter >> connectMasterToDetail [
 	masterPresenter blockForPRSelected: [ :aPR |
-		| iceDiff conversationItems |
+		| iceDiff conversationItems conversationItemsByIceNode |
 		iceDiff := aPR diffToBase.
 		conversationItems := self allConversationItemsOf: aPR iceDiff: iceDiff.
-		
+		conversationItemsByIceNode := self conversationItemsByIceNodeFrom: conversationItems.
+
 		detailPresenter model:
 			(model copy 
 				add: #pullRequest -> aPR;
 				add: #pullRequestDiff -> iceDiff;
 				add: #pullRequestConversationItems -> conversationItems;
+				add: #conversationItemsByIceNode -> conversationItemsByIceNode;
 				yourself) ].
 
+]
+
+{ #category : #private }
+RiPullRequestMasterDetailPresenter >> conversationItemsByIceNodeFrom: conversationItems [
+
+	| dictionary |
+	dictionary := conversationItems
+		groupedBy: [ :each | each hasMapping
+			ifTrue: [ each mapping iceNode ]
+			ifFalse: [ nil ] ].
+	dictionary removeKey: nil.
+	^ IdentityDictionary newFrom: dictionary
 ]
 
 { #category : #initialization }
