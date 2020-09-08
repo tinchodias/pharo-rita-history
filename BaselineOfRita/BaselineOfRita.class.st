@@ -46,8 +46,8 @@ BaselineOfRita >> baselineForPharo9: spec [
 		loads: #(coreTests) ].
 	spec baseline: 'Iceberg' with: [
 		spec
-			repository: 'github://tinchodias/iceberg:rita2'";
-			loads: 'development'" ].
+			repository: 'github://tinchodias/iceberg:rita2';
+			loads: 'development' ].
 
 	spec
 		package: 'Rita' with: [ spec requires: #('Roassal3' 'TaskIt' 'Iceberg') ];
