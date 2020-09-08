@@ -42,11 +42,12 @@ BaselineOfRita >> baselineForPharo9: spec [
 	spec baseline: 'Roassal3' with: [
 		spec repository: 'github://ObjectProfile/Roassal3:master/src' ].
 	spec baseline: 'TaskIt' with: [
-		spec repository: 'github://sbragagnolo/taskit:v1.1.1' ].
+		spec repository: 'github://sbragagnolo/taskit:v1.1.1';
+		loads: #(coreTests) ].
 	spec baseline: 'Iceberg' with: [
 		spec
-			repository: 'github://tinchodias/iceberg:rita2';
-			loads: 'development' ].
+			repository: 'github://tinchodias/iceberg:rita2'";
+			loads: 'development'" ].
 
 	spec
 		package: 'Rita' with: [ spec requires: #('Roassal3' 'TaskIt' 'Iceberg') ];
@@ -54,4 +55,5 @@ BaselineOfRita >> baselineForPharo9: spec [
 		package: 'Rita-PullRequests' with: [ spec requires: #('Rita') ].
 	spec
 		group: 'default' with: #('Rita' 'Rita-Tests' 'Rita-PullRequests')
+
 ]
