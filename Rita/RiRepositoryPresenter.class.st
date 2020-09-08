@@ -26,58 +26,6 @@ RiRepositoryPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #examples }
-RiRepositoryPresenter class >> hiedraExample [
-	<example>
-
-	^ self openOnRepositoryNamed: 'Hiedra'
-]
-
-{ #category : #examples }
-RiRepositoryPresenter class >> mongotalkExample [
-	<example>
-
-	^ self openOnRepositoryNamed: 'mongotalk'
-]
-
-{ #category : #examples }
-RiRepositoryPresenter class >> openOnRepositoryNamed: aName [
-	| aRiRepository anIceRepository |
-	anIceRepository := IceRepository registry
-		detect: [ :each | each name asLowercase beginsWith: aName asLowercase ].
-	aRiRepository := (RiRepository iceRepository: anIceRepository)
-		process;
-		yourself.
-
-	self new
-		model: aRiRepository;
-		openWithSpec;
-		withWindowDo: [ :window | 
-			window
-				extent: 1000 @ 900;
-				title: aName ]
-]
-
-{ #category : #examples }
-RiRepositoryPresenter class >> ritaExample [
-	<example>
-	^ self openOnRepositoryNamed: 'pharo-rita-history'
-]
-
-{ #category : #examples }
-RiRepositoryPresenter class >> roassal3Example [
-	<example>
-
-	^ self openOnRepositoryNamed: 'Roassal3'
-]
-
-{ #category : #examples }
-RiRepositoryPresenter class >> voyageExample [
-	<example>
-
-	^ self openOnRepositoryNamed: 'voyage'
-]
-
 { #category : #'pin/unpin commits' }
 RiRepositoryPresenter >> actionAddPin: aRiElement [
 	(model at: #pinDiffModels)
