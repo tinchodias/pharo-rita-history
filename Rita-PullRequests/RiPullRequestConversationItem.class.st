@@ -7,7 +7,7 @@ Class {
 		'pullRequest',
 		'iceDiff'
 	],
-	#category : #'Rita-PullRequests-UI'
+	#category : #'Rita-PullRequests-Model'
 }
 
 { #category : #'instance creation' }
