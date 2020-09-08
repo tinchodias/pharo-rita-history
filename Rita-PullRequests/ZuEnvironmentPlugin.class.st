@@ -38,20 +38,29 @@ ZuEnvironmentPlugin >> doesClassHaveChange: aClass [
 
 { #category : #'item decoration' }
 ZuEnvironmentPlugin >> doesMethodHaveChange: aMethod [
-	self pullRequestDiff tree allChildrenDo: [ :each |
-		| def |
-		def := each value definition.
-		(def isMethodDefinition and: [ 
-		def selector = aMethod selector and: [ 
-		def className = aMethod origin name ] ]) ifTrue: [ ^ true ] ].
-	
-	^ false
+
+	^ self iceNodeFor: aMethod ifPresent: [ true ] ifAbsent: [ false ]
 ]
 
 { #category : #'item decoration' }
 ZuEnvironmentPlugin >> doesPackageHaveChange: aPackage [
 	^ (aPackage definedClasses anySatisfy: [ :each | self doesClassHaveChange: each ]) or: [
 		aPackage extensionMethods anySatisfy: [ :each | self doesMethodHaveChange: each ] ]
+]
+
+{ #category : #accessing }
+ZuEnvironmentPlugin >> iceNodeFor: aMethod ifPresent: presentBlock ifAbsent: absentBlock [ 
+
+	self pullRequestDiff tree allChildrenDo: [ :each |
+		| def |
+		def := each value definition.
+		(def isMethodDefinition and: [
+		def selector = aMethod selector and: [
+		def classIsMeta = aMethod isMetaSide and: [
+		def className = aMethod origin theNonMetaClass name ] ] ]) 
+			ifTrue: [ ^ presentBlock cull: each ] ].
+
+	^ absentBlock value
 ]
 
 { #category : #accessing }
@@ -69,18 +78,14 @@ ZuEnvironmentPlugin >> pullRequestModel: aCollection [
 	pullRequestModel := aCollection
 ]
 
-{ #category : #'as yet unclassified' }
-ZuEnvironmentPlugin >> toolModelFor: aRGMethod ifPresent: presentBlock ifAbsent: absentBlock [ 
+{ #category : #accessing }
+ZuEnvironmentPlugin >> toolModelFor: aMethod ifPresent: presentBlock ifAbsent: absentBlock [
 
-	self pullRequestDiff tree allChildrenDo: [ :each |
-		| def |
-		def := each value definition.
-		(def isMethodDefinition and: [ 
-		def selector = aRGMethod selector and: [ 
-		def className = aRGMethod origin name ] ]) ifTrue: [
-			^ presentBlock value: (pullRequestModel copy
-				at: #selectedIceNode put: each;
-				yourself) ] ].
-
-	^ absentBlock value
+	^ self
+		  iceNodeFor: aMethod
+		  ifPresent: [ :iceNode | 
+			  presentBlock value: (pullRequestModel copy
+					   at: #selectedIceNode put: iceNode;
+					   yourself) ]
+		  ifAbsent: absentBlock
 ]

@@ -14,6 +14,12 @@ RGBehavior >> allSubclasses [
 ]
 
 { #category : #'*Rita-PullRequests' }
+RGBehavior >> visibleMethods [
+
+	^ self methods
+]
+
+{ #category : #'*Rita-PullRequests' }
 RGBehavior >> withAllSubclasses [
 	"Answer a Set of the receiver, the receiver's descendent's, and the  
 	receiver's descendent's subclasses."
