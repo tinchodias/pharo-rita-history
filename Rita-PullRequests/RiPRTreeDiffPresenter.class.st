@@ -9,7 +9,7 @@ RiPRTreeDiffPresenter >> iconNameFor: iceNode [
 	^ (model at: #conversationItemsByIceNode) 
 		at: iceNode
 		ifPresent: [ :items |
-			ZuTheme current changeIconSelector ]
+			ZuTheme current conversationIconSelector ]
 		ifAbsent: [ #blank ]
 ]
 

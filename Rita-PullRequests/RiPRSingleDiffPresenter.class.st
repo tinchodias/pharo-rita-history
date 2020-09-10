@@ -20,7 +20,7 @@ RiPRSingleDiffPresenter >> addConversationSegmentFor: aRiPullRequestConversation
 	
 	newSegment := RubUnderlinedSegmentMorph from: indexInterval first to: indexInterval last.
 	newSegment
-		icon: (self iconNamed: ZuTheme current changeIconSelector);
+		icon: (self iconNamed: ZuTheme current conversationIconSelector);
 		label: label;
 		iconBlock: [
 			self showConversationItem: aRiPullRequestConversationItem ].

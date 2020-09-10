@@ -21,3 +21,8 @@ ZuTheme >> cellBackgroundColor [
 ZuTheme >> changeIconSelector [
 	^ #diff
 ]
+
+{ #category : #accessing }
+ZuTheme >> conversationIconSelector [
+	^ #announcement
+]

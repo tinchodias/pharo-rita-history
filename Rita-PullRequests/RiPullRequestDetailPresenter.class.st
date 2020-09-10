@@ -23,7 +23,7 @@ RiPullRequestDetailPresenter >> initializeConversationPage [
 	| page |
 	page := SpNotebookPage
 		title: 'Conversation'
-		icon: (self iconNamed: #announcement)
+		icon: (self iconNamed: ZuTheme current conversationIconSelector)
 		provider: [ model
 				ifNil: [ self newNullPresenter ]
 				ifNotNil: [ self newConversationPresenter ] ].
@@ -35,7 +35,7 @@ RiPullRequestDetailPresenter >> initializeDiffPage [
 	| page |
 	page := SpNotebookPage
 		title: 'Diff to base'
-		icon: (self iconNamed: #diff)
+		icon: (self iconNamed: (ZuTheme current changeIconSelector))
 		provider: [ model
 				ifNil: [ self newNullPresenter ]
 				ifNotNil: [ self newDiffPresenter ] ].

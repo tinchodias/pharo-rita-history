@@ -5,16 +5,6 @@ Class {
 }
 
 { #category : #decoration }
-ZuMethodTableDecorator class >> decorateMainTableCell: anItemCellMorph of: aDataSourceItem [
-	
-	| changedIcon |
-	super decorateMainTableCell: anItemCellMorph of: aDataSourceItem.
-	
-	changedIcon := anItemCellMorph addExtraIcon: #uncommentedClass.
-	changedIcon setBalloonText: 'There is no comment!'
-]
-
-{ #category : #decoration }
 ZuMethodTableDecorator class >> decorateTableCell: anItemCellMorph of: aDataSourceItem [
 "	anItemCellMorph label
 		clyAddEmphasis: TextEmphasis bold;
@@ -22,6 +12,11 @@ ZuMethodTableDecorator class >> decorateTableCell: anItemCellMorph of: aDataSour
 "	
 	(anItemCellMorph addExtraIcon: ZuTheme current changeIconSelector)
 		setBalloonText: 'This item has changed.'.
+
+	(aDataSourceItem getProperty: ZuChangeProperty) pullRequestConversationItems
+		ifNotEmpty: [ :ics |
+			(anItemCellMorph addExtraIcon: ZuTheme current conversationIconSelector)
+				setBalloonText: 'This item has conversations.'].
 
 	anItemCellMorph color: ZuTheme current cellBackgroundColor.
 
@@ -58,5 +53,5 @@ ZuMethodTableDecorator class >> priority [
 
 { #category : #testing }
 ZuMethodTableDecorator class >> wantsDecorateTableCellOf: aDataSourceItem [
-	^ aDataSourceItem isMarkedWith: ZuChangedTag
+	^ aDataSourceItem hasProperty: ZuChangeProperty
 ]

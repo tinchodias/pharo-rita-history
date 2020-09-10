@@ -20,7 +20,7 @@ ZuMethodDiffTool class >> browserTabActivation [
 
 { #category : #accessing }
 ZuMethodDiffTool class >> shouldBeActivatedInContext: aBrowserContext [
-	^ aBrowserContext lastSelectedItem hasProperty: ZuChangedTag
+	^ aBrowserContext lastSelectedItem hasProperty: ZuChangeProperty
 ]
 
 { #category : #accessing }
