@@ -22,25 +22,25 @@ ZuMethodTableDecorator class >> decorateTableCell: anItemCellMorph of: aDataSour
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #decoration }
 ZuMethodTableDecorator class >> decorationStrategyForClass [
 	<classAnnotation>
 	^ ClyTableDecorationStrategy for: ClyClass asCalypsoItemContext
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #decoration }
 ZuMethodTableDecorator class >> decorationStrategyForMethod [
 	<classAnnotation>
 	^ ClyTableDecorationStrategy for: ClyMethod asCalypsoItemContext
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #decoration }
 ZuMethodTableDecorator class >> decorationStrategyForPackage [
 	<classAnnotation>
 	^ ClyTableDecorationStrategy for: RPackage asCalypsoItemContext
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #decoration }
 ZuMethodTableDecorator class >> decorationStrategyForPackageTag [
 	<classAnnotation>
 	^ ClyTableDecorationStrategy for: ClyTaggedClassGroup asCalypsoItemContext
