@@ -110,14 +110,12 @@ ZuMethodDiffTool >> selectedMethod [
 ZuMethodDiffTool >> setUpModelFromContext [
 
 	| aPlugin |
+	aPlugin := context tool navigationEnvironment getPlugin: ZuEnvironmentPlugin.
 	
-	self flag: #todo. "How to access this plugin correctly?"
-	aPlugin := LastZuEnvironmentPlugin.
-
 	selectedMethod := context lastSelectedMethod.
 	model := aPlugin
 		toolModelFor: selectedMethod
 		ifPresent: [ :m | m ]
-		ifAbsent: [ nil ].
+		ifAbsent: [ nil ]
 
 ]

@@ -87,18 +87,19 @@ RiPullRequestListPresenter >> initializePresenters [
 { #category : #actions }
 RiPullRequestListPresenter >> openBrowserWithDiff: anIceGitHubPullRequest [ 
 
-	| env detailModel |
+	| env detailModel aPlugin |
 	self flag: #todo. "FIX HACK"
-
 	detailModel := (self owner instVarNamed: 'detailPresenter') model.
 
 	env := RiCommitBrowseUtility ringEnvironmentFor: (detailModel at: #pullRequestDiff) sourceVersion.
 	
-	LastZuEnvironmentPlugin := (ZuEnvironmentPlugin new pullRequestModel: detailModel; yourself).
+	aPlugin := ZuEnvironmentPlugin new
+		pullRequestModel: detailModel;
+		yourself.
 	
 	env
 		zurichBrowseAs: 'Changes'
-		extraEnvironmentPlugin: LastZuEnvironmentPlugin.
+		extraEnvironmentPlugin: aPlugin.
 
 ]
 
