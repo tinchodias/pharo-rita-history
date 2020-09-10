@@ -35,7 +35,7 @@ RiPullRequestDetailPresenter >> initializeDiffPage [
 	| page |
 	page := SpNotebookPage
 		title: 'Diff to base'
-		icon: (self iconNamed: (ZuTheme current changeIconSelector))
+		icon: (self iconNamed: ZuTheme current changeIconSelector)
 		provider: [ model
 				ifNil: [ self newNullPresenter ]
 				ifNotNil: [ self newDiffPresenter ] ].
