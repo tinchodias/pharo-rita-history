@@ -4,7 +4,10 @@ Class {
 	#instVars : [
 		'diffPresenter',
 		'notebook',
-		'header'
+		'header',
+		'conversationPresenter',
+		'diffPage',
+		'conversationPage'
 	],
 	#category : #'Rita-PullRequests-UI'
 }
@@ -20,26 +23,22 @@ RiPullRequestDetailPresenter class >> defaultSpec [
 
 { #category : #private }
 RiPullRequestDetailPresenter >> initializeConversationPage [
-	| page |
-	page := SpNotebookPage
+	conversationPresenter := self instantiate: RiPRConversationPresenter.
+	conversationPage := SpNotebookPage
 		title: 'Conversation'
 		icon: (self iconNamed: ZuTheme current conversationIconSelector)
-		provider: [ model
-				ifNil: [ self newNullPresenter ]
-				ifNotNil: [ self newConversationPresenter ] ].
-	notebook addPage: page
+		provider: [ conversationPresenter ].
+	notebook addPage: conversationPage
 ]
 
 { #category : #private }
 RiPullRequestDetailPresenter >> initializeDiffPage [
-	| page |
-	page := SpNotebookPage
+	diffPresenter := self instantiate: RiPRDiffPresenter.
+	diffPage := SpNotebookPage
 		title: 'Diff to base'
 		icon: (self iconNamed: ZuTheme current changeIconSelector)
-		provider: [ model
-				ifNil: [ self newNullPresenter ]
-				ifNotNil: [ self newDiffPresenter ] ].
-	notebook addPage: page
+		provider: [ diffPresenter ].
+	notebook addPage: diffPage
 ]
 
 { #category : #initialization }
@@ -50,29 +49,22 @@ RiPullRequestDetailPresenter >> initializePresenters [
 	self initializeDiffPage.
 ]
 
-{ #category : #private }
-RiPullRequestDetailPresenter >> newConversationPresenter [
-	^ (self instantiate: RiPRConversationPresenter)
-		model: model;
-		yourself
-]
-
-{ #category : #private }
-RiPullRequestDetailPresenter >> newDiffPresenter [
+{ #category : #accessing }
+RiPullRequestDetailPresenter >> refreshOnModelUpdate [
 	| iceDiff |
+	header model: model.
+	
+	conversationPresenter model: (model copy
+		add: #blockWhenNodeSelected -> [ :iceNode |
+			notebook selectPage: diffPage.
+			diffPresenter selectIceNode: iceNode ];
+		yourself).
+	
 	iceDiff := model at: #pullRequestDiff.
-	^ (self instantiate: RiPRDiffPresenter)
-			model: (model copy
+	diffPresenter model: (model copy
 				add: #iceDiff -> iceDiff;
 				add: #shadowedIceNodes -> IdentitySet new;
 				add: #expandedIceNodes -> (RiVisibleTreeStrategy 
 					expandedIceNodesFrom: {iceDiff tree});
-				yourself);
-			yourself
-]
-
-{ #category : #accessing }
-RiPullRequestDetailPresenter >> refreshOnModelUpdate [
-	header model: model.
-	notebook resetAllPageContents.
+				yourself)
 ]

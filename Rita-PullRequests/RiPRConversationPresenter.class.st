@@ -27,9 +27,9 @@ RiPRConversationPresenter >> refreshOnModelUpdate [
 ]
 
 { #category : #private }
-RiPRConversationPresenter >> selectIceNodePointedBy: x [
+RiPRConversationPresenter >> selectIceNodePointedBy: aConversationItem [
 
-	x halt
+	(model at: #blockWhenNodeSelected) value: aConversationItem mapping iceNode
 ]
 
 { #category : #initialization }
