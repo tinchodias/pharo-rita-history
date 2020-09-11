@@ -86,10 +86,11 @@ RiPRConversationPrinter >> textFor: aPRComment [
 	text := self headerLineFor: aPRComment.
 	indentationString := ''.
 	
-	aPRComment isHunkComment ifTrue: [
-		text prepend: (indentationString := String tab).
-		aPRComment isReplyComment ifFalse: [
-			text prepend: (self hunkTextForMapping: item mapping) ]].
+	(aPRComment isHunkComment and: [ aPRComment isOutdated not ])
+		ifTrue: [
+			text prepend: (indentationString := String tab).
+			aPRComment isReplyComment ifFalse: [
+				text prepend: (self hunkTextForMapping: item mapping) ]].
 
 	body := (MicroDownParser asText: aPRComment body, String cr, '***').
 	body := body copyReplaceAll: String cr with: String cr, indentationString.

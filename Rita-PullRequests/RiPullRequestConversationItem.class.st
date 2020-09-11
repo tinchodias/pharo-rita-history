@@ -48,12 +48,13 @@ RiPullRequestConversationItem >> initializeMapping [
 	| begin commitToResolve file lineNumber |
 	begin := comments first.
 	begin isHunkComment ifFalse: [ ^ self ].
+	begin isOutdated ifTrue: [ ^ self "'outdated comment' traceCr" ].
 
 	commitToResolve := begin isSideOfAddition
 		ifTrue: [ iceDiff sourceVersion ]
 		ifFalse: [ iceDiff targetVersion ].
 	file := commitToResolve fileSystem resolveString: begin path.
-	lineNumber := begin originalLine. "line ?"
+	lineNumber := begin line.
 
 	mapping := (file extension = 'st'
 		ifTrue: [ RiTonelToDiffMapping new ] 

@@ -60,6 +60,12 @@ IceGitHubPullRequestComment >> isHunkComment [
 	^ json includesKey: 'path'
 ]
 
+{ #category : #testing }
+IceGitHubPullRequestComment >> isOutdated [
+
+	^ self line isNil
+]
+
 { #category : #'as yet unclassified' }
 IceGitHubPullRequestComment >> isReplyComment [
 	^ json includesKey: 'in_reply_to_id'

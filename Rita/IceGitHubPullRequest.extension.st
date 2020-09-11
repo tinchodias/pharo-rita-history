@@ -4,7 +4,7 @@ Extension { #name : #IceGitHubPullRequest }
 IceGitHubPullRequest >> comments [
 	| jsons |
 	jsons := (IceGitHubAPI new
-"		useComfortFadeAcceptMediaType; --> for multi-line comment support"
+		useComfortFadeAcceptMediaType; "--> for multi-line comment support"
 		beAnonymous;
 		getListPullRequestComments: self owner 
 			project: self projectName
@@ -34,7 +34,7 @@ IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 IceGitHubPullRequest >> reviewComments [
 	| jsons |
 	jsons := (IceGitHubAPI new
-		"useComfortFadeAcceptMediaType; --> for multi-line comment support"
+		useComfortFadeAcceptMediaType; "--> for multi-line comment support"
 		beAnonymous;
 		getListPullRequestReviewComments: self owner 
 			project: self projectName

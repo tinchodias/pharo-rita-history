@@ -15,11 +15,8 @@ RiTonelParser >> comment [
 ]
 
 { #category : #parsing }
-RiTonelParser >> currentPosition [
-	^ string lineNumberCorrespondingToIndex: stream position. "{
-		stream position.
-		string lineNumberCorrespondingToIndex: stream position.
-	}"
+RiTonelParser >> currentLineNumber [
+	^ string lineNumberCorrespondingToIndex: stream position
 ]
 
 { #category : #accessing }
@@ -60,8 +57,10 @@ RiTonelParser >> methodBody [
 ]
 
 { #category : #accessing }
-RiTonelParser >> methodBodyOffsetAtLine: anInteger [ 
-	^ (self defRecordingAtLine: anInteger) second + 2
+RiTonelParser >> methodBodyOffsetAtLine: anInteger [
+	"Answer the offset (in terms of number of lines) of the first line of the body to the specified integer."
+
+	^ (self defRecordingAtLine: anInteger) second + 1
 ]
 
 { #category : #parsing }
@@ -71,21 +70,21 @@ RiTonelParser >> methodDef [
 
 { #category : #parsing }
 RiTonelParser >> recordDefDuringSuperSend: aSelector [
-	| result start end |
-	start := self currentPosition.
+	| result startLine endLine |
+	startLine := self currentLineNumber.
 	result := self perform: aSelector withArguments: #() inSuperclass: TonelParser.
-	end := self currentPosition.
-	defRecordings add: { aSelector. start. end. result. }.
+	endLine := self currentLineNumber.
+	defRecordings add: { aSelector. startLine. endLine. result. }.
 	^ result
 ]
 
 { #category : #parsing }
 RiTonelParser >> recordDuringSuperSend: aSelector [
-	| result start end |
-	start := self currentPosition.
+	| result startLine endLine |
+	startLine := self currentLineNumber.
 	result := self perform: aSelector withArguments: #() inSuperclass: TonelParser.
-	end := self currentPosition.
-	recordings add: { aSelector. start. end. result. }.
+	endLine := self currentLineNumber.
+	recordings add: { aSelector. startLine. endLine. result. }.
 	^ result
 ]
 
