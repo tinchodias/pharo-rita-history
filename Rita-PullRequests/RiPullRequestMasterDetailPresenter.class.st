@@ -65,30 +65,6 @@ RiPullRequestMasterDetailPresenter >> detailPresenterClass [
 	^ RiPullRequestDetailPresenter
 ]
 
-{ #category : #private }
-RiPullRequestMasterDetailPresenter >> mappingOf: aPullRequestComment in: iceDiff [ 
-
-	| commitToResolve file lineNumber |
-	aPullRequestComment isHunkComment ifFalse: [ ^ nil ].
-
-	"Parse file"
-	commitToResolve := aPullRequestComment isSideOfAddition
-		ifTrue: [ iceDiff sourceVersion ]
-		ifFalse: [ iceDiff targetVersion ].
-	file := commitToResolve fileSystem resolveString: aPullRequestComment path.
-	lineNumber := aPullRequestComment originalLine. "line ?"
-
-	^(file extension = 'st'
-		ifTrue: [ RiTonelToDiffMapping new ] 
-		ifFalse: [ RiFileToDiffMapping new ])
-			file: file;
-			lineNumber: lineNumber;
-			iceDiff: iceDiff; 
-			calculate;
-			iceComment: aPullRequestComment;
-			yourself
-]
-
 { #category : #initialization }
 RiPullRequestMasterDetailPresenter >> masterPresenterClass [
 	^ RiPullRequestListPresenter
