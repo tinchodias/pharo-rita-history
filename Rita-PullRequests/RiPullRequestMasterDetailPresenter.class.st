@@ -89,5 +89,6 @@ RiPullRequestMasterDetailPresenter >> refreshOnModelUpdate [
 
 	masterPresenter model: (model copy
 		at: #pullRequestsToShow put: prs;
+		at: #blockToRefreshPullRequests put: [ self refreshOnModelUpdate ];
 		yourself)
 ]

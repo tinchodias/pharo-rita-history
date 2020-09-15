@@ -16,7 +16,9 @@ RiPRSingleDiffPresenter >> addConversationSegmentFor: aRiPullRequestConversation
 	indexInterval := diffText asString 
 		indexCorrespondingToLineNumber: 
 			aRiPullRequestConversationItem mapping iceNodeLineNumber.
-	label := 'Conversation ({1})' format: { aRiPullRequestConversationItem comments size }.
+	label := '{1} comment{2}' format: {
+		aRiPullRequestConversationItem numberOfComments.
+		aRiPullRequestConversationItem numberOfComments > 1 ifTrue: [ 's' ] ifFalse: [ '' ] }.
 	
 	newSegment := RubUnderlinedSegmentMorph from: indexInterval first to: indexInterval last.
 	newSegment

@@ -41,14 +41,16 @@ RiPullRequestListPresenter >> contextMenuForTable [
 
 	menu addItem: [ :item |
 		item
-			name: 'Open code in this commit in System Browser';
-			action: [ RiCommitBrowseUtility browse: selected basicHeadCommit ] ].
-
+			name: 'Open diff in System Browser';
+			icon: (self iconNamed: #smallSystemBrowser);
+			action: [ self openBrowserWithDiff: selected ] ].
+	
 	menu addItem: [ :item |
 		item
-			name: 'Open diff to base in System Browser';
-			action: [ self openBrowserWithDiff: selected ] ].
-			
+			name: 'Open branch tip in System Browser';
+			icon: (self iconNamed: #smallSystemBrowser);
+			action: [ RiCommitBrowseUtility browse: selected basicHeadCommit ] ].
+
 	menu addItem: [ :item |
 		item
 			name: 'Open in Web Browser';
@@ -56,9 +58,9 @@ RiPullRequestListPresenter >> contextMenuForTable [
 			action: [ self openInWebBrowser: selected ] ].
 	menu addItem: [ :item | 
 		item
-			name: 'Refresh list';
+			name: 'Reload';
 			icon: (self iconNamed: #smallUpdate);
-			action: [ self refreshOnModelUpdate ] ].
+			action: [ (model at: #blockToRefreshPullRequests) value ] ].
 	menu addItem: [ :item | 
 		item
 			name: 'Inspect object';

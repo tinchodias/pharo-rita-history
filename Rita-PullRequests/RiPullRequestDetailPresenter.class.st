@@ -35,7 +35,7 @@ RiPullRequestDetailPresenter >> initializeConversationPage [
 RiPullRequestDetailPresenter >> initializeDiffPage [
 	diffPresenter := self instantiate: RiPRDiffPresenter.
 	diffPage := SpNotebookPage
-		title: 'Diff to base'
+		title: 'Diff'
 		icon: (self iconNamed: ZuTheme current changeIconSelector)
 		provider: [ diffPresenter ].
 	notebook addPage: diffPage

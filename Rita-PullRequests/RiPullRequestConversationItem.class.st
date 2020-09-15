@@ -79,3 +79,8 @@ RiPullRequestConversationItem >> initializeWithComment: aComment pullRequest: aP
 RiPullRequestConversationItem >> mapping [
 	^ mapping
 ]
+
+{ #category : #accessing }
+RiPullRequestConversationItem >> numberOfComments [
+	^ comments size
+]

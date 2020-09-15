@@ -45,6 +45,6 @@ RiPRTreeDiffPresenter >> stringFor: iceNode [
 	^ (model at: #conversationItemsByIceNode) 
 		at: iceNode
 		ifPresent: [ :items |
-			items size asString ]
+			(items sum: [ :each | each numberOfComments ]) asString ]
 		ifAbsent: [ '' ]
 ]
