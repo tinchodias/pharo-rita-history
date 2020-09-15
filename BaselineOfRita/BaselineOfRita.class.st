@@ -19,7 +19,9 @@ BaselineOfRita >> baselineForPharo8: spec [
 	spec baseline: 'Roassal3' with: [
 		spec repository: 'github://ObjectProfile/Roassal3:old-text-extent/src' ].
 	spec baseline: 'TaskIt' with: [
-		spec repository: 'github://sbragagnolo/taskit:v1.1.0' ].
+		spec
+			repository: 'github://sbragagnolo/taskit:v1.1.0';
+			loads: #(coreTests) ].
 	spec baseline: 'Iceberg' with: [
 		spec
 			repository: 'github://tinchodias/iceberg:rita2';
@@ -30,7 +32,8 @@ BaselineOfRita >> baselineForPharo8: spec [
 		spec repository: 'github://pillar-markup/MicroDown:v1.0.4/src' ].
 
 	spec
-		package: 'Rita' with: [ spec requires: #('Roassal3' 'TaskIt' 'Iceberg' 'Hiedra' 'Microdown') ];
+		package: 'Rita' with: [
+			spec requires: #('Roassal3' 'TaskIt' 'Iceberg' 'Hiedra' 'Microdown') ];
 		package: 'Rita-Tests' with: [ spec requires: #('Rita') ].
 	spec
 		group: 'default' with: #('Rita' 'Rita-Tests')
@@ -39,16 +42,13 @@ BaselineOfRita >> baselineForPharo8: spec [
 { #category : #baseline }
 BaselineOfRita >> baselineForPharo9: spec [
 
-	spec baseline: 'TaskIt' with: [
-		spec repository: 'github://sbragagnolo/taskit:v1.1.1';
-		loads: #(coreTests) ].
 	spec baseline: 'Iceberg' with: [
 		spec
 			repository: 'github://tinchodias/iceberg:rita2';
 			loads: 'development' ].
 
 	spec
-		package: 'Rita' with: [ spec requires: #('TaskIt' 'Iceberg') ];
+		package: 'Rita' with: [ spec requires: #('Iceberg') ];
 		package: 'Rita-Tests' with: [ spec requires: #('Rita') ];
 		package: 'Rita-PullRequests' with: [ spec requires: #('Rita') ].
 	spec
