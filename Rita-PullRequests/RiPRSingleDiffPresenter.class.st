@@ -22,6 +22,7 @@ RiPRSingleDiffPresenter >> addConversationSegmentFor: aRiPullRequestConversation
 	
 	newSegment := RubUnderlinedSegmentMorph from: indexInterval first to: indexInterval last.
 	newSegment
+		underlineColor: self theme textColor;
 		icon: (self iconNamed: ZuTheme current conversationIconSelector);
 		label: label;
 		iconBlock: [
