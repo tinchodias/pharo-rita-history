@@ -2,8 +2,7 @@ Class {
 	#name : #RiPRSingleDiffPresenter,
 	#superclass : #RiSingleDiffPresenter,
 	#instVars : [
-		'segments',
-		'popover'
+		'segments'
 	],
 	#category : #'Rita-PullRequests-UI'
 }
@@ -77,23 +76,21 @@ RiPRSingleDiffPresenter >> showPopoverWith: aText [
 		layout: (SpBoxLayout newVertical
 			borderWidth: 5; 
 			spacing: 5;
-			add: (self newLabel label: 'Conversation');
 			add: (self newText
 				beNotEditable;
 				text: aText;
-				yourself)
-				height: 300;
+				yourself);
 			add: (self newButton 
 				label: 'Done';
-				action: [ popover dismiss ];
-				yourself);
+				action: [ content window close ];
+				yourself)
+				expand: false;
 			yourself);
 		yourself.
 
-	popover ifNotNil: [ popover dismiss ].
-	(popover := self newPopover)
-		relativeTo: self;
-		bePositionLeft;
-		presenter: content;
-		popup
+	content openWithSpec withWindowDo: [ :window |
+		window
+			title: 'Comments';
+			extent: 500@700 ].
+
 ]
