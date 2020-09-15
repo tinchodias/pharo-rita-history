@@ -14,7 +14,7 @@ ZuEnvironmentPlugin >> cacheClass: aClass propertyDo: aUnaryBlock [
 	| subProperties |
 	subProperties := OrderedCollection new.
 
-	aClass localMethods do: [ :each |
+	aClass localMethods, aClass theMetaClass localMethods do: [ :each |
 		self cacheMethod: each propertyDo: [ :p |
 			subProperties add: p ] ].
 
@@ -58,7 +58,7 @@ ZuEnvironmentPlugin >> cachePackage: aPackage propertyDo: aUnaryBlock [
 			subProperties add: p ] ].
 	
 	aPackage extensionMethods do: [ :each |
-		1halt.
+		self shouldBeImplemented
 		"self cacheExtensionMethod: each propertiesDo: [ :ps |
 			properties addAll: ps ]" ].
 
@@ -79,11 +79,6 @@ ZuEnvironmentPlugin >> collectMetadataOfPackages: aQueryResult [
 	aQueryResult items do: [ :each |
 		self cachePackage: each propertyDo: [:p | ] ].
 
-]
-
-{ #category : #'method groups' }
-ZuEnvironmentPlugin >> collectMetadataOfProjects: aQueryResult [
-	1halt.
 ]
 
 { #category : #'method groups' }
@@ -112,7 +107,7 @@ ZuEnvironmentPlugin >> decorateBrowserItem: anItem ofPackage: aPackage [
 { #category : #'item decoration' }
 ZuEnvironmentPlugin >> doesMethodHaveChange: aMethod [
 
-	^ self iceNodeFor: aMethod ifPresent: [ true ] ifAbsent: [ false ]
+	^ cache includesKey: aMethod
 ]
 
 { #category : #accessing }
