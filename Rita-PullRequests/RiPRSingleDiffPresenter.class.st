@@ -33,23 +33,31 @@ RiPRSingleDiffPresenter >> addConversationSegmentFor: aRiPullRequestConversation
 ]
 
 { #category : #private }
+RiPRSingleDiffPresenter >> initialize [
+
+	super initialize.
+	segments := OrderedCollection new
+]
+
+{ #category : #private }
 RiPRSingleDiffPresenter >> removeAllConversationSegments [
-	segments ifNil: [ segments := OrderedCollection new ].
-	segments do: [ :each | diffMorphPresenter morph textArea removeSegment: each ]
+	segments do: [ :each | each delete ]
 ]
 
 { #category : #initialization }
 RiPRSingleDiffPresenter >> selectIceNode: iceNode [
 	super selectIceNode: iceNode.
-	iceNode ifNil: [ ^ self ].
 
-	self defer: [
-		diffMorphPresenter morph withTextSegmentIcons].
+	self removeAllConversationSegments.
+	diffMorphPresenter morph 
+		withoutTextSegmentIcons;
+		withTextSegmentIcons.
+
+	iceNode ifNil: [ ^ self ].
 
 	 (model at: #conversationItemsByIceNode) 
 		at: iceNode
 		ifPresent: [ :items |
-			self removeAllConversationSegments.
 			items do: [ :each | self addConversationSegmentFor: each ] ]
 
 ]
