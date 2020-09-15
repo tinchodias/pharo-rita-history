@@ -33,9 +33,19 @@ RiMasterDetailPresenter >> detailPresenterClass [
 ]
 
 { #category : #initialization }
-RiMasterDetailPresenter >> initializePresenters [
-	masterPresenter := self instantiate: self masterPresenterClass.
+RiMasterDetailPresenter >> initializeDetailPresenter [
 	detailPresenter := self instantiate: self detailPresenterClass
+]
+
+{ #category : #initialization }
+RiMasterDetailPresenter >> initializeMasterPresenter [
+	masterPresenter := self instantiate: self masterPresenterClass
+]
+
+{ #category : #initialization }
+RiMasterDetailPresenter >> initializePresenters [
+	self initializeMasterPresenter.
+	self initializeDetailPresenter
 ]
 
 { #category : #initialization }
