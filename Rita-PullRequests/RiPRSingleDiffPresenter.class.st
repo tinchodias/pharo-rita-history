@@ -77,6 +77,56 @@ RiPRSingleDiffPresenter >> openConversationItemWindowFor: aRiPullRequestConversa
 ]
 
 { #category : #private }
+RiPRSingleDiffPresenter >> openReplyWindowFor: aRiPullRequestConversationItem [ 
+
+	| aPresenter replyTextPresenter submitBlock |
+"	aPresenter := (self instantiate: RiPRCommentReplyPresenter)
+		model: aRiPullRequestConversationItem;
+		openWithSpec
+
+TODO: EXTRACT ALL HERE ^^^^
+
+"
+	replyTextPresenter := self newText
+				placeholder: 'Write your reply here...';
+				yourself.
+
+	submitBlock := [ 
+		replyTextPresenter text ifEmpty: [ self error: 'Cant be empty' ].
+		self
+			submitReply: replyTextPresenter text string
+			for: aRiPullRequestConversationItem
+			onSuccess: [ :result |
+				aRiPullRequestConversationItem addReply: result.
+				self inform: 'Reply accepted'.
+				(model at: #blockForRefreshPullRequest) value.
+				aPresenter window close ]
+			onError: [ :e | self inform: 'Reply failed: ', e asString. ] ].
+
+	aPresenter := SpPresenter new 
+		layout: (SpBoxLayout newVertical
+			add: replyTextPresenter;
+			add: (self newButton 
+				label: 'Submit';
+				action: submitBlock;
+				yourself)
+				expand: false;
+			add: (self newButton 
+				label: 'Cancel';
+				action: [ aPresenter window close ];
+				yourself)
+				expand: false;
+			yourself);
+		yourself.
+
+	aPresenter openWithSpec withWindowDo: [ :window |
+		window
+			title: 'Comments';
+			extent: 500@400 ].
+
+]
+
+{ #category : #private }
 RiPRSingleDiffPresenter >> removeAllConversationSegments [
 	segments do: [ :each | each delete ]
 ]
@@ -96,5 +146,20 @@ RiPRSingleDiffPresenter >> selectIceNode: iceNode [
 		at: iceNode
 		ifPresent: [ :items |
 			items do: [ :each | self addConversationSegmentFor: each ] ]
+
+]
+
+{ #category : #private }
+RiPRSingleDiffPresenter >> submitReply: messageString for: aRiPullRequestConversationItem onSuccess: successBlock onError: errorBlock [
+
+	| commentId result |
+	commentId := aRiPullRequestConversationItem comments last id.
+
+	[ result := aRiPullRequestConversationItem pullRequest
+			replyComment: messageString
+			commentId: commentId.
+	] on: Error do: [ :e | errorBlock cull: e ].
+
+	successBlock cull: result
 
 ]
