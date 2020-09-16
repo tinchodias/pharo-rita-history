@@ -20,6 +20,16 @@ IceGitHubPullRequestComment >> author [
 ]
 
 { #category : #accessing }
+IceGitHubPullRequestComment >> authorAvatarUrl [
+	^ (json at: #user) at: #avatar_url
+]
+
+{ #category : #accessing }
+IceGitHubPullRequestComment >> authorHtmlUrl [
+	^ (json at: #user) at: #html_url
+]
+
+{ #category : #accessing }
 IceGitHubPullRequestComment >> body [
 	^ json at: #body
 ]
@@ -63,7 +73,7 @@ IceGitHubPullRequestComment >> isHunkComment [
 { #category : #testing }
 IceGitHubPullRequestComment >> isOutdated [
 
-	^ self line isNil
+	^ (json includesKey: 'line') and: [ (json at: 'line') isNil]
 ]
 
 { #category : #'as yet unclassified' }

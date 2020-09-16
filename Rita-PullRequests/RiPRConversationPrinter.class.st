@@ -18,34 +18,54 @@ RiPRConversationPrinter class >> defaultSpec [
 
 { #category : #initialization }
 RiPRConversationPrinter >> headerLineFor: aPRComment [
-	| timestamp text timestampHumanReadable |
+	| timestamp text timestampHumanReadable username avatarUrl htmlUrl result |
 	timestamp := aPRComment creationDateAndTime.
 	timestampHumanReadable := printer stringFor: timestamp.
+	username := aPRComment author.
+	avatarUrl := aPRComment authorAvatarUrl.
+	htmlUrl := aPRComment authorHtmlUrl.
 
-	text := aPRComment author asText
-		append: ' · ' , timestampHumanReadable;
-		append: String lf;
-		yourself.
-	^ text allBold "makeAllColor: (model at: #aesthetics) secondaryTextColor."
+	"![avatar]({2})"
+	text := 'User [{1}]({3}) commented ({4}):' format: { username. avatarUrl. htmlUrl. timestampHumanReadable }.
 
+	result := MicroDownParser asText: text.
+	"FIX: remove first cr line"
+	self assert: result first = Character cr.
+	result replaceFrom: 1 to: 1 with: ''.
+
+	^ result
 ]
 
 { #category : #private }
 RiPRConversationPrinter >> hunkTextForMapping: mapping [
 
-	^ Text streamContents: [ :stream |
+	| result |
+	result := Text streamContents: [ :stream |
 		| path line diffString |
 		path := self linkToIceNodePointedBy: mapping.
 
 		diffString := mapping iceNode value newUnifiedStringDiff unifiedString.
 		line := diffString lines at: mapping iceNodeLineNumber.
 
+		"FIX"
+		line := line asText.
+		line prepend: ('Line {1}:	' format: {mapping iceNodeLineNumber}).
+		line addAttribute: (TextFontReference toFont: (LogicalFont 
+			familyName: 'Source Code Pro' 
+			pointSize: StandardFonts defaultFont pointSize)).
+
 		stream
-			nextPutAll: path; lf;
-			nextPutAll: line; lf; lf ].
+			nextPutAll: 'Comments at ';
+			nextPutAll: path; cr;
+			nextPutAll: line; cr ].
 
+"	result addAttribute: (TextBackgroundColor color: Color yellow translucent).
 
+"
 
+	result append: String cr.
+	
+	^ result
 ]
 
 { #category : #initialization }
@@ -74,29 +94,28 @@ RiPRConversationPrinter >> linkToIceNodePointedBy: mapping [
 
 { #category : #initialization }
 RiPRConversationPrinter >> printAsTextOn: aTextStream [
-	item comments do: [ :each |
+	(item comments reject: #isOutdated) do: [ :each |
 		aTextStream
 			nextPutAll: (self textFor: each) ]
 ]
 
 { #category : #initialization }
 RiPRConversationPrinter >> textFor: aPRComment [
-	| text indentationString body |
-	
-	text := self headerLineFor: aPRComment.
-	indentationString := ''.
-	
-	(aPRComment isHunkComment and: [ aPRComment isOutdated not ])
-		ifTrue: [
-			text prepend: (indentationString := String tab).
-			aPRComment isReplyComment ifFalse: [
-				text prepend: (self hunkTextForMapping: item mapping) ]].
+	| result indentCount body |
+	indentCount := 0.
+	result := '' asText.
 
-	body := (MicroDownParser asText: aPRComment body, String cr, '***').
-	body := body copyReplaceAll: String cr with: String cr, indentationString.
-	text append: body.
+	aPRComment isHunkComment ifTrue: [
+		indentCount := 1.
+		aPRComment isReplyComment ifFalse: [
+			result append: (self hunkTextForMapping: item mapping) ]].
 
-	text append: String lf.
-	text append: String lf.
-	^ text
+	body := self headerLineFor: aPRComment.
+	body append: (MicroDownParser asText: aPRComment body, String cr, '***').
+	body addAttribute: (TextIndent tabs: indentCount).
+
+	result append: body.
+	result append: String lf.
+	result append: String lf.
+	^ result
 ]
