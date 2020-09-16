@@ -110,7 +110,7 @@ IceGitHubPullRequestComment >> printOn: aStream [
 		nextPut: $(;
 		print: self id.
 	
-	self isReplyComment ifTrue: [ :repliedId |
+	self isReplyComment ifTrue: [
 		aStream
 			nextPutAll: ' - reply to: ';
 			print: self repliedId ].
