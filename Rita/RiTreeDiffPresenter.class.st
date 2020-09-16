@@ -26,12 +26,12 @@ RiTreeDiffPresenter >> contextMenuForTable [
 
 	menu addItem: [ :item |
 		item
-			name: 'Collapse with all children';
-			action: [ self doCollapseWithAllChildren  ] ].
-	menu addItem: [ :item |
-		item
 			name: 'Expand with all children';
 			action: [ self doExpandWithAllChildren ] ].
+	menu addItem: [ :item |
+		item
+			name: 'Collapse with all children';
+			action: [ self doCollapseWithAllChildren  ] ].
 	menu addItem: [ :item | 
 		item
 			name: 'Inspect object';
