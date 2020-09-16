@@ -42,23 +42,31 @@ RiPRSingleDiffPresenter >> initialize [
 { #category : #private }
 RiPRSingleDiffPresenter >> openConversationItemWindowFor: aRiPullRequestConversationItem [
 
-	| aText content |
-	aText := Text streamContents: [ :stream | 
-		RiPRConversationPrinter new
-			item: aRiPullRequestConversationItem;
-			linkBlock: [ "Ignore" ];
-			printAsTextOn: stream ].
+	| content textPresenter refreshBlock |
+	textPresenter := self newText
+				beNotEditable;
+				yourself.
+
+	refreshBlock := [
+		| aText |
+		aText := Text streamContents: [ :stream | 
+			RiPRConversationPrinter new
+				item: aRiPullRequestConversationItem;
+				linkBlock: [ "Ignore" ];
+				printAsTextOn: stream ].
+		textPresenter text: aText].
 		
 	content := SpPresenter new 
 		layout: (SpBoxLayout newVertical
 			spacing: 4;
-			add: (self newText
-				beNotEditable;
-				text: aText;
-				yourself);
+			add: textPresenter;
 			add: (self newButton 
 				label: 'Reply...';
-				action: [ self openReplyWindowFor: aRiPullRequestConversationItem ];
+				action: [
+					"Open window and update from model if there is an update (reply)"
+					self
+						openReplyWindowFor: aRiPullRequestConversationItem
+						onRefreshDo: refreshBlock ];
 				yourself)
 				expand: false;
 			add: (self newButton 
@@ -69,6 +77,9 @@ RiPRSingleDiffPresenter >> openConversationItemWindowFor: aRiPullRequestConversa
 			yourself);
 		yourself.
 
+	"initialize with current model"
+	refreshBlock value.
+
 	content openWithSpec withWindowDo: [ :window |
 		window
 			title: 'Comments';
@@ -77,7 +88,7 @@ RiPRSingleDiffPresenter >> openConversationItemWindowFor: aRiPullRequestConversa
 ]
 
 { #category : #private }
-RiPRSingleDiffPresenter >> openReplyWindowFor: aRiPullRequestConversationItem [ 
+RiPRSingleDiffPresenter >> openReplyWindowFor: aRiPullRequestConversationItem onRefreshDo: refreshBlock [
 
 	| aPresenter replyTextPresenter submitBlock |
 "	aPresenter := (self instantiate: RiPRCommentReplyPresenter)
@@ -100,7 +111,8 @@ TODO: EXTRACT ALL HERE ^^^^
 				aRiPullRequestConversationItem addReply: result.
 				self inform: 'Reply accepted'.
 				(model at: #blockForRefreshPullRequest) value.
-				aPresenter window close ]
+				aPresenter window close.
+				refreshBlock value ]
 			onError: [ :e | self inform: 'Reply failed: ', e asString. ] ].
 
 	aPresenter := SpPresenter new 
@@ -153,7 +165,7 @@ RiPRSingleDiffPresenter >> selectIceNode: iceNode [
 RiPRSingleDiffPresenter >> submitReply: messageString for: aRiPullRequestConversationItem onSuccess: successBlock onError: errorBlock [
 
 	| commentId result |
-	commentId := aRiPullRequestConversationItem comments last id.
+	commentId := aRiPullRequestConversationItem commentIdToReply.
 
 	[ result := aRiPullRequestConversationItem pullRequest
 			replyComment: messageString

@@ -21,10 +21,17 @@ RiPullRequestConversationItem class >> withComment: aComment pullRequest: aPullR
 
 { #category : #accessing }
 RiPullRequestConversationItem >> addReply: aPRComment [
-	| repliedComment |
+"	| repliedComment |
 	repliedComment := comments
 		detect: [ :c | c id = aPRComment repliedId ].
-	comments add: aPRComment after: repliedComment
+	comments add: aPRComment after: repliedComment"
+	self assert: comments first id = aPRComment repliedId.
+	comments addLast: aPRComment
+]
+
+{ #category : #accessing }
+RiPullRequestConversationItem >> commentIdToReply [
+	^ comments first id
 ]
 
 { #category : #accessing }
