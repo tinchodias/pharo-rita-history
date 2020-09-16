@@ -76,7 +76,7 @@ IceGitHubPullRequestComment >> isOutdated [
 	^ (json includesKey: 'line') and: [ (json at: 'line') isNil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 IceGitHubPullRequestComment >> isReplyComment [
 	^ json includesKey: 'in_reply_to_id'
 ]
