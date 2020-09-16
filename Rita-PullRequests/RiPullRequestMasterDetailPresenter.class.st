@@ -44,6 +44,7 @@ RiPullRequestMasterDetailPresenter >> connectMasterToDetail [
 				add: #pullRequestDiff -> iceDiff;
 				add: #pullRequestConversationItems -> conversationItems;
 				add: #conversationItemsByIceNode -> conversationItemsByIceNode;
+				add: #blockForRefreshPullRequest -> [ detailPresenter refreshOnModelUpdate ];
 				yourself) ].
 
 ]

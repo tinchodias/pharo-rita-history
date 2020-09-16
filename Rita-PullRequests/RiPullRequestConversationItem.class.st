@@ -84,3 +84,8 @@ RiPullRequestConversationItem >> mapping [
 RiPullRequestConversationItem >> numberOfComments [
 	^ comments size
 ]
+
+{ #category : #accessing }
+RiPullRequestConversationItem >> pullRequest [
+	^ pullRequest
+]

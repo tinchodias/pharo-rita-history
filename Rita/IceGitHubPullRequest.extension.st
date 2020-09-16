@@ -22,12 +22,15 @@ IceGitHubPullRequest >> isHunkComment [
 
 { #category : #'*Rita' }
 IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
-	IceGitHubAPI new 
+	| aJsonDictionary |
+	aJsonDictionary := IceGitHubAPI new 
 		addCommentOn: self owner 
 			project: self projectName
 			number: self number
 			commentId: commentId
-			body: messageString
+			body: messageString.
+			
+	^ IceGitHubPullRequestComment fromJSON: aJsonDictionary
 ]
 
 { #category : #'*Rita' }
