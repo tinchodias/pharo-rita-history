@@ -85,12 +85,12 @@ RiPRSingleDiffPresenter >> removeAllConversationSegments [
 RiPRSingleDiffPresenter >> selectIceNode: iceNode [
 	super selectIceNode: iceNode.
 
+	iceNode ifNil: [ ^ self ].
+
 	self removeAllConversationSegments.
-	diffMorphPresenter morph 
+	diffMorphPresenter morph
 		withoutTextSegmentIcons;
 		withTextSegmentIcons.
-
-	iceNode ifNil: [ ^ self ].
 
 	 (model at: #conversationItemsByIceNode) 
 		at: iceNode
