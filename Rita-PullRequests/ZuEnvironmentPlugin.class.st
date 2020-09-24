@@ -14,7 +14,7 @@ ZuEnvironmentPlugin >> cacheClass: aClass propertyDo: aUnaryBlock [
 	| subProperties |
 	subProperties := OrderedCollection new.
 
-	aClass localMethods, aClass theMetaClass localMethods do: [ :each |
+	aClass localMethods, aClass classSide localMethods do: [ :each |
 		self cacheMethod: each propertyDo: [ :p |
 			subProperties add: p ] ].
 
