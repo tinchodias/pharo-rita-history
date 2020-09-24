@@ -11,6 +11,21 @@ IceGitHubPullRequest >> authorHtmlUrl [
 ]
 
 { #category : #'*Rita-PullRequests' }
+IceGitHubPullRequest >> baseCommonAncestorCommit [
+	^ self baseCommit commonAncestorWith: self basicHeadCommit
+]
+
+{ #category : #'*Rita-PullRequests' }
+IceGitHubPullRequest >> diffToBaseCommonAncestor [
+	^ self headCommit diffTo: self baseCommonAncestorCommit
+]
+
+{ #category : #'*Rita-PullRequests' }
+IceGitHubPullRequest >> headCommit [
+	^ self branch commit
+]
+
+{ #category : #'*Rita-PullRequests' }
 IceGitHubPullRequest >> isOutdated [
 	^ false
 ]

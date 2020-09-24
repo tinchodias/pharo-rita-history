@@ -34,7 +34,7 @@ RiPullRequestMasterDetailPresenter >> allConversationItemsOf: aPullRequest iceDi
 RiPullRequestMasterDetailPresenter >> connectMasterToDetail [
 	masterPresenter blockForPRSelected: [ :aPR |
 		| iceDiff conversationItems conversationItemsByIceNode |
-		iceDiff := aPR diffToBase.
+		iceDiff := aPR diffToBaseCommonAncestor.
 		conversationItems := self allConversationItemsOf: aPR iceDiff: iceDiff.
 		conversationItemsByIceNode := self conversationItemsByIceNodeFrom: conversationItems.
 
