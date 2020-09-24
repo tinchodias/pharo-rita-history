@@ -13,9 +13,12 @@ Class {
 
 { #category : #accessing }
 RiHiedraImageBuilder >> morphAt: item [
+
 	self flag: #todo. "Fix this async problem in other way"
-	hiedraColumnController ifNil: [ ^ Morph new ].
-	^ hiedraColumnController cellMorphAtValue: item
+
+	^ (hiedraColumnController notNil and: [ hiedraColumnController isReady ])
+		ifFalse: [ ^ Morph new ]
+		ifTrue: [ hiedraColumnController cellMorphAtValue: item ]
 ]
 
 { #category : #refreshing }
