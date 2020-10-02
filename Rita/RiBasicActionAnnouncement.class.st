@@ -1,5 +1,5 @@
 Class {
-	#name : #RiActionAnnouncement,
+	#name : #RiBasicActionAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
 		'timestamp',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #converting }
-RiActionAnnouncement >> asOrderedDictionary [
+RiBasicActionAnnouncement >> asOrderedDictionary [
 	"Convert to a dictionary which is convenient to be written as JSON."
 
 	^ {
@@ -22,45 +22,45 @@ RiActionAnnouncement >> asOrderedDictionary [
 ]
 
 { #category : #accessing }
-RiActionAnnouncement >> currentTimestamp [
+RiBasicActionAnnouncement >> currentTimestamp [
 	"Number of seconds since midnight, as Float with decimals."
 
 	^ DateAndTime now asDuration asMilliSeconds / 1000.0
 ]
 
 { #category : #accessing }
-RiActionAnnouncement >> data [
+RiBasicActionAnnouncement >> data [
 	^ data
 ]
 
 { #category : #accessing }
-RiActionAnnouncement >> data: anObject [
+RiBasicActionAnnouncement >> data: anObject [
 	data := anObject
 ]
 
 { #category : #accessing }
-RiActionAnnouncement >> initialize [ 
+RiBasicActionAnnouncement >> initialize [ 
 	super initialize.
 	
 	timestamp := self currentTimestamp
 ]
 
 { #category : #accessing }
-RiActionAnnouncement >> kind [
+RiBasicActionAnnouncement >> kind [
 	^ kind
 ]
 
 { #category : #accessing }
-RiActionAnnouncement >> kind: anObject [
+RiBasicActionAnnouncement >> kind: anObject [
 	kind := anObject
 ]
 
 { #category : #accessing }
-RiActionAnnouncement >> timestamp [
+RiBasicActionAnnouncement >> timestamp [
 	^ timestamp
 ]
 
 { #category : #accessing }
-RiActionAnnouncement >> timestamp: anObject [
+RiBasicActionAnnouncement >> timestamp: anObject [
 	timestamp := anObject
 ]

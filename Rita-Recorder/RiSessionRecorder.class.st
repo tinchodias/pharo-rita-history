@@ -81,7 +81,7 @@ RiSessionRecorder >> start [
 '.
 
 	rootModel actionsAnnouncer weak
-		when: RiActionAnnouncement send: #add: to: self.
+		when: RiBasicActionAnnouncement send: #add: to: self.
 	
 	self inform: ('Started to record actions on <1p>.' expandMacrosWith: fileReference pathString)
 ]

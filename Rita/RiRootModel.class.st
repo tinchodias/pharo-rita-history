@@ -45,7 +45,7 @@ RiRootModel >> aesthetics [
 RiRootModel >> announceAction: aSymbol iceNode: iceNode [
 
 	actionsAnnouncer announce: 
-		(RiActionAnnouncement new
+		(RiBasicActionAnnouncement new
 			 kind: aSymbol;
 			 data: iceNode asString;
 			 yourself)
