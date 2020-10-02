@@ -23,14 +23,12 @@ RiRootPresenter class >> defaultSpec [
 RiRootPresenter class >> open [
 	<script>
 
-	self openWithApplication: RiSpApplication new
+	^ self openWithApplication: RiSpApplication new
 ]
 
 { #category : #examples }
 RiRootPresenter class >> openWithApplication: aSpApplication [
-	(self newApplication: aSpApplication)
-		model: RiRootModel newWithRegisteredRepositories;
-		openWithSpec
+	^ (self newApplication: aSpApplication) openWithSpec
 ]
 
 { #category : #accessing }
