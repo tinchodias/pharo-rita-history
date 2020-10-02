@@ -1,6 +1,6 @@
 Extension { #name : #SpCompositeTableColumn }
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 SpCompositeTableColumn >> addColumnFirst: aSpTableColumn [ 
 	columns addFirst: aSpTableColumn
 ]

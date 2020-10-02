@@ -1,6 +1,6 @@
 Extension { #name : #IceOperation }
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IceOperation >> newUnifiedStringDiff [
 	| right left |
 	right := self rightContents.
@@ -16,7 +16,7 @@ IceOperation >> newUnifiedStringDiff [
 
 ]
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IceOperation >> ritaKey [
 	^ self name
 ]

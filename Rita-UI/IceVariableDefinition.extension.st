@@ -1,11 +1,11 @@
 Extension { #name : #IceVariableDefinition }
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IceVariableDefinition >> ritaAsTextForTree0 [
 	^ mcVariableDefinition name
 ]
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IceVariableDefinition >> ritaBasicAsText [
 	^ self typeToShow = 'instance'
 		ifTrue: [ 'Variable' ]

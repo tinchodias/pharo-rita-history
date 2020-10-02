@@ -1,6 +1,6 @@
 Extension { #name : #SpAbstractListPresenter }
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 SpAbstractListPresenter >> selectItem: anItem scrollToSelection: shouldScrollToSelection [
 	self
 		selectIndex: (self selection indexOfItem: anItem)

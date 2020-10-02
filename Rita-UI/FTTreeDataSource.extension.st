@@ -1,6 +1,6 @@
 Extension { #name : #FTTreeDataSource }
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 FTTreeDataSource >> indexOfElement: anObject [
 	1 to: self numberOfRows do: [ :index |
 		(self realElementAt: index) = anObject 

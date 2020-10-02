@@ -1,21 +1,21 @@
 Extension { #name : #IcePropertyDefinition }
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IcePropertyDefinition >> ritaAsTextForPRConversation [
 	^ self containerIceDefinition ritaAsTextForPRConversation, ' (', self ritaAsText, ')'
 ]
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IcePropertyDefinition >> ritaAsTextForTree0 [
 	^ self ritaNameToShow
 ]
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IcePropertyDefinition >> ritaAsTextForTree1 [
 	^ super ritaAsTextForTree1, ' of ', self containerIceDefinition ritaBasicAsText
 ]
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IcePropertyDefinition >> ritaNameToShow [
 	| nameToShow |
 	nameToShow := self name.

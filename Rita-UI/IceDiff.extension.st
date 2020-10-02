@@ -1,6 +1,6 @@
 Extension { #name : #IceDiff }
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IceDiff >> ritaShortId [
 	^ '{1}...{2}'
 		format:

@@ -1,6 +1,6 @@
 Extension { #name : #IceGitHubPullRequest }
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IceGitHubPullRequest >> comments [
 	| jsons |
 	jsons := (IceGitHubAPI new
@@ -15,12 +15,12 @@ IceGitHubPullRequest >> comments [
 			yourself "]
 ]
 
-{ #category : #'*Rita-PullRequests' }
+{ #category : #'*Rita-UI-PullRequests' }
 IceGitHubPullRequest >> isHunkComment [
 	^ false
 ]
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 	| aJsonDictionary |
 	aJsonDictionary := IceGitHubAPI new 
@@ -33,7 +33,7 @@ IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 	^ IceGitHubPullRequestComment fromJSON: aJsonDictionary
 ]
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IceGitHubPullRequest >> reviewComments [
 	| jsons |
 	jsons := (IceGitHubAPI new
@@ -48,7 +48,7 @@ IceGitHubPullRequest >> reviewComments [
 			yourself "]
 ]
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 IceGitHubPullRequest >> reviews [
 	| jsons |
 	jsons := (IceGitHubAPI new

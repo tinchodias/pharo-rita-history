@@ -1,6 +1,6 @@
 Extension { #name : #FTTableMorph }
 
-{ #category : #'*Rita' }
+{ #category : #'*Rita-UI' }
 FTTableMorph >> beRitaContainer [
 	| oldContainer |
 	oldContainer := container.
