@@ -16,6 +16,11 @@ RiPullRequestListPresenter class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #actions }
+RiPullRequestListPresenter >> actionCheckoutPR: anIceGitHubPullRequest [ 
+	anIceGitHubPullRequest branch checkout
+]
+
 { #category : #accessing }
 RiPullRequestListPresenter >> blockForPRSelected: aBlockClosure [
 	blockForPRSelected := aBlockClosure
@@ -38,6 +43,12 @@ RiPullRequestListPresenter >> contextMenuForTable [
 			name: 'View Diff to Repository HEAD';
 			icon: (self iconNamed: #diff);
 			action: [ self openDiffToHeadOf: selected ] ]."
+
+	menu addItem: [ :item |
+		item
+			name: 'Checkout (in IMAGE)';
+			icon: (self iconNamed: #smallSystemBrowser);
+			action: [ self actionCheckoutPR: selected ] ].
 
 	menu addItem: [ :item |
 		item
