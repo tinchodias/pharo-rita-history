@@ -30,6 +30,24 @@ ZuEnvironmentPlugin >> cacheClass: aClass propertyDo: aUnaryBlock [
 ]
 
 { #category : #enumerating }
+ZuEnvironmentPlugin >> cacheExtensionMethod: aMethod propertiesDo: aUnaryBlock [ 
+
+	self
+		iceNodeFor: aMethod
+		ifPresent: [ :iceNode |
+			| aProperty |
+			aProperty := ZuChangeProperty new
+				matchingIceNode: iceNode;
+				plugin: self;
+				yourself.
+			
+			cache at: aMethod put: aProperty.
+			aUnaryBlock	value: aProperty ]
+		ifAbsent: [ ]
+
+]
+
+{ #category : #enumerating }
 ZuEnvironmentPlugin >> cacheMethod: aMethod propertyDo: aUnaryBlock [ 
 
 	self
@@ -58,9 +76,8 @@ ZuEnvironmentPlugin >> cachePackage: aPackage propertyDo: aUnaryBlock [
 			subProperties add: p ] ].
 	
 	aPackage extensionMethods do: [ :each |
-		self shouldBeImplemented
-		"self cacheExtensionMethod: each propertiesDo: [ :ps |
-			properties addAll: ps ]" ].
+		self cacheExtensionMethod: each propertiesDo: [ :ps |
+			subProperties addAll: ps ] ].
 
 	subProperties ifNotEmpty: [
 		| aProperty |
