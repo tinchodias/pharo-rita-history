@@ -27,6 +27,12 @@ RiTorchRenderer >> adjustTitle: title on: aGroup [
 
 ]
 
+{ #category : #'popup building' }
+RiTorchRenderer >> announceAction: aSymbol iceNode: iceNode [
+
+	(model at: #root) announceAction: aSymbol iceNode: iceNode
+]
+
 { #category : #hooks }
 RiTorchRenderer >> applyMLayoutOn: shapes [
 	RSFlowLayout new 
@@ -173,7 +179,9 @@ RiTorchRenderer >> methodsFor: aClass [
 { #category : #'popup building' }
 RiTorchRenderer >> popupForIceNodeShapes [
 	^ RSMorphicPopup new
-		morphBuilder: [ :iceNode | aesthetics popupDiffMorphFor: iceNode ];
+		morphBuilder: [ :iceNode |
+			self announceAction: #torchPopup iceNode: iceNode.
+			aesthetics popupDiffMorphFor: iceNode ];
 		yourself
 ]
 

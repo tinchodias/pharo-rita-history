@@ -11,7 +11,8 @@ Class {
 		'connectHierarchies',
 		'flyDiff',
 		'showPackages',
-		'aesthetics'
+		'aesthetics',
+		'actionsAnnouncer'
 	],
 	#category : #'Rita-UI-Models'
 }
@@ -31,8 +32,24 @@ RiRootModel class >> newWithRegisteredRepositories [
 ]
 
 { #category : #accessing }
+RiRootModel >> actionsAnnouncer [
+	^ actionsAnnouncer
+]
+
+{ #category : #accessing }
 RiRootModel >> aesthetics [
 	^ aesthetics
+]
+
+{ #category : #accessing }
+RiRootModel >> announceAction: aSymbol iceNode: iceNode [
+
+	actionsAnnouncer announce: 
+		(RiActionAnnouncement new
+			 kind: aSymbol;
+			 data: iceNode asString;
+			 yourself)
+
 ]
 
 { #category : #accessing }
@@ -74,6 +91,7 @@ RiRootModel >> initialize [
 	connectHierarchies := true.
 	flyDiff := true.
 	showPackages := false.
+	actionsAnnouncer := Announcer new.
 ]
 
 { #category : #accessing }

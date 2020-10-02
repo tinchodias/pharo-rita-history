@@ -87,6 +87,9 @@ RiFullDiffPresenter >> selectBackIceNode [
 
 { #category : #initialization }
 RiFullDiffPresenter >> selectIceNode: iceNode [
+
+	(model at: #root) announceAction: #select iceNode: iceNode.
+
 	treeDiffPresenter selectIceNode: iceNode.
 	torchDiffPresenter selectIceNode: iceNode.
 	sourceCodePanel selectIceNode: iceNode
