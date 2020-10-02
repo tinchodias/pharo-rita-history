@@ -48,10 +48,14 @@ BaselineOfRita >> baselineForPharo9: spec [
 			loads: 'development' ].
 
 	spec
-		package: 'Rita' with: [ spec requires: #('Iceberg') ];
-		package: 'Rita-Tests' with: [ spec requires: #('Rita') ];
-		package: 'Rita-PullRequests' with: [ spec requires: #('Rita') ].
+		package: 'Rita-Model' with: [ spec requires: #('Iceberg') ];
+		package: 'Rita-Roassal3' with: [ spec requires: #('Rita-Model') ];
+		package: 'Rita-Avatars';
+		package: 'Rita-UI' with: [ spec requires: #('Rita-Model' 'Rita-Roassal3' 'Rita-Avatars') ];
+		package: 'Rita-Tests' with: [ spec requires: #('Rita-Model') ];
+		package: 'Rita-Recorder' with: [ spec requires: #('Rita-UI') ].
+		package: 'Rita-PullRequests' with: [ spec requires: #('Rita-UI') ].
 	spec
-		group: 'default' with: #('Rita' 'Rita-Tests' 'Rita-PullRequests')
+		group: 'default' with: #('Rita' 'Rita-Tests' 'Rita-PullRequests' 'Rita-Recorder')
 
 ]
