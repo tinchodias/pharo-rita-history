@@ -26,6 +26,11 @@ IceGitHubPullRequest >> headCommit [
 ]
 
 { #category : #'*Rita-PullRequests' }
+IceGitHubPullRequest >> isHunkComment [
+	^ false
+]
+
+{ #category : #'*Rita-PullRequests' }
 IceGitHubPullRequest >> isOutdated [
 	^ false
 ]
