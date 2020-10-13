@@ -16,6 +16,21 @@ IceGitHubPullRequest >> baseCommonAncestorCommit [
 ]
 
 { #category : #'*Rita-PullRequests' }
+IceGitHubPullRequest >> comments [
+	| jsons |
+	jsons := (IceGitHubAPI new
+		useComfortFadeAcceptMediaType; "--> for multi-line comment support"
+		beAnonymous;
+		getListPullRequestComments: self owner 
+			project: self projectName
+			number: self number) all.
+	^ jsons collect: [ :each |
+		(IceGitHubPullRequestComment fromJSON: each)
+"			repository: self repository
+			yourself "]
+]
+
+{ #category : #'*Rita-PullRequests' }
 IceGitHubPullRequest >> diffToBaseCommonAncestor [
 	^ self headCommit diffTo: self baseCommonAncestorCommit
 ]
@@ -33,4 +48,43 @@ IceGitHubPullRequest >> isHunkComment [
 { #category : #'*Rita-PullRequests' }
 IceGitHubPullRequest >> isOutdated [
 	^ false
+]
+
+{ #category : #'*Rita-PullRequests' }
+IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
+	| aJsonDictionary |
+	aJsonDictionary := IceGitHubAPI new 
+		addCommentOn: self owner 
+			project: self projectName
+			number: self number
+			commentId: commentId
+			body: messageString.
+			
+	^ IceGitHubPullRequestComment fromJSON: aJsonDictionary
+]
+
+{ #category : #'*Rita-PullRequests' }
+IceGitHubPullRequest >> reviewComments [
+	| jsons |
+	jsons := (IceGitHubAPI new
+		useComfortFadeAcceptMediaType; "--> for multi-line comment support"
+		beAnonymous;
+		getListPullRequestReviewComments: self owner 
+			project: self projectName
+			number: self number) all.
+	^ jsons collect: [ :each |
+		(IceGitHubPullRequestComment fromJSON: each)
+"			repository: self repository;
+			yourself "]
+]
+
+{ #category : #'*Rita-PullRequests' }
+IceGitHubPullRequest >> reviews [
+	| jsons |
+	jsons := (IceGitHubAPI new
+		beAnonymous;
+		getListPullRequestReviews: self owner 
+			project: self projectName
+			number: self number) all.
+	^ jsons "reify"
 ]
