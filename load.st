@@ -4,7 +4,7 @@
   baseline: 'Roassal3';
   repository: 'github://ObjectProfile/Roassal3';
   onConflictUseIncoming;
-  load ] on: MCMergeOrLoadWarning do: [:warning | warning load ]
+  load ] on: MCMergeOrLoadWarning do: [:warning | warning load ].
 
 "Load project assuming the image is at build/"
 dir := FileLocator imageDirectory parent pathString.

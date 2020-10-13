@@ -23,7 +23,6 @@ echo " ----------------------------------------------"
 echo ""
 git clone -b rita2 https://github.com/tinchodias/iceberg.git
 ./iceberg/scripts/testUpdateIceberg.sh --dev
-./pharo-ui Pharo.image
 
 
 echo ""
