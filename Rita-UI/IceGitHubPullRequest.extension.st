@@ -15,11 +15,6 @@ IceGitHubPullRequest >> comments [
 			yourself "]
 ]
 
-{ #category : #'*Rita-UI-PullRequests' }
-IceGitHubPullRequest >> isHunkComment [
-	^ false
-]
-
 { #category : #'*Rita-UI' }
 IceGitHubPullRequest >> replyComment: messageString commentId: commentId [
 	| aJsonDictionary |
