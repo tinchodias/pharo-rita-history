@@ -44,10 +44,12 @@ RiRootModel >> aesthetics [
 { #category : #accessing }
 RiRootModel >> announceAction: aSymbol iceNode: iceNode [
 
+	iceNode ifNil: [ ^self ].
+
 	actionsAnnouncer announce: 
 		(RiBasicActionAnnouncement new
 			 kind: aSymbol;
-			 data: iceNode asString;
+			 data: iceNode key asString;
 			 yourself)
 
 ]
