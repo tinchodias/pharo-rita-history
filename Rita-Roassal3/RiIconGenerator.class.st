@@ -162,7 +162,7 @@ RiIconGenerator >> newMorph [
 { #category : #generation }
 RiIconGenerator >> newRSCanvas [
 	^ RSCanvas new
-		shapes: shapes;
+		addAll: shapes;
 		color: Color transparent;
 		yourself
 ]
