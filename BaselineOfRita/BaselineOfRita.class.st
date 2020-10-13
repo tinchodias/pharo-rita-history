@@ -53,7 +53,7 @@ BaselineOfRita >> baselineForPharo9: spec [
 		package: 'Rita-Avatars';
 		package: 'Rita-UI' with: [ spec requires: #('Rita-Model' 'Rita-Roassal3' 'Rita-Avatars') ];
 		package: 'Rita-Tests' with: [ spec requires: #('Rita-Model') ];
-		package: 'Rita-Recorder' with: [ spec requires: #('Rita-UI') ].
+		package: 'Rita-Recorder' with: [ spec requires: #('Rita-UI') ];
 		package: 'Rita-PullRequests' with: [ spec requires: #('Rita-UI') ].
 	spec
 		group: 'default' with: #('Rita' 'Rita-Tests' 'Rita-PullRequests' 'Rita-Recorder')
