@@ -42,20 +42,15 @@ BaselineOfRita >> baselineForPharo8: spec [
 { #category : #baseline }
 BaselineOfRita >> baselineForPharo9: spec [
 
-"	spec baseline: 'Iceberg' with: [
-		spec
-			repository: 'github://tinchodias/iceberg:rita2';
-			loads: 'development' ]."
-
 	spec
-		package: 'Rita-Model' "with: [ spec requires: #('Iceberg') ]";
-		package: 'Rita-Roassal3' with: [ spec requires: #('Rita-Model') ];
-		package: 'Rita-Avatars';
-		package: 'Rita-UI' with: [ spec requires: #('Rita-Model' 'Rita-Roassal3' 'Rita-Avatars') ];
+		package: 'Rita-Model';
 		package: 'Rita-Tests' with: [ spec requires: #('Rita-Model') ];
+		package: 'Rita-Roassal3' with: [ spec requires: #('Rita-Model') ];
+		package: 'Rita-Avatars' with: [ spec requires: #('Rita-Roassal3') ];
+		package: 'Rita-UI' with: [ spec requires: #('Rita-Avatars' 'Rita-Model' 'Rita-Roassal3') ];
 		package: 'Rita-Recorder' with: [ spec requires: #('Rita-UI') ];
-		package: 'Rita-PullRequests' with: [ spec requires: #('Rita-UI') ].
+		package: 'Rita-PullRequests' with: [ spec requires: #('Rita-Model' 'Rita-UI') ].
 	spec
-		group: 'default' with: #('Rita' 'Rita-Tests' 'Rita-PullRequests' 'Rita-Recorder')
+		group: 'default' with: #('Rita-Tests' 'Rita-PullRequests' 'Rita-Recorder')
 
 ]
