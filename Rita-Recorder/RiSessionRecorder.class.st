@@ -68,6 +68,11 @@ RiSessionRecorder >> initialize [
 
 ]
 
+{ #category : #convenience }
+RiSessionRecorder >> openInOSFileBrowser [
+	fileReference openInOSFileBrowser
+]
+
 { #category : #API }
 RiSessionRecorder >> start [
 
