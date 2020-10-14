@@ -6,43 +6,18 @@ This repository is home of several experiments on understanding of code changes 
 
 ![Screenshot](small.png)
 
-## Install
+## Install and execute
 
-In Pharo 8:
+On Linux and Mac (tested on Debian 10 and Catalina, respectively):
 
-~~~Smalltalk
-    Metacello new
-        githubUser: 'pharo-spec' project: 'Spec' commitish: 'v0.7.0' path: 'src';
-        baseline: 'Spec2';
-        onConflict: [ :e | e useIncoming ];
-        onUpgrade: [ :e | e useIncoming ];
-        ignoreImage;
-        load.
+1. Clone or download this repository.
+2. Open a terminal and execute `./build.sh`.
+3. When finished, `cd build` and `./pharo-ui Pharo.image`.
+4. Click on `World Menu -> Tools -> Rita`.
 
-    Metacello new 
-        baseline: 'Rita'; 
-        repository: 'github://tinchodias/pharo-rita-history/';
-        onConflict: [ :e | e useLoaded ];
-        onUpgrade: [ :e | e useLoaded ];
-        ignoreImage;
-        load.
-~~~
-
-**NOTE**: A window will ask if you want to Load or Merge the project named Hiedra. Load is good.
-
-
-## Execute
-
-Click on `World Menu -> Tools -> Rita`.
-
-or evaluate:
-
-~~~Smalltalk
-RiRootPresenter open
-~~~
+On Windows 10, we didn't make it work yet.
 
 ---
-
 
 ## License
 The code is licensed under [MIT](LICENSE).
