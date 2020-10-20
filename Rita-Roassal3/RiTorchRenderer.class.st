@@ -95,13 +95,18 @@ RiTorchRenderer >> configuredAsDraggable: aShape [
 
 { #category : #'shape building' }
 RiTorchRenderer >> configuredWithInteractions: aShape model: iceNode [
+
+	aShape model: iceNode.
+
+	self flag: #todo. "FIX this hack"		
+	RiShouldAddInteractions value == false ifTrue: [ ^aShape ].
+
 	^ aShape
-		model: iceNode;
 		when: RSMouseClick do: self blockForMouseClickOnIceNode;
 		when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
 		when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
 		when: RSMouseDoubleClick do: self blockForMouseDoubleClickOnIceNode;
-		addInteraction: self popupForIceNodeShapes;
+		addInteraction: (self popupFor: iceNode);
 		addInteraction: highlighingController;
 		yourself
 ]
@@ -172,21 +177,62 @@ RiTorchRenderer >> methodsFor: aClass [
 ]
 
 { #category : #'popup building' }
-RiTorchRenderer >> popupForIceNodeShapes [
+RiTorchRenderer >> popupDiffMorphFor: iceNode [
+	^ aesthetics popupDiffMorphFor: iceNode
+]
+
+{ #category : #'popup building' }
+RiTorchRenderer >> popupFor: iceNode [
+	^ (self isExpanded: iceNode)
+		ifTrue: [ self popupForExpandedNode ]
+		ifFalse: [ self popupForCollapsedNode ]
+
+]
+
+{ #category : #'popup building' }
+RiTorchRenderer >> popupForCollapsedNode [
+
 	^ RSMorphicPopup new
 		morphBuilder: [ :iceNode |
-			self announceAction: #torchPopup iceNode: iceNode.
-			aesthetics popupDiffMorphFor: iceNode ];
+			| selector popupContent |
+			selector := iceNode value definition accept: RiDetailedPopupHackyVisitor new.
+
+			self flag: #todo. "FIX this hack"
+			popupContent := RiShouldAddInteractions
+				value: false 
+				during: [ self perform: selector with: iceNode ].
+
+			popupContent isMorph
+				ifTrue: [ popupContent ]
+				ifFalse: [ 
+					| canvas extent scale pad hackyOffset |
+					scale := 1.2.
+					pad := 20@20.
+					hackyOffset := -0.5 @ -1.
+					extent := popupContent extent * scale.
+					canvas := RSCanvas new 
+						color: aesthetics backgroundColor;
+						add: popupContent;
+						yourself.
+					canvas camera
+						zoomToFit: extent;
+						translateTo: canvas camera position + hackyOffset;
+						scale: scale.
+					canvas createMorph
+						extent: extent + pad;
+						yourself.
+					 ].
+			
+			 ];
 		yourself
 ]
 
 { #category : #'popup building' }
-RiTorchRenderer >> popupForTinyClassShapes [
-	^ RSPopup new
-		shapeBuilder: [ :node | 
-			(self shapeForClassInExpandedMode: node)
-				color: aesthetics backgroundColor;
-				yourself ];
+RiTorchRenderer >> popupForExpandedNode [
+	^ RSMorphicPopup new
+		morphBuilder: [ :iceNode |
+			self announceAction: #torchPopup iceNode: iceNode.
+			self popupDiffMorphFor: iceNode ];
 		yourself
 ]
 
@@ -229,7 +275,7 @@ RiTorchRenderer >> shapeForClassInTinyMode: iceNode [
 		size: aesthetics widthForMethod;
 		model: iceNode;
 		border: aesthetics tinyBoxBorder;
-		addInteraction: self popupForTinyClassShapes;
+		addInteraction: self popupForCollapsedNode;
 		yourself
 ]
 
@@ -290,21 +336,18 @@ RiTorchRenderer >> shapeForFiles: iceNodes [
 	
 	| shapes |
 	shapes := iceNodes collect: [ :each | 
-		(self shapeForTinyBox: each)
-			model: each;
-			when: RSMouseClick do: self blockForMouseClickOnIceNode;
-			when: RSMouseEnter do: self blockForMouseEnterOnIceNode;
-			when: RSMouseLeave do: self blockForMouseLeaveOnIceNode;
-			addInteraction: highlighingController;
+		(self
+			configuredWithInteractions: (self shapeForTinyBox: each)
+			model: each)
+"			addInteraction: (RSPopup text: [ :node | node path pathString ]);"
 			border: aesthetics innerBorder;
-			addInteraction: (RSPopup text: [ :node | node path pathString ]);
 			yourself ].
 	self applyVLayoutOn: shapes.
 
 	^ RSComposite new
 		shapes: shapes;
 		padding: aesthetics classRowMargin;
-		yourself.
+		yourself
 
 ]
 
