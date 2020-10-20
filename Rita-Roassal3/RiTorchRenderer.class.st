@@ -143,11 +143,6 @@ RiTorchRenderer >> defaultTextColor [
 	^ aesthetics foregroundColor
 ]
 
-{ #category : #accessing }
-RiTorchRenderer >> highlighingController: aRiHighlighingController [
-	highlighingController := aRiHighlighingController
-]
-
 { #category : #initialization }
 RiTorchRenderer >> initializeWithModel: aModel highlighingController: aHighlighingController [
 	self initialize.
