@@ -22,7 +22,8 @@ Class {
 		'pendingToWrite',
 		'fileReference',
 		'stream',
-		'writeDeferrer'
+		'writeDeferrer',
+		'alreadyWritten'
 	],
 	#category : #'Rita-Recorder'
 }
@@ -48,9 +49,11 @@ RiSessionRecorder >> fileReference: aFileReference [
 RiSessionRecorder >> flushPendingToWrite [
 
 	pendingToWrite flush: [ :each |
-		STONJSON put: each asOrderedDictionary onStreamPretty: stream.
-		stream << ',
+		alreadyWritten ifFalse: [
+			stream << ',
 ' ].
+	alreadyWritten := false.
+		STONJSON put: each asOrderedDictionary onStreamPretty: stream ].
 	stream flush.
 ]
 
@@ -64,6 +67,7 @@ RiSessionRecorder >> initialize [
 		to: self
 		after: 250 milliSeconds.
 
+	alreadyWritten := true.
 	fileReference := ('recording-<1p>.json ' expandMacrosWith: self identityHash) asFileReference.
 
 ]
@@ -73,20 +77,29 @@ RiSessionRecorder >> openInOSFileBrowser [
 	fileReference openInOSFileBrowser
 ]
 
+{ #category : #accessing }
+RiSessionRecorder >> rootModel [
+	"Answer the model of the Rita window (assuming it's open)."
+
+	^ window presenter model
+]
+
 { #category : #API }
 RiSessionRecorder >> start [
 
-	| rootModel |
 	window := RiRootPresenter open.
-	rootModel := window presenter model.
 
 	stream := fileReference writeStream.
-	
 	stream nextPutAll: '[
 '.
 
-	rootModel actionsAnnouncer weak
+	self rootModel actionsAnnouncer weak
 		when: RiBasicActionAnnouncement send: #add: to: self.
+
+	self add: (RiBasicActionAnnouncement new
+			 kind: #recording;
+			 data: 'start';
+			 yourself).
 	
 	self inform: ('Started to record actions on <1p>.' expandMacrosWith: fileReference pathString)
 ]
@@ -94,10 +107,24 @@ RiSessionRecorder >> start [
 { #category : #API }
 RiSessionRecorder >> stop [
 
+	self add: (RiBasicActionAnnouncement new
+			 kind: #recording;
+			 data: 'stop';
+			 yourself).
+
+	self flushPendingToWrite.	
+
 	stream << '
 ]'.
 
 	self inform: ('Finished to record actions on <1p>.' expandMacrosWith: fileReference pathString).
 
 	stream close.
+]
+
+{ #category : #accessing }
+RiSessionRecorder >> window [
+	"Answer the Rita window (assuming it was open via #start)."
+
+	^ window
 ]
