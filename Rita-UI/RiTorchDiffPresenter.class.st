@@ -187,7 +187,7 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 			yourself.
 	connectHierarchiesButton := self
 		newRootModelToggleButtonFor: #connectHierarchies
-		label: 'Hier'
+		label: 'Hchy'
 		icon: #hierarchy
 		help: 'Whether connect subclasses or leave them free.'.
 	iterateNextButton := (self instantiate: SpToolbarButtonPresenter)
@@ -205,9 +205,9 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 
 	^ self newToolbar
 		addItem: connectHierarchiesButton;
-		addItemRight: iterateNextButton;
+"		addItemRight: iterateNextButton;
 		addItemRight: iterateBackButton;
-		addItem: spawnButton;
+"		addItem: spawnButton;
 		yourself
 ]
 
