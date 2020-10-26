@@ -93,6 +93,8 @@ ZuEnvironmentPlugin >> cachePackage: aPackage propertyDo: aUnaryBlock [
 { #category : #'method groups' }
 ZuEnvironmentPlugin >> collectMetadataOfPackages: aQueryResult [
 
+	pullRequestModel ifNil: [ ^self ].
+
 	aQueryResult items do: [ :each |
 		self cachePackage: each propertyDo: [:p | ] ].
 
