@@ -476,7 +476,7 @@ RiTorchRenderer >> titleForString: title icon: icon [
 	shapes := { icon. label }.
 	RSHorizontalLineLayout new 
 		gapSize: 1;
-		alignCenter;
+		alignMiddle;
 		on: shapes.
 	
 	^ RSComposite new
