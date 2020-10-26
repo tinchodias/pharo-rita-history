@@ -3,16 +3,14 @@ I record a session of Rita browser.
 
 ## Usage example:
 
+```
+RiSessionRecorder start.
 
-""To begin""
-aRecorder := RiSessionRecorder new.
-aRecorder start.
+""Use the tool""
 
-""To finish""
-aRecorder stop.
+RiSessionRecorder stop.
+```
 
-""Inspect the .json file output""
-aRecorder fileReference inspect.
 "
 Class {
 	#name : #RiSessionRecorder,
@@ -25,8 +23,41 @@ Class {
 		'writeDeferrer',
 		'alreadyWritten'
 	],
+	#classInstVars : [
+		'soleInstance'
+	],
 	#category : #'Rita-Recorder'
 }
+
+{ #category : #accessing }
+RiSessionRecorder class >> defaultInstance [
+	^ soleInstance ifNil: [ soleInstance := self new ]
+]
+
+{ #category : #accessing }
+RiSessionRecorder class >> hasDefaultInstance [
+	^ soleInstance notNil
+]
+
+{ #category : #accessing }
+RiSessionRecorder class >> resetDefaultInstance [
+	soleInstance := nil
+]
+
+{ #category : #convenience }
+RiSessionRecorder class >> start [
+	self hasDefaultInstance 
+		ifTrue: [ self error: 'You must #stop the #defaultInstance before #start.' ].
+	^ self defaultInstance start
+
+]
+
+{ #category : #convenience }
+RiSessionRecorder class >> stop [
+	self defaultInstance stop; openInOSFileBrowser.
+	self resetDefaultInstance.
+	
+]
 
 { #category : #'handling actions' }
 RiSessionRecorder >> add: aRiUserActionAnnouncement [ 
