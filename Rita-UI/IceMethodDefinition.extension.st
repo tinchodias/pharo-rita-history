@@ -2,7 +2,7 @@ Extension { #name : #IceMethodDefinition }
 
 { #category : #'*Rita-UI' }
 IceMethodDefinition >> linesOfCode [
-	^ sourceCode lines size
+	^ sourceCode lineCount
 ]
 
 { #category : #'*Rita-UI' }
