@@ -2,7 +2,7 @@ Extension { #name : #IcePropertyDefinition }
 
 { #category : #'*Rita-UI' }
 IcePropertyDefinition >> ritaAsTextForPRConversation [
-	^ self containerIceDefinition ritaAsTextForPRConversation, ' (', self ritaAsText, ')'
+	^ self ownerIceDefinition ritaAsTextForPRConversation, ' (', self ritaAsText, ')'
 ]
 
 { #category : #'*Rita-UI' }
@@ -12,7 +12,7 @@ IcePropertyDefinition >> ritaAsTextForTree0 [
 
 { #category : #'*Rita-UI' }
 IcePropertyDefinition >> ritaAsTextForTree1 [
-	^ super ritaAsTextForTree1, ' of ', self containerIceDefinition ritaBasicAsText
+	^ super ritaAsTextForTree1, ' of ', self ownerIceDefinition ritaBasicAsText
 ]
 
 { #category : #'*Rita-UI' }
