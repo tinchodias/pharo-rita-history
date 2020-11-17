@@ -22,7 +22,7 @@ echo "| Downloading Pharo with required Iceberg fork |"
 echo " ----------------------------------------------"
 echo ""
 git clone -b rita2 https://github.com/tinchodias/iceberg.git
-./iceberg/scripts/testUpdateIceberg.sh --dev
+./iceberg/scripts/testUpdateIcebergStable.sh --dev
 
 
 echo ""
