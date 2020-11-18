@@ -31,9 +31,7 @@ RiPRDiffPresenter >> refreshOnModelUpdate [
 	modelCopy := model copy
 		add: #blockWhenNodeSelected -> [ :iceNode |
 			self selectIceNode: iceNode ];
-		add: #blockWhenNodeExpandToggle -> [ :iceNode |
-			treeDiffPresenter selectIceNode: iceNode.
-			treeDiffPresenter doToggleExpandOneLevel ];
+		add: #blockWhenNodeExpandToggle -> [ :iceNode | ];
 		add: #blockWhenNodesHighlighted -> [ :iceNodeCollection | ];
 		add: #blockWhenShadowedIceNodesChanged -> [
 			treeDiffPresenter refreshOnCheckedIceNodesChanged ];

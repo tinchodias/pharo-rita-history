@@ -43,6 +43,8 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 		add: #blockWhenNodeSelected -> [ :iceNode |
 			self selectIceNode: iceNode ];
 		add: #blockWhenNodeExpandToggle -> [ :iceNode |
+			"Note this is uni-directional: It delegates from
+			double-click on a box to the tree toggle."
 			treeDiffPresenter selectIceNode: iceNode.
 			treeDiffPresenter doToggleExpandOneLevel ];
 		add: #blockWhenNodesHighlighted -> [ :iceNodeCollection |

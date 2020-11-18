@@ -47,10 +47,7 @@ RiTorchDiffPresenter >> buildCanvas [
 		when: RSMouseClick do: [
 			highlighingController setPrimaryOutlineTo: nil ].
 
-	self flag: #todo. "Hacky: Update help icon"
-	(canvas fixedShapes detect: [ :each | each class = RSLabel ])
-		text: '?'";
-		fontSize: 10."
+	self buildHelpIcon.
 ]
 
 { #category : #'canvas building' }
@@ -112,6 +109,15 @@ RiTorchDiffPresenter >> buildFileStructureAndConnections [
 		canvas add: (renderer shapeForFilesBox: iceNodes) ]
 	
 	
+]
+
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> buildHelpIcon [
+
+	self flag: #todo. "Hacky: Update help icon"
+	(canvas fixedShapes detect: [ :each | each class = RSLabel ])
+		text: '?'";
+		fontSize: 10."
 ]
 
 { #category : #'canvas building' }
