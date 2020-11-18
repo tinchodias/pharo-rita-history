@@ -250,11 +250,11 @@ RiTorchDiffPresenter >> selectIceNode: anIceNode [
 RiTorchDiffPresenter >> zoomingInteraction [
 	"Interaction for zooming."
 
-	| controls |
-	controls := RSCanvasController new.
-	controls configuration
+	| anInteraction |
+	anInteraction := RSCanvasController new.
+	anInteraction configuration
 		useBasicZoom;
-		maxScale: 2.0.
-	^ controls
+		maxScale: 3.0.
+	^ anInteraction
 
 ]
