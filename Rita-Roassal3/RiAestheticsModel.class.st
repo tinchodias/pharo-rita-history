@@ -192,6 +192,11 @@ RiAestheticsModel >> foregroundColor [
 
 { #category : #colors }
 RiAestheticsModel >> foregroundColorFor: iceNode [
+
+	self flag: #todo. "HACK to avoid using blue in classes with a change in definition."
+	(iceNode isEmpty not and: [ iceNode value isModification ]) ifTrue: [ 
+		 ^ self colorForLineNoModification ].
+	
 	^ self foregroundColorMixedWith: (iceNode value accept: iceOperationColorVisitor)
 ]
 
