@@ -61,8 +61,7 @@ RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 
 	"First, add classes (and traits) with expanded parents."
 	classIceNodes := query nodesForBehaviors
-		select: [ :each | each allParentNodes
-			allSatisfy: [ :each2 | renderer isExpanded: each2 ] ].
+		select: [ :each | renderer areAllParentsExpanded: each ].
 	classShapes := classIceNodes collect: [ :each | renderer shapeForClass: each ].
 
 	self rootModel connectHierarchies ifTrue: [
@@ -79,11 +78,10 @@ RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 
 	"Add method extensions with expanded parents"
 	canvas addAll: (query nodesForMethodExtensions
-		select: [ :each | each allParentNodes
-			allSatisfy: [ :each2 | renderer isExpanded: each2 ] ]
+		select: [ :each | renderer areAllParentsExpanded: each ]
 		thenCollect: [ :each | renderer shapeForClass: each ]).
 
-	"Add packages"
+	"Add packages (only if those collapsed)"
 	packageShapes := query nodesForPackages
 		select: [ :each | (renderer isExpanded: each) not ]
 		thenCollect: [ :each | renderer shapeForPackage: each ].
@@ -108,8 +106,7 @@ RiTorchDiffPresenter >> buildFileStructureAndConnections [
 	query := model at: #diffQuery.
 
 	iceNodes := query nodesForFiles
-		select: [ :each | each allParentNodes
-			allSatisfy: [ :each2 | renderer isExpanded: each2 ] ].
+		select: [ :each | renderer areAllParentsExpanded: each ].
 
 	iceNodes ifNotEmpty: [
 		canvas add: (renderer shapeForFilesBox: iceNodes) ]

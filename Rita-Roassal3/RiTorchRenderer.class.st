@@ -46,6 +46,12 @@ RiTorchRenderer >> applyVLayoutOn: shapes [
 	self applyMLayoutOn: shapes
 ]
 
+{ #category : #testing }
+RiTorchRenderer >> areAllParentsExpanded: iceNode [
+
+	^ iceNode allParentNodes allSatisfy: [ :each | self isExpanded: each ]
+]
+
 { #category : #private }
 RiTorchRenderer >> blockForMouseClickOnIceNode [
 	^ [ :clickEvent | (model at: #blockWhenNodeSelected) value: clickEvent shape model ]
