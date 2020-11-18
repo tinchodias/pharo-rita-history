@@ -40,7 +40,7 @@ RiDetailedPopupHackyVisitor >> visitMethodNode: anIceMethodDefinition [
 { #category : #visiting }
 RiDetailedPopupHackyVisitor >> visitPackage: anIcePackageDefinition [
 
-	^ #shapeForPackage:
+	^ #shapeForContentsOfCollapsedPackage:
 ]
 
 { #category : #visiting }

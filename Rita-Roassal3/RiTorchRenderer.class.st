@@ -199,6 +199,7 @@ RiTorchRenderer >> popupFor: iceNode [
 RiTorchRenderer >> popupForCollapsedNode [
 
 	^ RSMorphicPopup new
+		gapFromPointer: aesthetics widthForMethod asPoint;
 		morphBuilder: [ :iceNode |
 			| selector popupContent |
 			selector := iceNode value definition accept: RiDetailedPopupHackyVisitor new.
@@ -236,9 +237,18 @@ RiTorchRenderer >> popupForCollapsedNode [
 { #category : #'popup building' }
 RiTorchRenderer >> popupForExpandedNode [
 	^ RSMorphicPopup new
+		gapFromPointer: aesthetics widthForMethod asPoint;
 		morphBuilder: [ :iceNode |
 			self announceAction: #torchPopup iceNode: iceNode.
-			self popupDiffMorphFor: iceNode ];
+			
+			self flag: #todo.
+			iceNode value isNoModification
+				ifTrue: [
+					Morph new extent: 0 asPoint; color: Color transparent; yourself 
+					"aesthetics popupNoModificationMorphFor: iceNode" ]
+				ifFalse: [ self popupDiffMorphFor: iceNode ].
+
+			 ];
 		yourself
 ]
 
@@ -338,6 +348,25 @@ RiTorchRenderer >> shapeForContentsOfCollapsedClass: iceNode [
 ]
 
 { #category : #'shape building' }
+RiTorchRenderer >> shapeForContentsOfCollapsedPackage: iceNode [
+	
+	| shapes |
+	shapes := iceNode children collect: [ :each | 
+		(self
+			configuredWithInteractions: (self shapeForTinyBox: each)
+			model: each)
+			border: aesthetics innerBorder;
+			yourself ].
+	self applyVLayoutOn: shapes.
+
+	^ RSComposite new
+		shapes: shapes;
+		padding: aesthetics classRowMargin;
+		yourself
+
+]
+
+{ #category : #'shape building' }
 RiTorchRenderer >> shapeForFiles: iceNodes [
 	
 	| shapes |
@@ -406,6 +435,7 @@ RiTorchRenderer >> shapeForMethodInExpandedMode: iceNode [
 
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForPackage: iceNode [
+
 	| outerBox aGroup h |
 	aGroup := {
 		self titleFor: iceNode.
@@ -417,6 +447,11 @@ RiTorchRenderer >> shapeForPackage: iceNode [
 	^ self configuredAsDraggable: (self
 		configuredWithInteractions: aGroup asShape
 		model: iceNode)
+
+"	alternative/experimental: 
+	^ self
+		  shapeForTitledBox: iceNode
+		  shapes: { self shapeForContentsOfCollapsedPackage: iceNode }"
 ]
 
 { #category : #'shape building' }

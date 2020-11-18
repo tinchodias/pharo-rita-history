@@ -412,19 +412,46 @@ RiAestheticsModel >> pathMorphWith: iceNode [
 { #category : #'diff morph creation' }
 RiAestheticsModel >> popupDiffMorphFor: iceNode [
 
-	| topText font |
+	| font diffMorph |
 	font := LogicalFont 
 		familyName: StandardFonts codeFont familyName
 		pointSize: 7.
+	diffMorph := (self diffMorphFor2: iceNode)
+		font: font;
+		hScrollbarShowNever;
+		vScrollbarShowNever;
+		yourself.
+
+	^ (self popupMorphFor: iceNode wrapping: diffMorph)
+			extent: 500 @ (diffMorph textArea height min: 400);
+			yourself
+]
+
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> popupMorphFor: iceNode wrapping: aMorph [
+
+	| topText |
 	topText := iceNode value definition ritaAsText.
 	topText := topText asText allBold.
 	^ (self columnMorphWithAll: {
 			topText asMorph.
-			(self diffMorphFor2: iceNode)
-				font: font;
-				yourself
+			aMorph
 		})
-		extent: 500@250;
+		yourself
+]
+
+{ #category : #'diff morph creation' }
+RiAestheticsModel >> popupNoModificationMorphFor: iceNode [
+
+	| messageMorph |
+	messageMorph := 
+		('<1p> change(s) inside' expandMacrosWith: iceNode children size) asMorph
+"			backgroundColor: self currentTheme backgroundColor;"
+			yourself.
+	^ (self
+		  popupMorphFor: iceNode
+		  wrapping: messageMorph)
+		extent: 300@50;
 		yourself
 ]
 
