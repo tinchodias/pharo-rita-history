@@ -99,6 +99,30 @@ RiHighlightingController >> addSecondaryOutlineTo: aRSShape [
 ]
 
 { #category : #private }
+RiHighlightingController >> addTempraryOutlineTo: aRSShape border: aRSBorder [ 
+
+	| newOutline |
+	newOutline := RSBox new
+		model: aRSShape;
+		extent: aRSShape extent + aesthetics outlineSize;
+		position: aRSShape position;
+		border: aRSBorder;
+		noPaint;
+		yourself.
+
+	"Follow any movement of the target shape"
+	aRSShape announcer weak
+		when: RSPositionChangedEvent
+		send: #ritaUpdatePositionFromModelShape
+		to: newOutline.
+
+	aRSShape parent add: newOutline.
+	newOutline pushBack.
+
+	^ newOutline
+]
+
+{ #category : #private }
 RiHighlightingController >> ensureAddShadowLayerOver: aRSShape [
 	shadowByIceNode
 		at: aRSShape model
@@ -202,4 +226,30 @@ RiHighlightingController >> setShadowedIceNodes: iceNodes [
 	shadowByIceNode valuesDo: [ :each | each remove ].
 	self resetShadowByIceNode.
 	self ensureAddShadowLayerOverAll: iceNodes.
+]
+
+{ #category : #public }
+RiHighlightingController >> setTempraryOutlineToAll: aCollection [ 
+
+	| border outlines |
+	border := RSBorder new 
+		joinMiter;
+		color: aesthetics temporaryOutlineColor;
+		width: aesthetics outlineSize * 2;
+		yourself.
+
+	self flag: #todo. "Why I had to check for nil?"
+	outlines := aCollection 
+		select: [ :each |
+			each parent notNil ] 
+		thenCollect: [ :each |
+			self addTempraryOutlineTo: each border: border ].
+
+	(canvas newAnimation
+		duration: 1.5 seconds;
+		from: 1.0; to: 0.0;
+		onStepDo: [ :t |
+			border color: (aesthetics temporaryOutlineColor alpha: t) ])
+		when: RSAnimationEndEvent
+			do: [ outlines do: #remove ].
 ]

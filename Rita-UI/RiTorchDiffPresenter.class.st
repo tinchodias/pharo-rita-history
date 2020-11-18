@@ -8,7 +8,8 @@ Class {
 		'highlighingController',
 		'canvas',
 		'renderer',
-		'showPackagesButton'
+		'showPackagesButton',
+		'expandedIceNodes'
 	],
 	#category : #'Rita-UI-Spec2-Diff'
 }
@@ -48,6 +49,9 @@ RiTorchDiffPresenter >> buildCanvas [
 			highlighingController setPrimaryOutlineTo: nil ].
 
 	self buildHelpIcon.
+	
+	self highlightChildrenOfExpandedNodes.
+
 ]
 
 { #category : #'canvas building' }
@@ -140,6 +144,31 @@ RiTorchDiffPresenter >> ensureRemoveShadowLayerFromAll: iceNodeCollection [
 	highlighingController ifNil: [ ^ self ].
 	highlighingController ensureRemoveShadowLayerFromAll: iceNodeCollection
 
+]
+
+{ #category : #'canvas building' }
+RiTorchDiffPresenter >> highlightChildrenOfExpandedNodes [
+
+	| previousExpandedIceNodes newIceNodes |
+	previousExpandedIceNodes := expandedIceNodes.
+
+	expandedIceNodes := (model at: #expandedIceNodes) copy.
+
+	"First time, escape."
+	previousExpandedIceNodes ifNil: [ ^ self ].
+	
+	newIceNodes := Set new
+		"Expanded"
+		addAll: (expandedIceNodes difference: previousExpandedIceNodes);
+		"Collapsed"
+		addAll: (previousExpandedIceNodes difference: expandedIceNodes);
+		yourself.
+
+	"Packages are removed and classes are added at canvas level"
+	newIceNodes addAll: (newIceNodes flatCollect: #children).
+
+	highlighingController
+		setTempraryOutlineToAll: (canvas shapesFromModels: newIceNodes).
 ]
 
 { #category : #accessing }

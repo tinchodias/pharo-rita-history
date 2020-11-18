@@ -561,6 +561,12 @@ RiAestheticsModel >> shapeForIcon: aForm [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+RiAestheticsModel >> temporaryOutlineColor [
+	
+	^ Color yellow
+]
+
 { #category : #accessing }
 RiAestheticsModel >> tinyBoxBorder [
 	^ tinyBoxBorder
