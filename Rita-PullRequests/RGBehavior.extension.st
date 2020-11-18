@@ -18,10 +18,3 @@ RGBehavior >> visibleMethods [
 
 	^ self methods
 ]
-
-{ #category : #'*Rita-PullRequests' }
-RGBehavior >> withAllSuperAndSubclasses [
-	"Answer the receiver's class hierarchy"
-
-	^self allSuperclasses, self withAllSubclasses
-]
