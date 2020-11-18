@@ -159,7 +159,7 @@ RiTorchRenderer >> initializeWithModel: aModel highlighingController: aHighlighi
 	modelDescriptor := RiTorchModelDescriptor new
 ]
 
-{ #category : #private }
+{ #category : #testing }
 RiTorchRenderer >> isExpanded: iceNode [
 	^  (model at: #expandedIceNodes) includes: iceNode
 ]
@@ -423,7 +423,9 @@ RiTorchRenderer >> shapeForTinyBox: iceNode [
 
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForTitledBox: iceNode shapes: shapesArray [
+
 	| outerBox title titleBox aGroup |
+
 	"Do some magic to adjust title on top-center"
 	aGroup := self groupFor: shapesArray.
 	title := self titleFor: iceNode.
@@ -438,8 +440,8 @@ RiTorchRenderer >> shapeForTitledBox: iceNode shapes: shapesArray [
 	aGroup addLast: (outerBox := self classBoxShapeFor: iceNode).
 	self adjustBox: outerBox on: aGroup.
 	titleBox
-		position: outerBox position x @ (title position y);
-		extent: (outerBox width @ (title height)).
+		position: outerBox position x @ title position y;
+		extent: outerBox width @ title height.
 
 	^ self 
 		configuredWithInteractions: aGroup asShape
