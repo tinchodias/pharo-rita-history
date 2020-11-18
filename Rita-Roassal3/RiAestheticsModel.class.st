@@ -566,6 +566,19 @@ RiAestheticsModel >> shapeForIcon: aForm [
 		yourself
 ]
 
+{ #category : #'shape building' }
+RiAestheticsModel >> shapeForMethodStereotypeLabeled: aString [
+
+	^ RiIconGenerator new
+		extent: self widthForMethod asPoint;
+		labelScale: 0.08;
+		addFilled: RSShapeFactory box
+			color: self foregroundColor;
+		addLabel: aString
+			color: self backgroundColor;
+		newRSComposite
+]
+
 { #category : #'as yet unclassified' }
 RiAestheticsModel >> temporaryOutlineColor [
 	

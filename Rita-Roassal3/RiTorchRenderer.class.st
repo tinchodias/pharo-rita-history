@@ -426,11 +426,27 @@ RiTorchRenderer >> shapeForMethod: iceNode [
 
 { #category : #'shape building' }
 RiTorchRenderer >> shapeForMethodInExpandedMode: iceNode [
-	| shape |
-	shape := (iceNode accept: methodShapeCreatorVisitor)
-		border: (aesthetics innerBorderFor: iceNode);
-		yourself.
-	^ self configuredWithInteractions: shape model: iceNode
+
+	| aGroup sourceBox composite |
+	aGroup := OrderedCollection new asGroup. 
+	
+	iceNode value definition classIsMeta ifTrue: [
+		aGroup add: (aesthetics shapeForMethodStereotypeLabeled: 'C') ].
+	iceNode value definition isUnitTest ifTrue: [
+		aGroup add: (aesthetics shapeForMethodStereotypeLabeled: 'T') ].
+	
+	sourceBox := iceNode accept: methodShapeCreatorVisitor.
+	aGroup add: sourceBox.
+
+	"Distribute vertically"
+	RSVerticalLineLayout new gapSize: 0; on: aGroup.
+
+	composite :=
+		aGroup asShape
+			border: (aesthetics innerBorderFor: iceNode);
+			yourself.
+	
+	^ self configuredWithInteractions: composite model: iceNode
 ]
 
 { #category : #'shape building' }
