@@ -211,7 +211,7 @@ RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: 
 { #category : #initialization }
 RiTorchDiffPresenter >> newSettingsToolBar [
 
-	| connectHierarchiesButton iterateNextButton iterateBackButton |
+	| connectHierarchiesButton iterateNextButton iterateBackButton zoomToFitButton zoomInButton zoomOutButton |
 	spawnButton := (self instantiate: SpToolbarButtonPresenter)
 			label: 'Maximize';
 			icon: (self iconNamed: #smallRemoteOpen);
@@ -219,7 +219,7 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 			yourself.
 	connectHierarchiesButton := self
 		newRootModelToggleButtonFor: #connectHierarchies
-		label: 'Hchy'
+		label: 'Hierarchy'
 		icon: #hierarchy
 		help: 'Whether connect subclasses or leave them free.'.
 	iterateNextButton := (self instantiate: SpToolbarButtonPresenter)
@@ -235,11 +235,37 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 			action: [ (model at: #blockForIterateBack) value ];
 			yourself.
 
+	zoomToFitButton := (self instantiate: SpToolbarButtonPresenter)
+			label: 'Fit Zoom';
+			icon: (self iconNamed: #glamorousZoomToFit);
+			help: 'Zoom canvas to fit camera on all visual objects.';
+			action: [ RSZoomToFitCanvas new animatedZoomToFit: canvas. ];
+			yourself.
+	zoomInButton := (self instantiate: SpToolbarButtonPresenter)
+			label: 'Zoom in';
+			icon: (self iconNamed: #glamorousZoomIn);
+			help: 'Increase zoom (in canvas).';
+			action: [ RSKeyNavigationCanvas new zoomIn: canvas ];
+			yourself.
+	zoomOutButton := (self instantiate: SpToolbarButtonPresenter)
+			label: 'Zoom out';
+			icon: (self iconNamed: #glamorousZoomOut);
+			help: 'Decrease zoom (in canvas).';
+			action: [ RSKeyNavigationCanvas new zoomOut: canvas ];
+			yourself.
+
+.
+
 	^ self newToolbar
+		addItem: spawnButton;
 		addItem: connectHierarchiesButton;
-"		addItemRight: iterateNextButton;
-		addItemRight: iterateBackButton;
-"		addItem: spawnButton;
+
+		addItem: zoomToFitButton;
+		addItem: zoomInButton;
+		addItem: zoomOutButton;
+
+"		addItemRight: iterateNextButton;"
+"		addItemRight: iterateBackButton;"
 		yourself
 ]
 
