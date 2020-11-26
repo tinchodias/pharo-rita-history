@@ -8,7 +8,6 @@ Class {
 		'highlighingController',
 		'canvas',
 		'renderer',
-		'showPackagesButton',
 		'expandedIceNodes'
 	],
 	#category : #'Rita-UI-Spec2-Diff'
@@ -211,7 +210,7 @@ RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: 
 { #category : #initialization }
 RiTorchDiffPresenter >> newSettingsToolBar [
 
-	| connectHierarchiesButton iterateNextButton iterateBackButton zoomToFitButton zoomInButton zoomOutButton expandAllButton |
+	| connectHierarchiesButton iterateNextButton iterateBackButton zoomToFitButton zoomInButton zoomOutButton expandAllButton refreshButton |
 	spawnButton := (self instantiate: SpToolbarButtonPresenter)
 			label: 'Maximize';
 			icon: (self iconNamed: #smallRemoteOpen);
@@ -260,12 +259,22 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 			help: 'Expand all visual objects.';
 			action: [ (model at: #blockWhenNodeExpandAll) value ];
 			yourself.
-.
+
+	refreshButton := (self instantiate: SpToolbarButtonPresenter)
+			label: 'Refresh';
+			icon: (self iconNamed: #glamorousRefresh);
+			help: 'Redraw the canvas.';
+			action: [
+				roassalPresenter refresh.
+				canvas morph resumeAfterDrawError ];
+			yourself.
+
 
 	^ self newToolbar
+		addItem: refreshButton;
 		addItem: spawnButton;
-		addItem: connectHierarchiesButton;
 		addItem: expandAllButton;
+		addItem: connectHierarchiesButton;
 
 		addItemRight: zoomInButton;
 		addItemRight: zoomOutButton;
