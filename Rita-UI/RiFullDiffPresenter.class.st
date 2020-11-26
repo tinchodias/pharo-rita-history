@@ -47,6 +47,11 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 			double-click on a box to the tree toggle."
 			treeDiffPresenter selectIceNode: iceNode.
 			treeDiffPresenter doToggleExpandOneLevel ];
+		add: #blockWhenNodeExpandAll -> [
+			(model at: #iceDiff) tree childrenDo: [:each |
+				treeDiffPresenter selectIceNode: each.
+				treeDiffPresenter doExpandWithAllChildren ].
+			];
 		add: #blockWhenNodesHighlighted -> [ :iceNodeCollection |
 			treeDiffPresenter highlightIceNode: iceNodeCollection.
 			torchDiffPresenter highlightIceNode: iceNodeCollection ];
