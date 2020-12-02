@@ -251,5 +251,5 @@ RiHighlightingController >> setTempraryOutlineToAll: aCollection [
 		onStepDo: [ :t |
 			border color: (aesthetics temporaryOutlineColor alpha: t) ])
 		when: RSAnimationEndEvent
-			do: [ outlines do: #remove ].
+			do: [ UIManager default defer: [ outlines do: #remove ] ].
 ]
