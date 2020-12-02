@@ -526,7 +526,7 @@ RiTorchRenderer >> titleForString: title icon: icon [
 		color: self textColor;
 		scaleBy: 1@1.1
 		yourself).
-	label fontSize: label fontSize * 0.6.
+	label fontSize: label fontSize * 0.9.
 	label text: (RiTextWidthKeeper
 		middleTruncationFor: title
 		font: label font
