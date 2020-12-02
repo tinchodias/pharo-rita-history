@@ -210,7 +210,7 @@ RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: 
 { #category : #initialization }
 RiTorchDiffPresenter >> newSettingsToolBar [
 
-	| connectHierarchiesButton iterateNextButton iterateBackButton zoomToFitButton zoomInButton zoomOutButton expandAllButton refreshButton |
+	| connectHierarchiesButton iterateNextButton iterateBackButton zoomToFitButton zoomInButton zoomOutButton expandAllButton refreshButton collapseAllButton |
 	spawnButton := (self instantiate: SpToolbarButtonPresenter)
 			label: 'Maximize';
 			icon: (self iconNamed: #smallRemoteOpen);
@@ -253,6 +253,12 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 			action: [ RSKeyNavigationCanvas new zoomOut: canvas ];
 			yourself.
 
+	collapseAllButton := (self instantiate: SpToolbarButtonPresenter)
+			label: 'Collapse All';
+			icon: (self iconNamed: #haloDup);
+			help: 'Collapse all visual objects.';
+			action: [ (model at: #blockWhenNodeCollapseAll) value ];
+			yourself.
 	expandAllButton := (self instantiate: SpToolbarButtonPresenter)
 			label: 'Expand All';
 			icon: (self iconNamed: #haloDrag);
@@ -274,15 +280,12 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 		addItem: refreshButton;
 		addItem: spawnButton;
 		addItem: expandAllButton;
+		addItem: collapseAllButton;
 		addItem: connectHierarchiesButton;
 
 		addItemRight: zoomInButton;
 		addItemRight: zoomOutButton;
 		addItemRight: zoomToFitButton;
-		
-
-"		addItemRight: iterateNextButton;"
-"		addItemRight: iterateBackButton;"
 		yourself
 ]
 

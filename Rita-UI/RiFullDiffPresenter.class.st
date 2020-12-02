@@ -50,8 +50,11 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 		add: #blockWhenNodeExpandAll -> [
 			(model at: #iceDiff) tree childrenDo: [:each |
 				treeDiffPresenter selectIceNode: each.
-				treeDiffPresenter doExpandWithAllChildren ].
-			];
+				treeDiffPresenter doExpandWithAllChildren ] ];
+		add: #blockWhenNodeCollapseAll -> [
+			(model at: #iceDiff) tree childrenDo: [:each |
+				treeDiffPresenter selectIceNode: each.
+				treeDiffPresenter doCollapseWithAllChildren ] ];
 		add: #blockWhenNodesHighlighted -> [ :iceNodeCollection |
 			treeDiffPresenter highlightIceNode: iceNodeCollection.
 			torchDiffPresenter highlightIceNode: iceNodeCollection ];
