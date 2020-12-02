@@ -41,11 +41,11 @@ RiRootPresenter class >> taskbarIconName [
 RiRootPresenter class >> worldMenuItemOn: aBuilder [
 	<worldMenu>
 
-	(aBuilder item: 'Rita')
+	(aBuilder item: 'Torch')
 		parent: #Tools;
 		action: [ self open ];
 		icon: self taskbarIcon;
-		help: 'Experimental UI to browse Iceberg repositories';
+		help: 'Torch is a tool that helps developers to understand code changes between two commits in a git repository.';
 		order: 0.5
 ]
 
