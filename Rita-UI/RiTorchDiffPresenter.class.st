@@ -69,10 +69,14 @@ RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 			canvas: canvas;
 			shapes: classShapes;
 			connectFrom: [ :node |
-				| superclassName |
-				superclassName := node value definition asMCDefinition superclassName.
-				classIceNodes
-					detect: [:each | each value definition name = superclassName ]
+				node value definition propertyDefinitions
+					detect: [ :each | each name = #superclassName ]
+					ifFound: [ :found |
+						| superclassName |
+						superclassName := found propertyValue.
+						classIceNodes
+							detect: [:each | each value definition name = superclassName ]
+							ifNone: [ nil ] ]
 					ifNone: [ nil ] ] ].
 	canvas addAll: classShapes.
 
