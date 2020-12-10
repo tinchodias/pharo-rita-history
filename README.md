@@ -17,9 +17,9 @@ On Linux and Mac (tested on Debian 10 and Catalina, respectively):
    * `cd build`
    * `./pharo-ui Pharo.image`
 2. When finished do: `cd build` and `./pharo-ui Pharo.image`.
-3. Click on `World Menu -> Tools -> Rita`.
+3. Click on `World Menu -> Tools -> Torch`.
 
-On Windows 10, we didn't make it work yet.
+On Windows 10, the build process was only tested using the git-bash terminal (MINGW64).
 
 ---
 
