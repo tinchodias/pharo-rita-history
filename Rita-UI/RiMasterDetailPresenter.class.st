@@ -27,6 +27,12 @@ RiMasterDetailPresenter >> connectPresenters [
 	self connectMasterToDetail
 ]
 
+{ #category : #accessing }
+RiMasterDetailPresenter >> detailPresenter [
+
+	^ detailPresenter
+]
+
 { #category : #initialization }
 RiMasterDetailPresenter >> detailPresenterClass [
 	^ self subclassResponsibility
@@ -46,6 +52,12 @@ RiMasterDetailPresenter >> initializeMasterPresenter [
 RiMasterDetailPresenter >> initializePresenters [
 	self initializeMasterPresenter.
 	self initializeDetailPresenter
+]
+
+{ #category : #accessing }
+RiMasterDetailPresenter >> masterPresenter [
+
+	^ masterPresenter
 ]
 
 { #category : #initialization }

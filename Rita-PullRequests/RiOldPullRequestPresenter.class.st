@@ -9,9 +9,10 @@ Class {
 
 { #category : #specs }
 RiOldPullRequestPresenter class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
-		add: #table;
-		yourself
+		  add: #table;
+		  yourself
 ]
 
 { #category : #initialization }

@@ -9,12 +9,14 @@ Class {
 
 { #category : #accessing }
 RiPullRequestRowBuilder >> initialize [
+
 	super initialize.
-	datePrinter := RiDatePrinter new.
+	datePrinter := RiDatePrinter new
 ]
 
 { #category : #accessing }
 RiPullRequestRowBuilder >> morphAt: item [
+
 	| row |
 	row := RiRowMorph new.
 	row addItemLeft: (('#{1} {2}' format: {item number. item title}) asMorph hResizing: #spaceFill).
@@ -25,5 +27,6 @@ RiPullRequestRowBuilder >> morphAt: item [
 
 { #category : #accessing }
 RiPullRequestRowBuilder >> timestampStringFor: item [
+
 	^ datePrinter stringFor: item creationDateAndTime asDate
 ]

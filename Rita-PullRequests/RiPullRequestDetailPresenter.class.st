@@ -23,6 +23,7 @@ RiPullRequestDetailPresenter class >> defaultSpec [
 
 { #category : #private }
 RiPullRequestDetailPresenter >> initializeConversationPage [
+
 	conversationPresenter := self instantiate: RiPRConversationPresenter.
 	conversationPage := SpNotebookPage
 		title: 'Conversation'
@@ -33,6 +34,7 @@ RiPullRequestDetailPresenter >> initializeConversationPage [
 
 { #category : #private }
 RiPullRequestDetailPresenter >> initializeDiffPage [
+
 	diffPresenter := self instantiate: RiPRDiffPresenter.
 	diffPage := SpNotebookPage
 		title: 'Diff'
@@ -43,6 +45,7 @@ RiPullRequestDetailPresenter >> initializeDiffPage [
 
 { #category : #initialization }
 RiPullRequestDetailPresenter >> initializePresenters [
+
 	header := self instantiate: RiPRHeaderPresenter.
 	notebook := self newNotebook.
 	self initializeConversationPage.
@@ -51,6 +54,7 @@ RiPullRequestDetailPresenter >> initializePresenters [
 
 { #category : #accessing }
 RiPullRequestDetailPresenter >> refreshOnModelUpdate [
+
 	| iceDiff |
 	header model: model.
 	

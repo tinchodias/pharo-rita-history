@@ -9,20 +9,24 @@ Class {
 
 { #category : #accessing }
 ZuTheme class >> current [
+
 	^ currentInstance ifNil: [ currentInstance := self new ]
 ]
 
 { #category : #accessing }
 ZuTheme >> cellBackgroundColor [
+
 	^ Color orange alpha: 0.25
 ]
 
 { #category : #accessing }
 ZuTheme >> changeIconSelector [
+
 	^ #diff
 ]
 
 { #category : #accessing }
 ZuTheme >> conversationIconSelector [
+
 	^ #announcement
 ]

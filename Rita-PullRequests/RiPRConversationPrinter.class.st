@@ -11,13 +11,15 @@ Class {
 
 { #category : #specs }
 RiPRConversationPrinter class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
-		add: #textPresenter;
-		yourself
+		  add: #textPresenter;
+		  yourself
 ]
 
 { #category : #initialization }
 RiPRConversationPrinter >> headerLineFor: aPRComment [
+
 	| timestamp text timestampHumanReadable username avatarUrl htmlUrl result |
 	timestamp := aPRComment creationDateAndTime.
 	timestampHumanReadable := printer stringFor: timestamp.
@@ -70,17 +72,20 @@ RiPRConversationPrinter >> hunkTextForMapping: mapping [
 
 { #category : #initialization }
 RiPRConversationPrinter >> initialize [
+
 	super initialize.
 	printer := RiDateAndTimePrinter new
 ]
 
 { #category : #accessing }
 RiPRConversationPrinter >> item: anObject [
+
 	item := anObject
 ]
 
 { #category : #accessing }
 RiPRConversationPrinter >> linkBlock: anObject [
+
 	linkBlock := anObject
 ]
 
@@ -94,13 +99,14 @@ RiPRConversationPrinter >> linkToIceNodePointedBy: mapping [
 
 { #category : #initialization }
 RiPRConversationPrinter >> printAsTextOn: aTextStream [
-	(item comments reject: #isOutdated) do: [ :each |
-		aTextStream
-			nextPutAll: (self textFor: each) ]
+
+	(item comments reject: #isOutdated) do: [ :each | 
+		aTextStream nextPutAll: (self textFor: each) ]
 ]
 
 { #category : #initialization }
 RiPRConversationPrinter >> textFor: aPRComment [
+
 	| result indentCount body |
 	indentCount := 0.
 	result := '' asText.
@@ -117,5 +123,7 @@ RiPRConversationPrinter >> textFor: aPRComment [
 	result append: body.
 	result append: String lf.
 	result append: String lf.
+
 	^ result
+
 ]

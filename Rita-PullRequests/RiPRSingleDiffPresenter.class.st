@@ -140,11 +140,13 @@ TODO: EXTRACT ALL HERE ^^^^
 
 { #category : #private }
 RiPRSingleDiffPresenter >> removeAllConversationSegments [
+
 	segments do: [ :each | each delete ]
 ]
 
 { #category : #initialization }
 RiPRSingleDiffPresenter >> selectIceNode: iceNode [
+
 	super selectIceNode: iceNode.
 
 	iceNode ifNil: [ ^ self ].

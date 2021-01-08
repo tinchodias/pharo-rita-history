@@ -6,6 +6,7 @@ Class {
 
 { #category : #mapping }
 RiFileToDiffMapping >> calculate [
+
 	iceNode := iceDiff tree resolve: file path.
 	iceNodeLineNumber := lineNumber
 ]

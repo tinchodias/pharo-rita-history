@@ -32,6 +32,7 @@ RiPullRequestMasterDetailPresenter >> allConversationItemsOf: aPullRequest iceDi
 
 { #category : #initialization }
 RiPullRequestMasterDetailPresenter >> connectMasterToDetail [
+
 	masterPresenter blockForPRSelected: [ :aPR |
 		| iceDiff conversationItems conversationItemsByIceNode |
 		iceDiff := aPR diffToBaseCommonAncestor.
@@ -63,16 +64,19 @@ RiPullRequestMasterDetailPresenter >> conversationItemsByIceNodeFrom: conversati
 
 { #category : #initialization }
 RiPullRequestMasterDetailPresenter >> detailPresenterClass [
+
 	^ RiPullRequestDetailPresenter
 ]
 
 { #category : #initialization }
 RiPullRequestMasterDetailPresenter >> masterPresenterClass [
+
 	^ RiPullRequestListPresenter
 ]
 
 { #category : #accessing }
 RiPullRequestMasterDetailPresenter >> refreshOnModelUpdate [
+
 	| iceRepo githubRemote jsons prs credentials |
 	githubRemote := model at: #githubRemote.
 	iceRepo := githubRemote localRepository.

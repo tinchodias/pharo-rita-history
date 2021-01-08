@@ -13,36 +13,43 @@ Class {
 }
 
 { #category : #accessing }
-RiDiffMapping >> file: aFileReference [ 
+RiDiffMapping >> file: aFileReference [
+
 	file := aFileReference
 ]
 
 { #category : #accessing }
 RiDiffMapping >> iceComment: anIceComment [
+
 	iceComment := anIceComment
 ]
 
 { #category : #accessing }
-RiDiffMapping >> iceDiff: anIceDiff [ 
+RiDiffMapping >> iceDiff: anIceDiff [
+
 	iceDiff := anIceDiff
 ]
 
 { #category : #accessing }
 RiDiffMapping >> iceNode [
+
 	^ iceNode
 ]
 
 { #category : #accessing }
 RiDiffMapping >> iceNodeLineNumber [
+
 	^ iceNodeLineNumber
 ]
 
 { #category : #accessing }
 RiDiffMapping >> lineNumber [
+
 	^ lineNumber
 ]
 
 { #category : #accessing }
-RiDiffMapping >> lineNumber: anInteger [ 
+RiDiffMapping >> lineNumber: anInteger [
+
 	lineNumber := anInteger
 ]

@@ -10,18 +10,19 @@ Class {
 
 { #category : #specs }
 RiPRDiffPresenter class >> defaultSpec [
+
 	^ SpPanedLayout newHorizontal
-		position: 45 percent;
-		add: #treeDiffPresenter;
-		add: #sourceCodePanel;
-		yourself
+		  position: 45 percent;
+		  add: #treeDiffPresenter;
+		  add: #sourceCodePanel;
+		  yourself
 ]
 
 { #category : #initialization }
 RiPRDiffPresenter >> initializePresenters [
-	treeDiffPresenter := self instantiate: RiPRTreeDiffPresenter.
-	sourceCodePanel := self instantiate: RiPRSingleDiffPresenter.
 
+	treeDiffPresenter := self instantiate: RiPRTreeDiffPresenter.
+	sourceCodePanel := self instantiate: RiPRSingleDiffPresenter
 ]
 
 { #category : #initialization }
@@ -49,6 +50,7 @@ RiPRDiffPresenter >> refreshOnModelUpdate [
 
 { #category : #initialization }
 RiPRDiffPresenter >> selectIceNode: iceNode [
+
 	treeDiffPresenter selectIceNode: iceNode.
 	sourceCodePanel selectIceNode: iceNode
 ]

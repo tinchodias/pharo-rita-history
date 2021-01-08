@@ -21,6 +21,7 @@ RiPullRequestConversationItem class >> withComment: aComment pullRequest: aPullR
 
 { #category : #accessing }
 RiPullRequestConversationItem >> addReply: aPRComment [
+
 "	| repliedComment |
 	repliedComment := comments
 		detect: [ :c | c id = aPRComment repliedId ].
@@ -31,21 +32,25 @@ RiPullRequestConversationItem >> addReply: aPRComment [
 
 { #category : #accessing }
 RiPullRequestConversationItem >> commentIdToReply [
+
 	^ comments first id
 ]
 
 { #category : #accessing }
 RiPullRequestConversationItem >> comments [
+
 	^ comments
 ]
 
 { #category : #testing }
 RiPullRequestConversationItem >> hasMapping [
+
 	^ mapping isNotNil
 ]
 
 { #category : #testing }
-RiPullRequestConversationItem >> includesCommentWithId: anInteger [ 
+RiPullRequestConversationItem >> includesCommentWithId: anInteger [
+
 	^ comments anySatisfy: [ :each | each id = anInteger ]
 ]
 
@@ -75,24 +80,28 @@ RiPullRequestConversationItem >> initializeMapping [
 
 { #category : #initialization }
 RiPullRequestConversationItem >> initializeWithComment: aComment pullRequest: aPullRequest iceDiff: anIceDiff [
+
 	self initialize.
 	comments := OrderedCollection with: aComment.
 	pullRequest := aPullRequest.
 	iceDiff := anIceDiff.
-	self initializeMapping.
+	self initializeMapping
 ]
 
 { #category : #accessing }
 RiPullRequestConversationItem >> mapping [
+
 	^ mapping
 ]
 
 { #category : #accessing }
 RiPullRequestConversationItem >> numberOfComments [
+
 	^ comments size
 ]
 
 { #category : #accessing }
 RiPullRequestConversationItem >> pullRequest [
+
 	^ pullRequest
 ]

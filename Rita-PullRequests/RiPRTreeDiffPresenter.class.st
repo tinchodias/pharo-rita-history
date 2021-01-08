@@ -6,6 +6,7 @@ Class {
 
 { #category : #initialization }
 RiPRTreeDiffPresenter >> iconNameFor: iceNode [
+
 	^ (model at: #conversationItemsByIceNode) 
 		at: iceNode
 		ifPresent: [ :items |
@@ -15,6 +16,7 @@ RiPRTreeDiffPresenter >> iconNameFor: iceNode [
 
 { #category : #initialization }
 RiPRTreeDiffPresenter >> initializePresenters [
+
 	treeTable := self newTreeTable.
 	treeTable
 		children: [ :each | each children ];
@@ -32,6 +34,7 @@ RiPRTreeDiffPresenter >> initializePresenters [
 
 { #category : #initialization }
 RiPRTreeDiffPresenter >> newColumnWithConversationInfo [
+
 	^ self newColumnWithIceNodes 
 		addColumn: (SpImageTableColumn evaluated: [ :iceNode | 
 			self iconNamed: (self iconNameFor: iceNode) ]);
@@ -42,6 +45,7 @@ RiPRTreeDiffPresenter >> newColumnWithConversationInfo [
 
 { #category : #initialization }
 RiPRTreeDiffPresenter >> stringFor: iceNode [
+
 	^ (model at: #conversationItemsByIceNode) 
 		at: iceNode
 		ifPresent: [ :items |

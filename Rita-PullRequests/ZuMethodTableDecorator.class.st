@@ -24,34 +24,41 @@ ZuMethodTableDecorator class >> decorateTableCell: anItemCellMorph of: aDataSour
 
 { #category : #decoration }
 ZuMethodTableDecorator class >> decorationStrategyForClass [
+
 	<classAnnotation>
 	^ ClyTableDecorationStrategy for: ClyClass asCalypsoItemContext
 ]
 
 { #category : #decoration }
 ZuMethodTableDecorator class >> decorationStrategyForMethod [
+
 	<classAnnotation>
 	^ ClyTableDecorationStrategy for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #decoration }
 ZuMethodTableDecorator class >> decorationStrategyForPackage [
+
 	<classAnnotation>
 	^ ClyTableDecorationStrategy for: RPackage asCalypsoItemContext
 ]
 
 { #category : #decoration }
 ZuMethodTableDecorator class >> decorationStrategyForPackageTag [
+
 	<classAnnotation>
-	^ ClyTableDecorationStrategy for: ClyTaggedClassGroup asCalypsoItemContext
+	^ ClyTableDecorationStrategy for:
+		  ClyTaggedClassGroup asCalypsoItemContext
 ]
 
 { #category : #decoration }
 ZuMethodTableDecorator class >> priority [
+
 	^ 9001
 ]
 
 { #category : #testing }
 ZuMethodTableDecorator class >> wantsDecorateTableCellOf: aDataSourceItem [
+
 	^ aDataSourceItem hasProperty: ZuChangeProperty
 ]

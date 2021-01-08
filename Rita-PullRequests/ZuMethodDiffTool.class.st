@@ -20,19 +20,20 @@ ZuMethodDiffTool class >> browserTabActivation [
 
 { #category : #accessing }
 ZuMethodDiffTool class >> shouldBeActivatedInContext: aBrowserContext [
+
 	^ aBrowserContext lastSelectedItem hasProperty: ZuChangeProperty
 ]
 
 { #category : #accessing }
 ZuMethodDiffTool class >> tabOrder [
+
 	^ 100
 ]
 
 { #category : #accessing }
 ZuMethodDiffTool >> activationPriority [
-	^ model isNil
-		ifTrue: [ 0 ]
-		ifFalse: [ self tabOrder ]
+
+	^ model ifNil: [ 0 ] ifNotNil: [ self tabOrder ]
 ]
 
 { #category : #testing }
@@ -62,19 +63,20 @@ ZuMethodDiffTool >> build [
 
 	diffPresenter
 		model: model;
-		selectIceNode: (model at: #selectedIceNode);
-		yourself.
+		selectIceNode: (model at: #selectedIceNode).
 	
 	self addMorph: diffMorph fullFrame: LayoutFrame identity
 ]
 
 { #category : #initialization }
 ZuMethodDiffTool >> defaultIconName [
+
 	^ ZuTheme current changeIconSelector
 ]
 
 { #category : #initialization }
 ZuMethodDiffTool >> defaultTitle [
+
 	^ 'Diff'
 ]
 
@@ -90,19 +92,22 @@ ZuMethodDiffTool >> isSimilarTo: anotherBrowserTool [
 
 { #category : #printing }
 ZuMethodDiffTool >> printContext [
+
 	^ selectedMethod printSystemPath
 ]
 
 { #category : #initialization }
 ZuMethodDiffTool >> resetStateForSnapshot [
+
 	super resetStateForSnapshot.
-	
-	diffPresenter := diffMorph := nil.
+
+	diffPresenter := diffMorph := nil
 	"Needed?"
 ]
 
 { #category : #testing }
 ZuMethodDiffTool >> selectedMethod [
+
 	^ selectedMethod
 ]
 

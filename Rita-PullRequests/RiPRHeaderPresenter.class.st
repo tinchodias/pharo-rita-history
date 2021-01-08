@@ -17,6 +17,7 @@ RiPRHeaderPresenter class >> defaultSpec [
 
 { #category : #initialization }
 RiPRHeaderPresenter >> initializePresenters [
+
 	headerText := self newText
 		beNotEditable;
 		yourself
@@ -24,6 +25,7 @@ RiPRHeaderPresenter >> initializePresenters [
 
 { #category : #accessing }
 RiPRHeaderPresenter >> refreshOnModelUpdate [
+
 	| text pr |
 	pr := model at: #pullRequest.
 	text := Text streamContents: [ :stream |
@@ -39,6 +41,7 @@ RiPRHeaderPresenter >> refreshOnModelUpdate [
 
 { #category : #private }
 RiPRHeaderPresenter >> textForSignature: aLGitSignature role: aString [ 
+
 	^ Text streamContents: [ :stream |
 		stream
 			nextPutAll: aString asText allBold;

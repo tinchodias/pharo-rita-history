@@ -102,25 +102,26 @@ ZuEnvironmentPlugin >> collectMetadataOfPackages: aQueryResult [
 
 { #category : #'method groups' }
 ZuEnvironmentPlugin >> collectMethodGroupProviders [
+
 	^ { ZuChangedMethodGroupProvider new }
 ]
 
 { #category : #'item decoration' }
 ZuEnvironmentPlugin >> decorateBrowserItem: anItem ofClass: aClass [
-	cache at: aClass ifPresent: [ :p |
-		anItem addProperty: p ]
+
+	cache at: aClass ifPresent: [ :p | anItem addProperty: p ]
 ]
 
 { #category : #'item decoration' }
 ZuEnvironmentPlugin >> decorateBrowserItem: anItem ofMethod: aMethod [
-	cache at: aMethod ifPresent: [ :p |
-		anItem addProperty: p ]
+
+	cache at: aMethod ifPresent: [ :p | anItem addProperty: p ]
 ]
 
 { #category : #'item decoration' }
 ZuEnvironmentPlugin >> decorateBrowserItem: anItem ofPackage: aPackage [
-	cache at: aPackage ifPresent: [ :p |
-		anItem addProperty: p ]
+
+	cache at: aPackage ifPresent: [ :p | anItem addProperty: p ]
 ]
 
 { #category : #'item decoration' }
@@ -130,15 +131,15 @@ ZuEnvironmentPlugin >> doesMethodHaveChange: aMethod [
 ]
 
 { #category : #accessing }
-ZuEnvironmentPlugin >> iceNodeFor: aMethod ifPresent: presentBlock ifAbsent: absentBlock [ 
+ZuEnvironmentPlugin >> iceNodeFor: aMethod ifPresent: presentBlock ifAbsent: absentBlock [
 
-	self pullRequestDiff tree allChildrenDo: [ :each |
+	self pullRequestDiff tree allChildrenDo: [ :each | 
 		| def |
 		def := each value definition.
-		(def isMethodDefinition and: [
-		def selector = aMethod selector and: [
-		def classIsMeta = aMethod isMetaSide and: [
-		def className = aMethod origin theNonMetaClass name ] ] ]) 
+		(def isMethodDefinition and: [ 
+			 def selector = aMethod selector and: [ 
+				 def classIsMeta = aMethod isMetaSide and: [ 
+					 def ownerName = aMethod origin theNonMetaClass name ] ] ]) 
 			ifTrue: [ ^ presentBlock cull: each ] ].
 
 	^ absentBlock value
@@ -153,16 +154,27 @@ ZuEnvironmentPlugin >> initialize [
 
 { #category : #accessing }
 ZuEnvironmentPlugin >> pullRequestConversationItems [
+
 	^ pullRequestModel at: #pullRequestConversationItems
 ]
 
 { #category : #accessing }
+ZuEnvironmentPlugin >> pullRequestConversationItemsFor: anIceNode [
+	
+	^ self pullRequestConversationItems select: [ :each |
+		each hasMapping and: [ each mapping iceNode == anIceNode ] ]
+
+]
+
+{ #category : #accessing }
 ZuEnvironmentPlugin >> pullRequestDiff [
+
 	^ pullRequestModel at: #pullRequestDiff
 ]
 
 { #category : #initialization }
-ZuEnvironmentPlugin >> pullRequestModel: aCollection [ 
+ZuEnvironmentPlugin >> pullRequestModel: aCollection [
+
 	pullRequestModel := aCollection
 ]
 

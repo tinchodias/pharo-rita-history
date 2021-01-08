@@ -11,23 +11,27 @@ Class {
 
 { #category : #specs }
 RiPullRequestListPresenter class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
-		add: #listPresenter;
-		yourself
+		  add: #listPresenter;
+		  yourself
 ]
 
 { #category : #actions }
-RiPullRequestListPresenter >> actionCheckoutPR: anIceGitHubPullRequest [ 
+RiPullRequestListPresenter >> actionCheckoutPR: anIceGitHubPullRequest [
+
 	anIceGitHubPullRequest branch checkout
 ]
 
 { #category : #accessing }
 RiPullRequestListPresenter >> blockForPRSelected: aBlockClosure [
+
 	blockForPRSelected := aBlockClosure
 ]
 
 { #category : #initialization }
 RiPullRequestListPresenter >> contextMenuForTable [
+
 	| menu selected |
 	menu := self newMenu.
 	
@@ -102,7 +106,7 @@ RiPullRequestListPresenter >> openBrowserWithDiff: anIceGitHubPullRequest [
 
 	| env detailModel aPlugin |
 	self flag: #todo. "FIX HACK"
-	detailModel := (self owner instVarNamed: 'detailPresenter') model.
+	detailModel := self owner detailPresenter model.
 
 	env := RiCommitBrowseUtility ringEnvironmentFor: (detailModel at: #pullRequestDiff) sourceVersion.
 	
@@ -117,7 +121,8 @@ RiPullRequestListPresenter >> openBrowserWithDiff: anIceGitHubPullRequest [
 ]
 
 { #category : #initialization }
-RiPullRequestListPresenter >> openDiffToBaseOf: aPR [ 
+RiPullRequestListPresenter >> openDiffToBaseOf: aPR [
+
 	| iceDiff |
 	iceDiff := aPR diffToBase.
 	(model at: #blockForSpawn) value: (model copy
@@ -128,7 +133,8 @@ RiPullRequestListPresenter >> openDiffToBaseOf: aPR [
 ]
 
 { #category : #initialization }
-RiPullRequestListPresenter >> openDiffToHeadOf: aPR [ 
+RiPullRequestListPresenter >> openDiffToHeadOf: aPR [
+
 	| iceDiff | 
 	iceDiff := aPR diffToRepositoryHead.
 	(model at: #blockForSpawn) value: (model copy
@@ -139,11 +145,13 @@ RiPullRequestListPresenter >> openDiffToHeadOf: aPR [
 ]
 
 { #category : #initialization }
-RiPullRequestListPresenter >> openInWebBrowser: aPR [ 
+RiPullRequestListPresenter >> openInWebBrowser: aPR [
+
 	WebBrowser openOn: aPR htmlUrl
 ]
 
 { #category : #accessing }
 RiPullRequestListPresenter >> refreshOnModelUpdate [
+
 	listPresenter items: (model at: #pullRequestsToShow)
 ]

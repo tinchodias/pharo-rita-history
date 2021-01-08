@@ -6,7 +6,8 @@ Class {
 
 { #category : #specs }
 RiPRCommentReplyPresenter class >> defaultSpec [
+
 	^ SpPanedLayout newVertical
-		add: #notebook;
-		yourself
+		  add: #notebook;
+		  yourself
 ]

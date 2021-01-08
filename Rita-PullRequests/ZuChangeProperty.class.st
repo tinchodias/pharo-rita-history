@@ -8,13 +8,9 @@ Class {
 	#category : #'Rita-PullRequests-Calypso'
 }
 
-{ #category : #tmp }
-ZuChangeProperty class >> instance [
-	^ self new
-]
-
 { #category : #accessing }
 ZuChangeProperty >> matchingIceNode [
+
 	^ matchingIceNode
 ]
 
@@ -33,7 +29,5 @@ ZuChangeProperty >> plugin: aZuEnvironmentPlugin [
 { #category : #accessing }
 ZuChangeProperty >> pullRequestConversationItems [
 
-	^ plugin pullRequestConversationItems select: [ :each |
-		each hasMapping and: [ each mapping iceNode == matchingIceNode ] ]
-
+	^ plugin pullRequestConversationItemsFor: matchingIceNode
 ]

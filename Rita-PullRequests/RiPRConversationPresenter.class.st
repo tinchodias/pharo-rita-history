@@ -9,13 +9,15 @@ Class {
 
 { #category : #specs }
 RiPRConversationPresenter class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
-		add: #textPresenter;
-		yourself
+		  add: #textPresenter;
+		  yourself
 ]
 
 { #category : #initialization }
 RiPRConversationPresenter >> initializePresenters [
+
 	textPresenter := self newText
 		beNotEditable;
 		yourself.
@@ -23,6 +25,7 @@ RiPRConversationPresenter >> initializePresenters [
 
 { #category : #initialization }
 RiPRConversationPresenter >> refreshOnModelUpdate [
+
 	textPresenter text: self textForAllConversationItems
 ]
 
@@ -34,6 +37,7 @@ RiPRConversationPresenter >> selectIceNodePointedBy: aConversationItem [
 
 { #category : #initialization }
 RiPRConversationPresenter >> textForAllConversationItems [
+
 	^ Text streamContents: [ :stream | 
 		(model at: #pullRequestConversationItems) do: [ :each |
 			RiPRConversationPrinter new

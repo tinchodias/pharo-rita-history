@@ -6,6 +6,7 @@ Class {
 
 { #category : #mapping }
 RiTonelToDiffMapping >> calculate [
+
 	| contents parser mcDefinition |
 	contents := file contents.
 	parser := RiTonelParser on: contents readStream.
