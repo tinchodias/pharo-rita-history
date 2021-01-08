@@ -1,3 +1,9 @@
+"
+I'm a plugin for Calypso, the main entry point for the Rita-PullRequests Calypso extension.
+
+
+
+"
 Class {
 	#name : #ZuEnvironmentPlugin,
 	#superclass : #ClySystemEnvironmentPlugin,

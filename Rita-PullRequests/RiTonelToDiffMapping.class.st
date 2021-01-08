@@ -1,3 +1,6 @@
+"
+I represent a mapping between an IceNode and a GitHub Pull Request comment on a Tonel file.
+"
 Class {
 	#name : #RiTonelToDiffMapping,
 	#superclass : #RiDiffMapping,

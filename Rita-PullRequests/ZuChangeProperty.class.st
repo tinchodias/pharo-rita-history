@@ -1,3 +1,6 @@
+"
+I'm a property for Calypso items. Please refer to my superclass for more information.
+"
 Class {
 	#name : #ZuChangeProperty,
 	#superclass : #ClyProperty,

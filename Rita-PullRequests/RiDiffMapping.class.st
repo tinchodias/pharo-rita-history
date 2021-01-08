@@ -1,3 +1,6 @@
+"
+I represent a mapping between an IceNode and a GitHub Pull Request comment.
+"
 Class {
 	#name : #RiDiffMapping,
 	#superclass : #Object,

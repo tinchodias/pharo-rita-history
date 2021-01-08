@@ -1,3 +1,6 @@
+"
+I represent an aesthetic visual theme for the Rita-PullRequests Calypso extension.
+"
 Class {
 	#name : #ZuTheme,
 	#superclass : #Object,

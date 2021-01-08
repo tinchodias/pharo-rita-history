@@ -1,3 +1,6 @@
+"
+My responsability is two-fold in a Calypso browser: (1) select the methods that have changes, and (2) decorate the Morphs that represent such methods in the Calypso table.
+"
 Class {
 	#name : #ZuChangedMethodQuery,
 	#superclass : #ClyMethodQuery,

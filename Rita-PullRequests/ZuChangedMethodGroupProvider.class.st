@@ -1,3 +1,6 @@
+"
+I'm responsible of creating a method group for Calypso that gathers the methods that have a change.
+"
 Class {
 	#name : #ZuChangedMethodGroupProvider,
 	#superclass : #ClySingleMethodGroupProvider,

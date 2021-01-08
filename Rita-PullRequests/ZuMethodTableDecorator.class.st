@@ -1,3 +1,8 @@
+"
+I am responsible of decorating Calypso table rows/cells.
+
+I define methods as Calypso requires, in class-side. Please refer to my superclass, which has a detailed explanation.
+"
 Class {
 	#name : #ZuMethodTableDecorator,
 	#superclass : #ClyTableDecorator,

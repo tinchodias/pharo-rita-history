@@ -1,3 +1,8 @@
+"
+I'm a Morph that displays a change in Calypso.
+
+Refer to the comment of my superclass to understand more details.
+"
 Class {
 	#name : #ZuMethodDiffTool,
 	#superclass : #ClyBrowserToolMorph,

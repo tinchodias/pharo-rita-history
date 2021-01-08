@@ -1,3 +1,6 @@
+"
+I am a parser for Tonel files that, additionally to the behavior of my superclass, also records the file position (or line number) where the definitions begin andd end.
+"
 Class {
 	#name : #RiTonelParser,
 	#superclass : #TonelParser,
