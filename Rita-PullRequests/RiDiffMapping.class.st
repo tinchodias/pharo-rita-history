@@ -15,6 +15,16 @@ Class {
 	#category : #'Rita-PullRequests-Model'
 }
 
+{ #category : #'instance creation' }
+RiDiffMapping class >> newForFileReference: file [
+
+	^ (file extension = 'st'
+		   ifTrue: [ RiTonelToDiffMapping new ]
+		   ifFalse: [ RiFileToDiffMapping new ])
+		  file: file;
+		  yourself
+]
+
 { #category : #accessing }
 RiDiffMapping >> file: aFileReference [
 
@@ -40,9 +50,19 @@ RiDiffMapping >> iceNode [
 ]
 
 { #category : #accessing }
+RiDiffMapping >> iceNode: anObject [
+	iceNode := anObject
+]
+
+{ #category : #accessing }
 RiDiffMapping >> iceNodeLineNumber [
 
 	^ iceNodeLineNumber
+]
+
+{ #category : #accessing }
+RiDiffMapping >> iceNodeLineNumber: anObject [
+	iceNodeLineNumber := anObject
 ]
 
 { #category : #accessing }

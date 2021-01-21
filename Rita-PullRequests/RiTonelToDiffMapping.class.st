@@ -32,3 +32,20 @@ RiTonelToDiffMapping >> calculate [
 
 	self notYetImplemented
 ]
+
+{ #category : #'as yet unclassified' }
+RiTonelToDiffMapping >> calculateFileLineNumber [
+
+	| contents parser mcDefinition offset |
+	contents := file contents.
+	parser := RiTonelParser on: contents readStream.
+	parser string: file contents.
+	[ parser start ]
+		on: TonelParseError
+		do: [ ^ self notYetImplemented ].
+
+	mcDefinition := iceNode definition asMCDefinition. 
+	offset := (parser startingLineForDefinition: mcDefinition).
+	lineNumber := iceNodeLineNumber + offset.
+
+]

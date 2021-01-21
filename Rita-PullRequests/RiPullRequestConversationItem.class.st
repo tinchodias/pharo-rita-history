@@ -68,10 +68,7 @@ RiPullRequestConversationItem >> initializeMapping [
 	file := commitToResolve fileSystem resolveString: begin path.
 	lineNumber := begin line.
 
-	mapping := (file extension = 'st'
-		ifTrue: [ RiTonelToDiffMapping new ] 
-		ifFalse: [ RiFileToDiffMapping new ])
-			file: file;
+	mapping := (RiDiffMapping newForFileReference: file)
 			lineNumber: lineNumber;
 			iceDiff: iceDiff; 
 			calculate;
@@ -86,6 +83,16 @@ RiPullRequestConversationItem >> initializeWithComment: aComment pullRequest: aP
 	pullRequest := aPullRequest.
 	iceDiff := anIceDiff.
 	self initializeMapping
+]
+
+{ #category : #accessing }
+RiPullRequestConversationItem >> lineNumberInIceNodeDiff [
+	"Answer the line number in the diff, that gathers inserted, removed and matched lines."
+
+	| begin lineAndSideMapping |
+	begin := comments first.
+	lineAndSideMapping := mapping iceNode accept: ZuLineAndSideVisitor new.
+	^ lineAndSideMapping indexOf: { mapping iceNodeLineNumber. begin side }
 ]
 
 { #category : #accessing }

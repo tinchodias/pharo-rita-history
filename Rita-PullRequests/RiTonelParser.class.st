@@ -27,6 +27,13 @@ RiTonelParser >> defRecordingAtLine: anInteger [
 	^ defRecordings detect: [ :each | anInteger between: each second and: each third ]
 ]
 
+{ #category : #'as yet unclassified' }
+RiTonelParser >> defRecordingForDefinition: aMCDefinition [
+
+	^ defRecordings detect: [ :each | 
+		  each fourth description = aMCDefinition description ]
+]
+
 { #category : #accessing }
 RiTonelParser >> defRecordings [
 	^ defRecordings
@@ -99,6 +106,11 @@ RiTonelParser >> recordingAtLine: anInteger [
 { #category : #accessing }
 RiTonelParser >> recordings [
 	^ recordings
+]
+
+{ #category : #'as yet unclassified' }
+RiTonelParser >> startingLineForDefinition: aMCDefinition [
+	^ (self defRecordingForDefinition: aMCDefinition) second
 ]
 
 { #category : #accessing }

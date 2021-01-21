@@ -1,18 +1,8 @@
 Class {
 	#name : #IceGitHubPullRequestComment,
-	#superclass : #Object,
-	#instVars : [
-		'json'
-	],
+	#superclass : #IceGitHubJsonWrapper,
 	#category : #'Rita-PullRequests-Model'
 }
-
-{ #category : #'instance creation' }
-IceGitHubPullRequestComment class >> fromJSON: aDictionary [
-	^ self basicNew
-		initializeWithJSON: aDictionary;
-		yourself
-]
 
 { #category : #accessing }
 IceGitHubPullRequestComment >> author [
@@ -47,12 +37,6 @@ IceGitHubPullRequestComment >> diffHunk [
 { #category : #accessing }
 IceGitHubPullRequestComment >> id [
 	^ json at: #id
-]
-
-{ #category : #initialization }
-IceGitHubPullRequestComment >> initializeWithJSON: aDictionary [
-	json := aDictionary.
-	self initialize
 ]
 
 { #category : #inspecting }

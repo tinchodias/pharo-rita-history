@@ -50,13 +50,7 @@ RiPullRequestListPresenter >> contextMenuForTable [
 
 	menu addItem: [ :item |
 		item
-			name: 'Checkout (in IMAGE)';
-			icon: (self iconNamed: #smallSystemBrowser);
-			action: [ self actionCheckoutPR: selected ] ].
-
-	menu addItem: [ :item |
-		item
-			name: 'Open diff in System Browser';
+			name: 'Open in System Browser';
 			icon: (self iconNamed: #smallSystemBrowser);
 			action: [ self openBrowserWithDiff: selected ] ].
 	
@@ -71,6 +65,13 @@ RiPullRequestListPresenter >> contextMenuForTable [
 			name: 'Open in Web Browser';
 			icon: (self iconNamed: #remote);
 			action: [ self openInWebBrowser: selected ] ].
+
+	menu addItem: [ :item |
+		item
+			name: 'Checkout (in IMAGE)';
+			icon: (self iconNamed: #smallSystemBrowser);
+			action: [ self actionCheckoutPR: selected ] ].
+
 	menu addItem: [ :item | 
 		item
 			name: 'Reload';

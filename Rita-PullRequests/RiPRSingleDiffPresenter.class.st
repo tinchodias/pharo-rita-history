@@ -3,7 +3,8 @@ Class {
 	#superclass : #RiSingleDiffPresenter,
 	#instVars : [
 		'segments',
-		'sideRuler'
+		'sideRuler',
+		'selectedIceNode'
 	],
 	#category : #'Rita-PullRequests-UI'
 }
@@ -15,7 +16,7 @@ RiPRSingleDiffPresenter >> addConversationSegmentFor: aRiPullRequestConversation
 	diffText := diffMorphPresenter morph text.
 	indexInterval := diffText asString 
 		indexCorrespondingToLineNumber: 
-			aRiPullRequestConversationItem mapping iceNodeLineNumber.
+			aRiPullRequestConversationItem lineNumberInIceNodeDiff.
 	label := '{1} comment{2}' format: {
 		aRiPullRequestConversationItem numberOfComments.
 		aRiPullRequestConversationItem numberOfComments > 1 ifTrue: [ 's' ] ifFalse: [ '' ] }.
@@ -31,6 +32,12 @@ RiPRSingleDiffPresenter >> addConversationSegmentFor: aRiPullRequestConversation
 	diffMorphPresenter morph addSegment: newSegment.
 	segments add: newSegment.
 
+]
+
+{ #category : #private }
+RiPRSingleDiffPresenter >> createCommentAtLine: lineIndex [
+
+	self openCreateReviewCommentWindowForLine: lineIndex onRefreshDo: [ "" ]
 ]
 
 { #category : #private }
@@ -84,7 +91,7 @@ RiPRSingleDiffPresenter >> openConversationItemWindowFor: aRiPullRequestConversa
 				yourself)
 				expand: false;
 			add: (self newButton 
-				label: 'Done';
+				label: 'Close window';
 				action: [ content window close ];
 				yourself)
 				expand: false;
@@ -98,6 +105,49 @@ RiPRSingleDiffPresenter >> openConversationItemWindowFor: aRiPullRequestConversa
 		window
 			title: 'Comments';
 			extent: 500@700 ].
+
+]
+
+{ #category : #private }
+RiPRSingleDiffPresenter >> openCreateReviewCommentWindowForLine: anInteger onRefreshDo: refreshBlock [
+
+	| aPresenter replyTextPresenter submitBlock |
+	replyTextPresenter := self newText
+				placeholder: 'Write your review comment here...';
+				yourself.
+
+	submitBlock := [
+		replyTextPresenter text ifEmpty: [ self error: 'Can''t be empty' ].
+		self
+			submitCreateReviewComment: replyTextPresenter text string
+			line: anInteger
+			onSuccess: [ :result |
+				self inform: 'Submit: Done. But please, reload PRs manually.'.
+				(model at: #blockForRefreshPullRequest) value.
+				aPresenter window close.
+				refreshBlock value ]
+			onError: [ :e | self inform: 'Submit: Failure. ', e asString. ] ].
+
+	aPresenter := SpPresenter new 
+		layout: (SpBoxLayout newVertical
+			add: replyTextPresenter;
+			add: (self newButton 
+				label: 'Submit';
+				action: submitBlock;
+				yourself)
+				expand: false;
+			add: (self newButton 
+				label: 'Cancel';
+				action: [ aPresenter window close ];
+				yourself)
+				expand: false;
+			yourself);
+		yourself.
+
+	aPresenter openWithSpec withWindowDo: [ :window |
+		window
+			title: 'Comments';
+			extent: 500@400 ].
 
 ]
 
@@ -117,7 +167,7 @@ TODO: EXTRACT ALL HERE ^^^^
 				yourself.
 
 	submitBlock := [ 
-		replyTextPresenter text ifEmpty: [ self error: 'Cant be empty' ].
+		replyTextPresenter text ifEmpty: [ self error: 'Can''t be empty' ].
 		self
 			submitReply: replyTextPresenter text string
 			for: aRiPullRequestConversationItem
@@ -174,6 +224,25 @@ RiPRSingleDiffPresenter >> selectIceNode: iceNode [
 		at: iceNode
 		ifPresent: [ :items |
 			items do: [ :each | self addConversationSegmentFor: each ] ]
+
+]
+
+{ #category : #private }
+RiPRSingleDiffPresenter >> submitCreateReviewComment: messageString line: anInteger onSuccess: successBlock onError: errorBlock [
+
+	| aMatching |
+	aMatching := IceDiffToGitHubMatching new
+		pullRequest: (model at: #pullRequest);
+		iceDiff: (model at: #pullRequestDiff);
+		iceNode: selectedIceNode;
+		lineNumberInIceDiff: anInteger;
+		calculate;
+		yourself.
+
+	[ 	| result |
+		result := aMatching addReviewComment: messageString.
+		successBlock cull: result
+	] on: Error do: [ :e | errorBlock cull: e ].
 
 ]
 
