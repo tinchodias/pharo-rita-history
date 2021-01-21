@@ -94,7 +94,10 @@ RiTreeDiffPresenter >> doExpandWithAllChildren [
 
 { #category : #'expand/collapse' }
 RiTreeDiffPresenter >> doInitialTreeExpansionOn: aFastTable [
+	
 	| expanded items |
+	model ifNil: [ ^ self ].
+	
 	expanded := model at: #expandedIceNodes.
 	
 	"Initially, all items are collapsed. Iterate from roots to expand those marked in the model."

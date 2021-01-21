@@ -2,7 +2,8 @@ Class {
 	#name : #RiPRSingleDiffPresenter,
 	#superclass : #RiSingleDiffPresenter,
 	#instVars : [
-		'segments'
+		'segments',
+		'sideRuler'
 	],
 	#category : #'Rita-PullRequests-UI'
 }
@@ -36,7 +37,20 @@ RiPRSingleDiffPresenter >> addConversationSegmentFor: aRiPullRequestConversation
 RiPRSingleDiffPresenter >> initialize [
 
 	super initialize.
-	segments := OrderedCollection new
+	segments := OrderedCollection new.
+	sideRuler := ZuRubRuler new
+		hoveredLineIcon: (self iconNamed: #add) dimmed;
+		clickActionBlock: [ :lineIndex | self createCommentAtLine: lineIndex ];
+		yourself
+]
+
+{ #category : #initialization }
+RiPRSingleDiffPresenter >> newRubTextMorph [
+
+	^ super newRubTextMorph
+		  withoutAdornment;
+		  withRuler: sideRuler;
+		  yourself
 ]
 
 { #category : #private }
@@ -149,12 +163,12 @@ RiPRSingleDiffPresenter >> selectIceNode: iceNode [
 
 	super selectIceNode: iceNode.
 
+	selectedIceNode := iceNode.
+
 	iceNode ifNil: [ ^ self ].
 
 	self removeAllConversationSegments.
-	diffMorphPresenter morph
-		withoutTextSegmentIcons;
-		withTextSegmentIcons.
+	sideRuler changed. "Trigger draw:"
 
 	 (model at: #conversationItemsByIceNode) 
 		at: iceNode
