@@ -141,6 +141,7 @@ RiRootPresenter >> openPage: anObject title: aString ifAbsentBuildWith: aBlock [
 	
 	page := aBlock value.
 	page title: aString.
+	page beCloseable.
 	notebook
 		addPage: page;
 		selectPage: page
