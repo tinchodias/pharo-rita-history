@@ -16,6 +16,19 @@ IceGitHubPullRequest >> baseCommonAncestorCommit [
 ]
 
 { #category : #'*Rita-PullRequests' }
+IceGitHubPullRequest >> changedFiles [
+
+	| jsons |
+	jsons := (IceGitHubAPI new
+		   getListPullRequestFiles: self owner
+		   project: self projectName
+		   number: self number) all.
+		
+	^ jsons collect: [ :each |
+		IceGitHubPullRequestChangedFile fromJSON: each ]
+]
+
+{ #category : #'*Rita-PullRequests' }
 IceGitHubPullRequest >> comments [
 	| jsons |
 	jsons := (IceGitHubAPI new
