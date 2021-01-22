@@ -34,3 +34,9 @@ ZuChangeProperty >> pullRequestConversationItems [
 
 	^ plugin pullRequestConversationItemsFor: matchingIceNode
 ]
+
+{ #category : #accessing }
+ZuChangeProperty >> pullRequestConversationItemsConsideringChildren [
+
+	^ plugin pullRequestConversationItemsConsideringChildrenFor: matchingIceNode
+]

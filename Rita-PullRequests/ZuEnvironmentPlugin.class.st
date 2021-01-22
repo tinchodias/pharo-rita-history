@@ -165,6 +165,15 @@ ZuEnvironmentPlugin >> pullRequestConversationItems [
 ]
 
 { #category : #accessing }
+ZuEnvironmentPlugin >> pullRequestConversationItemsConsideringChildrenFor: anIceNode [
+
+	self flag: #todo. "Why had to use key?"
+	^ self pullRequestConversationItems select: [ :each |
+		each hasMapping and: [ anIceNode anySatisfy: [:any | any key = each mapping iceNode key ] ] ]
+
+]
+
+{ #category : #accessing }
 ZuEnvironmentPlugin >> pullRequestConversationItemsFor: anIceNode [
 	
 	^ self pullRequestConversationItems select: [ :each |

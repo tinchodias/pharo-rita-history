@@ -11,20 +11,19 @@ Class {
 
 { #category : #decoration }
 ZuMethodTableDecorator class >> decorateTableCell: anItemCellMorph of: aDataSourceItem [
-"	anItemCellMorph label
-		clyAddEmphasis: TextEmphasis bold;
-		color: (anItemCellMorph label color contrastingColorAdjustment) contrastingColorAdjustment.
-"	
-	(anItemCellMorph addExtraIcon: ZuTheme current changeIconSelector)
-		setBalloonText: 'This item has changed.'.
-
-	(aDataSourceItem getProperty: ZuChangeProperty) pullRequestConversationItems
-		ifNotEmpty: [ :ics |
-			(anItemCellMorph addExtraIcon: ZuTheme current conversationIconSelector)
-				setBalloonText: 'This item has conversations.'].
 
 	anItemCellMorph color: ZuTheme current cellBackgroundColor.
 
+	(anItemCellMorph addExtraIcon: ZuTheme current changeIconSelector)
+		setBalloonText: 'This item has changed.'.
+
+	(aDataSourceItem getProperty: ZuChangeProperty) pullRequestConversationItemsConsideringChildren
+		ifNotEmpty: [ :items |
+			| toolMorph |
+			toolMorph := self toolMorphFor: items. 
+			toolMorph setBalloonText: ('This item has {1} conversations.' format: { items size }).
+			anItemCellMorph addExtraTool: toolMorph.
+		]
 ]
 
 { #category : #decoration }
@@ -60,6 +59,18 @@ ZuMethodTableDecorator class >> decorationStrategyForPackageTag [
 ZuMethodTableDecorator class >> priority [
 
 	^ 9001
+]
+
+{ #category : #decoration }
+ZuMethodTableDecorator class >> toolMorphFor: items [
+	
+	| morphFactory |
+	morphFactory := EpMorphFactory default.
+	
+	^ morphFactory rowWithAll: {
+		ZuTheme current conversationIcon asMorph.
+		('x', items size asString) asMorph.
+	}
 ]
 
 { #category : #testing }

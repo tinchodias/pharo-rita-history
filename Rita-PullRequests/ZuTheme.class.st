@@ -19,13 +19,19 @@ ZuTheme class >> current [
 { #category : #accessing }
 ZuTheme >> cellBackgroundColor [
 
-	^ Color orange alpha: 0.25
+	^ Smalltalk ui theme caretColor alpha: 0.07
 ]
 
 { #category : #accessing }
 ZuTheme >> changeIconSelector [
 
-	^ #diff
+	^ #paint "#glamorousLargeGrayCircleEmphasized" "#diff"
+]
+
+{ #category : #accessing }
+ZuTheme >> conversationIcon [
+
+	^ self iconNamed: self conversationIconSelector
 ]
 
 { #category : #accessing }
