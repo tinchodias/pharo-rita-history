@@ -20,7 +20,11 @@ RiRepositoryListPresenter class >> defaultSpec [
 
 { #category : #commands }
 RiRepositoryListPresenter >> actionFetch [
-	table selection selectedItem fetch.
+
+	table selection selectedItem
+		fetch;
+		refresh.
+	self flag: #todo. "should update the model, which should announce changed and trigger the next send..."
 	self refreshOnModelUpdate
 ]
 
