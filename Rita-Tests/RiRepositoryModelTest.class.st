@@ -79,33 +79,6 @@ RiRepositoryModelTest >> testAllChildren [
 ]
 
 { #category : #tests }
-RiRepositoryModelTest >> testEnsureProcessed [
-
-	repository := RiRepository iceRepository: self repository.
-	repository ensureProcessed.
-	self assert: repository elements size equals: 0.
-	self assert: repository elementMarks size equals: 0.
-
-	self commitWithMessage: '1'.
-
-	"It is not automatically refreshed:"
-	self assert: repository elements size equals: 0.
-	self assert: repository elementMarks size equals: 0.
-
-	"Refresh:"
-	repository reset; ensureProcessed.
-	self assert: repository elements size equals: 1.
-	self assert: repository elementMarks size equals: 1. "master"
-
-	"Same applies to tags, they need a refresh:"
-	self createTag: 'A'.
-	self assert: repository elementMarks size equals: 1.
-	repository reset; ensureProcessed.
-	self assert: repository elementMarks size equals: 2. "master, b"
-
-]
-
-{ #category : #tests }
 RiRepositoryModelTest >> testMerge [
 	"
 	input:
@@ -143,6 +116,33 @@ RiRepositoryModelTest >> testMerge [
 	self assert: e1 children equals: { e3. e2 }.
 	self assert: e2 children equals: { e3 }.
 	self assert: e3 children isEmpty.
+
+]
+
+{ #category : #tests }
+RiRepositoryModelTest >> testRefresh [
+
+	repository := RiRepository iceRepository: self repository.
+	repository refresh.
+	self assert: repository elements size equals: 0.
+	self assert: repository elementMarks size equals: 0.
+
+	self commitWithMessage: '1'.
+
+	"It is not automatically refreshed:"
+	self assert: repository elements size equals: 0.
+	self assert: repository elementMarks size equals: 0.
+
+	"Refresh:"
+	repository refresh.
+	self assert: repository elements size equals: 1.
+	self assert: repository elementMarks size equals: 1. "master"
+
+	"Same applies to tags, they need a refresh:"
+	self createTag: 'A'.
+	self assert: repository elementMarks size equals: 1.
+	repository refresh.
+	self assert: repository elementMarks size equals: 2. "master, b"
 
 ]
 

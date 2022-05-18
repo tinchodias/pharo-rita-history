@@ -202,7 +202,7 @@ RiRepository >> processMark: anIceCommitish [
 
 ]
 
-{ #category : #processing }
+{ #category : #private }
 RiRepository >> processTips [
 
 	| branches |
@@ -238,6 +238,11 @@ RiRepository >> processWorkdirMark [
 
 	aRiCommit addMark: (RiWorkdirMark new element: aRiCommit; yourself).
 
+]
+
+{ #category : #processing }
+RiRepository >> refresh [
+	self reset; process
 ]
 
 { #category : #processing }
