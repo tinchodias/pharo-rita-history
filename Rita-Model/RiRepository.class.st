@@ -21,7 +21,7 @@ RiRepository class >> iceRepository: anIceLibgitRepository [
 		yourself
 ]
 
-{ #category : #processing }
+{ #category : #accessing }
 RiRepository >> commitAtSha: hexString [
 	^ self commits detect: [ :each | each id = hexString ]
 ]
@@ -124,7 +124,7 @@ RiRepository >> process [
 
 ]
 
-{ #category : #processing }
+{ #category : #private }
 RiRepository >> processCommitGraph [
 	"Connect all collected RiCommits in terms of child/parent."
 
@@ -137,13 +137,15 @@ RiRepository >> processCommitGraph [
 				each addAncestor: ancestor ] ]
 ]
 
-{ #category : #processing }
+{ #category : #private }
 RiRepository >> processCommits [
 	"Determine the commits in the proper order via Libgit's revwalk."
 
 	elementMarks := OrderedCollection new.
 	elements := OrderedCollection new.
 	elementByCommit := Dictionary new.
+
+	iceRepository head isUnbornBranch ifTrue: [ ^self ].
 
 	self newCommitWalk commitsDo: [:each |
 		| newCommit |
@@ -158,6 +160,7 @@ RiRepository >> processImageMark [
 
 	| aRiCommit |
 	iceRepository hasLoadedPackages ifFalse: [ ^self ].
+
 	aRiCommit := elementByCommit at: iceRepository workingCopy referenceCommit.
 	
 	iceRepository workingCopy isModified
@@ -203,17 +206,22 @@ RiRepository >> processMark: anIceCommitish [
 RiRepository >> processTips [
 
 	| branches |
-	"Note: /HEAD branches were problematic. And they are unneeded... right?"
-	branches := iceRepository allBranches
-		reject: [ :each | each name endsWith: '/HEAD' ].
 
-	tips := branches , iceRepository tags
+	"Note: /HEAD branches were problematic.
+	... And they are unneeded... right?"
+	branches := iceRepository allBranches reject: [ :each |
+			each isUnbornBranch or: [
+			each name endsWith: '/HEAD' ] ].
+
+	tips := branches, iceRepository tags
 ]
 
 { #category : #accessing }
 RiRepository >> processWorkdirMark [
 
 	| aRiCommit diff |
+	iceRepository headCommit isNoCommit ifTrue: [ ^self ].
+
 	aRiCommit := elementByCommit at: iceRepository headCommit.
 	
 	diff := (LGitDiff of: iceRepository repositoryHandle)
@@ -233,6 +241,11 @@ RiRepository >> processWorkdirMark [
 ]
 
 { #category : #processing }
+RiRepository >> reset [
+	elementByCommit := elementMarks := elements := tips := nil
+]
+
+{ #category : #accessing }
 RiRepository >> selectLibgitCommitsWithChangesAt: aPath [
 	"Based on IceLog>>#collectCommitsFor:path:"
 
