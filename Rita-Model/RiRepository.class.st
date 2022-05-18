@@ -145,7 +145,6 @@ RiRepository >> processCommits [
 	elements := OrderedCollection new.
 	elementByCommit := Dictionary new.
 
-	self processTips.
 	self newCommitWalk commitsDo: [:each |
 		| newCommit |
 		newCommit := RiCommit repository: self iceCommit: each.
