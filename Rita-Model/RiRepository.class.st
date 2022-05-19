@@ -9,7 +9,8 @@ Class {
 		'elementMarks',
 		'elements',
 		'iceRepository',
-		'tips'
+		'iceBranches',
+		'iceTags'
 	],
 	#category : #'Rita-Model-Core'
 }
@@ -78,7 +79,7 @@ RiRepository >> name [
 ]
 
 { #category : #private }
-RiRepository >> newCommitWalk [
+RiRepository >> newIceCommitWalk [
 	"Answer a IceLibgitCommitWalk. Requires that #processTips was executed before."
 
 	| walk |
@@ -86,7 +87,9 @@ RiRepository >> newCommitWalk [
 	walk revwalk
 		beSortedByCommitTime;
 		beSortedParentsBeforeChildren.
-	tips collect: #commitId thenDo: [ :each | walk fromLGitId: each ].
+
+	(iceBranches, iceTags) do: [ :each | walk fromLGitId: each commitId ].
+
 	^ walk
 ]
 
@@ -108,19 +111,46 @@ RiRepository >> printOn: aStream [
 
 { #category : #processing }
 RiRepository >> process [
+	"Build my elements and marks by walking the repository,
+	starting from the children-most leaves: branches and tags."
 
-	self processTips.
+	"Note: /HEAD branches were problematic, and they seem to be unwanted"
+	iceBranches := iceRepository allBranches reject: [ :each |
+			each isUnbornBranch or: [
+			each name endsWith: '/HEAD' ] ].
+	iceTags := iceRepository tags.
 
 	"Determine the commit graph."
 	self processCommits.
 	self processCommitGraph.
 
 	"Add our marks to the commit elements."
-	tips do: [ :each | self processMark: each ].
+	iceBranches do: [ :each | self processBranchMark: each ].
+	iceTags do: [ :each | self processTagMark: each ].
 
 	"Add new non-commit elements to the list, if needed."
 	self processImageMark.
 	self processWorkdirMark.
+
+]
+
+{ #category : #private }
+RiRepository >> processBranchMark: anIceCommitish [ 
+
+	| element mark |
+	element := elementByCommit at: anIceCommitish commit.
+
+	mark := element marks
+		detect: [ :each |
+			each isBranchMark and: [
+			each shortname = anIceCommitish shortname ] ]
+		ifNone: [ element addMark: RiBranchMark new ].
+	
+	anIceCommitish isLocal
+		ifTrue: [ mark local: anIceCommitish ]
+		ifFalse: [ mark remote: anIceCommitish ].
+		
+	elementMarks add: mark
 
 ]
 
@@ -147,7 +177,7 @@ RiRepository >> processCommits [
 
 	iceRepository head isUnbornBranch ifTrue: [ ^self ].
 
-	self newCommitWalk commitsDo: [:each |
+	self newIceCommitWalk commitsDo: [:each |
 		| newCommit |
 		newCommit := RiCommit repository: self iceCommit: each.
 		elements add: newCommit.
@@ -203,17 +233,16 @@ RiRepository >> processMark: anIceCommitish [
 ]
 
 { #category : #private }
-RiRepository >> processTips [
+RiRepository >> processTagMark: anIceCommitish [ 
 
-	| branches |
+	| element mark |
+	element := elementByCommit at: anIceCommitish commit.
 
-	"Note: /HEAD branches were problematic.
-	... And they are unneeded... right?"
-	branches := iceRepository allBranches reject: [ :each |
-			each isUnbornBranch or: [
-			each name endsWith: '/HEAD' ] ].
+	mark := RiTagMark new tag: anIceCommitish; yourself.
 
-	tips := branches, iceRepository tags
+	element addMark: mark.
+	elementMarks add: mark
+
 ]
 
 { #category : #accessing }
@@ -247,7 +276,7 @@ RiRepository >> refresh [
 
 { #category : #processing }
 RiRepository >> reset [
-	elementByCommit := elementMarks := elements := tips := nil
+	elementByCommit := elementMarks := elements := iceBranches := iceTags := nil
 ]
 
 { #category : #accessing }
@@ -260,7 +289,7 @@ RiRepository >> selectLibgitCommitsWithChangesAt: aPath [
 	diffOptions pathspec: (LGitStringArray withAll: { aPath }).
 
 	results := OrderedCollection new.
-	self newCommitWalk commitsDo: [:each |
+	self newIceCommitWalk commitsDo: [:each |
 		| tree commit |
 		commit := each libgitCommit.
 		tree := commit tree.
@@ -276,9 +305,4 @@ RiRepository >> selectLibgitCommitsWithChangesAt: aPath [
 					results add: (self commitAtSha: commit id hexString) ] ] ].
 
 	^ results
-]
-
-{ #category : #accessing }
-RiRepository >> tips [
-	^ tips
 ]
