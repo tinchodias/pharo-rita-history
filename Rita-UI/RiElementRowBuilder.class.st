@@ -113,7 +113,7 @@ RiElementRowBuilder >> morphAt: item [
 	| row |
 	row := RiRowMorph new.
 	(self leftMorphsAt: item) do: [ :each | row addItemLeft: each ].
-	row addItemRight: (' [{1}]		{2}			' format: { item shortId. item dateAndTime }) asMorph.
+	row addItemRight: (' [{1}]		{2}		     ' format: { item shortId. item dateAndTime }) asMorph.
 	^ row
 
 ]
