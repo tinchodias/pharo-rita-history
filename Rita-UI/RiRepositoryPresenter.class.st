@@ -191,7 +191,7 @@ RiRepositoryPresenter >> contextMenuToJumpDownFor: aRiElement [
 		menu
 			addItem: [ :item | 
 				item
-					name: 'Previous commit'; "each shortDescription"
+					name: ('''{1}'' parent commit' format: { each shortId });
 					icon: (self iconNamed: #down);
 					action: [ self selectRiElement: each ] ] ].
 
@@ -217,7 +217,7 @@ RiRepositoryPresenter >> contextMenuToJumpUpFor: aRiElement [
 		menu
 			addItem: [ :item | 
 				item
-					name: 'Next commit';
+					name: ('''{1}'' child commit' format: { each shortId });
 					icon: (self iconNamed: #up);
 					action: [ self selectRiElement: each ] ] ].
 
