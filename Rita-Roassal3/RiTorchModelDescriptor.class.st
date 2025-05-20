@@ -16,7 +16,7 @@ RiTorchModelDescriptor >> childrenToShowFor: node withClassName: aClassName [
 
 { #category : #accessing }
 RiTorchModelDescriptor >> classProperties [
-	^ [ :node | self childrenToShowFor: node withClassName: #IcePropertyDefinition ]
+	^ [ :node | self childrenToShowFor: node withClassName: #RicePropertyDefinition ]
 ]
 
 { #category : #accessing }
@@ -26,7 +26,7 @@ RiTorchModelDescriptor >> classname [
 
 { #category : #accessing }
 RiTorchModelDescriptor >> instVars [
-	^ [ :node | self childrenToShowFor: node withClassName: #IceVariableDefinition ]
+	^ [ :node | self childrenToShowFor: node withClassName: #RiceVariableDefinition ]
 ]
 
 { #category : #accessing }

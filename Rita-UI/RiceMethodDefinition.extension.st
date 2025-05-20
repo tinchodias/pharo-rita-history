@@ -1,12 +1,12 @@
-Extension { #name : #IceMethodDefinition }
+Extension { #name : #RiceMethodDefinition }
 
 { #category : #'*Rita-UI' }
-IceMethodDefinition >> linesOfCode [
+RiceMethodDefinition >> linesOfCode [
 	^ sourceCode lines size
 ]
 
 { #category : #'*Rita-UI' }
-IceMethodDefinition >> ritaBasicAsText [
+RiceMethodDefinition >> ritaBasicAsText [
 	^ (classIsMeta
 		ifTrue: [ 'Class ' ]
 		ifFalse: [ '' ]) asText allBold, super ritaBasicAsText

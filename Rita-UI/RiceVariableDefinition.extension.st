@@ -1,12 +1,12 @@
-Extension { #name : #IceVariableDefinition }
+Extension { #name : #RiceVariableDefinition }
 
 { #category : #'*Rita-UI' }
-IceVariableDefinition >> ritaAsTextForTree0 [
+RiceVariableDefinition >> ritaAsTextForTree0 [
 	^ mcVariableDefinition name
 ]
 
 { #category : #'*Rita-UI' }
-IceVariableDefinition >> ritaBasicAsText [
+RiceVariableDefinition >> ritaBasicAsText [
 	^ self typeToShow = 'instance'
 		ifTrue: [ 'Variable' ]
 		ifFalse: [ self typeToShow capitalized , ' Variable' ]
