@@ -1,6 +1,6 @@
 Class {
 	#name : #RiMethodShapeCreatorVisitor,
-	#superclass : #IceTreeVisitor,
+	#superclass : #RiceTreeVisitor,
 	#instVars : [
 		'colorMap',
 		'aesthetics'

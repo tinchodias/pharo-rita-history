@@ -1,22 +1,22 @@
-Extension { #name : #IcePropertyDefinition }
+Extension { #name : #RicePropertyDefinition }
 
 { #category : #'*Rita-UI' }
-IcePropertyDefinition >> ritaAsTextForPRConversation [
+RicePropertyDefinition >> ritaAsTextForPRConversation [
 	^ self ownerIceDefinition ritaAsTextForPRConversation, ' (', self ritaAsText, ')'
 ]
 
 { #category : #'*Rita-UI' }
-IcePropertyDefinition >> ritaAsTextForTree0 [
+RicePropertyDefinition >> ritaAsTextForTree0 [
 	^ self ritaNameToShow
 ]
 
 { #category : #'*Rita-UI' }
-IcePropertyDefinition >> ritaAsTextForTree1 [
+RicePropertyDefinition >> ritaAsTextForTree1 [
 	^ super ritaAsTextForTree1, ' of ', self ownerIceDefinition ritaBasicAsText
 ]
 
 { #category : #'*Rita-UI' }
-IcePropertyDefinition >> ritaNameToShow [
+RicePropertyDefinition >> ritaNameToShow [
 	| nameToShow |
 	nameToShow := self name.
 	nameToShow = 'superclassName'

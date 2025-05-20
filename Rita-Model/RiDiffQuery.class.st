@@ -22,7 +22,7 @@ RiDiffQuery >> basicTreeToQuery [
 		ifTrue: [ diff tree ]
 		ifFalse: [
 			"FIX"
-			IceDiff new
+			RiceDiff new
 				sourceVersion: diff sourceVersion;
 				targetVersion: diff targetVersion;
 				buildForAllFiles;

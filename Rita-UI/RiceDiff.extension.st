@@ -1,7 +1,7 @@
-Extension { #name : #IceDiff }
+Extension { #name : #RiceDiff }
 
 { #category : #'*Rita-UI' }
-IceDiff >> ritaShortId [
+RiceDiff >> ritaShortId [
 	^ '{1}...{2}'
 		format:
 			{self sourceVersion shortId.

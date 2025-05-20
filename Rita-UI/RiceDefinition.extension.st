@@ -1,27 +1,27 @@
-Extension { #name : #IceDefinition }
+Extension { #name : #RiceDefinition }
 
 { #category : #'*Rita-UI' }
-IceDefinition >> ritaAsText [
+RiceDefinition >> ritaAsText [
 	^ self ritaAsTextForTree0, ' · ', self ritaAsTextForTree1
 ]
 
 { #category : #'*Rita-UI' }
-IceDefinition >> ritaAsTextForPRConversation [
+RiceDefinition >> ritaAsTextForPRConversation [
 	^ self ritaAsText
 ]
 
 { #category : #'*Rita-UI' }
-IceDefinition >> ritaAsTextForTree0 [
+RiceDefinition >> ritaAsTextForTree0 [
 	^ self name
 ]
 
 { #category : #'*Rita-UI' }
-IceDefinition >> ritaAsTextForTree1 [
+RiceDefinition >> ritaAsTextForTree1 [
 	^ self ritaBasicAsText asString asText
 ]
 
 { #category : #'*Rita-UI' }
-IceDefinition >> ritaBasicAsText [
+RiceDefinition >> ritaBasicAsText [
 	^ (self class name allButFirst: 'Ice' size)
 		allButLast: 'Definition' size
 ]
