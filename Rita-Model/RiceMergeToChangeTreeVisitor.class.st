@@ -2,44 +2,46 @@
 I visit a tree of IceNode with IceOperationMerge with all operations already chosen and return the coresponding tree of changes (IceNodes with IceOperation)
 "
 Class {
-	#name : #RiceMergeToChangeTreeVisitor,
-	#superclass : #RiceTreeVisitor,
-	#category : #'Rita-Model-Changes'
+	#name : 'RiceMergeToChangeTreeVisitor',
+	#superclass : 'RiceTreeVisitor',
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceMergeToChangeTreeVisitor >> convertMergeNodeToChangeNode [
 	currentNode value: currentNode value chosenOperation .
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMergeToChangeTreeVisitor >> visitAddition: anIceAddition [ 
 	self convertMergeNodeToChangeNode.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMergeToChangeTreeVisitor >> visitClassDefinition: anIceClassDefinition [ 
 	self convertMergeNodeToChangeNode.
 	self visitChildrenOf: currentNode
 ]
 
-{ #category : #visting }
+{ #category : 'visting' }
 RiceMergeToChangeTreeVisitor >> visitNoModification: anIceNoModification [
 	anIceNoModification definition accept: self.
 ]
 
-{ #category : #visting }
+{ #category : 'visting' }
 RiceMergeToChangeTreeVisitor >> visitNonConflictingOperation: anIceNonConflictingOperation [ 
 	anIceNonConflictingOperation chosenOperation accept: self.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMergeToChangeTreeVisitor >> visitPackage: anIcePackageDefinition [
 	self convertMergeNodeToChangeNode.
 	self visitChildrenOf: currentNode
 ]
 
-{ #category : #visting }
+{ #category : 'visting' }
 RiceMergeToChangeTreeVisitor >> visitRootDefinition: anIceRootDefinition [ 
 	self visitChildrenOf: currentNode
 ]

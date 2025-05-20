@@ -3,12 +3,14 @@ I extend my superclass with the sole purpose of showing line removals before lin
 
 "
 Class {
-	#name : #RiTextDiffBuilder,
-	#superclass : #TextDiffBuilder,
-	#category : #'Rita-Model-Diff'
+	#name : 'RiTextDiffBuilder',
+	#superclass : 'TextDiffBuilder',
+	#category : 'Rita-Model-Diff',
+	#package : 'Rita-Model',
+	#tag : 'Diff'
 }
 
-{ #category : #'creating patches' }
+{ #category : 'creating patches' }
 RiTextDiffBuilder >> buildPatchSequence [
 	"Adapt superclass implementation to the fact that x and y strings are inverted."
 	
@@ -19,7 +21,7 @@ RiTextDiffBuilder >> buildPatchSequence [
 			ifRemove: [ :string | stream nextPut: #insert -> string ] ]
 ]
 
-{ #category : #'creating patches' }
+{ #category : 'creating patches' }
 RiTextDiffBuilder >> from: xString to: yString [
 	"Invert the strings. See #buildPatchSequence."
 

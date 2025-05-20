@@ -4,24 +4,26 @@ I am an IceDefinition representing the repository root. I contain all packages, 
 See my superclasses for more information.
 "
 Class {
-	#name : #RiceRootDefinition,
-	#superclass : #RiceDefinition,
-	#category : #'Rita-Model-Changes'
+	#name : 'RiceRootDefinition',
+	#superclass : 'RiceDefinition',
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceRootDefinition >> accept: aVisitor [
 	
 	^ aVisitor visitRootDefinition: self
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiceRootDefinition >> initialize [
 	super initialize.
 	name := ''.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceRootDefinition >> isRootDefinition [
 	
 	^ true

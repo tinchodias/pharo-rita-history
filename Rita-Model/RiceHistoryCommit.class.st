@@ -4,16 +4,18 @@ I am a commit optimizing history access. I know a history and can determine if I
 All other operations are simply forwarded to my wrapped ice commit.
 "
 Class {
-	#name : #RiceHistoryCommit,
-	#superclass : #Object,
+	#name : 'RiceHistoryCommit',
+	#superclass : 'Object',
 	#instVars : [
 		'iceCommit',
 		'history'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceHistoryCommit class >> commit: anIceCommit history: aHistory [
 	
 	^ self new
@@ -22,87 +24,87 @@ RiceHistoryCommit class >> commit: anIceCommit history: aHistory [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> ancestors [
 	
 	^ iceCommit ancestorIds
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> author [
 	
 	^ iceCommit author
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceHistoryCommit >> canRevertChanges [
 	
 	^ iceCommit canRevertChanges
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> comment [
 	
 	^ iceCommit comment
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> datetime [
 	
 	^ iceCommit datetime
 ]
 
-{ #category : #'API-changes' }
+{ #category : 'API-changes' }
 RiceHistoryCommit >> diffFromHead [
 	
 	^ iceCommit diffFromHead
 ]
 
-{ #category : #'API-changes' }
+{ #category : 'API-changes' }
 RiceHistoryCommit >> diffToParent [
 	
 	^ iceCommit diffToParent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> history [
 	^ history
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> history: anObject [
 	history := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> iceCommit [
 	^ iceCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> iceCommit: anIceGitCommit [ 
 	iceCommit := anIceGitCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> id [
 	
 	^ iceCommit id
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceHistoryCommit >> isMerged [
 	
 	^ history headHistory includes: iceCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> repository [
 	
 	^ iceCommit repository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistoryCommit >> shortId [
 	
 	^ iceCommit shortId

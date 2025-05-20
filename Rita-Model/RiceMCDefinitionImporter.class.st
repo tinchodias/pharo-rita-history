@@ -2,16 +2,18 @@
 I am an importer that visits MCDefinitions and creates IceDefinitions from them. I install those definitions into a corresponding package node.
 "
 Class {
-	#name : #RiceMCDefinitionImporter,
-	#superclass : #Object,
+	#name : 'RiceMCDefinitionImporter',
+	#superclass : 'Object',
 	#instVars : [
 		'packageNode',
 		'snapshot'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isTrait: isTrait isExtension: isExtension [
 	
 	| newDefinition |	
@@ -28,14 +30,14 @@ RiceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isTrait: isTrait i
 	^ packageNode childAt: newDefinition key ifAbsentPut: [ newDefinition ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceMCDefinitionImporter >> isExtension: aString [ 
 	
 	snapshot definitionForMethodContainerNamed: aString ifAbsent: [ ^ true ].
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceMCDefinitionImporter >> isTrait: aString [ 
 	
 	| definition |
@@ -43,17 +45,17 @@ RiceMCDefinitionImporter >> isTrait: aString [
 	^ definition isTraitDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMCDefinitionImporter >> packageNode: anIcePackageNode [ 
 	packageNode := anIcePackageNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMCDefinitionImporter >> snapshot: aMCSnapshot [ 
 	snapshot := aMCSnapshot
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMCDefinitionImporter >> visitClassDefinition: aMCClassDefinition [ 
 	
 	| classDefinitionNode iceDefinition |
@@ -70,7 +72,7 @@ RiceMCDefinitionImporter >> visitClassDefinition: aMCClassDefinition [
 	^ classDefinitionNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMCDefinitionImporter >> visitClassTraitDefinition: aMCClassTraitDefinition [ 
 
 	| classTraitDefinitionNode |
@@ -82,7 +84,7 @@ RiceMCDefinitionImporter >> visitClassTraitDefinition: aMCClassTraitDefinition [
 	^ classTraitDefinitionNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMCDefinitionImporter >> visitMetaclassDefinition: aMCClassDefinition [
 	"We do nothing because of Monticello meta-model.
 	
@@ -92,7 +94,7 @@ RiceMCDefinitionImporter >> visitMetaclassDefinition: aMCClassDefinition [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMCDefinitionImporter >> visitMethodDefinition: aMCMethodDefinition [ 
 	
 	| ownerName isMeta isTrait ownerNode iceNode iceDefinition |
@@ -122,13 +124,13 @@ RiceMCDefinitionImporter >> visitMethodDefinition: aMCMethodDefinition [
 	^ iceNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMCDefinitionImporter >> visitOrganizationDefinition: aMCOrganizationDefinition [ 
 	
 	packageNode value categories: aMCOrganizationDefinition categories
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMCDefinitionImporter >> visitTraitDefinition: aMCTraitDefinition [ 
 	
 	| traitDefinitionNode |

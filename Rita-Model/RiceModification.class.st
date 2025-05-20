@@ -2,15 +2,17 @@
 I am a modification in a tree. I contain the definition I'm changing (right) and the new (left) version of the definition. I know what is the icon for modification and how to calculate a conflict with other operations.
 "
 Class {
-	#name : #RiceModification,
-	#superclass : #RiceOperation,
+	#name : 'RiceModification',
+	#superclass : 'RiceOperation',
 	#instVars : [
 		'oldDefinition'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceModification class >> left: leftDefinition right: rightDefinition [
 
 	^ self new
@@ -19,20 +21,20 @@ RiceModification class >> left: leftDefinition right: rightDefinition [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceModification >> = anotherOperation [
 
 	^ super = anotherOperation
 		and: [ self rightDefinition = anotherOperation rightDefinition ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceModification >> accept: aVisitor [
 	
 	^ aVisitor visitModification: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceModification >> description [
 	^ definition key asString,
 			(self isOnlyLowImpact
@@ -40,36 +42,36 @@ RiceModification >> description [
 				ifFalse: [ '' ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceModification >> icon [
 	
 	^ self iconNamed: #changeUpdate
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RiceModification >> inverse [
 	
 	^ RiceModification left: self rightDefinition right: self leftDefinition
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceModification >> isModification [
 	
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceModification >> isOnlyLowImpact [
 	^ definition isLowImpactAppliedTo: oldDefinition 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceModification >> leftContents [
 	
 	^ definition contents
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceModification >> mergeWithLeftAddition: anIceAddition [ 
 	
 	"This should not happen. If I represent a modification of a node, that means that the original definition existed on the base version.
@@ -77,7 +79,7 @@ RiceModification >> mergeWithLeftAddition: anIceAddition [
 	self shouldNotImplement
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceModification >> mergeWithLeftModification: anIceModification [ 
 	
 	"If the modification is the same, I can just keep any of them."
@@ -87,43 +89,43 @@ RiceModification >> mergeWithLeftModification: anIceModification [
 	^ RiceConflictingOperation left: anIceModification right: self
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceModification >> mergeWithLeftNoOperation: anIceNoModification [ 
 	
 	^ RiceNonConflictingOperation operation: self
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceModification >> mergeWithLeftRemoval: anIceRemoval [ 
 	
 	^ RiceConflictingOperation left: anIceRemoval right: self
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceModification >> mergeWithOperation: anOperation [
 	
 	^ anOperation mergeWithLeftModification: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceModification >> oldDefinition [
 	
 	^ oldDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceModification >> rightContents [
 	
 	^ oldDefinition contents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceModification >> rightDefinition [
 	
 	^ oldDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceModification >> rightDefinition: aDefinition [
 	
 	oldDefinition := aDefinition

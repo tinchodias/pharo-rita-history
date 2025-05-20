@@ -1,16 +1,18 @@
 Class {
-	#name : #RiceCypressPropertiesChange,
-	#superclass : #RiceChange,
-	#category : #'Rita-Model-Changes'
+	#name : 'RiceCypressPropertiesChange',
+	#superclass : 'RiceChange',
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceCypressPropertiesChange >> accept: anIceChangeImporter [ 
 	
 	anIceChangeImporter visitCypressPropertiesChange: self
 ]
 
-{ #category : #displaying }
+{ #category : 'displaying' }
 RiceCypressPropertiesChange >> displayingProgressString [
 	^ 'Comparing Cypress changes'
 ]

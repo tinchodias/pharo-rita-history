@@ -2,15 +2,17 @@
 I reprensent a non-conflict between two operations that can be solved automatically. The user can still override the automatic choice using #selectLeft and #selectRight.
 "
 Class {
-	#name : #RiceNonConflictingOperation,
-	#superclass : #RiceOperationMerge,
+	#name : 'RiceNonConflictingOperation',
+	#superclass : 'RiceOperationMerge',
 	#instVars : [
 		'operation'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceNonConflictingOperation class >> operation: anOperation [
 	
 	^ self new
@@ -18,19 +20,19 @@ RiceNonConflictingOperation class >> operation: anOperation [
 		yourself
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceNonConflictingOperation >> accept: aVisitor [
 	
 	^ aVisitor visitNonConflictingOperation: self
 ]
 
-{ #category : #'morphic-compatibility' }
+{ #category : 'morphic-compatibility' }
 RiceNonConflictingOperation >> actualClass [
 	
 	^ operation definition actualClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNonConflictingOperation >> chosenOperation [
 	
 	^ chosen
@@ -38,69 +40,69 @@ RiceNonConflictingOperation >> chosenOperation [
 		ifNotNil: [ chosen ]
 ]
 
-{ #category : #'morphic-compatibility' }
+{ #category : 'morphic-compatibility' }
 RiceNonConflictingOperation >> contextClass [
 	
 	^ operation contextClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNonConflictingOperation >> definition [
 	
 	"This is just for compatibility"
 	^ operation definition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNonConflictingOperation >> description [
 	
 	"Any of my instances should have the same description"
 	^ operation description
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceNonConflictingOperation >> isConflict [
 
 	^ false
 ]
 
-{ #category : #resolution }
+{ #category : 'resolution' }
 RiceNonConflictingOperation >> isLeftChosen [
 	
 	^ chosen = operation
 ]
 
-{ #category : #resolution }
+{ #category : 'resolution' }
 RiceNonConflictingOperation >> isRightChosen [
 	
 	^ chosen = operation inverse
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNonConflictingOperation >> key [
 	
 	"Any of my operations should have the same key"
 	^ operation key
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNonConflictingOperation >> leftContents [
 	
 	^ operation leftContents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNonConflictingOperation >> operation: anIceModification [ 
 	operation := anIceModification
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceNonConflictingOperation >> operationIcon [
 	
 	^ operation icon
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceNonConflictingOperation >> preferredColor [
 	
 	^ self isResolved
@@ -108,19 +110,19 @@ RiceNonConflictingOperation >> preferredColor [
 		ifFalse: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNonConflictingOperation >> rightContents [
 	
 	^ operation rightContents
 ]
 
-{ #category : #resolution }
+{ #category : 'resolution' }
 RiceNonConflictingOperation >> selectLeft [
 	
 	chosen := operation
 ]
 
-{ #category : #resolution }
+{ #category : 'resolution' }
 RiceNonConflictingOperation >> selectRight [
 	
 	chosen := operation inverse

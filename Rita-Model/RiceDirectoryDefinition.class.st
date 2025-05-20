@@ -6,29 +6,31 @@ My contents is an empty string.
 See my superclasses for more information.
 "
 Class {
-	#name : #RiceDirectoryDefinition,
-	#superclass : #RiceFileSystemDefinition,
-	#category : #'Rita-Model-Changes'
+	#name : 'RiceDirectoryDefinition',
+	#superclass : 'RiceFileSystemDefinition',
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceDirectoryDefinition >> accept: aVisitor [
 	
 	^ aVisitor visitDirectoryDefinition: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDirectoryDefinition >> contents [
 	
 	^ ''
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceDirectoryDefinition >> icon [
 	^ self iconNamed: #emptyPackage
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDirectoryDefinition >> isDirectoryDefinition [
 	
 	^ true

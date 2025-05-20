@@ -7,8 +7,8 @@ Future optimizations:
  - implement pagination
 "
 Class {
-	#name : #RiceHistory,
-	#superclass : #Object,
+	#name : 'RiceHistory',
+	#superclass : 'Object',
 	#instVars : [
 		'commitish',
 		'commits',
@@ -16,10 +16,12 @@ Class {
 		'headHistory',
 		'repository'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceHistory class >> on: commitish repository: anIceRepository [
 	
 	^ self new
@@ -28,45 +30,45 @@ RiceHistory class >> on: commitish repository: anIceRepository [
 		yourself
 ]
 
-{ #category : #history }
+{ #category : 'history' }
 RiceHistory >> commitDictionary [
 
 	commitDictionary ifNil: [ self lookupCommits ].
 	^ commitDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistory >> commitish: aCommitish [
 	commitish := aCommitish
 ]
 
-{ #category : #history }
+{ #category : 'history' }
 RiceHistory >> commits [
 	
 	commits ifNil: [ self lookupCommits ].
 	^ commits
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistory >> headHistory [
 	
 	^ headHistory ifNil: [ 
 		headHistory := RiceHistory on: repository headCommit repository: repository ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceHistory >> includes: anIceGitCommit [ 
 	
 	^ self commitDictionary includesKey: anIceGitCommit id
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceHistory >> isHead [
 	
 	^ commitish = repository head
 ]
 
-{ #category : #history }
+{ #category : 'history' }
 RiceHistory >> lookupCommits [
 	
 	| newCommitDictionary newCommits |
@@ -80,13 +82,13 @@ RiceHistory >> lookupCommits [
 	commits := newCommits.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistory >> name [
 	
 	^ commitish name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceHistory >> repository: aRepository [ 
 	repository := aRepository
 ]

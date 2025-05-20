@@ -6,8 +6,8 @@ I receive the node where I have to work on, a version, and the I can be visited 
 I work recursively: I create new instances of myself to build the children nodes of my node.
 "
 Class {
-	#name : #RiceChangeImporter,
-	#superclass : #Object,
+	#name : 'RiceChangeImporter',
+	#superclass : 'Object',
 	#instVars : [
 		'parentNode',
 		'sourceSnapshot',
@@ -16,10 +16,12 @@ Class {
 		'operation',
 		'version'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #importing }
+{ #category : 'importing' }
 RiceChangeImporter >> addFileNamed: aString path: aRelativePath contents: aByteArray [ 
 
 	| fileParentNode |
@@ -37,12 +39,12 @@ RiceChangeImporter >> addFileNamed: aString path: aRelativePath contents: aByteA
 		contents: aByteArray).
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceChangeImporter >> diff: anIceDiff [ 
 	diff := anIceDiff
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiceChangeImporter >> ensureDirectoryAtPath: aPathSegments inNode: aNode [
 
 	| firstChild |
@@ -51,7 +53,7 @@ RiceChangeImporter >> ensureDirectoryAtPath: aPathSegments inNode: aNode [
 	^ self ensureDirectoryAtPath: aPathSegments allButFirst inNode: firstChild
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiceChangeImporter >> ensureDirectoryNamed: aName inNode: aNode [
 
 	aNode childAt: aName ifPresent: [ :node |
@@ -60,7 +62,7 @@ RiceChangeImporter >> ensureDirectoryNamed: aName inNode: aNode [
 	^ aNode addChild: (RiceDirectoryDefinition named: aName path: aNode path / aName)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiceChangeImporter >> ensureSourceCodeParentNodeIn: aNode [
 	
 	^ self
@@ -68,24 +70,24 @@ RiceChangeImporter >> ensureSourceCodeParentNodeIn: aNode [
 		inNode: aNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceChangeImporter >> parentNode: anIcePackageNode [ 
 	parentNode := anIcePackageNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceChangeImporter >> version: aVersion [ 
 	
 	version := aVersion
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceChangeImporter >> visitCypressPropertiesChange: anIceCypressPropertiesChange [ 
 	
 	version properties addToChangeBuilder: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceChangeImporter >> visitGitChange: anIceGitChange [ 
 
 	| importer |
@@ -97,7 +99,7 @@ RiceChangeImporter >> visitGitChange: anIceGitChange [
 	importer importOn: parentNode.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceChangeImporter >> visitImageChange: anIceImageChange [ 
 
 	| importer |
@@ -108,7 +110,7 @@ RiceChangeImporter >> visitImageChange: anIceImageChange [
 	^ importer importOn: (self ensureSourceCodeParentNodeIn: parentNode)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceChangeImporter >> visitMemoryChange: anIceMemoryChange [ 
 	
 	| importer |
@@ -119,7 +121,7 @@ RiceChangeImporter >> visitMemoryChange: anIceMemoryChange [
 	^ importer importOn: parentNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceChangeImporter >> visitProjectChange: anIceProjectChange [ 
 	
 	"Import the project file extracted from the commit without utterly post-treatment to create the new project file"

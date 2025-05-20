@@ -6,15 +6,17 @@ My contents are the contents of the file, utf8 decoded.
 See my superclasses for more information.
 "
 Class {
-	#name : #RiceFileDefinition,
-	#superclass : #RiceFileSystemDefinition,
+	#name : 'RiceFileDefinition',
+	#superclass : 'RiceFileSystemDefinition',
 	#instVars : [
 		'contents'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceFileDefinition class >> named: aString path: aPath contents: contents [
 	
 	^ (self named: aString path: aPath)
@@ -22,7 +24,7 @@ RiceFileDefinition class >> named: aString path: aPath contents: contents [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceFileDefinition class >> named: aString path: aPath fileReference: aFileReference [
 	^ self
 		named: aString
@@ -30,31 +32,31 @@ RiceFileDefinition class >> named: aString path: aPath fileReference: aFileRefer
 		contents: (aFileReference binaryReadStreamDo: [ :each | each upToEnd ])
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceFileDefinition >> = anotherDefinition [
 
 	^ super = anotherDefinition and: [ contents = anotherDefinition basicContents ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceFileDefinition >> accept: aVisitor [
 	
 	^ aVisitor visitFileNode: self
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceFileDefinition >> basicContents [
 
 	^ contents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceFileDefinition >> basicContents: anObject [
 
 	contents := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceFileDefinition >> contents [
 	"Contents for display purposes.
 	If the file is binary (or could not detect as utf8 file) then just return an hexa dump representation of the contents
@@ -65,37 +67,37 @@ RiceFileDefinition >> contents [
 		ifFalse: [ contents utf8Decoded ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceFileDefinition >> contents: anObject [
 
 	contents := anObject
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceFileDefinition >> hash [
 	
 	^ self contents hash
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceFileDefinition >> icon [
 	^ self iconNamed: #book
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceFileDefinition >> isBinary [
 	
 	[contents utf8Decoded] on: ZnInvalidUTF8 do: [ ^ true ].
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceFileDefinition >> isFileDefinition [
 	
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RiceFileDefinition >> removeFrom: aVisitor [ 
 	aVisitor removeFile: self
 ]

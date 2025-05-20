@@ -1,22 +1,24 @@
 Class {
-	#name : #RiDiffQuery,
-	#superclass : #Object,
+	#name : 'RiDiffQuery',
+	#superclass : 'Object',
 	#instVars : [
 		'diff',
 		'onlyConsiderChanged',
 		'treeToQuery'
 	],
-	#category : #'Rita-Model-Diff'
+	#category : 'Rita-Model-Diff',
+	#package : 'Rita-Model',
+	#tag : 'Diff'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> allLeafChildren [
 	^ Array streamContents: [ :stream |
 		self treeToQuery allLeavesDo: [ :iceNode |
 			stream nextPut: iceNode ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiDiffQuery >> basicTreeToQuery [
 	^ self onlyConsiderChanged
 		ifTrue: [ diff tree ]
@@ -29,24 +31,24 @@ RiDiffQuery >> basicTreeToQuery [
 				mergedTree ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> diff [
 	^ diff
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> diff: anIceDiff [
 	diff := anIceDiff
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiDiffQuery >> initialize [
 	super initialize.
 	
 	onlyConsiderChanged := true.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> nodesForBehaviors [
 	^ self nodesThatSatisfy: [ :iceNode |
 		iceNode value definition isClassDefinition or: [
@@ -54,26 +56,26 @@ RiDiffQuery >> nodesForBehaviors [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> nodesForFiles [
 	^ self nodesThatSatisfy: [ :iceNode |
 		iceNode value definition isFileDefinition ]
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> nodesForMethodExtensions [
 	^ self nodesThatSatisfy: [ :iceNode |
 		iceNode value definition isExtensionDefinition ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> nodesForPackages [
 	^ self nodesThatSatisfy: [ :iceNode |
 		iceNode value definition isPackageDefinition ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> nodesThatSatisfy: aBlock [
 	^ Array streamContents: [ :stream |
 		self treeToQuery allChildrenDo: [ :iceNode |
@@ -81,17 +83,17 @@ RiDiffQuery >> nodesThatSatisfy: aBlock [
 				stream nextPut: iceNode ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> onlyConsiderChanged [
 	^ onlyConsiderChanged
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> onlyConsiderChanged: anObject [
 	onlyConsiderChanged := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQuery >> treeToQuery [
 	^ treeToQuery ifNil: [ treeToQuery := self basicTreeToQuery ]
 ]

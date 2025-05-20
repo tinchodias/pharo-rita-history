@@ -2,8 +2,8 @@
 I enrich a IceLibGitRepository object with RiElements.
 "
 Class {
-	#name : #RiRepository,
-	#superclass : #Object,
+	#name : 'RiRepository',
+	#superclass : 'Object',
 	#instVars : [
 		'elementByCommit',
 		'elementMarks',
@@ -12,73 +12,75 @@ Class {
 		'iceBranches',
 		'iceTags'
 	],
-	#category : #'Rita-Model-Core'
+	#category : 'Rita-Model-Core',
+	#package : 'Rita-Model',
+	#tag : 'Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiRepository class >> iceRepository: anIceLibgitRepository [
 	^ self basicNew
 		initializeWithIceRepository: anIceLibgitRepository;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> commitAtSha: hexString [
 	^ self commits detect: [ :each | each id = hexString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> commits [
 	^ elements reject: #isUncommited
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> description [
 	^ iceRepository description
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> elementByCommit [
 	^ elementByCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> elementMarks [
 	^ elementMarks
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> elements [
 	^ elements
 ]
 
-{ #category : #processing }
+{ #category : 'processing' }
 RiRepository >> ensureProcessed [
 	elements ifNil: [ self process ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RiRepository >> fetch [
 	iceRepository fetch
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> iceRepository [
 	^ iceRepository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> initializeWithIceRepository: anIceLibgitRepository [
 	self initialize.
 	iceRepository := anIceLibgitRepository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> name [
 	^ iceRepository name
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRepository >> newIceCommitWalk [
 	"Answer a IceLibgitCommitWalk. Requires that #processTips was executed before."
 
@@ -93,12 +95,12 @@ RiRepository >> newIceCommitWalk [
 	^ walk
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RiRepository >> openInNativeBrowser [
 	iceRepository location openInNativeBrowser
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RiRepository >> printOn: aStream [
 	"Append a sequence of characters to aStream that identify the receiver."
 
@@ -109,7 +111,7 @@ RiRepository >> printOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #processing }
+{ #category : 'processing' }
 RiRepository >> process [
 	"Build my elements and marks by walking the repository,
 	starting from the children-most leaves: branches and tags."
@@ -134,7 +136,7 @@ RiRepository >> process [
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRepository >> processBranchMark: anIceCommitish [ 
 
 	| element mark |
@@ -154,7 +156,7 @@ RiRepository >> processBranchMark: anIceCommitish [
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRepository >> processCommitGraph [
 	"Connect all collected RiCommits in terms of child/parent."
 
@@ -167,7 +169,7 @@ RiRepository >> processCommitGraph [
 				each addAncestor: ancestor ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRepository >> processCommits [
 	"Determine the commits in the proper order via Libgit's revwalk."
 
@@ -185,7 +187,7 @@ RiRepository >> processCommits [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> processImageMark [
 
 	| aRiCommit |
@@ -206,7 +208,7 @@ RiRepository >> processImageMark [
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRepository >> processMark: anIceCommitish [ 
 
 	| element mark |
@@ -232,7 +234,7 @@ RiRepository >> processMark: anIceCommitish [
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRepository >> processTagMark: anIceCommitish [ 
 
 	| element mark |
@@ -245,7 +247,7 @@ RiRepository >> processTagMark: anIceCommitish [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> processWorkdirMark [
 
 	| aRiCommit diff |
@@ -269,17 +271,17 @@ RiRepository >> processWorkdirMark [
 
 ]
 
-{ #category : #processing }
+{ #category : 'processing' }
 RiRepository >> refresh [
 	self reset; process
 ]
 
-{ #category : #processing }
+{ #category : 'processing' }
 RiRepository >> reset [
 	elementByCommit := elementMarks := elements := iceBranches := iceTags := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepository >> selectLibgitCommitsWithChangesAt: aPath [
 	"Based on IceLog>>#collectCommitsFor:path:"
 

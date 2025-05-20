@@ -2,27 +2,29 @@
 Represents an element in the contents list of a repository.
 "
 Class {
-	#name : #RiElement,
-	#superclass : #Object,
+	#name : 'RiElement',
+	#superclass : 'Object',
 	#instVars : [
 		'marks'
 	],
-	#category : #'Rita-Model-Core'
+	#category : 'Rita-Model-Core',
+	#package : 'Rita-Model',
+	#tag : 'Core'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiElement >> accept: aVisitor [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> addMark: aRiMark [
 	self marks add: aRiMark.
 	aRiMark element: self.
 	^ aRiMark
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> allAncestors [
 	| ancestors |
 	ancestors := OrderedCollection new.
@@ -31,7 +33,7 @@ RiElement >> allAncestors [
 
 ]
 
-{ #category : #enumeration }
+{ #category : 'enumeration' }
 RiElement >> allAncestorsDo: aBlockClosure [
 	self ancestors do: [ :each |
 		aBlockClosure value: each.
@@ -39,7 +41,7 @@ RiElement >> allAncestorsDo: aBlockClosure [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> allChildren [
 	| children |
 	children := OrderedCollection new.
@@ -48,7 +50,7 @@ RiElement >> allChildren [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> allChildrenDo: aBlockClosure [ 
 	self children do: [ :each |
 		aBlockClosure value: each.
@@ -56,7 +58,7 @@ RiElement >> allChildrenDo: aBlockClosure [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> ancestorToDiffIfPresent: presentBlockClosure ifAbsent: absentBlockClosure [
 	"Detect the first ancestor (potentially ignores other ancestors, in case of merge, as usually tools do)."
 
@@ -65,75 +67,75 @@ RiElement >> ancestorToDiffIfPresent: presentBlockClosure ifAbsent: absentBlockC
 		ifNotEmpty: [ :col | presentBlockClosure value: col first ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> ancestors [
 	"Answer a collection of RiElement sub-instances."
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> author [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> children [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> comment [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> dateAndTime [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> detectInAllAncestors: aBlockClosure ifFound: foundBlockClosure [
 	self allAncestorsDo: [ :each | 
 		(aBlockClosure value: each)
 			ifTrue: [ ^ foundBlockClosure cull: each ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> detectInAllChildren: aBlockClosure ifFound: foundBlockClosure [
 	self allChildrenDo: [ :each | 
 		(aBlockClosure value: each)
 			ifTrue: [ ^ foundBlockClosure cull: each ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiElement >> isUncommited [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> marks [
 	^ marks ifNil: [ marks := OrderedCollection new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> repository [
 	"Answer the RiRepository that contains me."
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> shortDescription [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElement >> shortId [
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumeration }
+{ #category : 'enumeration' }
 RiElement >> withAllAncestorsDo: aBlockClosure [ 
 	aBlockClosure value: self.
 	self allAncestorsDo: aBlockClosure.

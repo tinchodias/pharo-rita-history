@@ -8,15 +8,17 @@ I also contain the monticello definition that corresponds to me.
 See my super/subclasses for more information.
 "
 Class {
-	#name : #RiceMethodContainerDefinition,
-	#superclass : #RiceCodeDefinition,
+	#name : 'RiceMethodContainerDefinition',
+	#superclass : 'RiceCodeDefinition',
 	#instVars : [
 		'mcDefinition'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceMethodContainerDefinition class >> named: aString [
 	
 	^ self new
@@ -24,17 +26,17 @@ RiceMethodContainerDefinition class >> named: aString [
 		yourself
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodContainerDefinition >> allPropertyNames [
 	^ MCClassDefinition instVarNames copyWithoutAll: #(name variables commentStamp)
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodContainerDefinition >> asMCDefinition [
 	^ mcDefinition
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceMethodContainerDefinition >> browse [
 	
 	| browsed |
@@ -43,40 +45,40 @@ RiceMethodContainerDefinition >> browse [
 	browsed browse
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceMethodContainerDefinition >> canBeBrowsed [
 	
 	^ Smalltalk globals includesKey: name
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceMethodContainerDefinition >> canBrowseReferences [
 	
 	^ self canBeBrowsed
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiceMethodContainerDefinition >> childrenDefinitions [
 	^ self propertyDefinitions, self variableDefinitions
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodContainerDefinition >> mcDefinition [
 	^ mcDefinition
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodContainerDefinition >> mcDefinition: aMCDefinition [
 	mcDefinition := aMCDefinition
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodContainerDefinition >> removeFrom: aPatcher [
 	
 	aPatcher removeClass: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodContainerDefinition >> variableDefinitions [
 	^ mcDefinition variables
 		collect: [ :each | 

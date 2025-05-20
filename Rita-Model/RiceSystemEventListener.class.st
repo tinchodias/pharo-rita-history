@@ -5,12 +5,14 @@ I'm mainly used to mark as dirty packages whose methods and classes are modified
 I'm implemented as class side methods to avoid memory leaks and problems when unsubscribing to events.
 "
 Class {
-	#name : #RiceSystemEventListener,
-	#superclass : #Object,
-	#category : #'Rita-Model-Changes'
+	#name : 'RiceSystemEventListener',
+	#superclass : 'Object',
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 RiceSystemEventListener class >> handleClassChange: aClassChange [
 
 	"We should take care not only about the class package but also the package of the methods extending that class."
@@ -18,19 +20,19 @@ RiceSystemEventListener class >> handleClassChange: aClassChange [
 
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 RiceSystemEventListener class >> handleMethodChange: aMethodChange [
 
 	self handlePackagesChange: aMethodChange packagesAffected
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 RiceSystemEventListener class >> handlePackageChange: aPackageChange [
 
 	self handlePackagesChange: aPackageChange packagesAffected
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 RiceSystemEventListener class >> handlePackagesChange: packages [
 
 	IceRepository registry do: [ :repository | | changed |
@@ -39,7 +41,7 @@ RiceSystemEventListener class >> handlePackagesChange: packages [
 		changed ifTrue: [ 	Iceberg announcer announce: (IceRepositoryModified for: repository) ]]
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 RiceSystemEventListener class >> handleVersionLoaded: ann [
 	"When monticello finishes to load a package, we need to verify its status to mark them as dirty or 
 	 not dirty as they apply."
@@ -68,24 +70,26 @@ RiceSystemEventListener class >> handleVersionLoaded: ann [
 						Iceberg announcer announce: (IceRepositoryModified for: each) ] ]]
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 RiceSystemEventListener class >> initialize [
 
 	self registerSystemAnnouncements
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 RiceSystemEventListener class >> registerSystemAnnouncements [
 
 	self unregisterSystemAnnouncements.
-	SystemAnnouncer uniqueInstance weak
+
+	self codeChangeAnnouncer weak
 		when: ClassAnnouncement send: #handleClassChange: to: self;
 		when: MethodAnnouncement send: #handleMethodChange: to: self;
-		when: ClassTagAnnouncement send: #handlePackageChange: to: self;
-		when: MCVersionLoaderStopped send: #handleVersionLoaded: to: self.
+		when: PackageTagAnnouncement send: #handlePackageChange: to: self.
+
+	self codeSupportAnnouncer weak when: MCVersionLoaderStopped send: #handleVersionLoaded: to: self
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 RiceSystemEventListener class >> unregisterSystemAnnouncements [
 	
 	SystemAnnouncer uniqueInstance unsubscribe: self

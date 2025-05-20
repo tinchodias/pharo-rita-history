@@ -18,8 +18,8 @@ I am created by doing one of the following:
 	yourself
 "
 Class {
-	#name : #RiceDiff,
-	#superclass : #Object,
+	#name : 'RiceDiff',
+	#superclass : 'Object',
 	#instVars : [
 		'tree',
 		'source',
@@ -27,10 +27,12 @@ Class {
 		'writerClass',
 		'mergedTree'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceDiff class >> from: sourceCommitish to: targetCommitish [
 	
 	^ self new
@@ -40,19 +42,19 @@ RiceDiff class >> from: sourceCommitish to: targetCommitish [
 		yourself
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceDiff >> accept: aVisitor [
 	
 	^ tree accept: aVisitor
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 RiceDiff >> build [
 
 	self buildForChanges: (source changesTo: target)
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 RiceDiff >> buildForAllFiles [
 
 	| files changes |
@@ -62,7 +64,7 @@ RiceDiff >> buildForAllFiles [
 	self buildForChanges: changes
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 RiceDiff >> buildForChanges: aCollection [
 
 	| leftTree rightTree |
@@ -86,13 +88,13 @@ RiceDiff >> buildForChanges: aCollection [
 	tree := mergedTree select: [ :operation | operation hasChanges ].
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 RiceDiff >> buildForPackages: aCollection [
 
 	self buildForChanges: (aCollection collect: [ :package | RiceImageChange package: package ])
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 RiceDiff >> buildFull [
 
 	"Image changes should be processed before commit changes
@@ -100,13 +102,13 @@ RiceDiff >> buildFull [
 	self buildForChanges: self imageChanges, (source referenceCommit changesTo: target) asArray
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDiff >> canRevertChanges [
 	
 	^ source canRevertChanges
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> codeSubdirectoryNode [
 	
 	^ self repository subdirectory
@@ -115,7 +117,7 @@ RiceDiff >> codeSubdirectoryNode [
 		
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RiceDiff >> copyWithOnly: aCollection [ 
 	
 	| treeCopy selectedOperations |
@@ -129,44 +131,44 @@ RiceDiff >> copyWithOnly: aCollection [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> description [
 	
 	^ target description
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RiceDiff >> diff: leftTree with: rightTree [
 
 	^ (self mergedTreeOf: leftTree with: rightTree)
 		select: [ :operation | operation hasChanges ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> diffTree: anIceTreeDiff [
 
 	tree := anIceTreeDiff
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 RiceDiff >> imageChanges [
 
 	^ self imageChangesForPackages: source loadedPackages
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 RiceDiff >> imageChangesForPackages: aCollection [
 
 	^ aCollection collect: [ :package | RiceImageChange package: package ] as: Array
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDiff >> includesPackageNamed: aString [
 	^ self isEmpty not
 		and: [ self codeSubdirectoryNode includesKey: aString ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDiff >> isCodeSubdirectory: aNode [
 	
 	| nodeLocation repositorySubdirectoryLocation |
@@ -175,24 +177,24 @@ RiceDiff >> isCodeSubdirectory: aNode [
 	^ nodeLocation pathString = repositorySubdirectoryLocation pathString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDiff >> isEmpty [
 	
 	^ tree isEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDiff >> isValidPackage: aFileReference [
 	
 	^ self writerClass isValidPackage: aFileReference
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> mergedTree [
 	^ mergedTree
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RiceDiff >> mergedTreeOf: leftTree with: rightTree [
 	
 	^ leftTree
@@ -205,55 +207,55 @@ RiceDiff >> mergedTreeOf: leftTree with: rightTree [
 				ifFalse: [ RiceModification left: left right: right ] ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RiceDiff >> packageNameFromDirectory: aString [ 
 	
 	^ self writerClass packageNameFromDirectory: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> packages [
 	
 	tree isEmpty ifTrue: [ ^ #( ) ].
 	^ self codeSubdirectoryNode children
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> repository [
 	
 	^ source repository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> sourceVersion [
 	
 	^ source
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> sourceVersion: aCommitish [
 	
 	source := aCommitish
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> targetVersion [
 	
 	^ target
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> targetVersion: aCommitish [
 	
 	target := aCommitish
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> tree [
 	^ tree
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDiff >> treeToShow [
 	"Returns the tree to show in the UI.
 	For a diff it is always the same tree.
@@ -261,7 +263,7 @@ RiceDiff >> treeToShow [
 	^ self tree
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RiceDiff >> writerClass [
 	
 	"I am cached per instance of diff because obtaining the writer class is an expensive operation (600ms per call)"

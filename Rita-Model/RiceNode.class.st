@@ -29,17 +29,19 @@ Visiting API:
  - visit:
 "
 Class {
-	#name : #RiceNode,
-	#superclass : #RiceAbstractNode,
+	#name : 'RiceNode',
+	#superclass : 'RiceAbstractNode',
 	#instVars : [
 		'parent',
 		'childrenDictionary',
 		'value'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceNode class >> value: aValue [
 	
 	^ self new
@@ -47,7 +49,7 @@ RiceNode class >> value: aValue [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceNode class >> value: aValue parent: aParentNode [ 
 	
 	^ (self value: aValue)
@@ -55,45 +57,45 @@ RiceNode class >> value: aValue parent: aParentNode [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> / aString [ 
 	
 	^ childrenDictionary at: aString
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceNode >> = anotherNode [
 
 	^ (self basicEqualsTo: anotherNode)
 		and: [ self children asSet = anotherNode children asSet ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceNode >> accept: aVisitor [
 	
 	^ aVisitor visitTreeNode: self
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RiceNode >> addChild: aChild [
 	
 	^ self addNode: (self class value: aChild).
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RiceNode >> addNode: aNode [
 
 	self at: aNode key put: aNode.
 	^ aNode
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RiceNode >> addTo: anotherNode [
 	
 	anotherNode addNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> allParentNodes [
 
 	self hasParent ifFalse: [ ^ #() ].
@@ -101,13 +103,13 @@ RiceNode >> allParentNodes [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> allPathSegments [
 
 	^ self withAllParentNodes collect: [ :each | each key ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> allSatisfy: aBlockClosure [ 
 	
 	(aBlockClosure value: self value)
@@ -120,7 +122,7 @@ RiceNode >> allSatisfy: aBlockClosure [
 	^ true
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> anySatisfy: aBlockClosure [ 
 	
 	(aBlockClosure value: self value)
@@ -133,20 +135,20 @@ RiceNode >> anySatisfy: aBlockClosure [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> at: aString put: aNode [ 
 	
 	aNode parent: self.
 	childrenDictionary at: aString put: aNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceNode >> basicEqualsTo: aNode [
 
 	^ self value = aNode value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> childAt: aString ifAbsentPut: aBlock [
 
 	^ childrenDictionary
@@ -154,20 +156,20 @@ RiceNode >> childAt: aString ifAbsentPut: aBlock [
 		  ifAbsent: [ self addChild: aBlock value ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> childAt: aString ifPresent: aBlockClosure [
 
 	^ childrenDictionary at: aString ifPresent: aBlockClosure
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> children [
 	"Answer the children in the order they were added."
 
 	^ childrenDictionary values
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> collect: aBlock [
 	| newNode |
 	newNode := self class value: (aBlock value: self value).
@@ -176,7 +178,7 @@ RiceNode >> collect: aBlock [
 	^ newNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> collectWithPath: aBlock [
 	| newNode |
 	newNode := self class value: (aBlock value: self value value: self path).
@@ -185,7 +187,7 @@ RiceNode >> collectWithPath: aBlock [
 	^ newNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> count: aBlockClosure [ 
 	
 	| count |
@@ -197,31 +199,31 @@ RiceNode >> count: aBlockClosure [
 	^ count
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> definition [
 	
 	^ value definition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> description [
 	
 	^ value description
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> detect: aBlock [
 	^ (self firstNodeSuchThat: aBlock) value
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> do: aBlockClosure [ 
 	
 	aBlockClosure value: self value.
 	self childrenDo: [ :node | node do: aBlockClosure ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> firstNodeSuchThat: conditionBlock ifNone: noneBlock [
 	
 	(conditionBlock value: self)
@@ -240,7 +242,7 @@ RiceNode >> firstNodeSuchThat: conditionBlock ifNone: noneBlock [
 				ifNone: noneBlock ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceNode >> gtInspectorItemsIn: composite [
 	<gtInspectorPresentationOrder: 0>
 	^ composite fastTable 
@@ -250,68 +252,68 @@ RiceNode >> gtInspectorItemsIn: composite [
 		column: 'Value' evaluated: [:each | each value ] width: 400 * self currentWorld displayScaleFactor
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceNode >> hasChanges [
 	
 	^ value hasChanges or: [ self children anySatisfy: [ :child | child hasChanges ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceNode >> hasParent [
 	
 	^ self parent notNil
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceNode >> hash [
 
 	^ self key hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> includesKey: anObject [
 	
 	^ childrenDictionary includesKey: anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiceNode >> initialize [
 
 	super initialize.
 	childrenDictionary := SmallDictionary new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceNode >> isEmpty [
 	
 	^ childrenDictionary isEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceNode >> isEmptyNode [
 
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> key [
 	
 	^ value key
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> keys [
 
 	^ childrenDictionary keys
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> keysDo: aBlockClosure [ 
 	
 	childrenDictionary keysDo: aBlockClosure
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> mergeWith: anotherTree onLeft: leftBlock onRight: rightBlock onMerge: mergeBlock [
 	
 	| mergedTree newNode |
@@ -338,7 +340,7 @@ RiceNode >> mergeWith: anotherTree onLeft: leftBlock onRight: rightBlock onMerge
 	^ newNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> mergeWith: anotherTree onMerge: mergeBlock [
 	
 	^ self
@@ -348,7 +350,7 @@ RiceNode >> mergeWith: anotherTree onMerge: mergeBlock [
 		onMerge: mergeBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> nextChildNodeStartingFrom: anIceNode suchThat: conditionBlock ifNone: noneBlock [ 
 	
 	| aCollection |
@@ -370,7 +372,7 @@ RiceNode >> nextChildNodeStartingFrom: anIceNode suchThat: conditionBlock ifNone
 		ifNone: noneBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> nextNodeSuchThat: conditionBlock ifFound: foundBlock [ 
 	
 	self children do: [ :each |
@@ -381,7 +383,7 @@ RiceNode >> nextNodeSuchThat: conditionBlock ifFound: foundBlock [
 			ifFound: [ :found | ^  foundBlock value: found  ] ].
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> nextNodeSuchThat: conditionBlock ifNone: noneBlock [
 	
 	self children do: [ :each |
@@ -397,24 +399,24 @@ RiceNode >> nextNodeSuchThat: conditionBlock ifNone: noneBlock [
 		ifNone: noneBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> parent [
 	^ parent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> parent: anObject [
 	
 	parent := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> path [
 	
 	^ RelativePath withAll: self allPathSegments
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RiceNode >> printOn: aStream [
 	aStream
 		nextPutAll: 'IceNode(';
@@ -422,38 +424,38 @@ RiceNode >> printOn: aStream [
 		nextPutAll: ')'
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 RiceNode >> removeChild: anIceNode [ 
 	
 	childrenDictionary removeKey: anIceNode key
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> replace: oldNode with: newNode [
 	
 	self assert: oldNode name = newNode name.
 	childrenDictionary at: oldNode name put: newNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> replaceBy: aNode [ 
 	
 	parent replace: self with: aNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> resolve: aRelativePath [ 
 	
 	^ self resolve: aRelativePath ifAbsent: [ NotFound signalFor: aRelativePath ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> resolve: aRelativePath ifAbsent: aBlock [
 	
 	^ self resolve: aRelativePath ifPresent: [ :each | each ] ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> resolve: aRelativePath ifPresent: presentBlock ifAbsent: absentBlock [ 	
 	| segments node |
 	segments := aRelativePath segments.
@@ -468,13 +470,13 @@ RiceNode >> resolve: aRelativePath ifPresent: presentBlock ifAbsent: absentBlock
 		ifAbsent: absentBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> rootNode [
 	
 	^ self parent rootNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceNode >> select: aBlock [
 
 	| selectedChildren newNode |
@@ -491,19 +493,19 @@ RiceNode >> select: aBlock [
 	^ newNode
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RiceNode >> value [
 	
 	^ value
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RiceNode >> value: aValue [
  
 	value := aValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceNode >> withAllParentNodes [
 
 	self hasParent ifFalse: [ ^ #() ].

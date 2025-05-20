@@ -1,44 +1,46 @@
 Class {
-	#name : #RiBranchMark,
-	#superclass : #RiMark,
+	#name : 'RiBranchMark',
+	#superclass : 'RiMark',
 	#instVars : [
 		'local',
 		'remote'
 	],
-	#category : #'Rita-Model-Core'
+	#category : 'Rita-Model-Core',
+	#package : 'Rita-Model',
+	#tag : 'Core'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiBranchMark >> accept: aVisitor [
 	^ aVisitor visitBranchMark: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBranchMark >> description [
 	^ self shortname surroundedBySingleQuotes, ' branch'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiBranchMark >> isBranchMark [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiBranchMark >> isOnlyLocal [
 	^ local isNotNil and: [ remote isNil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBranchMark >> local [
 	^ local
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBranchMark >> local: anObject [
 	local := anObject
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RiBranchMark >> printOn: aStream [
 
 	super printOn: aStream.
@@ -48,17 +50,17 @@ RiBranchMark >> printOn: aStream [
 		nextPutAll: ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBranchMark >> remote [
 	^ remote
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBranchMark >> remote: anObject [
 	remote := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBranchMark >> shortname [
 	^ (local ifNil: [ remote ]) shortname "One of both must be not nil"
 ]

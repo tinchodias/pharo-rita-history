@@ -1,33 +1,35 @@
 Class {
-	#name : #RiTagMark,
-	#superclass : #RiMark,
+	#name : 'RiTagMark',
+	#superclass : 'RiMark',
 	#instVars : [
 		'tag'
 	],
-	#category : #'Rita-Model-Core'
+	#category : 'Rita-Model-Core',
+	#package : 'Rita-Model',
+	#tag : 'Core'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiTagMark >> accept: aVisitor [
 	^ aVisitor visitTagMark: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTagMark >> description [
 	^ self name surroundedBySingleQuotes, ' tag'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiTagMark >> isTagMark [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTagMark >> name [
 	^ tag name
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RiTagMark >> printOn: aStream [
 
 	super printOn: aStream.
@@ -37,12 +39,12 @@ RiTagMark >> printOn: aStream [
 		nextPutAll: ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTagMark >> tag [
 	^ tag
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTagMark >> tag: anObject [
 	tag := anObject
 ]

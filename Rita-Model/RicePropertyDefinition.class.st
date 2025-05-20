@@ -4,27 +4,29 @@ I represent a property of an IceClassDefinition or IceTraitDefinition. For examp
 A property has a name and a value, and only its value can change. Properties cann't be removed from the container.
 "
 Class {
-	#name : #RicePropertyDefinition,
-	#superclass : #RiceContainedDefinition,
+	#name : 'RicePropertyDefinition',
+	#superclass : 'RiceContainedDefinition',
 	#instVars : [
 		'propertyValue'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RicePropertyDefinition >> = anObject [
 	"Answer whether the receiver and anObject represent the same object."
 
 	^ super = anObject and: [ self propertyValue = anObject propertyValue ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RicePropertyDefinition >> accept: aVisitor [
 	^ aVisitor visitPropertyDefinition: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RicePropertyDefinition >> addedIn: aMCDefinition [
 
 	^ aMCDefinition copy
@@ -33,19 +35,19 @@ RicePropertyDefinition >> addedIn: aMCDefinition [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePropertyDefinition >> contents [
 	^ self propertyValue asString
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RicePropertyDefinition >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ super hash bitXor: self propertyValue hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RicePropertyDefinition >> isDefaultValue [
 	name = #superclassName ifTrue: [ 
 		^ self propertyValue = #Object ].
@@ -62,28 +64,28 @@ RicePropertyDefinition >> isDefaultValue [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RicePropertyDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [ 
 	^ #(category comment commentStamp timeStamp) includes: self propertyName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePropertyDefinition >> key [
 	^ '>Property: ', name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePropertyDefinition >> propertyName [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePropertyDefinition >> propertyValue [
 	^ propertyValue ifNil: [
 		propertyValue := containerDefinition asMCDefinition basicAtPropertyNamed: name ]
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RicePropertyDefinition >> removeFromPatcher: aMCPatcher [
 	"Cannot remove a property, just change it."
 

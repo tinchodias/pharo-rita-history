@@ -4,15 +4,17 @@ I am an abstract class that represents a sub-definition of either a IceClassDefi
 My instances only have meaning as elements of the container. 
 "
 Class {
-	#name : #RiceContainedDefinition,
-	#superclass : #RiceCodeDefinition,
+	#name : 'RiceContainedDefinition',
+	#superclass : 'RiceCodeDefinition',
 	#instVars : [
 		'containerDefinition'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceContainedDefinition >> = anotherDefinition [
 	"Answer whether the receiver and anObject represent the same object."
 
@@ -20,12 +22,12 @@ RiceContainedDefinition >> = anotherDefinition [
 		and: [ containerDefinition name = anotherDefinition containerIceDefinition name ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceContainedDefinition >> accept: aVisitor [
 	^ aVisitor visitContainedDefinition: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceContainedDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
 
 (aMCPatcher isKindOf: MCPackageLoader) ifTrue: [ ^self "containerMCDefinition did it" ].
@@ -38,7 +40,7 @@ RiceContainedDefinition >> addModification: anotherIceDefinition toPatcher: aMCP
 
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceContainedDefinition >> addToPatcher: aMCPatcher [ 
 
 	(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [
@@ -52,60 +54,60 @@ RiceContainedDefinition >> addToPatcher: aMCPatcher [
 
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceContainedDefinition >> addedIn: aMCDefinition [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceContainedDefinition >> browse [
 	self containerIceDefinition browse
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceContainedDefinition >> containerIceDefinition [
 	^ containerDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceContainedDefinition >> containerIceDefinition: anObject [
 	containerDefinition := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceContainedDefinition >> containerMCDefinition [
 	^ containerDefinition asMCDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceContainedDefinition >> contents [
 	
 	^ self subclassResponsibility
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceContainedDefinition >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ super hash bitXor: containerDefinition hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceContainedDefinition >> icon [
 	^ self iconNamed: #menuPin
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceContainedDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [ 
 	^ false
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceContainedDefinition >> removeFrom: aPatcher [
 	(self className , 'removeFrom: ' , aPatcher asString) traceCr
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceContainedDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	self subclassResponsibility

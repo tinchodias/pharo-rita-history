@@ -1,6 +1,6 @@
 Class {
-	#name : #RiUnifiedStringDiff,
-	#superclass : #Object,
+	#name : 'RiUnifiedStringDiff',
+	#superclass : 'Object',
 	#instVars : [
 		'lineJoins',
 		'unifiedString',
@@ -8,10 +8,12 @@ Class {
 		'newString',
 		'inlineJoins'
 	],
-	#category : #'Rita-Model-Diff'
+	#category : 'Rita-Model-Diff',
+	#package : 'Rita-Model',
+	#tag : 'Diff'
 }
 
-{ #category : #building }
+{ #category : 'building' }
 RiUnifiedStringDiff >> build [
 
 	| diffBuilder |
@@ -29,7 +31,7 @@ RiUnifiedStringDiff >> build [
 	self buildInlineJoins.
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 RiUnifiedStringDiff >> buildInlineJoins [
 	| runs runsStream |
 	inlineJoins := OrderedCollection new.
@@ -51,7 +53,7 @@ RiUnifiedStringDiff >> buildInlineJoins [
 
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 RiUnifiedStringDiff >> buildInlineJoins: inlinePatches offset: offset reject: aSymbol add: anotherSymbol [ 
 	| inlineString |
 	inlineString := ''.
@@ -66,27 +68,27 @@ RiUnifiedStringDiff >> buildInlineJoins: inlinePatches offset: offset reject: aS
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUnifiedStringDiff >> inlineJoins [
 	^ inlineJoins
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUnifiedStringDiff >> lineJoins [
 	^ lineJoins
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUnifiedStringDiff >> newString: anObject [
 	newString := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUnifiedStringDiff >> oldString: anObject [
 	oldString := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUnifiedStringDiff >> unifiedString [
 	^ unifiedString
 ]

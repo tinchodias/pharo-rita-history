@@ -7,15 +7,17 @@ My contents is just an empty string as the extended class/trait is not defined i
 See my superclasses for more information.
 "
 Class {
-	#name : #RiceExtensionDefinition,
-	#superclass : #RiceMethodContainerDefinition,
+	#name : 'RiceExtensionDefinition',
+	#superclass : 'RiceMethodContainerDefinition',
 	#instVars : [
 		'packageName'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceExtensionDefinition class >> named: aString packageName: aName [
 	^ self new
 		name: aString;
@@ -23,73 +25,73 @@ RiceExtensionDefinition class >> named: aString packageName: aName [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceExtensionDefinition >> = otherExtension [
 	^ self species = otherExtension species 
 		and: [ self name = otherExtension name ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceExtensionDefinition >> accept: aVisitor [
 
 	^ aVisitor visitExtensionDefinition: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceExtensionDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
 
 	"Do nothing. Monticello does not have definitions for extensions"
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceExtensionDefinition >> addToPatcher: aMCPatcher [ 
 	
 	"Monticello does not reify extensions"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceExtensionDefinition >> contents [
 	^ ''
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceExtensionDefinition >> hash [
 	^ self name hash
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceExtensionDefinition >> icon [
 	^ self iconNamed: #group
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceExtensionDefinition >> isExtensionDefinition [
 	
 	^ true
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceExtensionDefinition >> key [
 	^ super key, ' (extension)'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceExtensionDefinition >> packageName [
 	^ packageName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceExtensionDefinition >> packageName: anObject [
 	packageName := anObject
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceExtensionDefinition >> removeFrom: aPatcher [
 	
 	"Do nothing. Do not remove extensions"
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceExtensionDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	"Monticello does not reify extensions"

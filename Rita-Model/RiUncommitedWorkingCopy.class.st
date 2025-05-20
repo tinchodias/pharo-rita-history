@@ -2,95 +2,97 @@
 Represents changes in image's working copy.
 "
 Class {
-	#name : #RiUncommitedWorkingCopy,
-	#superclass : #RiElement,
+	#name : 'RiUncommitedWorkingCopy',
+	#superclass : 'RiElement',
 	#instVars : [
 		'referenceCommit'
 	],
-	#category : #'Rita-Model-Core'
+	#category : 'Rita-Model-Core',
+	#package : 'Rita-Model',
+	#tag : 'Core'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiUncommitedWorkingCopy >> accept: aVisitor [
 	^ aVisitor visitUncommitedWorkingCopy: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> ancestors [
 	^ { referenceCommit }
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RiUncommitedWorkingCopy >> asIceObject [
 	^ self repository iceRepository workingCopy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> author [
 	^ '---'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> authorEmail [
 	^ ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> children [
 	^ #()
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> comment [
 	^ '---'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> committerEmail [
 	^ ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> dateAndTime [
 	^ '---'
 ]
 
-{ #category : #diff }
+{ #category : 'diff' }
 RiUncommitedWorkingCopy >> diffTo: aRiCommit [ 
 	^ self asIceObject diffTo: aRiCommit iceCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> id [
 	^ '---'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiUncommitedWorkingCopy >> isUncommited [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> referenceCommit [
 	^ referenceCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> referenceCommit: aRiCommit [
 	referenceCommit := aRiCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> repository [
 	^ referenceCommit repository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> shortDescription [
 	^ 'Uncommited changes'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiUncommitedWorkingCopy >> shortId [
 	^ '---'
 ]

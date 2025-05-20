@@ -6,16 +6,18 @@ My concrete subclasses represent directories and files.
 See my superclasses for more information.
 "
 Class {
-	#name : #RiceFileSystemDefinition,
-	#superclass : #RiceDefinition,
+	#name : 'RiceFileSystemDefinition',
+	#superclass : 'RiceDefinition',
 	#instVars : [
 		'path',
 		'fileReference'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceFileSystemDefinition class >> named: aString path: aPath [
 	
 	^ (self named: aString)
@@ -23,50 +25,50 @@ RiceFileSystemDefinition class >> named: aString path: aPath [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceFileSystemDefinition >> canBeBrowsed [
 	
 	"It can always be browsed through the libgit file system"
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceFileSystemDefinition >> canBrowseReferences [
 	
 	"We do not track file references..."
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceFileSystemDefinition >> fileReference [
 
 	^ fileReference
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceFileSystemDefinition >> fileReference: aFileReference [
 
 	fileReference := aFileReference 
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceFileSystemDefinition >> isLowImpactAppliedTo: anIceFileDefinition [
 	"May be arbitrary: We assume it doesn't affect behavior of code entities."
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceFileSystemDefinition >> path [
 	^ path
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceFileSystemDefinition >> path: anObject [
 	path := anObject
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceFileSystemDefinition >> removeFrom: aVisitor [
 	
 	aVisitor removeFileReferenceInPath: self path

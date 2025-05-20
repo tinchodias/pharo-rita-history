@@ -2,42 +2,44 @@
 I am a removal in a tree. I contain the definition I'm removing. I know what is the icon for removal and how to calculate a conflict with other operations.
 "
 Class {
-	#name : #RiceRemoval,
-	#superclass : #RiceOperation,
-	#category : #'Rita-Model-Changes'
+	#name : 'RiceRemoval',
+	#superclass : 'RiceOperation',
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceRemoval >> accept: aVisitor [
 	
 	^ aVisitor visitRemoval: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceRemoval >> icon [
 
 	^ self iconNamed: #changeRemove
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RiceRemoval >> inverse [
 	
 	^ RiceAddition definition: definition
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceRemoval >> isRemoval [
 	
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceRemoval >> leftContents [
 	
 	^ ''
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceRemoval >> mergeWithLeftAddition: anIceAddition [ 
 	
 	"This should not happen. If I represent a removal of a node, that means that the original definition existed on the base version.
@@ -45,7 +47,7 @@ RiceRemoval >> mergeWithLeftAddition: anIceAddition [
 	self shouldNotImplement
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceRemoval >> mergeWithLeftModification: anIceModification [ 
 	
 	^ RiceConflictingOperation
@@ -53,7 +55,7 @@ RiceRemoval >> mergeWithLeftModification: anIceModification [
 		right: self
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceRemoval >> mergeWithLeftNoOperation: anIceNoModification [ 
 	
 	"We assume that if the IceNoModification is in the tree this means its children have modifications.
@@ -63,13 +65,13 @@ RiceRemoval >> mergeWithLeftNoOperation: anIceNoModification [
 	^ RiceConflictingOperation left: anIceNoModification right: self
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceRemoval >> mergeWithLeftRemoval: anIceRemoval [ 
 	
 	^ RiceNonConflictingOperation operation: anIceRemoval
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceRemoval >> mergeWithOperation: anOperation [
 	
 	^ anOperation mergeWithLeftRemoval: self

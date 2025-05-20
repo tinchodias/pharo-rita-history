@@ -6,23 +6,25 @@ My contents are the tags defined in the package.
 See my superclasses for more information.
 "
 Class {
-	#name : #RicePackageDefinition,
-	#superclass : #RiceDefinition,
+	#name : 'RicePackageDefinition',
+	#superclass : 'RiceDefinition',
 	#instVars : [
 		'package',
 		'categories',
 		'path'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RicePackageDefinition >> accept: aVisitor [
 	
 	^ aVisitor visitPackage: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RicePackageDefinition >> addModification: anotherIceModification toPatcher: aMCPatcher [ 
 
 	"In MC there is no such thing as a MCPackage definition.
@@ -35,42 +37,42 @@ RicePackageDefinition >> addModification: anotherIceModification toPatcher: aMCP
 	^ aMCPatcher addDefinition: self asMCDefinition
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RicePackageDefinition >> addToPatcher: aPatcher [
 	
 	aPatcher addDefinition: (MCOrganizationDefinition categories: ({name}, categories))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePackageDefinition >> asMCDefinition [
 	
 	^ MCOrganizationDefinition categories: categories
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RicePackageDefinition >> canBeBrowsed [
 	
 	^ RPackage organizer includesPackageNamed: name
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RicePackageDefinition >> canBrowseReferences [
 	
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePackageDefinition >> categories [
 	^ categories
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePackageDefinition >> categories: aCollection [
 
 	categories := aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePackageDefinition >> contents [
 	
 	^ String streamContents: [ :stream |
@@ -82,47 +84,47 @@ RicePackageDefinition >> contents [
 	]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RicePackageDefinition >> icon [
 	^ self iconNamed: #package
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RicePackageDefinition >> initialize [
 
 	super initialize.
 	categories := #()
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RicePackageDefinition >> isPackageDefinition [
 	
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePackageDefinition >> package [
 	
 	^ package
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePackageDefinition >> path [
 	^ path
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RicePackageDefinition >> path: aRelativePath [ 
 	
 	path := aRelativePath
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RicePackageDefinition >> removeFrom: aVisitor [ 
 	aVisitor removePackage: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RicePackageDefinition >> removeFromPatcher: aPatcher [
 	
 	aPatcher removeDefinition: (MCOrganizationDefinition categories: categories)

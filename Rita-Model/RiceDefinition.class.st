@@ -13,15 +13,17 @@ My main API is used to show myself in a diff or merge browser:
 I am also used for comparison to build diffs. See my definitions of equality along my subclasses.
 "
 Class {
-	#name : #RiceDefinition,
-	#superclass : #Object,
+	#name : 'RiceDefinition',
+	#superclass : 'Object',
 	#instVars : [
 		'name'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceDefinition class >> named: aString [ 
 	
 	^ self new
@@ -29,115 +31,115 @@ RiceDefinition class >> named: aString [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceDefinition >> = anotherDefinition [
 
 	^ self species = anotherDefinition species
 		and: [ name = anotherDefinition name ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceDefinition >> accept: aVisitor [
 	
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDefinition >> contents [
 	
 	self subclassResponsibility
 ]
 
-{ #category : #'morphic-compatibility' }
+{ #category : 'morphic-compatibility' }
 RiceDefinition >> contextClass [
 	
 	^ nil
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceDefinition >> hash [
 
 	^ self name hash
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceDefinition >> icon [
 	
 	self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceDefinition >> iconNamed: aSymbol [
 	^ Smalltalk ui icons iconNamed: aSymbol
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDefinition >> isClassDefinition [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDefinition >> isDirectoryDefinition [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDefinition >> isExtensionDefinition [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDefinition >> isFileDefinition [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDefinition >> isMethodDefinition [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDefinition >> isPackageDefinition [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDefinition >> isRootDefinition [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceDefinition >> isTraitDefinition [
 	
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDefinition >> key [
 	
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDefinition >> name [
 	
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceDefinition >> name: aString [ 
 	
 	name := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RiceDefinition >> printOn: aStream [
 	"Append a sequence of characters to aStream that identify the receiver."
 
@@ -148,7 +150,7 @@ RiceDefinition >> printOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceDefinition >> removeFrom: aVisitor [
 	
 	self subclassResponsibility

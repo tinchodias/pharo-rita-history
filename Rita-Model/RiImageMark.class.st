@@ -1,15 +1,17 @@
 Class {
-	#name : #RiImageMark,
-	#superclass : #RiMark,
-	#category : #'Rita-Model-Core'
+	#name : 'RiImageMark',
+	#superclass : 'RiMark',
+	#category : 'Rita-Model-Core',
+	#package : 'Rita-Model',
+	#tag : 'Core'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiImageMark >> accept: aVisitor [
 	^ aVisitor visitImageMark: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiImageMark >> description [
 	^ 'Image mark'
 ]

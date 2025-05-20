@@ -6,18 +6,20 @@ My contents is the code of the method.
 See my superclasses for more information.
 "
 Class {
-	#name : #RiceMethodDefinition,
-	#superclass : #RiceCodeDefinition,
+	#name : 'RiceMethodDefinition',
+	#superclass : 'RiceCodeDefinition',
 	#instVars : [
 		'className',
 		'classIsMeta',
 		'protocol',
 		'sourceCode'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiceMethodDefinition class >> className: aClassName classIsMeta: classIsMeta protocol: protocol name: aString sourceCode: source [
 
 	^ (self named: aString)
@@ -28,7 +30,7 @@ RiceMethodDefinition class >> className: aClassName classIsMeta: classIsMeta pro
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RiceMethodDefinition >> = anotherDefinition [
 	"A method can be equal and belong to another class (and be in the other side). 
 	 And yes, even if this usually should not happen, it happens (and not always is incorrect)"
@@ -37,32 +39,32 @@ RiceMethodDefinition >> = anotherDefinition [
 		and: [ self classIsMeta = anotherDefinition classIsMeta ] ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceMethodDefinition >> accept: aVisitor [
 	
 	^ aVisitor visitMethodNode: self
 ]
 
-{ #category : #'morphic-compatibility' }
+{ #category : 'morphic-compatibility' }
 RiceMethodDefinition >> actualClass [
 
 	^ self contextClass
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
 	aMCPatcher
 		modifyDefinition: anotherIceDefinition asMCDefinition
 		to: self asMCDefinition
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodDefinition >> addToPatcher: aMCPatcher [ 
 	
 	aMCPatcher addDefinition: self asMCDefinition
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodDefinition >> asMCDefinition [
 
 	^ MCMethodDefinition 
@@ -74,13 +76,13 @@ RiceMethodDefinition >> asMCDefinition [
 		source: sourceCode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> ast [
 
 	^ RBParser parseMethod: sourceCode
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceMethodDefinition >> browse [
 	
 	| owner |
@@ -89,7 +91,7 @@ RiceMethodDefinition >> browse [
 	(owner >> name) browse
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceMethodDefinition >> canBeBrowsed [
 	
 	^ Smalltalk globals at: className
@@ -97,41 +99,41 @@ RiceMethodDefinition >> canBeBrowsed [
 		ifAbsent: [ false ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceMethodDefinition >> canBrowseReferences [
 	
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> classIsMeta [
 	^ classIsMeta
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> classIsMeta: anObject [
 	classIsMeta := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> className [
 
 	^ className
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> className: anObject [
 	className := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> contents [
 
 	^ '"', self protocol, '"
 ', sourceCode
 ]
 
-{ #category : #'morphic-compatibility' }
+{ #category : 'morphic-compatibility' }
 RiceMethodDefinition >> contextClass [
 	
 	| class |
@@ -140,83 +142,83 @@ RiceMethodDefinition >> contextClass [
 	^ class
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceMethodDefinition >> icon [
 	
 	^ self iconNamed: #changeUpdate
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RiceMethodDefinition >> install [
 	
 	self asMCDefinition load
 ]
 
-{ #category : #'morphic-compatibility' }
+{ #category : 'morphic-compatibility' }
 RiceMethodDefinition >> isLoadable [
 	^ self contextClass notNil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceMethodDefinition >> isLowImpactAppliedTo: anotherIceMethodDefinition [
 	^ sourceCode = anotherIceMethodDefinition sourceCode
 		or: [ self ast = anotherIceMethodDefinition ast ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceMethodDefinition >> isMethodDefinition [
 	
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> key [
 	^ self classIsMeta
 		ifTrue: [ 'Method (class): ', name ]
 		ifFalse: [ 'Method (inst): ', name ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> ownerName [
 	
 	^ className
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> protocol [
 	^ protocol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> protocol: anObject [
 	protocol := anObject
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodDefinition >> removeFrom: aPatcher [
 	
 	aPatcher removeMethod: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceMethodDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	aMCPatcher removeDefinition: self asMCDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> selector [
 	
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> sourceCode [
 
 	^ sourceCode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMethodDefinition >> sourceCode: aString [
 
 	sourceCode := aString

@@ -12,8 +12,8 @@ I am created by doing one of the following:
 	yourself
 "
 Class {
-	#name : #RiceMerge,
-	#superclass : #Object,
+	#name : 'RiceMerge',
+	#superclass : 'Object',
 	#instVars : [
 		'mergeTree',
 		'repository',
@@ -21,10 +21,12 @@ Class {
 		'imageCommit',
 		'changesToWorkingCopyTree'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #executing }
+{ #category : 'executing' }
 RiceMerge >> calculateChanges [
 
 	| commonAncestor sourceDiff targetDiff |
@@ -44,21 +46,21 @@ RiceMerge >> calculateChanges [
 	 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> changesToWorkingCopyTree [
 
 	self calculateChanges.
 	^ changesToWorkingCopyTree
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceMerge >> conflictsDo: aBlockClosure [ 
 	
 	mergeTree do: [ :each |
 		each isConflict ifTrue: [ aBlockClosure value: each value ] ]
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 RiceMerge >> execute [
 	"at begining of this, there is a possibility that imageCommit needs to be 'fixed' to use."
 	| commitToAdvance |
@@ -76,25 +78,25 @@ RiceMerge >> execute [
 	^ commitToAdvance
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceMerge >> hasConflicts [
 	
 	self calculateChanges.
 	^ mergeTree anySatisfy: [ :e | e isConflict ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> headCommit [
 	^ repository headCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> imageCommit [
 	
 	^ imageCommit ifNil: [ imageCommit := repository workingCopy referenceCommit ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceMerge >> isAlreadyMerged [
 	"The commit is already merged in the image and in the head commit.
 	This means the selected commit is already in the history and there is nothing to do about it."
@@ -102,18 +104,18 @@ RiceMerge >> isAlreadyMerged [
 	^ mergeCommit isAncestorOf: self leftCommit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceMerge >> isEmpty [
 	
 	^ mergeTree isEmpty
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceMerge >> isFastForward [
 	^ self headCommit isAncestorOf: mergeCommit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceMerge >> isInverseMerge [
 	"When the image commit corresponds to the mergeCommit. 
 	It means we are in an inverse merge. We want to merge the changes from the image into head commit.
@@ -122,14 +124,14 @@ RiceMerge >> isInverseMerge [
 	^ self imageCommit = mergeCommit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceMerge >> isMerged [
 	
 	^ mergeTree allSatisfy: [ :operation |
 		operation isConflict not or: [ operation isResolved ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> leftCommit [
 
 	^ self isInverseMerge
@@ -138,29 +140,29 @@ RiceMerge >> leftCommit [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> mergeCommit: aCommit [ 
 	mergeCommit := aCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> mergeTree [
 	self calculateChanges.
 	^ mergeTree
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> repository [
 	
 	^ repository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> repository: anIceRepository [ 
 	repository := anIceRepository
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 RiceMerge >> resolveConflicts [
 	self hasConflicts
 		ifTrue: [ | resolved |
@@ -174,12 +176,12 @@ RiceMerge >> resolveConflicts [
 				ifFalse: [ IceMergeAborted signal ] ]
 ]
 
-{ #category : #descriptions }
+{ #category : 'descriptions' }
 RiceMerge >> sourceDescription [
 	^ 'Working Copy version: ' , self repository workingCopy description
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> sourceVersion [
 	"This is the commit that will provide the changes. 
 	In a merge, the commit providing the changes is the merge commit."
@@ -187,40 +189,40 @@ RiceMerge >> sourceVersion [
 	^ mergeCommit
 ]
 
-{ #category : #descriptions }
+{ #category : 'descriptions' }
 RiceMerge >> targetDescription [
 	^ 'Merging commit: ' , self sourceVersion description
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> targetVersion [
 	"This is the commit that will receive the changes. 
 	In a merge, the commit receiving the changes is the head of the repository."
 	^ self leftCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> tree [
 	"Returns the tree to merge.
 	Polymorphic with an ice Diff"
 	^ self mergeTree
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> treeToShow [
 	"Returns the tree to show in the UI.
 	Polymorphic with an ice Diff"
 	^ self changesToWorkingCopyTree
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceMerge >> unresolvedConflictCount [
 
 	^ mergeTree count: [ :operation |
 		operation isConflict and: [ operation isResolved not ] ]
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 RiceMerge >> updateHead [
 	" 2 - Update HEAD.
 	If the merged commits are from diverging branches, generate a merge commit.
@@ -243,7 +245,7 @@ RiceMerge >> updateHead [
 	repository branch commit: commitToAdvance
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 RiceMerge >> updateWorkingCopy [
 
 	" 3 - Load changes in the image.

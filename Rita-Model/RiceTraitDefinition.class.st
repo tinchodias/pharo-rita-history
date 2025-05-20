@@ -6,18 +6,20 @@ My contents is the trait definition.
 See my superclasses for more information.
 "
 Class {
-	#name : #RiceTraitDefinition,
-	#superclass : #RiceMethodContainerDefinition,
-	#category : #'Rita-Model-Changes'
+	#name : 'RiceTraitDefinition',
+	#superclass : 'RiceMethodContainerDefinition',
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceTraitDefinition >> accept: aVisitor [
 	
 	^ aVisitor visitTraitDefinition: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceTraitDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
 	
 	aMCPatcher
@@ -25,7 +27,7 @@ RiceTraitDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatch
 		to: self asMCDefinition
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceTraitDefinition >> addToPatcher: aMCPatcher [ 
 	
 	"We should not handle metaclasses if their mcDefinition is nil.
@@ -36,23 +38,23 @@ RiceTraitDefinition >> addToPatcher: aMCPatcher [
 	aMCPatcher addDefinition: self asMCDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceTraitDefinition >> contents [
 	^ mcDefinition definitionString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceTraitDefinition >> icon [
 	^ self iconNamed: #trait
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceTraitDefinition >> isTraitDefinition [
 
 	^ true
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 RiceTraitDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	"We should not handle metaclasses. They will be added automatically when added the instance side"

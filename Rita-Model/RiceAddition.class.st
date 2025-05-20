@@ -2,42 +2,44 @@
 I am an addition in a tree. I contain the definition I'm adding. I know what is the icon for addition and how to calculate a conflict with other operations.
 "
 Class {
-	#name : #RiceAddition,
-	#superclass : #RiceOperation,
-	#category : #'Rita-Model-Changes'
+	#name : 'RiceAddition',
+	#superclass : 'RiceOperation',
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceAddition >> accept: aVisitor [
 	
 	^ aVisitor visitAddition: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceAddition >> icon [
 	
 	^ self iconNamed: #changeAdd
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RiceAddition >> inverse [
 	
 	^ RiceRemoval definition: definition
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceAddition >> isAddition [
 	
 	^ true
 ]
 
-{ #category : #contents }
+{ #category : 'contents' }
 RiceAddition >> leftContents [
 	
 	^ definition contents
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceAddition >> mergeWithLeftAddition: anIceAddition [ 
 	
 	"If the addition is the same, I can just keep any of them."
@@ -47,7 +49,7 @@ RiceAddition >> mergeWithLeftAddition: anIceAddition [
 	^ RiceConflictingOperation left: anIceAddition right: self
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceAddition >> mergeWithLeftModification: anIceModification [ 
 	
 	"This should not happen. If I represent an addition of a node, that means that the original definition did not exist on the base version.
@@ -55,7 +57,7 @@ RiceAddition >> mergeWithLeftModification: anIceModification [
 	self shouldNotImplement
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceAddition >> mergeWithLeftNoOperation: anIceNoModification [ 
 	
 	"This should not happen. If I represent an addition of a node, that means that the original definition did not exist on the base version.
@@ -63,7 +65,7 @@ RiceAddition >> mergeWithLeftNoOperation: anIceNoModification [
 	self shouldNotImplement
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceAddition >> mergeWithLeftRemoval: anIceRemoval [ 
 	
 	"This should not happen. If I represent an addition of a node, that means that the original definition did not exist on the base version.
@@ -71,13 +73,13 @@ RiceAddition >> mergeWithLeftRemoval: anIceRemoval [
 	self shouldNotImplement
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceAddition >> mergeWithOperation: anOperation [
 	
 	^ anOperation mergeWithLeftAddition: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAddition >> rightContents [
 	
 	^ ''

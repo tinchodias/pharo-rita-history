@@ -2,24 +2,26 @@
 My subclasses implement a tree used for diffing and merging.
 "
 Class {
-	#name : #RiceAbstractNode,
-	#superclass : #Object,
-	#category : #'Rita-Model-Changes'
+	#name : 'RiceAbstractNode',
+	#superclass : 'Object',
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> accept: aVisitor [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> addTo: anotherNode [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> allChildren [
 	"Answer a collection with my direct and indirect children."
 
@@ -29,7 +31,7 @@ RiceAbstractNode >> allChildren [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> allChildrenDo: aBlockClosure [
 	"Evaluate aBlockClosure with my direct and indirect children."
 	
@@ -38,7 +40,7 @@ RiceAbstractNode >> allChildrenDo: aBlockClosure [
 		each allChildrenDo: aBlockClosure ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> allLeavesDo: aBlockClosure [
 	"Evaluate aBlockClosure with all empty nodes, including self and all (direct and indirect) children."
 
@@ -49,113 +51,113 @@ RiceAbstractNode >> allLeavesDo: aBlockClosure [
 				each allLeavesDo: aBlockClosure ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> anySatisfy: aBlockClosure [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> children [
 	"Answer the (direct) children of this node."
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceAbstractNode >> childrenDo: aBlockClosure [ 
 	
 	self children do: aBlockClosure
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> collect: aBlockClosure [
 	"Collect the results of aBlockClosure on my value and the values of my children."
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> collectWithPath: aBlockClosure [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> do: aBlockClosure [
 	"Evaluate aBlockClosure on my value and the values of my children."
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> firstNodeSuchThat: conditionBlock [ 
 	
 	^ self firstNodeSuchThat: conditionBlock ifNone: [ NotFound signalFor: conditionBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> firstNodeSuchThat: foundBlock ifNone: noneBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> hasChanges [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> includesKey: anObject [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> isEmpty [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> isEmptyNode [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> mergeWith: anotherNode onLeft: leftBlock onRight: rightBlock onMerge: mergeBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> notEmpty [
 
 	^ self isEmpty not
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> path [
 	"Answer a RelativePath to the top parent."
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> resolve: aRelativePath ifPresent: presentBlock ifAbsent: absentBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceAbstractNode >> select: aBlockClosure [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceAbstractNode >> withAllChildrenDo: aBlockClosure [
 
 	aBlockClosure value: self.

@@ -2,59 +2,61 @@
 I represent a merge between two operations. I know if I'm a conflict or not, if I have changes, and the user can use me to resolve a conflict.
 "
 Class {
-	#name : #RiceOperationMerge,
-	#superclass : #Object,
+	#name : 'RiceOperationMerge',
+	#superclass : 'Object',
 	#instVars : [
 		'chosen'
 	],
-	#category : #'Rita-Model-Changes'
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceOperationMerge >> accept: aVisitor [
 	
 	^ self subclassResponsibility
 ]
 
-{ #category : #'morphic-compatibility' }
+{ #category : 'morphic-compatibility' }
 RiceOperationMerge >> actualClass [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceOperationMerge >> chosenOperation [
 	
 	self subclassResponsibility
 ]
 
-{ #category : #resolution }
+{ #category : 'resolution' }
 RiceOperationMerge >> clearSelection [
 	
 	chosen := nil
 ]
 
-{ #category : #'morphic-compatibility' }
+{ #category : 'morphic-compatibility' }
 RiceOperationMerge >> contextClass [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceOperationMerge >> definition [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceOperationMerge >> description [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceOperationMerge >> hasChanges [
 
 	^ self chosenOperation hasChanges
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceOperationMerge >> icon [
 
 	self isRightChosen ifTrue: [ ^ self iconNamed: #changeBlock ].
@@ -63,58 +65,58 @@ RiceOperationMerge >> icon [
 	^ self operationIcon
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceOperationMerge >> isConflict [
 	self subclassResponsibility
 ]
 
-{ #category : #resolution }
+{ #category : 'resolution' }
 RiceOperationMerge >> isLeftChosen [
 	self subclassResponsibility
 ]
 
-{ #category : #'morphic-compatibility' }
+{ #category : 'morphic-compatibility' }
 RiceOperationMerge >> isLoadable [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceOperationMerge >> isResolved [
 	
 	^ chosen notNil
 ]
 
-{ #category : #resolution }
+{ #category : 'resolution' }
 RiceOperationMerge >> isRightChosen [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceOperationMerge >> key [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceOperationMerge >> leftContents [
 	self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiceOperationMerge >> operationIcon [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceOperationMerge >> rightContents [
 	self subclassResponsibility
 ]
 
-{ #category : #resolution }
+{ #category : 'resolution' }
 RiceOperationMerge >> selectLeft [
 	self subclassResponsibility
 ]
 
-{ #category : #resolution }
+{ #category : 'resolution' }
 RiceOperationMerge >> selectRight [
 	self subclassResponsibility
 ]

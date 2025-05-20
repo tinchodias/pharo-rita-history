@@ -1,33 +1,35 @@
 Class {
-	#name : #RiLinesJoin,
-	#superclass : #Object,
+	#name : 'RiLinesJoin',
+	#superclass : 'Object',
 	#instVars : [
 		'string',
 		'kind',
 		'to',
 		'from'
 	],
-	#category : #'Rita-Model-Diff'
+	#category : 'Rita-Model-Diff',
+	#package : 'Rita-Model',
+	#tag : 'Diff'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiLinesJoin class >> from: anIndex to: anotherIndex kind: aSymbol string: aString [
 	^ self basicNew
 		initializeFrom: anIndex to: anotherIndex kind: aSymbol string: aString;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiLinesJoin >> diffString [
 	^ string
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiLinesJoin >> fromIndex [
 	^ from
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiLinesJoin >> initializeFrom: anIndex to: anotherIndex kind: aSymbol string: aString [
 	self initialize.
 	from := anIndex.
@@ -36,12 +38,12 @@ RiLinesJoin >> initializeFrom: anIndex to: anotherIndex kind: aSymbol string: aS
 	kind := aSymbol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiLinesJoin >> kindSymbol [
 	^ kind
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RiLinesJoin >> printOn: aStream [
 	"Append a sequence of characters to aStream that identify the receiver."
 
@@ -58,7 +60,7 @@ RiLinesJoin >> printOn: aStream [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiLinesJoin >> toIndex [
 	^ to
 ]

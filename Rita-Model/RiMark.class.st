@@ -2,40 +2,42 @@
 Represents a mark of a RiElement.
 "
 Class {
-	#name : #RiMark,
-	#superclass : #Object,
+	#name : 'RiMark',
+	#superclass : 'Object',
 	#instVars : [
 		'element'
 	],
-	#category : #'Rita-Model-Core'
+	#category : 'Rita-Model-Core',
+	#package : 'Rita-Model',
+	#tag : 'Core'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiMark >> accept: aVisitor [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMark >> description [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMark >> element [
 	^ element
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMark >> element: anObject [
 	element := anObject
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiMark >> isBranchMark [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiMark >> isTagMark [
 	^ false
 ]

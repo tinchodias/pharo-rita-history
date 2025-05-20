@@ -2,51 +2,53 @@
 I am a null object representing an empty node of a tree. I'm used together with IceNode.
 "
 Class {
-	#name : #RiceEmptyNode,
-	#superclass : #RiceAbstractNode,
-	#category : #'Rita-Model-Changes'
+	#name : 'RiceEmptyNode',
+	#superclass : 'RiceAbstractNode',
+	#category : 'Rita-Model-Changes',
+	#package : 'Rita-Model',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiceEmptyNode >> accept: aVisitor [
 	
 	^ aVisitor visitEmptyNode: self
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RiceEmptyNode >> addTo: anotherNode [ 
 	"I'm empty, so I do not add myself to a tree."
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceEmptyNode >> anySatisfy: aBlockClosure [ 
 	
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceEmptyNode >> children [
 	
 	^ #()
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceEmptyNode >> collect: aBlockClosure [ 
 
 	^ self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceEmptyNode >> collectWithPath: aBlockClosure [ 
 	^ self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceEmptyNode >> do: aBlock [
 	"Do nothing"
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceEmptyNode >> firstNodeSuchThat: conditionBlock ifNone: noneBlock [
 	
 	^ (conditionBlock value: self)
@@ -54,48 +56,48 @@ RiceEmptyNode >> firstNodeSuchThat: conditionBlock ifNone: noneBlock [
 		ifFalse: noneBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceEmptyNode >> hasChanges [
 	
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceEmptyNode >> includesKey: aString [ 
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceEmptyNode >> isEmpty [
 	
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiceEmptyNode >> isEmptyNode [
 	
 	^ true
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 RiceEmptyNode >> mergeWith: anotherNode onLeft: leftBlock onRight: rightBlock onMerge: mergeBlock [
 	
 	^ anotherNode collect: rightBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceEmptyNode >> path [
 
 	^ RelativePath new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiceEmptyNode >> resolve: aRelativePath ifPresent: presentBlock ifAbsent: absentBlock [ 
 	^ absentBlock value
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiceEmptyNode >> select: aBlockClosure [ 
 	
 	^ self
