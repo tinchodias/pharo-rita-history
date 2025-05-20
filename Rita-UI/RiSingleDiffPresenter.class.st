@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'specs' }
-RiSingleDiffPresenter class >> defaultSpec [
+RiSingleDiffPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #diffMorphPresenter;
 		yourself

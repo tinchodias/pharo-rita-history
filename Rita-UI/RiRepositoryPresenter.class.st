@@ -20,7 +20,7 @@ Class {
 }
 
 { #category : 'examples' }
-RiRepositoryPresenter class >> defaultSpec [
+RiRepositoryPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #table;
 		add: #actionBar

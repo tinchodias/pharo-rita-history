@@ -12,9 +12,9 @@ Class {
 }
 
 { #category : 'specs' }
-RiElementPresenter class >> defaultSpec [
+RiElementPresenter class >> defaultLayout [
 	^ SpPanedLayout newVertical
-		position: 0.07;
+		positionOfSlider: 0.07;
 		add: #header;
 		add: #notebook;
 		yourself

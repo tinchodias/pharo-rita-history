@@ -10,8 +10,8 @@ Class {
 }
 
 { #category : 'specs' }
-RiClassSearchPage class >> defaultSpec [
-	^ super defaultSpec
+RiClassSearchPage class >> defaultLayout [
+	^ super defaultLayout
 		add: #classNameInput height: self labelledInputHeight;
 		yourself
 ]

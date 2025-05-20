@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : 'specs' }
-RiRepositoryListPresenter class >> defaultSpec [
+RiRepositoryListPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 "		add: #menuBar
 			withConstraints: [ :constraints | constraints height: self toolbarHeight ];"

@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'specs' }
-RiPathSearchPage class >> defaultSpec [
+RiPathSearchPage class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #pathInput height: self labelledInputHeight;
 		yourself

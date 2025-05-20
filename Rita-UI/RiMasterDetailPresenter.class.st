@@ -11,9 +11,9 @@ Class {
 }
 
 { #category : 'specs' }
-RiMasterDetailPresenter class >> defaultSpec [
+RiMasterDetailPresenter class >> defaultLayout [
 	^ SpPanedLayout newHorizontal
-		position: 30 percent;
+		positionOfSlider: 30 percent;
 		add: #masterPresenter;
 		add: #detailPresenter;
 		yourself

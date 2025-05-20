@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : 'specs' }
-RiFullDiffPresenter class >> defaultSpec [
+RiFullDiffPresenter class >> defaultLayout [
 	^ SpPanedLayout newHorizontal
 		position: 60 percent;
 		add: #torchDiffPresenter;

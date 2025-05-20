@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'specs' }
-RiElementHeaderPresenter class >> defaultSpec [
+RiElementHeaderPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
 		add: #headerText;

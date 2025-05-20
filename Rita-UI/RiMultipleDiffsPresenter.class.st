@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'specs' }
-RiMultipleDiffsPresenter class >> defaultSpec [
+RiMultipleDiffsPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #table;
 		yourself

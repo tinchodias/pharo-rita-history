@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'specs' }
-RiRepositorySearchPresenter class >> defaultSpec [
+RiRepositorySearchPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #notebook;
 "		add: #applyButton
