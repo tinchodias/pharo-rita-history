@@ -42,13 +42,14 @@ RiRootPresenter class >> taskbarIconName [
 
 { #category : 'accessing' }
 RiRootPresenter class >> worldMenuItemOn: aBuilder [
-	<worldMenu>
 
-	(aBuilder item: 'Torch')
+	<worldMenu>
+	(aBuilder item: 'Rita')
 		parent: #Tools;
 		action: [ self open ];
-		icon: self taskbarIcon;
-		help: 'Torch is a tool that helps developers to understand code changes between two commits in a git repository.';
+		icon: (self iconNamed: self taskbarIconName);
+		help:
+			'Rita is a tool that helps developers to understand code changes in a git repository.';
 		order: 0.5
 ]
 
