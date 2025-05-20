@@ -1,6 +1,6 @@
 Class {
-	#name : #RiDiffQueryFixture,
-	#superclass : #IceMultiplePackageFixture,
+	#name : 'RiDiffQueryFixture',
+	#superclass : 'IceMultiplePackageFixture',
 	#instVars : [
 		'commit2',
 		'commit3',
@@ -10,10 +10,11 @@ Class {
 		'commit6',
 		'commit7'
 	],
-	#category : #'Rita-Tests'
+	#category : 'Rita-Tests',
+	#package : 'Rita-Tests'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RiDiffQueryFixture >> addFileAt: pathString with: aString [
 	| fileReference |
 	fileReference := repository location / pathString.
@@ -21,42 +22,42 @@ RiDiffQueryFixture >> addFileAt: pathString with: aString [
 	repository index addPath: (fileReference relativeTo: repository location).
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQueryFixture >> commit1 [
 	^ commit1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQueryFixture >> commit2 [
 	^ commit2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQueryFixture >> commit3 [
 	^ commit3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQueryFixture >> commit4 [
 	^ commit4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQueryFixture >> commit5 [
 	^ commit5
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQueryFixture >> commit6 [
 	^ commit6
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffQueryFixture >> commit7 [
 	^ commit7
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RiDiffQueryFixture >> setUp [
 	super setUp.
 

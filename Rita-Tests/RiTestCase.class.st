@@ -1,13 +1,20 @@
 Class {
-	#name : #RiTestCase,
-	#superclass : #IceAbstractTestCase,
+	#name : 'RiTestCase',
+	#superclass : 'IceAbstractTestCase',
 	#instVars : [
 		'repository'
 	],
-	#category : #'Rita-Tests'
+	#category : 'Rita-Tests',
+	#package : 'Rita-Tests'
 }
 
-{ #category : #running }
+{ #category : 'testing' }
+RiTestCase class >> isAbstract [
+
+	^ self == RiTestCase
+]
+
+{ #category : 'running' }
 RiTestCase >> buildRepository [
 	repository := (RiRepository iceRepository: self repository)
 		process;
@@ -15,12 +22,12 @@ RiTestCase >> buildRepository [
 
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RiTestCase >> checkoutBranch: aString [
 	^ self repository checkoutBranch: aString
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RiTestCase >> commitWithMessage: aString [
 	^ self repository workingCopy
 		commitChanges: self repository workingCopyDiff
@@ -28,7 +35,7 @@ RiTestCase >> commitWithMessage: aString [
 		force: true
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RiTestCase >> commitWithMessage: aString andParents: aCollection [ 
 	^ self repository
 		commitIndexWithMessage: aString
@@ -36,12 +43,12 @@ RiTestCase >> commitWithMessage: aString andParents: aCollection [
 
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RiTestCase >> createTag: aString [
 	^ self repository createTag: aString
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RiTestCase >> deleteBranch: aString [
 	(self repository branchNamed: aString) delete.
 
@@ -50,7 +57,7 @@ RiTestCase >> deleteBranch: aString [
 
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RiTestCase >> newFixture [
 	^ IceBasicRepositoryFixture inGit
 ]

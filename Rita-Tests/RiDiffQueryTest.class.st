@@ -1,15 +1,16 @@
 Class {
-	#name : #RiDiffQueryTest,
-	#superclass : #IceAbstractTestCase,
-	#category : #'Rita-Tests'
+	#name : 'RiDiffQueryTest',
+	#superclass : 'IceAbstractTestCase',
+	#category : 'Rita-Tests',
+	#package : 'Rita-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RiDiffQueryTest >> newFixture [
 	^ RiDiffQueryFixture inGit
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiDiffQueryTest >> test01ConsiderOnlyChangedButThereIsntAny [
 	| query nodes |
 	query := RiDiffQuery new
@@ -23,7 +24,7 @@ RiDiffQueryTest >> test01ConsiderOnlyChangedButThereIsntAny [
 			self assert: each value definition name equals: #A ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiDiffQueryTest >> test02ConsiderOnlyChangedThenItSkipsUnmodified [
 	| query nodes |
 	query := RiDiffQuery new
@@ -37,7 +38,7 @@ RiDiffQueryTest >> test02ConsiderOnlyChangedThenItSkipsUnmodified [
 			self assert: each value definition name equals: #B ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiDiffQueryTest >> test03ConsiderUnchangedWorks [
 	| query nodes |
 	query := RiDiffQuery new
@@ -54,7 +55,7 @@ RiDiffQueryTest >> test03ConsiderUnchangedWorks [
 		ifFound: [ :node | self assert: node value hasChanges ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiDiffQueryTest >> test04ConsiderUnchangedWithFileChanged [
 	| query nodes |
 	query := RiDiffQuery new
@@ -66,7 +67,7 @@ RiDiffQueryTest >> test04ConsiderUnchangedWithFileChanged [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiDiffQueryTest >> test05ConsiderUnchangedWithAnotherPackage [
 
 	| query nodes |
@@ -79,7 +80,7 @@ RiDiffQueryTest >> test05ConsiderUnchangedWithAnotherPackage [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiDiffQueryTest >> test06ConsiderOnlyChangedWithFiles [
 
 	| query nodes |

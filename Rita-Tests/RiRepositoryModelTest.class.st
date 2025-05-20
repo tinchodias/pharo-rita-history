@@ -1,10 +1,11 @@
 Class {
-	#name : #RiRepositoryModelTest,
-	#superclass : #RiTestCase,
-	#category : #'Rita-Tests'
+	#name : 'RiRepositoryModelTest',
+	#superclass : 'RiTestCase',
+	#category : 'Rita-Tests',
+	#package : 'Rita-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiRepositoryModelTest >> testAllAncestors [
 	"
 	input:
@@ -41,7 +42,7 @@ RiRepositoryModelTest >> testAllAncestors [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiRepositoryModelTest >> testAllChildren [
 	"
 	input:
@@ -78,7 +79,7 @@ RiRepositoryModelTest >> testAllChildren [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiRepositoryModelTest >> testMerge [
 	"
 	input:
@@ -119,7 +120,7 @@ RiRepositoryModelTest >> testMerge [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiRepositoryModelTest >> testRefresh [
 
 	repository := RiRepository iceRepository: self repository.
@@ -146,7 +147,7 @@ RiRepositoryModelTest >> testRefresh [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RiRepositoryModelTest >> testSimple [
 	"
 	input:
