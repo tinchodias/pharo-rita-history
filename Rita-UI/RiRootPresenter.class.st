@@ -81,25 +81,6 @@ RiRootPresenter >> newHomePage [
 				model: model repositories;
 				blockForOpenRepository: [ :aRiRepository |
 					self openRepository: aRiRepository ];
-				blockForOpenPullRequests: [ :anIceRemote |
-					self openPullRequestsOf: anIceRemote ];
-				yourself ]
-]
-
-{ #category : 'private' }
-RiRootPresenter >> newPullRequestsPageFor: anIceRemote [
-	^ SpNotebookPage
-		title: ''
-		icon: (self iconNamed: #github)
-		provider: [
-			(self instantiate: RiPullRequestMasterDetailPresenter)
-				model: { 
-					#githubRemote -> anIceRemote. 
-					#repository -> anIceRemote localRepository.
-					#root -> model.
-					#aesthetics -> model aesthetics.
-					#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ].
-					} asDictionary;
 				yourself ]
 ]
 
@@ -147,14 +128,6 @@ RiRootPresenter >> openPage: anObject title: aString ifAbsentBuildWith: aBlock [
 	notebook
 		addPage: page;
 		selectPage: page
-]
-
-{ #category : 'private' }
-RiRootPresenter >> openPullRequestsOf: anIceRemote [
-	self
-		openPage: anIceRemote
-		title: (self titleForPullRequestsPage: anIceRemote)
-		ifAbsentBuildWith: [ self newPullRequestsPageFor: anIceRemote ]
 ]
 
 { #category : 'private' }
