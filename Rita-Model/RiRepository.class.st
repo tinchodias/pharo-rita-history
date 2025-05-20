@@ -90,7 +90,8 @@ RiRepository >> newIceCommitWalk [
 		beSortedByCommitTime;
 		beSortedParentsBeforeChildren.
 
-	(iceBranches, iceTags) do: [ :each | walk fromLGitId: each commitId ].
+	iceBranches do: [ :each | walk fromBranch: each ].
+	iceTags do: [ :each | walk fromTag: each ].
 
 	^ walk
 ]
