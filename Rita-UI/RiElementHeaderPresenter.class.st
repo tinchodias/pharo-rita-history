@@ -9,7 +9,7 @@ Class {
 	#tag : 'Spec2-Repository'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiElementHeaderPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical

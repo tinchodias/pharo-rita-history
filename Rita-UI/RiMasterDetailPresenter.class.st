@@ -10,7 +10,7 @@ Class {
 	#tag : 'Spec2-Base'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiMasterDetailPresenter class >> defaultLayout [
 	^ SpPanedLayout newHorizontal
 		positionOfSlider: 30 percent;

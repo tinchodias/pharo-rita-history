@@ -9,7 +9,7 @@ Class {
 	#tag : 'Spec2-Base'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiRootPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #notebook;

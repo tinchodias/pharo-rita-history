@@ -9,7 +9,7 @@ Class {
 	#tag : 'Spec2-Diff'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiMultipleDiffsPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #table;

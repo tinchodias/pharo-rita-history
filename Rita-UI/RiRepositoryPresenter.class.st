@@ -19,7 +19,7 @@ Class {
 	#tag : 'Spec2-Repository'
 }
 
-{ #category : 'examples' }
+{ #category : 'layout' }
 RiRepositoryPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #table;

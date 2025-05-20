@@ -11,7 +11,7 @@ Class {
 	#tag : 'Spec2-Repository'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiElementPresenter class >> defaultLayout [
 	^ SpPanedLayout newVertical
 		positionOfSlider: 0.07;

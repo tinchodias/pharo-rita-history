@@ -11,7 +11,7 @@ Class {
 	#tag : 'Spec2-Repository'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiRepositoryListPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 "		add: #menuBar

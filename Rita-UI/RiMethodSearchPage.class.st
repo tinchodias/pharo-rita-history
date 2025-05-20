@@ -9,7 +9,7 @@ Class {
 	#tag : 'Spec2-Search'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiMethodSearchPage class >> defaultLayout [
 	^ super defaultLayout
 		add: #methodSelectorInput height: self labelledInputHeight;

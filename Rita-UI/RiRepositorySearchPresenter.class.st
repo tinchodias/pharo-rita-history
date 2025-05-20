@@ -9,7 +9,7 @@ Class {
 	#tag : 'Spec2-Search'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiRepositorySearchPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #notebook;

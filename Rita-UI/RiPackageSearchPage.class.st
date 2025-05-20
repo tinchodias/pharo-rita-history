@@ -9,7 +9,7 @@ Class {
 	#tag : 'Spec2-Search'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiPackageSearchPage class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #packageNameInput height: self labelledInputHeight;

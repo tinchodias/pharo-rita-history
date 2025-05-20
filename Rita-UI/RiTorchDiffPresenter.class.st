@@ -15,7 +15,7 @@ Class {
 	#tag : 'Spec2-Diff'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiTorchDiffPresenter class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #toolBar withConstraints: [ :constraints | constraints height: self toolbarHeight + 8];

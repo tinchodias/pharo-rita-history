@@ -9,7 +9,7 @@ Class {
 	#tag : 'Spec2-Search'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiClassSearchPage class >> defaultLayout [
 	^ super defaultLayout
 		add: #classNameInput height: self labelledInputHeight;

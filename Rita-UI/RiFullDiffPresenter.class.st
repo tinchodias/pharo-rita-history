@@ -11,7 +11,7 @@ Class {
 	#tag : 'Spec2-Diff'
 }
 
-{ #category : 'specs' }
+{ #category : 'layout' }
 RiFullDiffPresenter class >> defaultLayout [
 	^ SpPanedLayout newHorizontal
 		position: 60 percent;
