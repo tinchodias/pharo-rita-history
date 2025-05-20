@@ -37,10 +37,17 @@ RiTestCase >> commitWithMessage: aString [
 
 { #category : 'running' }
 RiTestCase >> commitWithMessage: aString andParents: aCollection [ 
-	^ self repository
+	
+	| aCommit |
+	aCommit := self repository
 		commitIndexWithMessage: aString
-		andParents: aCollection
+		andParents: aCollection.
 
+	"After a merge, working copy is detached until a checkout"
+	self repository head checkout.
+	self deny: self repository workingCopy isDetached.
+
+	^ aCommit
 ]
 
 { #category : 'running' }
