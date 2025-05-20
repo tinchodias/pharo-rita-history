@@ -1,15 +1,17 @@
 Class {
-	#name : #RiFullDiffPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiFullDiffPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'torchDiffPresenter',
 		'treeDiffPresenter',
 		'sourceCodePanel'
 	],
-	#category : #'Rita-UI-Spec2-Diff'
+	#category : 'Rita-UI-Spec2-Diff',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Diff'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiFullDiffPresenter class >> defaultSpec [
 	^ SpPanedLayout newHorizontal
 		position: 60 percent;
@@ -22,7 +24,7 @@ RiFullDiffPresenter class >> defaultSpec [
 				yourself) yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiFullDiffPresenter >> initializePresenters [
 	torchDiffPresenter := self instantiate: RiTorchDiffPresenter.
 	treeDiffPresenter := self instantiate: RiTreeDiffPresenter.
@@ -30,12 +32,12 @@ RiFullDiffPresenter >> initializePresenters [
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiFullDiffPresenter >> nodesToIterate [
 	^ (treeDiffPresenter model at: #diffQuery) allLeafChildren
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiFullDiffPresenter >> refreshOnModelUpdate [
 
 	| modelCopy |
@@ -78,7 +80,7 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RiFullDiffPresenter >> selectBackIceNode [
 	| iceNodes index iceNode |
 	iceNodes := self nodesToIterate.
@@ -95,7 +97,7 @@ RiFullDiffPresenter >> selectBackIceNode [
 	self selectIceNode: iceNode
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiFullDiffPresenter >> selectIceNode: iceNode [
 
 	(model at: #root) announceAction: #select iceNode: iceNode.
@@ -105,7 +107,7 @@ RiFullDiffPresenter >> selectIceNode: iceNode [
 	sourceCodePanel selectIceNode: iceNode
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RiFullDiffPresenter >> selectNextIceNode [
 	| iceNodes index iceNode |
 	iceNodes := self nodesToIterate.

@@ -1,13 +1,15 @@
 Class {
-	#name : #RiRootPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiRootPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'notebook'
 	],
-	#category : #'Rita-UI-Spec2-Base'
+	#category : 'Rita-UI-Spec2-Base',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Base'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiRootPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #notebook;
@@ -19,25 +21,25 @@ RiRootPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 RiRootPresenter class >> open [
 	<script>
 
 	^ self openWithApplication: RiSpApplication new
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 RiRootPresenter class >> openWithApplication: aSpApplication [
 	^ (self newApplication: aSpApplication) openWithSpec
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootPresenter class >> taskbarIconName [
 
 	^ #git
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootPresenter class >> worldMenuItemOn: aBuilder [
 	<worldMenu>
 
@@ -49,27 +51,27 @@ RiRootPresenter class >> worldMenuItemOn: aBuilder [
 		order: 0.5
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRootPresenter >> initialize [
 	super initialize.
 
 	self model: RiRootModel newWithRegisteredRepositories
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRootPresenter >> initializePresenters [
 	notebook := self newNotebook.
 	notebook addPage: self newHomePage
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRootPresenter >> initializeWindow: aSpWindowPresenter [
 	aSpWindowPresenter
 		initialExtent: 1000 @ 800;
 		title: 'History Explorer'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> newHomePage [
 	^ SpNotebookPage
 		title: 'Home'
@@ -84,7 +86,7 @@ RiRootPresenter >> newHomePage [
 				yourself ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> newPullRequestsPageFor: anIceRemote [
 	^ SpNotebookPage
 		title: ''
@@ -101,7 +103,7 @@ RiRootPresenter >> newPullRequestsPageFor: anIceRemote [
 				yourself ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 	^ SpNotebookPage
 		title: ''
@@ -118,7 +120,7 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> newSpawnPageFor: modelToSpawn [
 	^ SpNotebookPage
 		title: ''
@@ -129,7 +131,7 @@ RiRootPresenter >> newSpawnPageFor: modelToSpawn [
 				yourself ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> openPage: anObject title: aString ifAbsentBuildWith: aBlock [
 	"Ensure a notebook's page is open (and selected)."
 
@@ -147,7 +149,7 @@ RiRootPresenter >> openPage: anObject title: aString ifAbsentBuildWith: aBlock [
 		selectPage: page
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> openPullRequestsOf: anIceRemote [
 	self
 		openPage: anIceRemote
@@ -155,7 +157,7 @@ RiRootPresenter >> openPullRequestsOf: anIceRemote [
 		ifAbsentBuildWith: [ self newPullRequestsPageFor: anIceRemote ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> openRepository: aRiRepository [
 	self
 		openPage: aRiRepository
@@ -163,7 +165,7 @@ RiRootPresenter >> openRepository: aRiRepository [
 		ifAbsentBuildWith: [ self newRepositoryPageFor: aRiRepository ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> openSpawnFor: modelToSpawn [
 	self
 		openPage: modelToSpawn
@@ -171,17 +173,17 @@ RiRootPresenter >> openSpawnFor: modelToSpawn [
 		ifAbsentBuildWith: [ self newSpawnPageFor: modelToSpawn ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> titleForPullRequestsPage: anIceRemote [
 	^ 'Pull Requests on {1}' format: {anIceRemote displayString}
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> titleForRepositoryPage: aRiRepository [
 	^ aRiRepository name
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRootPresenter >> titleForSpawnPage: modelToSpawn [
 	^ '{1}: {2}'
 		format:

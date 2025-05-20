@@ -1,13 +1,15 @@
 Class {
-	#name : #RiElementHeaderPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiElementHeaderPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'headerText'
 	],
-	#category : #'Rita-UI-Spec2-Repository'
+	#category : 'Rita-UI-Spec2-Repository',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Repository'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiElementHeaderPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
@@ -15,19 +17,19 @@ RiElementHeaderPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiElementHeaderPresenter >> initializePresenters [
 	headerText := self newText
 		beNotEditable;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElementHeaderPresenter >> refreshOnModelUpdate [
 	model accept: self
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiElementHeaderPresenter >> textForSignature: aLGitSignature role: aString [ 
 	^ Text streamContents: [ :stream |
 		stream
@@ -39,7 +41,7 @@ RiElementHeaderPresenter >> textForSignature: aLGitSignature role: aString [
 				aLGitSignature dateAndTime asEmailString}) ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiElementHeaderPresenter >> visitCommit: aRiCommit [ 
 	| signaturesText text |
 	signaturesText := model committer = model author
@@ -61,7 +63,7 @@ RiElementHeaderPresenter >> visitCommit: aRiCommit [
 	headerText text: text
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiElementHeaderPresenter >> visitUncommitedWorkingCopy: aRiUncommitedWorkingCopy [
 	headerText text: 'Uncommitted changes in this image.'
 ]

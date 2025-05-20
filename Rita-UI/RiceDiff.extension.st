@@ -1,6 +1,6 @@
-Extension { #name : #RiceDiff }
+Extension { #name : 'RiceDiff' }
 
-{ #category : #'*Rita-UI' }
+{ #category : '*Rita-UI' }
 RiceDiff >> ritaShortId [
 	^ '{1}...{2}'
 		format:

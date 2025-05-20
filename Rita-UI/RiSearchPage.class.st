@@ -1,25 +1,27 @@
 Class {
-	#name : #RiSearchPage,
-	#superclass : #RiPresenter,
-	#category : #'Rita-UI-Spec2-Search'
+	#name : 'RiSearchPage',
+	#superclass : 'RiPresenter',
+	#category : 'Rita-UI-Spec2-Search',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Search'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 RiSearchPage class >> labelledInputHeight [
 	^ self inputTextHeight * 1.5
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiSearchPage >> checkIfInvalid: aBlockClosure [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiSearchPage >> pathIn: aRiRepository [
 	^ self subclassResponsibility
 ]
 
-{ #category : #searching }
+{ #category : 'searching' }
 RiSearchPage >> searchResultsIn: aRiRepository [
 	^ aRiRepository
 		selectLibgitCommitsWithChangesAt: (self pathIn: aRiRepository iceRepository)

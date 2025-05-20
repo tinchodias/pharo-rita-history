@@ -1,11 +1,11 @@
-Extension { #name : #RiceMethodDefinition }
+Extension { #name : 'RiceMethodDefinition' }
 
-{ #category : #'*Rita-UI' }
+{ #category : '*Rita-UI' }
 RiceMethodDefinition >> linesOfCode [
 	^ sourceCode lineCount
 ]
 
-{ #category : #'*Rita-UI' }
+{ #category : '*Rita-UI' }
 RiceMethodDefinition >> ritaBasicAsText [
 	^ (classIsMeta
 		ifTrue: [ 'Class ' ]

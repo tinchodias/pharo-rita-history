@@ -1,15 +1,17 @@
 Class {
-	#name : #RiRepositoryListPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiRepositoryListPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'table',
 		'blockForOpenPullRequests',
 		'blockForOpenRepository'
 	],
-	#category : #'Rita-UI-Spec2-Repository'
+	#category : 'Rita-UI-Spec2-Repository',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Repository'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiRepositoryListPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 "		add: #menuBar
@@ -18,7 +20,7 @@ RiRepositoryListPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 RiRepositoryListPresenter >> actionFetch [
 
 	table selection selectedItem
@@ -28,17 +30,17 @@ RiRepositoryListPresenter >> actionFetch [
 	self refreshOnModelUpdate
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepositoryListPresenter >> blockForOpenPullRequests: aBlock [
 	blockForOpenPullRequests:= aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepositoryListPresenter >> blockForOpenRepository: aBlock [
 	blockForOpenRepository := aBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositoryListPresenter >> contextMenuForPullRequestsFor: aRiRepository [
 	| menu |
 	menu := self newMenu.
@@ -53,7 +55,7 @@ RiRepositoryListPresenter >> contextMenuForPullRequestsFor: aRiRepository [
 	^ menu
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositoryListPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := self newMenu.
@@ -95,7 +97,7 @@ RiRepositoryListPresenter >> contextMenuForTable [
 	^ menu
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositoryListPresenter >> initializePresenters [
 
 	table := self newTable.
@@ -117,7 +119,7 @@ RiRepositoryListPresenter >> initializePresenters [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepositoryListPresenter >> refreshOnModelUpdate [
 	table items: model.
 ]

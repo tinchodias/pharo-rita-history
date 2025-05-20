@@ -2,18 +2,20 @@
 I am a Spec2 application to open the Rita root presenter in Morphic backend.
 "
 Class {
-	#name : #RiSpApplication,
-	#superclass : #SpApplication,
-	#category : #'Rita-UI-Spec2-Base'
+	#name : 'RiSpApplication',
+	#superclass : 'SpApplication',
+	#category : 'Rita-UI-Spec2-Base',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Base'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiSpApplication >> initialize [
 	super initialize.
 	self useBackend: #Morphic with: RiSpMorphicConfiguration new
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RiSpApplication >> start [
 	"
 	self new start

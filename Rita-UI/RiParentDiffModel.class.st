@@ -1,41 +1,43 @@
 Class {
-	#name : #RiParentDiffModel,
-	#superclass : #RiDiffModel,
+	#name : 'RiParentDiffModel',
+	#superclass : 'RiDiffModel',
 	#instVars : [
 		'parentRiElement'
 	],
-	#category : #'Rita-UI-Models'
+	#category : 'Rita-UI-Models',
+	#package : 'Rita-UI',
+	#tag : 'Models'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiParentDiffModel class >> parentRiElement: aRiCommit [
 	^ self basicNew
 		initializeWithParentRiElement: aRiCommit;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiParentDiffModel >> iceDiffTo: targetRiElement [
 	^ targetRiElement diffTo: parentRiElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiParentDiffModel >> icon [
 	^ self iconNamed: #diff
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiParentDiffModel >> initializeWithParentRiElement: aRiCommit [
 	self initialize.
 	parentRiElement := aRiCommit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiParentDiffModel >> shouldCompareTo: aRiCommit [ 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiParentDiffModel >> title [
 	^ 'Diff to Parent ({1})' format: { parentRiElement shortId } 
 ]

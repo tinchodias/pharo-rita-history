@@ -1,23 +1,25 @@
 Class {
-	#name : #RiTreeDiffPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiTreeDiffPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'treeTable',
 		'highlightDeferrer',
 		'iceNodeCollectionToHighlight',
 		'expandDeferrer'
 	],
-	#category : #'Rita-UI-Spec2-Diff'
+	#category : 'Rita-UI-Spec2-Diff',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Diff'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiTreeDiffPresenter class >> defaultSpec [
 	^ SpBoxLayout newHorizontal
 		add: #treeTable;
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTreeDiffPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := self newMenu.
@@ -41,7 +43,7 @@ RiTreeDiffPresenter >> contextMenuForTable [
 	^ menu
 ]
 
-{ #category : #'check/uncheck' }
+{ #category : 'check/uncheck' }
 RiTreeDiffPresenter >> doCheck: anIceNode [
 	self shadowedIceNodes
 		removeAllFoundIn: anIceNode allChildren;
@@ -52,7 +54,7 @@ RiTreeDiffPresenter >> doCheck: anIceNode [
 
 ]
 
-{ #category : #'expand/collapse' }
+{ #category : 'expand/collapse' }
 RiTreeDiffPresenter >> doCollapseOneLevel [
 	self doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | 
 		(fastTableItem hasChildren and: [ fastTableItem isExpanded ]) 
@@ -66,7 +68,7 @@ RiTreeDiffPresenter >> doCollapseOneLevel [
 						scrollToSelection: true ] ] ]
 ]
 
-{ #category : #'expanding-collapsing' }
+{ #category : 'expanding-collapsing' }
 RiTreeDiffPresenter >> doCollapseWithAllChildren [
 	self
 		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | 
@@ -76,13 +78,13 @@ RiTreeDiffPresenter >> doCollapseWithAllChildren [
 				refreshTable" ]
 ]
 
-{ #category : #'expand/collapse' }
+{ #category : 'expand/collapse' }
 RiTreeDiffPresenter >> doExpandOneLevel [
 	self
 		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | fastTableItem expand ]
 ]
 
-{ #category : #'collapse/expand' }
+{ #category : 'collapse/expand' }
 RiTreeDiffPresenter >> doExpandWithAllChildren [
 	self
 		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | 
@@ -92,7 +94,7 @@ RiTreeDiffPresenter >> doExpandWithAllChildren [
 				refreshTable" ]
 ]
 
-{ #category : #'expand/collapse' }
+{ #category : 'expand/collapse' }
 RiTreeDiffPresenter >> doInitialTreeExpansionOn: aFastTable [
 	
 	| expanded items |
@@ -112,14 +114,14 @@ RiTreeDiffPresenter >> doInitialTreeExpansionOn: aFastTable [
 	aFastTable refresh.
 ]
 
-{ #category : #'expand/collapse' }
+{ #category : 'expand/collapse' }
 RiTreeDiffPresenter >> doToggleExpandOneLevel [
 	self
 		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | 
 			fastTableItem toggle ]
 ]
 
-{ #category : #'check/uncheck' }
+{ #category : 'check/uncheck' }
 RiTreeDiffPresenter >> doUncheck: anIceNode [
 	self shadowedIceNodes
 		add: anIceNode;
@@ -129,7 +131,7 @@ RiTreeDiffPresenter >> doUncheck: anIceNode [
 	(model at: #blockWhenShadowedIceNodesChanged) value
 ]
 
-{ #category : #'expand/collapse' }
+{ #category : 'expand/collapse' }
 RiTreeDiffPresenter >> doValueOnSelectedFastTableItemToExpandOrCollapse: aBlock [
 	| fastTableItem |
 	fastTableItem := treeTable adapter widget dataSource
@@ -138,7 +140,7 @@ RiTreeDiffPresenter >> doValueOnSelectedFastTableItemToExpandOrCollapse: aBlock 
 	aBlock value: fastTableItem
 ]
 
-{ #category : #'expand/collapse' }
+{ #category : 'expand/collapse' }
 RiTreeDiffPresenter >> hackFastTableForExpandCollapse: aFastTable [
 	RiFTRootItem adoptInstance: aFastTable dataSource rootItem.
 	aFastTable dataSource rootItem
@@ -155,7 +157,7 @@ RiTreeDiffPresenter >> hackFastTableForExpandCollapse: aFastTable [
 		to: self
 ]
 
-{ #category : #highlighting }
+{ #category : 'highlighting' }
 RiTreeDiffPresenter >> hackFastTableForSecondaryHighligthing: table [
 	table beRitaContainer.
 	table container
@@ -168,13 +170,13 @@ RiTreeDiffPresenter >> hackFastTableForSecondaryHighligthing: table [
 
 ]
 
-{ #category : #highlighting }
+{ #category : 'highlighting' }
 RiTreeDiffPresenter >> highlightIceNode: iceNodeCollection [
 	iceNodeCollectionToHighlight := iceNodeCollection.
 	highlightDeferrer schedule.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTreeDiffPresenter >> initialize [
 	super initialize.
 
@@ -191,7 +193,7 @@ RiTreeDiffPresenter >> initialize [
 			after: 100 milliSeconds
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTreeDiffPresenter >> initializePresenters [
 	treeTable := self newTreeTable.
 	treeTable
@@ -211,7 +213,7 @@ RiTreeDiffPresenter >> initializePresenters [
 		self initializeTreeKeyCombinations ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTreeDiffPresenter >> initializeTreeKeyCombinations [
 		
 	treeTable
@@ -228,12 +230,12 @@ RiTreeDiffPresenter >> initializeTreeKeyCombinations [
 
 ]
 
-{ #category : #'check/uncheck' }
+{ #category : 'check/uncheck' }
 RiTreeDiffPresenter >> isChecked: anIceNode [
 	^ (self shadowedIceNodes includes: anIceNode) not
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTreeDiffPresenter >> newColumnWithCheckboxes [
 	^ self newColumnWithIceNodes 
 		addColumnFirst:
@@ -246,7 +248,7 @@ RiTreeDiffPresenter >> newColumnWithCheckboxes [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTreeDiffPresenter >> newColumnWithIceNodes [
 	^ SpCompositeTableColumn withAll: {
 		(SpImageTableColumn evaluated: [ :each |
@@ -260,7 +262,7 @@ RiTreeDiffPresenter >> newColumnWithIceNodes [
 				yourself]) }
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTreeDiffPresenter >> newColumnWithIceNodesOld [
 	self flag: #todo. "Delete with unused methods"
 	^ SpCompositeTableColumn new
@@ -279,7 +281,7 @@ RiTreeDiffPresenter >> newColumnWithIceNodesOld [
 		yourself
 ]
 
-{ #category : #'expand/collapse' }
+{ #category : 'expand/collapse' }
 RiTreeDiffPresenter >> onHackyCollapse: anAnnouncement [
 	self flag: #todo. "Make not hacky"
 	(anAnnouncement belongsToSpTableTree: treeTable) ifFalse: [ ^ self ].
@@ -290,7 +292,7 @@ RiTreeDiffPresenter >> onHackyCollapse: anAnnouncement [
 
 ]
 
-{ #category : #'expand/collapse' }
+{ #category : 'expand/collapse' }
 RiTreeDiffPresenter >> onHackyExpand: anAnnouncement [
 	self flag: #todo. "Make not hacky"
 	(anAnnouncement belongsToSpTableTree: treeTable) ifFalse: [ ^ self ].
@@ -300,14 +302,14 @@ RiTreeDiffPresenter >> onHackyExpand: anAnnouncement [
 
 ]
 
-{ #category : #'expand/collapse' }
+{ #category : 'expand/collapse' }
 RiTreeDiffPresenter >> refreshExpand [
 	self flag: #todo. "Try to avoid race conditions..."
 	highlightDeferrer flush.
 	(model at: #blockWhenExpandedIceNodesChanged) value
 ]
 
-{ #category : #highlighting }
+{ #category : 'highlighting' }
 RiTreeDiffPresenter >> refreshHighlight [
 	| table indices |
 	table := treeTable adapter widget.
@@ -328,12 +330,12 @@ RiTreeDiffPresenter >> refreshHighlight [
 			refresh ]
 ]
 
-{ #category : #'check/uncheck' }
+{ #category : 'check/uncheck' }
 RiTreeDiffPresenter >> refreshOnCheckedIceNodesChanged [
 	self defer: [ treeTable adapter widget refresh ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTreeDiffPresenter >> refreshOnModelUpdate [
 	| iceNodes |
 	iceNodes := (model at: #iceDiff) tree children.
@@ -341,7 +343,7 @@ RiTreeDiffPresenter >> refreshOnModelUpdate [
 
 ]
 
-{ #category : #highlighting }
+{ #category : 'highlighting' }
 RiTreeDiffPresenter >> selectIceNode: anIceNode [
 	treeTable selectedItem = anIceNode
 		ifTrue: [ ^ self ].
@@ -350,17 +352,17 @@ RiTreeDiffPresenter >> selectIceNode: anIceNode [
 		scrollToSelection: true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTreeDiffPresenter >> selectedIceNode [
 	^ treeTable selectedItem
 ]
 
-{ #category : #'check/uncheck' }
+{ #category : 'check/uncheck' }
 RiTreeDiffPresenter >> shadowedIceNodes [
 	^ model at: #shadowedIceNodes
 ]
 
-{ #category : #'check/uncheck' }
+{ #category : 'check/uncheck' }
 RiTreeDiffPresenter >> toggleSelection [
 	| anIceNode |
 	anIceNode := treeTable selection selectedItem.

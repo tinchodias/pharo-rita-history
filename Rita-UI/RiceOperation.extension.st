@@ -1,6 +1,6 @@
-Extension { #name : #RiceOperation }
+Extension { #name : 'RiceOperation' }
 
-{ #category : #'*Rita-UI' }
+{ #category : '*Rita-UI' }
 RiceOperation >> newUnifiedStringDiff [
 	| right left |
 	right := self rightContents.
@@ -16,7 +16,7 @@ RiceOperation >> newUnifiedStringDiff [
 
 ]
 
-{ #category : #'*Rita-UI' }
+{ #category : '*Rita-UI' }
 RiceOperation >> ritaKey [
 	^ self name
 ]

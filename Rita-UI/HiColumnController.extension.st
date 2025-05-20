@@ -1,6 +1,6 @@
-Extension { #name : #HiColumnController }
+Extension { #name : 'HiColumnController' }
 
-{ #category : #'*Rita-UI' }
+{ #category : '*Rita-UI' }
 HiColumnController >> isReady [
 	^ renderer isReady
 ]

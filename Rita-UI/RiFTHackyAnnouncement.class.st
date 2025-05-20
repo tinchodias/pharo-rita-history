@@ -1,36 +1,38 @@
 Class {
-	#name : #RiFTHackyAnnouncement,
-	#superclass : #Announcement,
+	#name : 'RiFTHackyAnnouncement',
+	#superclass : 'Announcement',
 	#instVars : [
 		'source'
 	],
-	#category : #'Rita-UI-FastTable'
+	#category : 'Rita-UI-FastTable',
+	#package : 'Rita-UI',
+	#tag : 'FastTable'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiFTHackyAnnouncement class >> source: anObject [
 	^ self new
 		initializeWithSource: anObject;
 		yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiFTHackyAnnouncement >> belongsToFastTable: aFTTableMorph [ 
 	^ source dataSource table == aFTTableMorph
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiFTHackyAnnouncement >> belongsToSpTableTree: aSpTreeTablePresenter [
 	^ aSpTreeTablePresenter isBuilt
 		and: [ self belongsToFastTable: aSpTreeTablePresenter adapter widget ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiFTHackyAnnouncement >> fastTableItem [
 	^ source
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiFTHackyAnnouncement >> initializeWithSource: anObject [
 	self initialize.
 	source := anObject

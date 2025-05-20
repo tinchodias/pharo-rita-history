@@ -1,27 +1,29 @@
 Class {
-	#name : #RiMethodSearchPage,
-	#superclass : #RiClassSearchPage,
+	#name : 'RiMethodSearchPage',
+	#superclass : 'RiClassSearchPage',
 	#instVars : [
 		'methodSelectorInput'
 	],
-	#category : #'Rita-UI-Spec2-Search'
+	#category : 'Rita-UI-Spec2-Search',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Search'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiMethodSearchPage class >> defaultSpec [
 	^ super defaultSpec
 		add: #methodSelectorInput height: self labelledInputHeight;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMethodSearchPage >> checkIfInvalid: aBlockClosure [
 	super checkIfInvalid: aBlockClosure.
 	methodSelectorInput input text trimBoth
 		ifEmpty: [ aBlockClosure value: 'Method selector is empty' ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMethodSearchPage >> initializePresenters [
 	super initializePresenters.
 	methodSelectorInput := self
@@ -34,7 +36,7 @@ RiMethodSearchPage >> initializePresenters [
 	self focusOrder add: methodSelectorInput
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMethodSearchPage >> pathIn: anIceLibgitRepository [
 	^ anIceLibgitRepository log
 		fileNameForPackageNamed: packageNameInput input text

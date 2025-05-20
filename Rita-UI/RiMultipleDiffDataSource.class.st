@@ -1,10 +1,12 @@
 Class {
-	#name : #RiMultipleDiffDataSource,
-	#superclass : #SpMorphicTableDataSource,
-	#category : #'Rita-UI-FastTable'
+	#name : 'RiMultipleDiffDataSource',
+	#superclass : 'SpMorphicTableDataSource',
+	#category : 'Rita-UI-FastTable',
+	#package : 'Rita-UI',
+	#tag : 'FastTable'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMultipleDiffDataSource >> cellColumn: column row: rowIndex [
 
 	^ (super cellColumn: column row: rowIndex)
@@ -14,7 +16,7 @@ RiMultipleDiffDataSource >> cellColumn: column row: rowIndex [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMultipleDiffDataSource >> rowHeight: rowIndex [
 
 	^ (table columns first readObject: (table dataSource elementAt: rowIndex)) height

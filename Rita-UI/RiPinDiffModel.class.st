@@ -1,46 +1,48 @@
 Class {
-	#name : #RiPinDiffModel,
-	#superclass : #RiDiffModel,
+	#name : 'RiPinDiffModel',
+	#superclass : 'RiDiffModel',
 	#instVars : [
 		'sourceRiCommit'
 	],
-	#category : #'Rita-UI-Models'
+	#category : 'Rita-UI-Models',
+	#package : 'Rita-UI',
+	#tag : 'Models'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiPinDiffModel class >> sourceRiCommit: aRiCommit [
 	^ self basicNew
 		initializeWithSourceRiCommit: aRiCommit;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiPinDiffModel >> iceDiffTo: targetRiCommit [
 	^ targetRiCommit asIceObject diffTo: sourceRiCommit asIceObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiPinDiffModel >> icon [
 	^ self iconNamed: #breakpoint
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiPinDiffModel >> initializeWithSourceRiCommit: aRiCommit [
 	self initialize.
 	sourceRiCommit := aRiCommit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RiPinDiffModel >> shouldCompareTo: aRiElement [
 	^ sourceRiCommit ~= aRiElement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiPinDiffModel >> sourceRiCommit [
 	^ sourceRiCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiPinDiffModel >> title [
 	^ 'Diff to Pin (', sourceRiCommit shortId, ')'
 ]

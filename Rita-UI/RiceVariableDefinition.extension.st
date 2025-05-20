@@ -1,11 +1,11 @@
-Extension { #name : #RiceVariableDefinition }
+Extension { #name : 'RiceVariableDefinition' }
 
-{ #category : #'*Rita-UI' }
+{ #category : '*Rita-UI' }
 RiceVariableDefinition >> ritaAsTextForTree0 [
 	^ mcVariableDefinition name
 ]
 
-{ #category : #'*Rita-UI' }
+{ #category : '*Rita-UI' }
 RiceVariableDefinition >> ritaBasicAsText [
 	^ self typeToShow = 'instance'
 		ifTrue: [ 'Variable' ]

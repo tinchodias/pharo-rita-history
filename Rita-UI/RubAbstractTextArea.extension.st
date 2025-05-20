@@ -1,6 +1,6 @@
-Extension { #name : #RubAbstractTextArea }
+Extension { #name : 'RubAbstractTextArea' }
 
-{ #category : #'*Rita-UI' }
+{ #category : '*Rita-UI' }
 RubAbstractTextArea >> removeAllSegments [
 	"Remove all segments"
 

@@ -1,22 +1,24 @@
 Class {
-	#name : #RiFTRootItem,
-	#superclass : #FTRootItem,
-	#category : #'Rita-UI-FastTable'
+	#name : 'RiFTRootItem',
+	#superclass : 'FTRootItem',
+	#category : 'Rita-UI-FastTable',
+	#package : 'Rita-UI',
+	#tag : 'FastTable'
 }
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiFTRootItem >> allChildrenDo: aBlockClosure [
 	self childrenDo: [ :each |
 		aBlockClosure value: each.
 		each allChildrenDo: aBlockClosure ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RiFTRootItem >> childrenDo: aBlockClosure [
 	self children do: aBlockClosure
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiFTRootItem >> data: aCollection [
 	self children: (aCollection collect: [ :object | RiFTBasicItem data: object from: dataSource ]) asArray
 ]

@@ -1,29 +1,31 @@
 Class {
-	#name : #RiFTTableRowMorph,
-	#superclass : #FTTableRowMorph,
-	#category : #'Rita-UI-FastTable'
+	#name : 'RiFTTableRowMorph',
+	#superclass : 'FTTableRowMorph',
+	#category : 'Rita-UI-FastTable',
+	#package : 'Rita-UI',
+	#tag : 'FastTable'
 }
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 RiFTTableRowMorph >> mouseEnter: evt [
 	self valueOfProperty: #ritaMouseEnter ifPresentDo: [ :valuable | valuable value ].
 	^ super mouseEnter: evt.
 	
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 RiFTTableRowMorph >> mouseLeave: evt [
 	self valueOfProperty: #ritaMouseLeave ifPresentDo: [ :valuable | valuable value ].
 	^ super mouseLeave: evt.
 	
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 RiFTTableRowMorph >> valuableForMouseEnter: aValuable [
 	self setProperty: #ritaMouseEnter toValue: aValuable
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 RiFTTableRowMorph >> valuableForMouseLeave: aValuable [
 	self setProperty: #ritaMouseLeave toValue: aValuable
 ]

@@ -1,10 +1,12 @@
 Class {
-	#name : #RiRowBuilder,
-	#superclass : #Object,
-	#category : #'Rita-UI-Support'
+	#name : 'RiRowBuilder',
+	#superclass : 'Object',
+	#category : 'Rita-UI-Support',
+	#package : 'Rita-UI',
+	#tag : 'Support'
 }
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiRowBuilder >> localMarkMorphText: text icon: icon [
 	^ (self markMorphText: text icon: icon)
 		borderStyle: (DashedBorder new
@@ -15,12 +17,12 @@ RiRowBuilder >> localMarkMorphText: text icon: icon [
 		yourself
 ]
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiRowBuilder >> markMorphBorderColor [
 	^ Smalltalk ui theme textColor alpha: 0.25
 ]
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiRowBuilder >> markMorphText: text icon: icon [
 	^ Morph new
 		layoutInset: 2 @ 0;
@@ -34,12 +36,12 @@ RiRowBuilder >> markMorphText: text icon: icon [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRowBuilder >> refreshWith: anObject [
 
 ]
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiRowBuilder >> remoteMarkMorphText: text icon: icon [
 	^ (self markMorphText: text icon: icon)
 		borderStyle: (SimpleBorder new

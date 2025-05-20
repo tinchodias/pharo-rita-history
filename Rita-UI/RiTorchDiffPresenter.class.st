@@ -1,6 +1,6 @@
 Class {
-	#name : #RiTorchDiffPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiTorchDiffPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'spawnButton',
 		'roassalPresenter',
@@ -10,10 +10,12 @@ Class {
 		'renderer',
 		'expandedIceNodes'
 	],
-	#category : #'Rita-UI-Spec2-Diff'
+	#category : 'Rita-UI-Spec2-Diff',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Diff'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiTorchDiffPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #toolBar withConstraints: [ :constraints | constraints height: self toolbarHeight + 8];
@@ -21,12 +23,12 @@ RiTorchDiffPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #'canvas building' }
+{ #category : 'canvas building' }
 RiTorchDiffPresenter >> aesthetics [
 	^ model at: #aesthetics
 ]
 
-{ #category : #'canvas building' }
+{ #category : 'canvas building' }
 RiTorchDiffPresenter >> buildCanvas [
 
 	canvas color: self aesthetics backgroundColor.
@@ -53,7 +55,7 @@ RiTorchDiffPresenter >> buildCanvas [
 
 ]
 
-{ #category : #'canvas building' }
+{ #category : 'canvas building' }
 RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 
 	| query classShapes classIceNodes packageShapes |
@@ -104,7 +106,7 @@ RiTorchDiffPresenter >> buildClassesTraitsExtensionsAndConnections [
 "
 ]
 
-{ #category : #'canvas building' }
+{ #category : 'canvas building' }
 RiTorchDiffPresenter >> buildFileStructureAndConnections [
 	| query iceNodes |
 	query := model at: #diffQuery.
@@ -118,7 +120,7 @@ RiTorchDiffPresenter >> buildFileStructureAndConnections [
 	
 ]
 
-{ #category : #'canvas building' }
+{ #category : 'canvas building' }
 RiTorchDiffPresenter >> buildHelpIcon [
 
 	self flag: #todo. "Hacky: Update help icon"
@@ -127,7 +129,7 @@ RiTorchDiffPresenter >> buildHelpIcon [
 		fontSize: 10."
 ]
 
-{ #category : #'canvas building' }
+{ #category : 'canvas building' }
 RiTorchDiffPresenter >> canvasLayout [
 	^ RSTreeLayout new
 		verticalGap: self aesthetics gapFromClassToSubclass;
@@ -135,21 +137,21 @@ RiTorchDiffPresenter >> canvasLayout [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchDiffPresenter >> ensureAddShadowLayerOverAll: iceNodeCollection [
 	highlighingController ifNil: [ ^ self ].
 	highlighingController ensureAddShadowLayerOverAll: iceNodeCollection
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchDiffPresenter >> ensureRemoveShadowLayerFromAll: iceNodeCollection [
 	highlighingController ifNil: [ ^ self ].
 	highlighingController ensureRemoveShadowLayerFromAll: iceNodeCollection
 
 ]
 
-{ #category : #'canvas building' }
+{ #category : 'canvas building' }
 RiTorchDiffPresenter >> highlightChildrenOfExpandedNodes [
 
 	| previousExpandedIceNodes newIceNodes |
@@ -174,21 +176,21 @@ RiTorchDiffPresenter >> highlightChildrenOfExpandedNodes [
 		setTempraryOutlineToAll: (canvas shapesFromModels: newIceNodes).
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchDiffPresenter >> highlightIceNode: iceNodeCollection [
 	highlighingController ifNil: [ ^ self ].
 	highlighingController setSecondaryOutlineToAll: iceNodeCollection.
 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTorchDiffPresenter >> initializePresenters [
 
 	toolBar := self newSettingsToolBar.
 	roassalPresenter := self newRoassalPresenter.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTorchDiffPresenter >> newRoassalPresenter [
 	^ (self instantiate: SpRoassalPresenter)
 		script: [ :newCanvas | 
@@ -198,7 +200,7 @@ RiTorchDiffPresenter >> newRoassalPresenter [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: iconSymbol help: help [
 
 	^ (self instantiate: SpToolbarToggleButtonPresenter)
@@ -211,7 +213,7 @@ RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: 
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiTorchDiffPresenter >> newSettingsToolBar [
 
 	| connectHierarchiesButton iterateNextButton iterateBackButton zoomToFitButton zoomInButton zoomOutButton expandAllButton refreshButton collapseAllButton |
@@ -293,7 +295,7 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 		yourself
 ]
 
-{ #category : #'canvas building' }
+{ #category : 'canvas building' }
 RiTorchDiffPresenter >> packInteraction [
 	"Interaction to pack hierarachies."
 
@@ -304,31 +306,31 @@ RiTorchDiffPresenter >> packInteraction [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchDiffPresenter >> refreshOnCheckedIceNodesChanged [
 	highlighingController
 		setShadowedIceNodes: (model at: #shadowedIceNodes)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchDiffPresenter >> refreshOnModelUpdate [
 	roassalPresenter refresh.
 	spawnButton action: [ (model at: #blockForSpawn) value: model ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchDiffPresenter >> rootModel [
 	^ model at: #root
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchDiffPresenter >> selectIceNode: anIceNode [
 	highlighingController ifNil: [ ^ self ].
 	highlighingController setPrimaryOutlineTo: anIceNode.
 
 ]
 
-{ #category : #'canvas building' }
+{ #category : 'canvas building' }
 RiTorchDiffPresenter >> zoomingInteraction [
 	"Interaction for zooming."
 

@@ -2,8 +2,8 @@
 I'm a view model for the main (root) repositories browser.
 "
 Class {
-	#name : #RiRootModel,
-	#superclass : #Object,
+	#name : 'RiRootModel',
+	#superclass : 'Object',
 	#instVars : [
 		'repositories',
 		'considerOnlyChanged',
@@ -14,10 +14,12 @@ Class {
 		'aesthetics',
 		'actionsAnnouncer'
 	],
-	#category : #'Rita-UI-Models'
+	#category : 'Rita-UI-Models',
+	#package : 'Rita-UI',
+	#tag : 'Models'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiRootModel class >> newWithRegisteredRepositories [
 
 	| repositories |
@@ -31,17 +33,17 @@ RiRootModel class >> newWithRegisteredRepositories [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> actionsAnnouncer [
 	^ actionsAnnouncer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> aesthetics [
 	^ aesthetics
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> announceAction: aSymbol iceNode: iceNode [
 
 	iceNode ifNil: [ ^self ].
@@ -54,37 +56,37 @@ RiRootModel >> announceAction: aSymbol iceNode: iceNode [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> connectHierarchies [
 	^ connectHierarchies
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> connectHierarchies: anObject [
 	connectHierarchies := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> considerOnlyChanged [
 	^ considerOnlyChanged
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> considerOnlyChanged: aBoolean [
 	considerOnlyChanged := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> flyDiff [
 	^ flyDiff
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> flyDiff: anObject [
 	flyDiff := anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRootModel >> initialize [
 	super initialize.
 	aesthetics := RiAestheticsModel new.
@@ -96,37 +98,37 @@ RiRootModel >> initialize [
 	actionsAnnouncer := Announcer new.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> isExpanded [
 	^ isExpanded
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> isExpanded: aBoolean [
 	isExpanded := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> repositories [
 	^ repositories
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> repositories: aCollection [ 
 	repositories := aCollection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> showPackages [
 	^ showPackages
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> showPackages: aBoolean [
 	showPackages := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRootModel >> toggle: aSymbol [
 	self
 		perform: aSymbol asMutator

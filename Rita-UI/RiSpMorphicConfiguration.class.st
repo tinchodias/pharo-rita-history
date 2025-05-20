@@ -2,12 +2,14 @@
 I add a few custom styles to the default Spec 2 Morphic configuration.
 "
 Class {
-	#name : #RiSpMorphicConfiguration,
-	#superclass : #SpMorphicConfiguration,
-	#category : #'Rita-UI-Spec2-Base'
+	#name : 'RiSpMorphicConfiguration',
+	#superclass : 'SpMorphicConfiguration',
+	#category : 'Rita-UI-Spec2-Base',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Base'
 }
 
-{ #category : #styling }
+{ #category : 'styling' }
 RiSpMorphicConfiguration >> styleSheet [ 
 	^ super styleSheet, (SpStyleSTONReader fromString: '
 	.application [

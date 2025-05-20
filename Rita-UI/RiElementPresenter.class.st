@@ -1,15 +1,17 @@
 Class {
-	#name : #RiElementPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiElementPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'diffPresenter',
 		'notebook',
 		'header'
 	],
-	#category : #'Rita-UI-Spec2-Repository'
+	#category : 'Rita-UI-Spec2-Repository',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Repository'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiElementPresenter class >> defaultSpec [
 	^ SpPanedLayout newVertical
 		position: 0.07;
@@ -18,7 +20,7 @@ RiElementPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 	| page |
 	page := SpNotebookPage
@@ -28,7 +30,7 @@ RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 	notebook addPage: page
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 	| iceDiff |
 	iceDiff := aRiDiffModel iceDiffTo: targetRiCommit.
@@ -41,14 +43,14 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 			yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiElementPresenter >> initializePresenters [
 	header := self instantiate: RiElementHeaderPresenter.
 	notebook := self newNotebook.
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElementPresenter >> refreshOnModelUpdate [
 	| element |
 	element := model at: #element.
@@ -64,7 +66,7 @@ RiElementPresenter >> refreshOnModelUpdate [
 		notebook selectPage: notebook pages first ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiElementPresenter >> selectedDiffModelIfFound: aBlockClosure [ 
 	^ aBlockClosure value: notebook selectedPage activePresenter 
 ]

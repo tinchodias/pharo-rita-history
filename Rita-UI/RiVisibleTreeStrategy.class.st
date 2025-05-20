@@ -1,20 +1,22 @@
 Class {
-	#name : #RiVisibleTreeStrategy,
-	#superclass : #Object,
-	#category : #'Rita-UI-Support'
+	#name : 'RiVisibleTreeStrategy',
+	#superclass : 'Object',
+	#category : 'Rita-UI-Support',
+	#package : 'Rita-UI',
+	#tag : 'Support'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiVisibleTreeStrategy class >> defaultLimit [
 	^ 20
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiVisibleTreeStrategy class >> expandedIceNodesFrom: initialIceNodes [
 	^ self expandedIceNodesFrom: initialIceNodes limit: self defaultLimit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiVisibleTreeStrategy class >> expandedIceNodesFrom: initialIceNodes limit: limit [
 	| result nextTreeLevel next2Levels |
 	result := IdentitySet withAll: initialIceNodes.

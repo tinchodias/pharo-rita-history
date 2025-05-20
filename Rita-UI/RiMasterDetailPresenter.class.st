@@ -1,14 +1,16 @@
 Class {
-	#name : #RiMasterDetailPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiMasterDetailPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'masterPresenter',
 		'detailPresenter'
 	],
-	#category : #'Rita-UI-Spec2-Base'
+	#category : 'Rita-UI-Spec2-Base',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Base'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiMasterDetailPresenter class >> defaultSpec [
 	^ SpPanedLayout newHorizontal
 		position: 30 percent;
@@ -17,50 +19,50 @@ RiMasterDetailPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMasterDetailPresenter >> connectMasterToDetail [
 	self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMasterDetailPresenter >> connectPresenters [
 	self connectMasterToDetail
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMasterDetailPresenter >> detailPresenter [
 
 	^ detailPresenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMasterDetailPresenter >> detailPresenterClass [
 	^ self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMasterDetailPresenter >> initializeDetailPresenter [
 	detailPresenter := self instantiate: self detailPresenterClass
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMasterDetailPresenter >> initializeMasterPresenter [
 	masterPresenter := self instantiate: self masterPresenterClass
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMasterDetailPresenter >> initializePresenters [
 	self initializeMasterPresenter.
 	self initializeDetailPresenter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMasterDetailPresenter >> masterPresenter [
 
 	^ masterPresenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMasterDetailPresenter >> masterPresenterClass [
 	^ self subclassResponsibility
 ]

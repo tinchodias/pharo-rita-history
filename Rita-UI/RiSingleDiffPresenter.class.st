@@ -1,20 +1,22 @@
 Class {
-	#name : #RiSingleDiffPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiSingleDiffPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'diffMorphPresenter'
 	],
-	#category : #'Rita-UI-Spec2-Diff'
+	#category : 'Rita-UI-Spec2-Diff',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Diff'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiSingleDiffPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #diffMorphPresenter;
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiSingleDiffPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -22,19 +24,19 @@ RiSingleDiffPresenter >> initializePresenters [
 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiSingleDiffPresenter >> newRubTextMorph [
 
 	^ (model at: #aesthetics) scrolledUnifiedDiffMorph
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiSingleDiffPresenter >> refreshOnModelUpdate [
 
 	diffMorphPresenter morph: self newRubTextMorph
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiSingleDiffPresenter >> selectIceNode: anIceNode [
 
 	anIceNode ifNil: [ ^ self ].

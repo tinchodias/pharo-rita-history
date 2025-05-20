@@ -1,27 +1,29 @@
 Class {
-	#name : #RiClassSearchPage,
-	#superclass : #RiPackageSearchPage,
+	#name : 'RiClassSearchPage',
+	#superclass : 'RiPackageSearchPage',
 	#instVars : [
 		'classNameInput'
 	],
-	#category : #'Rita-UI-Spec2-Search'
+	#category : 'Rita-UI-Spec2-Search',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Search'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiClassSearchPage class >> defaultSpec [
 	^ super defaultSpec
 		add: #classNameInput height: self labelledInputHeight;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiClassSearchPage >> checkIfInvalid: aBlockClosure [
 	super checkIfInvalid: aBlockClosure.
 	classNameInput input text trimBoth
 		ifEmpty: [ aBlockClosure value: 'Class name is empty' ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiClassSearchPage >> initializePresenters [
 	super initializePresenters.
 	classNameInput := self
@@ -34,7 +36,7 @@ RiClassSearchPage >> initializePresenters [
 	self focusOrder add: classNameInput
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiClassSearchPage >> pathIn: anIceLibgitRepository [
 	^ anIceLibgitRepository log
 		fileNameForPackageNamed: packageNameInput input text

@@ -1,15 +1,17 @@
 Class {
-	#name : #RiCommitBrowseUtility,
-	#superclass : #Object,
-	#category : #'Rita-UI-Support'
+	#name : 'RiCommitBrowseUtility',
+	#superclass : 'Object',
+	#category : 'Rita-UI-Support',
+	#package : 'Rita-UI',
+	#tag : 'Support'
 }
 
-{ #category : #opening }
+{ #category : 'opening' }
 RiCommitBrowseUtility class >> browse: iceCommit [
 	(self ringEnvironmentFor: iceCommit) browse
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 RiCommitBrowseUtility class >> ringEnvironmentFor: iceCommit [
 	| aRGEnvironment |
 	aRGEnvironment := RGEnvironment new.

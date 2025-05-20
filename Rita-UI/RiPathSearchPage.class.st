@@ -1,26 +1,28 @@
 Class {
-	#name : #RiPathSearchPage,
-	#superclass : #RiSearchPage,
+	#name : 'RiPathSearchPage',
+	#superclass : 'RiSearchPage',
 	#instVars : [
 		'pathInput'
 	],
-	#category : #'Rita-UI-Spec2-Search'
+	#category : 'Rita-UI-Spec2-Search',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Search'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiPathSearchPage class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #pathInput height: self labelledInputHeight;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiPathSearchPage >> checkIfInvalid: aBlockClosure [
 	pathInput input text trimBoth
 		ifEmpty: [ aBlockClosure value: 'Path is empty' ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiPathSearchPage >> initializePresenters [
 	pathInput := self
 		instantiate:
@@ -30,7 +32,7 @@ RiPathSearchPage >> initializePresenters [
 				description: 'A relative path, from the root of the repository. Example: README.md')
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiPathSearchPage >> pathIn: anIceLibgitRepository [ 
 	^ pathInput input text
 ]

@@ -3,15 +3,17 @@ I'm responsible of building the image (a Morph) to show in the Hiedra column of 
 
 "
 Class {
-	#name : #RiHiedraImageBuilder,
-	#superclass : #Object,
+	#name : 'RiHiedraImageBuilder',
+	#superclass : 'Object',
 	#instVars : [
 		'hiedraColumnController'
 	],
-	#category : #'Rita-UI-Support'
+	#category : 'Rita-UI-Support',
+	#package : 'Rita-UI',
+	#tag : 'Support'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiHiedraImageBuilder >> morphAt: item [
 
 	self flag: #todo. "Fix this async problem in other way"
@@ -21,7 +23,7 @@ RiHiedraImageBuilder >> morphAt: item [
 		ifTrue: [ hiedraColumnController cellMorphAtValue: item ]
 ]
 
-{ #category : #refreshing }
+{ #category : 'refreshing' }
 RiHiedraImageBuilder >> process: aRiRepository rowHeight: aHeight [
 
 	hiedraColumnController := HiColumnController new.
@@ -43,7 +45,7 @@ RiHiedraImageBuilder >> process: aRiRepository rowHeight: aHeight [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiHiedraImageBuilder >> setMultipleColors [
 
 	hiedraColumnController renderer useWheelColorStrategy.
@@ -57,7 +59,7 @@ RiHiedraImageBuilder >> setMultipleColors [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiHiedraImageBuilder >> setUniformColors [
 
 	hiedraColumnController renderer useUniformColorStrategy.

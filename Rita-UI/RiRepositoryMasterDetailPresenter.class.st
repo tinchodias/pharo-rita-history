@@ -1,10 +1,12 @@
 Class {
-	#name : #RiRepositoryMasterDetailPresenter,
-	#superclass : #RiMasterDetailPresenter,
-	#category : #'Rita-UI-Spec2-Repository'
+	#name : 'RiRepositoryMasterDetailPresenter',
+	#superclass : 'RiMasterDetailPresenter',
+	#category : 'Rita-UI-Spec2-Repository',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Repository'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> connectMasterToDetail [
 	masterPresenter blockForElementSelected: [ :targetRiElement |
 		detailPresenter model: 
@@ -17,28 +19,28 @@ RiRepositoryMasterDetailPresenter >> connectMasterToDetail [
 	self whenBuiltDo: [ self initializeKeyBindings ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiRepositoryMasterDetailPresenter >> currentFullDiffPresenterIfPresent: aBlockClosure [ 
 	^ detailPresenter selectedDiffModelIfFound: aBlockClosure
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> detailPresenterClass [
 	^ RiElementPresenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> initializeKeyBindings [
 	self bindKeyCombination: $n meta toAction: [ (model at: #blockForIterateNext) value ].
 	self bindKeyCombination: $b meta toAction: [ (model at: #blockForIterateBack) value ].
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> masterPresenterClass [
 	^ RiRepositoryPresenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> parentDiffModelsFor: targetRiElement [
 	"IMPORTANT: As other tools only answer the diff to the first ancestor (potentially ignoring others, in case of merge)."
 
@@ -48,7 +50,7 @@ RiRepositoryMasterDetailPresenter >> parentDiffModelsFor: targetRiElement [
 		ifAbsent: [ #() ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> refreshOnModelUpdate [
 	model at: #pinDiffModels put: OrderedCollection new.
 	

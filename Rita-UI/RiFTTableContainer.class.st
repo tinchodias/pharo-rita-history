@@ -1,24 +1,26 @@
 Class {
-	#name : #RiFTTableContainer,
-	#superclass : #FTTableContainerMorph,
+	#name : 'RiFTTableContainer',
+	#superclass : 'FTTableContainerMorph',
 	#instVars : [
 		'valuableForMouseEnter',
 		'valuableForMouseLeave'
 	],
-	#category : #'Rita-UI-FastTable'
+	#category : 'Rita-UI-FastTable',
+	#package : 'Rita-UI',
+	#tag : 'FastTable'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiFTTableContainer >> blockForMouseEnter: anObject [
 	valuableForMouseEnter := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiFTTableContainer >> blockForMouseLeave: anObject [
 	valuableForMouseLeave := anObject
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RiFTTableContainer >> transformRow: morph index: rowIndex [
 
 	RiFTTableRowMorph adoptInstance: morph.
@@ -35,19 +37,19 @@ RiFTTableContainer >> transformRow: morph index: rowIndex [
 				argument: rowIndex)
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RiFTTableContainer >> updateExposedRows [
 	super updateExposedRows.
 	exposedRows keysAndValuesDo: [ :rowIndex :morph |
 		self transformRow: morph index: rowIndex ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiFTTableContainer >> valuableForMouseEnter [
 	^ valuableForMouseEnter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiFTTableContainer >> valuableForMouseLeave [
 	^ valuableForMouseLeave
 ]

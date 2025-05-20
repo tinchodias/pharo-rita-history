@@ -1,13 +1,15 @@
 Class {
-	#name : #RiRepositorySearchPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiRepositorySearchPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'notebook'
 	],
-	#category : #'Rita-UI-Spec2-Search'
+	#category : 'Rita-UI-Spec2-Search',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Search'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiRepositorySearchPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #notebook;
@@ -16,19 +18,19 @@ RiRepositorySearchPresenter class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepositorySearchPresenter >> checkIfInvalid: aBlockClosure [ 
 	^ notebook selectedPage activePresenter checkIfInvalid: aBlockClosure
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositorySearchPresenter >> initializePageTitle: aString pageClass: aRiSearchPageClass [
 	notebook addPage: (SpNotebookPage
 		title: aString
 		provider: [ self instantiate: aRiSearchPageClass ])
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRepositorySearchPresenter >> initializePresenters [
 	notebook := self newNotebook.
 	self initializePageTitle: 'Path' pageClass: RiPathSearchPage.
@@ -38,7 +40,7 @@ RiRepositorySearchPresenter >> initializePresenters [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRepositorySearchPresenter >> searchResults [
 	^ notebook selectedPage activePresenter searchResultsIn: (model at: #repository)
 ]

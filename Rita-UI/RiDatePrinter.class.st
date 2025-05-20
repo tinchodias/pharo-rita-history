@@ -2,21 +2,23 @@
 I'm a personalized human-readable printer for Date.
 "
 Class {
-	#name : #RiDatePrinter,
-	#superclass : #Object,
+	#name : 'RiDatePrinter',
+	#superclass : 'Object',
 	#instVars : [
 		'extendedDatePrinter'
 	],
-	#category : #'Rita-UI-Support'
+	#category : 'Rita-UI-Support',
+	#package : 'Rita-UI',
+	#tag : 'Support'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiDatePrinter >> initialize [
 	super initialize.
 	extendedDatePrinter := ExtendedDatePrinter new
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RiDatePrinter >> printDate: aDate on: stream [
 	extendedDatePrinter
 		printDate: aDate
@@ -24,7 +26,7 @@ RiDatePrinter >> printDate: aDate on: stream [
 		on: stream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RiDatePrinter >> stringFor: aDate [
 	^ String streamContents: [ :stream |
 		self printDate: aDate on: stream ]

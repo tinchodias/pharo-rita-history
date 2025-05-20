@@ -1,6 +1,6 @@
-Extension { #name : #HiSimpleRenderer }
+Extension { #name : 'HiSimpleRenderer' }
 
-{ #category : #'*Rita-UI' }
+{ #category : '*Rita-UI' }
 HiSimpleRenderer >> isReady [
 	^ ruler isNotNil
 ]

@@ -3,24 +3,26 @@ I'm responsible of building the image (a Morph) to show in the comment column of
 
 "
 Class {
-	#name : #RiElementRowBuilder,
-	#superclass : #Object,
+	#name : 'RiElementRowBuilder',
+	#superclass : 'Object',
 	#instVars : [
 		'hiedraBuilder',
 		'avatarDatabase',
 		'repositoryPresenter'
 	],
-	#category : #'Rita-UI-Support'
+	#category : 'Rita-UI-Support',
+	#package : 'Rita-UI',
+	#tag : 'Support'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiElementRowBuilder class >> newForRepositoryPresenter: aRiRepositoryPresenter [
 	^ self basicNew
 		initializeForRepositoryPresenter: aRiRepositoryPresenter;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElementRowBuilder >> avatarsFor: item [
 	
 	| authorEmail committerEmail |
@@ -34,24 +36,24 @@ RiElementRowBuilder >> avatarsFor: item [
 		] ]
 ]
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiElementRowBuilder >> iconForBranch [
 	^ self iconNamed: #branch
 ]
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiElementRowBuilder >> iconForTag [
 	^ (self iconNamed: #breakpoint)
 		flipBy: #horizontal
 		centerAt: 0 @ 0
 ]
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiElementRowBuilder >> iconForWorkingCopy [
 	^ self iconNamed: #smallSave
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiElementRowBuilder >> initializeForRepositoryPresenter: aRiRepositoryPresenter [
 	self initialize.
 
@@ -60,7 +62,7 @@ RiElementRowBuilder >> initializeForRepositoryPresenter: aRiRepositoryPresenter 
 	repositoryPresenter := aRiRepositoryPresenter.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElementRowBuilder >> leftMorphsAt: item [
 	^ 	{ hiedraBuilder morphAt: item. '   ' asMorph },
 		(self avatarsFor: item),
@@ -72,10 +74,11 @@ RiElementRowBuilder >> leftMorphsAt: item [
 				yourself }
 ]
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiElementRowBuilder >> localMarkMorphText: text icon: icon [
+
 	^ (self markMorphText: text icon: icon)
-		borderStyle: (DashedBorder new
+		borderStyle: (DashedBorderStyle new
 			width: 1;
 			dashColors: { self markMorphBorderColor. Color transparent }
 				dashLengths: #(2 2);
@@ -83,13 +86,13 @@ RiElementRowBuilder >> localMarkMorphText: text icon: icon [
 		yourself
 ]
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiElementRowBuilder >> markMorphBorderColor [
 	self flag: #todo. "Fix... use aesthetics"
 	^ self theme textColor alpha: 0.25
 ]
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiElementRowBuilder >> markMorphText: text icon: icon [
 	^ Morph new
 		layoutInset: 2 @ 0;
@@ -103,12 +106,12 @@ RiElementRowBuilder >> markMorphText: text icon: icon [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElementRowBuilder >> markMorphsAt: aRiElement [
 	^ aRiElement marks collect: [ :each | each accept: self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElementRowBuilder >> morphAt: item [
 	| row |
 	row := RiRowMorph new.
@@ -118,14 +121,14 @@ RiElementRowBuilder >> morphAt: item [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElementRowBuilder >> pinMorphsFor: aRiElement [
 	(repositoryPresenter isPinned: aRiElement)
 		ifFalse: [ ^ #() ].
 	^ {(self iconNamed: #breakpoint) asMorph}
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElementRowBuilder >> refresh [
 	[ hiedraBuilder
 		process: repositoryPresenter riRepository 
@@ -141,17 +144,18 @@ RiElementRowBuilder >> refresh [
 
 ]
 
-{ #category : #'mark morph building' }
+{ #category : 'mark morph building' }
 RiElementRowBuilder >> remoteMarkMorphText: text icon: icon [
+
 	^ (self markMorphText: text icon: icon)
-		borderStyle: (SimpleBorder new
+		borderStyle: (SimpleBorderStyle new
 			width: 1;
 			color: self markMorphBorderColor;
 			yourself);
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElementRowBuilder >> textColorFor: item [
 	^ (repositoryPresenter hasSearchResults not or: [
 		repositoryPresenter searchResultIncudes: item ])
@@ -160,12 +164,12 @@ RiElementRowBuilder >> textColorFor: item [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiElementRowBuilder >> theme [
 	^ Smalltalk ui theme
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiElementRowBuilder >> visitBranchMark: aRiBranchMark [
 	^ aRiBranchMark isOnlyLocal
 		ifTrue: [
@@ -178,21 +182,21 @@ RiElementRowBuilder >> visitBranchMark: aRiBranchMark [
 				icon: self iconForBranch ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiElementRowBuilder >> visitImageMark: aRiMark [
 	^ self
 		localMarkMorphText: 'IMAGE'
 		icon: self iconForWorkingCopy
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiElementRowBuilder >> visitTagMark: aRiTagMark [
 	^ self
 		remoteMarkMorphText: aRiTagMark name
 		icon: self iconForTag
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiElementRowBuilder >> visitWorkdirMark: aRiMark [
 	^ self
 		localMarkMorphText: 'WORKDIR'

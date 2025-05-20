@@ -1,30 +1,32 @@
 Class {
-	#name : #RiDiffModel,
-	#superclass : #Object,
-	#category : #'Rita-UI-Models'
+	#name : 'RiDiffModel',
+	#superclass : 'Object',
+	#category : 'Rita-UI-Models',
+	#package : 'Rita-UI',
+	#tag : 'Models'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffModel >> allChildrenNodes [
 	self shouldBeImplemented.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffModel >> iceDiffTo: targetRiCommit [ 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffModel >> icon [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffModel >> shouldCompareTo: aRiCommit [ 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiDiffModel >> title [
 	^ self subclassResponsibility
 ]

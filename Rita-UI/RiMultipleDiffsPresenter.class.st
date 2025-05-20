@@ -1,20 +1,22 @@
 Class {
-	#name : #RiMultipleDiffsPresenter,
-	#superclass : #RiPresenter,
+	#name : 'RiMultipleDiffsPresenter',
+	#superclass : 'RiPresenter',
 	#instVars : [
 		'table'
 	],
-	#category : #'Rita-UI-Spec2-Diff'
+	#category : 'Rita-UI-Spec2-Diff',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Diff'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiMultipleDiffsPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #table;
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMultipleDiffsPresenter >> diffMorphFor: iceNode [
 
 	| aesthetics |
@@ -30,7 +32,7 @@ RiMultipleDiffsPresenter >> diffMorphFor: iceNode [
 		}
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMultipleDiffsPresenter >> initializePresenters [
 
 	table := self newTable
@@ -42,7 +44,7 @@ RiMultipleDiffsPresenter >> initializePresenters [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMultipleDiffsPresenter >> refreshOnModelUpdate [
 	
 	table items: ((model at: #diffQuery) allLeafChildren
@@ -50,7 +52,7 @@ RiMultipleDiffsPresenter >> refreshOnModelUpdate [
 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMultipleDiffsPresenter >> selectIceNode: anIceNode [
 
 	|  index |
@@ -62,7 +64,7 @@ RiMultipleDiffsPresenter >> selectIceNode: anIceNode [
 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMultipleDiffsPresenter >> setIceNode: iceNode in: presenter [
 	iceNode ifNil: [ ^self ].
 	presenter model: { 

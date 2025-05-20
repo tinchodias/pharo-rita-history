@@ -1,15 +1,17 @@
 Class {
-	#name : #RiBasicActionAnnouncement,
-	#superclass : #Announcement,
+	#name : 'RiBasicActionAnnouncement',
+	#superclass : 'Announcement',
 	#instVars : [
 		'timestamp',
 		'kind',
 		'data'
 	],
-	#category : #'Rita-UI-Announcements'
+	#category : 'Rita-UI-Announcements',
+	#package : 'Rita-UI',
+	#tag : 'Announcements'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 RiBasicActionAnnouncement >> asOrderedDictionary [
 	"Convert to a dictionary which is convenient to be written as JSON."
 
@@ -21,46 +23,46 @@ RiBasicActionAnnouncement >> asOrderedDictionary [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBasicActionAnnouncement >> currentTimestamp [
 	"Number of seconds since midnight, as Float with decimals."
 
 	^ DateAndTime now asDuration asMilliSeconds / 1000.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBasicActionAnnouncement >> data [
 	^ data
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBasicActionAnnouncement >> data: anObject [
 	data := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBasicActionAnnouncement >> initialize [ 
 	super initialize.
 	
 	timestamp := self currentTimestamp
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBasicActionAnnouncement >> kind [
 	^ kind
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBasicActionAnnouncement >> kind: anObject [
 	kind := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBasicActionAnnouncement >> timestamp [
 	^ timestamp
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiBasicActionAnnouncement >> timestamp: anObject [
 	timestamp := anObject
 ]

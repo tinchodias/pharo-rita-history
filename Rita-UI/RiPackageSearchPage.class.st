@@ -1,26 +1,28 @@
 Class {
-	#name : #RiPackageSearchPage,
-	#superclass : #RiSearchPage,
+	#name : 'RiPackageSearchPage',
+	#superclass : 'RiSearchPage',
 	#instVars : [
 		'packageNameInput'
 	],
-	#category : #'Rita-UI-Spec2-Search'
+	#category : 'Rita-UI-Spec2-Search',
+	#package : 'Rita-UI',
+	#tag : 'Spec2-Search'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RiPackageSearchPage class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #packageNameInput height: self labelledInputHeight;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiPackageSearchPage >> checkIfInvalid: aBlockClosure [
 	packageNameInput input text trimBoth
 		ifEmpty: [ aBlockClosure value: 'Package name is empty' ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiPackageSearchPage >> initializePresenters [
 	packageNameInput := self
 		instantiate:
@@ -32,7 +34,7 @@ RiPackageSearchPage >> initializePresenters [
 	self focusOrder add: packageNameInput
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiPackageSearchPage >> pathIn: anIceLibgitRepository [ 
 	^ anIceLibgitRepository log fileNameForPackageNamed: packageNameInput input text
 ]

@@ -2,16 +2,18 @@
 I'm a Morph that's useful as a list or table row. Submorphs can be added at left or right.
 "
 Class {
-	#name : #RiRowMorph,
-	#superclass : #Morph,
+	#name : 'RiRowMorph',
+	#superclass : 'Morph',
 	#instVars : [
 		'leftPanel',
 		'rightPanel'
 	],
-	#category : #'Rita-UI-Support'
+	#category : 'Rita-UI-Support',
+	#package : 'Rita-UI',
+	#tag : 'Support'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRowMorph >> addItemLeft: aMorph [
 
 	leftPanel addMorphBack: (aMorph
@@ -19,7 +21,7 @@ RiRowMorph >> addItemLeft: aMorph [
 		yourself)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiRowMorph >> addItemRight: aMorph [
 
 	rightPanel addMorphBack: (aMorph
@@ -27,7 +29,7 @@ RiRowMorph >> addItemRight: aMorph [
 		yourself)
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRowMorph >> initialize [
 	super initialize.
 
@@ -42,7 +44,7 @@ RiRowMorph >> initialize [
 	self initializePanels
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiRowMorph >> initializePanels [
 
 	leftPanel := self newPanelMorph.
@@ -56,7 +58,7 @@ RiRowMorph >> initializePanels [
 
 ]
 
-{ #category : #'private factory' }
+{ #category : 'private factory' }
 RiRowMorph >> newPanelMorph [
 
 	^ Morph new 

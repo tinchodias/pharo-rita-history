@@ -1,5 +1,7 @@
 Class {
-	#name : #RiNodeSelect,
-	#superclass : #RiNodeActionAnnouncement,
-	#category : #'Rita-UI-Announcements'
+	#name : 'RiNodeSelect',
+	#superclass : 'RiNodeActionAnnouncement',
+	#category : 'Rita-UI-Announcements',
+	#package : 'Rita-UI',
+	#tag : 'Announcements'
 }

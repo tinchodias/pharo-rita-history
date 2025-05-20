@@ -2,12 +2,14 @@
 I'm a Rubric segment that's created with an interval of the text indices and visually marks the whole lines involved be such interval.
 "
 Class {
-	#name : #RiRubricTextSegment,
-	#superclass : #RubTextSegmentMorph,
-	#category : #'Rita-UI-Support'
+	#name : 'RiRubricTextSegment',
+	#superclass : 'RubTextSegmentMorph',
+	#category : 'Rita-UI-Support',
+	#package : 'Rita-UI',
+	#tag : 'Support'
 }
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 RiRubricTextSegment >> computeVertices [
 	| firstLineIndex lastLineIndex firstLine lastLine |
 	firstLineIndex := self lineIndexOfCharacterIndex: firstIndex.
