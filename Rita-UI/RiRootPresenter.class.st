@@ -30,7 +30,8 @@ RiRootPresenter class >> open [
 
 { #category : 'examples' }
 RiRootPresenter class >> openWithApplication: aSpApplication [
-	^ (self newApplication: aSpApplication) openWithSpec
+
+	^ (self newApplication: aSpApplication) open
 ]
 
 { #category : 'accessing' }

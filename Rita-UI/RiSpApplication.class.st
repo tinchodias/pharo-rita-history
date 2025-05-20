@@ -21,5 +21,5 @@ RiSpApplication >> start [
 	self new start
 	"
 	
-	(self new: RiRootPresenter) openWithSpec
+	(self new: RiRootPresenter) open
 ]
