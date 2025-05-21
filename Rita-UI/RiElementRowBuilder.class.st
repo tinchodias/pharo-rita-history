@@ -6,9 +6,9 @@ Class {
 	#name : 'RiElementRowBuilder',
 	#superclass : 'Object',
 	#instVars : [
-		'hiedraBuilder',
 		'avatarDatabase',
-		'repositoryPresenter'
+		'repositoryPresenter',
+		'hiedraColumnController'
 	],
 	#category : 'Rita-UI-Support',
 	#package : 'Rita-UI',
@@ -36,6 +36,16 @@ RiElementRowBuilder >> avatarsFor: item [
 		] ]
 ]
 
+{ #category : 'accessing' }
+RiElementRowBuilder >> hiedraMorphAt: item [
+
+	self flag: #todo. "Fix this async problem in other way"
+
+	^ (hiedraColumnController notNil and: [ hiedraColumnController isReady ])
+		ifFalse: [ ^ Morph new ]
+		ifTrue: [ hiedraColumnController cellMorphAtValue: item ]
+]
+
 { #category : 'mark morph building' }
 RiElementRowBuilder >> iconForBranch [
 	^ self iconNamed: #branch
@@ -55,23 +65,11 @@ RiElementRowBuilder >> iconForWorkingCopy [
 
 { #category : 'initialization' }
 RiElementRowBuilder >> initializeForRepositoryPresenter: aRiRepositoryPresenter [
+
 	self initialize.
 
-	hiedraBuilder := RiHiedraImageBuilder new.
 	avatarDatabase := RiAvatarsDatabase new.
-	repositoryPresenter := aRiRepositoryPresenter.
-]
-
-{ #category : 'accessing' }
-RiElementRowBuilder >> leftMorphsAt: item [
-	^ 	{ hiedraBuilder morphAt: item. '   ' asMorph },
-		(self avatarsFor: item),
-		(self pinMorphsFor: item),
-		(self markMorphsAt: item),
-		{ item comment asMorph
-				color: (self textColorFor: item);
-				hResizing: #spaceFill;
-				yourself }
+	repositoryPresenter := aRiRepositoryPresenter
 ]
 
 { #category : 'mark morph building' }
@@ -113,10 +111,22 @@ RiElementRowBuilder >> markMorphsAt: aRiElement [
 
 { #category : 'accessing' }
 RiElementRowBuilder >> morphAt: item [
+
 	| row |
 	row := RiRowMorph new.
-	(self leftMorphsAt: item) do: [ :each | row addItemLeft: each ].
-	row addItemRight: (' [{1}]		{2}		     ' format: { item shortId. item dateAndTime }) asMorph.
+
+	{ self hiedraMorphAt: item. '   ' asMorph },
+		(self avatarsFor: item),
+		(self pinMorphsFor: item),
+		(self markMorphsAt: item),
+		{ item comment asMorph
+			color: (self textColorFor: item);
+			hResizing: #spaceFill;
+			yourself }
+				do: [ :each | row addItemLeft: each ].
+
+	row addItemRight: (' [{1}]		{2}		     '
+		format: { item shortId. item dateAndTime }) asMorph.
 	^ row
 
 ]
@@ -128,9 +138,31 @@ RiElementRowBuilder >> pinMorphsFor: aRiElement [
 	^ {(self iconNamed: #breakpoint) asMorph}
 ]
 
+{ #category : 'refreshing' }
+RiElementRowBuilder >> process: aRiRepository rowHeight: aHeight [
+
+	hiedraColumnController := HiColumnController new.
+	hiedraColumnController renderer
+		rowHeight: aHeight;
+		nodeRadius: 1.5;
+		nodeBorderWidth: 3.0;
+		arrowSize: 0;
+		nodeConnectionOffset: 3;
+		cellWidth: 6.75.
+	self setUniformColors.
+
+	"Create a new ruler model with current table elements"
+	hiedraColumnController ruler: (HiRulerBuilder
+		newRulerValues: aRiRepository elements
+		linksBlock: [ :each | each ancestors ]).
+
+	hiedraColumnController reset.
+
+]
+
 { #category : 'accessing' }
 RiElementRowBuilder >> refresh [
-	[ hiedraBuilder
+	[ self
 		process: repositoryPresenter riRepository 
 		rowHeight: repositoryPresenter rowHeightForHiedra ] future
 			onSuccessDo: [ :_ | repositoryPresenter refreshOnAvatarsUpdate ];
@@ -153,6 +185,29 @@ RiElementRowBuilder >> remoteMarkMorphText: text icon: icon [
 			color: self markMorphBorderColor;
 			yourself);
 		yourself
+]
+
+{ #category : 'accessing' }
+RiElementRowBuilder >> setMultipleColors [
+
+	hiedraColumnController renderer useWheelColorStrategy.
+	hiedraColumnController renderer colorStrategy
+		colorWheel: ((Color 
+			wheel: 5
+			saturation: 0.45 
+			brightness: 0.95)
+		collect: [ :each | each mixed: 0.75 with: Smalltalk ui theme textColor ]).
+		
+
+]
+
+{ #category : 'accessing' }
+RiElementRowBuilder >> setUniformColors [
+
+	hiedraColumnController renderer useUniformColorStrategy.
+	hiedraColumnController renderer colorStrategy
+		linkColor: Smalltalk ui theme textColor;
+		nodeColor: Smalltalk ui theme textColor
 ]
 
 { #category : 'accessing' }

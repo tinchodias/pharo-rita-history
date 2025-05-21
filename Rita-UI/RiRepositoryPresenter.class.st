@@ -305,8 +305,12 @@ RiRepositoryPresenter >> initializeTable [
 	table
 		hideColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
-		addColumn: (SpImageTableColumn
-			evaluated: [ :item | rowBuilder morphAt: item ]).
+		addColumn: (SpImageTableColumn new
+			evaluated: [ :item | rowBuilder morphAt: item ];
+			displayAlignment: [ :each | SpColumnAlignment left ];
+			beNotExpandable;
+			yourself).
+
 	table whenBuiltDo: [ :ann |
 		self refreshOnModelUpdate ].
 
