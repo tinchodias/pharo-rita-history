@@ -31,7 +31,7 @@ RiRepositoryPresenter class >> defaultLayout [
 { #category : 'pin/unpin commits' }
 RiRepositoryPresenter >> actionAddPin: aRiElement [
 	(model at: #pinDiffModels)
-		add: (RiPinDiffModel sourceRiCommit: aRiElement).
+		add: (RiPinDiffModel sourceRiElement: aRiElement).
 	(model at: #blockWhenPinsChanged) value
 ]
 
@@ -81,7 +81,7 @@ RiRepositoryPresenter >> actionLoadBranch: aRiBranchMark [
 
 { #category : 'actions' }
 RiRepositoryPresenter >> actionLoadCommit: aRiCommit [
-	aRiCommit iceCommit checkout.
+	aRiCommit iceGitCommit checkout.
 	self riRepository process.
 	self refreshOnModelUpdate.
 ]
@@ -89,7 +89,7 @@ RiRepositoryPresenter >> actionLoadCommit: aRiCommit [
 { #category : 'pin/unpin commits' }
 RiRepositoryPresenter >> actionRemovePin: aRiElement [
 	(model at: #pinDiffModels)
-		removeAllSuchThat: [ :each | each sourceRiCommit = aRiElement ].
+		removeAllSuchThat: [ :each | each sourceRiElement = aRiElement ].
 	(model at: #blockWhenPinsChanged) value
 ]
 
@@ -213,7 +213,7 @@ RiRepositoryPresenter >> contextMenuForTable [
 			item
 				name: 'Browse code in this commit';
 				icon: (self iconNamed: #open);
-				action: [ RiCommitBrowseUtility browse: selected iceCommit ] ].
+				action: [ RiCommitBrowseUtility browse: selected iceGitCommit ] ].
 
 		selected marks select: #isBranchMark thenDo: [ :mark |
 			aGroup addItem: [ :item | 
@@ -319,7 +319,7 @@ RiRepositoryPresenter >> initializeTable [
 { #category : 'pin/unpin commits' }
 RiRepositoryPresenter >> isPinned: aRiElement [
 	^ (model at: #pinDiffModels)
-		anySatisfy: [ :each | each sourceRiCommit = aRiElement ]
+		anySatisfy: [ :each | each sourceRiElement = aRiElement ]
 ]
 
 { #category : 'initialization' }

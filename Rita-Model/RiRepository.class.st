@@ -162,7 +162,7 @@ RiRepository >> processCommitGraph [
 	"Connect all collected RiCommits in terms of child/parent."
 
 	self commits do: [ :each | 
-		each iceCommit ancestors
+		each iceGitCommit ancestors
 			collect: [ :iceAncestor |
 				elementByCommit at: iceAncestor ]
 			thenDo: [ :ancestor |
@@ -182,7 +182,7 @@ RiRepository >> processCommits [
 
 	self newIceCommitWalk commitsDo: [:each |
 		| newCommit |
-		newCommit := RiCommit repository: self iceCommit: each.
+		newCommit := RiCommit repository: self iceGitCommit: each.
 		elements add: newCommit.
 		elementByCommit at: each put: newCommit ].
 

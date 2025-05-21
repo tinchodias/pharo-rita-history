@@ -17,7 +17,8 @@ RiParentDiffModel class >> parentRiElement: aRiCommit [
 ]
 
 { #category : 'accessing' }
-RiParentDiffModel >> iceDiffTo: targetRiElement [
+RiParentDiffModel >> iceDiffFrom: targetRiElement [
+
 	^ targetRiElement diffTo: parentRiElement
 ]
 

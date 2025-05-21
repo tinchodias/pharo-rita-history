@@ -13,15 +13,17 @@ Class {
 
 { #category : 'layout' }
 RiFullDiffPresenter class >> defaultLayout [
+
 	^ SpPanedLayout newHorizontal
-		position: 60 percent;
+		positionOfSlider: 60 percent;
 		add: #torchDiffPresenter;
 		add:
 			(SpPanedLayout newVertical
-				position: 50 percent;
+				positionOfSlider: 50 percent;
 				add: #treeDiffPresenter;
 				add: #sourceCodePanel;
-				yourself) yourself
+				yourself);
+		yourself
 ]
 
 { #category : 'initialization' }

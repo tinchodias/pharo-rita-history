@@ -10,15 +10,17 @@ Class {
 }
 
 { #category : 'instance creation' }
-RiPinDiffModel class >> sourceRiCommit: aRiCommit [
+RiPinDiffModel class >> sourceRiElement: aRiElement [
+
 	^ self basicNew
-		initializeWithSourceRiCommit: aRiCommit;
+		initializeWith: aRiElement;
 		yourself
 ]
 
 { #category : 'accessing' }
-RiPinDiffModel >> iceDiffTo: targetRiCommit [
-	^ targetRiCommit asIceObject diffTo: sourceRiCommit asIceObject
+RiPinDiffModel >> iceDiffFrom: targetRiElement [
+
+	^ targetRiElement asIceObject diffTo: sourceRiElement asIceObject
 ]
 
 { #category : 'accessing' }
@@ -27,22 +29,23 @@ RiPinDiffModel >> icon [
 ]
 
 { #category : 'accessing' }
-RiPinDiffModel >> initializeWithSourceRiCommit: aRiCommit [
+RiPinDiffModel >> initializeWith: aRiElement [
+
 	self initialize.
-	sourceRiCommit := aRiCommit
+	sourceRiElement := aRiElement
 ]
 
 { #category : 'testing' }
 RiPinDiffModel >> shouldCompareTo: aRiElement [
-	^ sourceRiCommit ~= aRiElement
+	^ sourceRiElement ~= aRiElement
 ]
 
 { #category : 'accessing' }
-RiPinDiffModel >> sourceRiCommit [
-	^ sourceRiCommit
+RiPinDiffModel >> sourceRiElement [
+	^ sourceRiElement
 ]
 
 { #category : 'accessing' }
 RiPinDiffModel >> title [
-	^ 'Diff to Pin (', sourceRiCommit shortId, ')'
+	^ 'Diff to Pin (', sourceRiElement shortId, ')'
 ]

@@ -32,13 +32,17 @@ RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
 
 { #category : 'private' }
 RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
-	| iceDiff |
-	iceDiff := aRiDiffModel iceDiffTo: targetRiCommit.
+
+	| iceDiff expandedNodes |
+	iceDiff := aRiDiffModel iceDiffFrom: targetRiCommit.
+	expandedNodes := Array streamContents: [ :stream |
+		iceDiff tree withAllChildrenDo: [ :each | stream nextPut: each ] ].
+
 	^ (self instantiate: RiFullDiffPresenter)
 			model: (model copy
 				add: #iceDiff -> iceDiff;
 				add: #shadowedIceNodes -> IdentitySet new;
-				add: #expandedIceNodes -> iceDiff tree withAllChildren;
+				add: #expandedIceNodes -> expandedNodes;
 				yourself);
 			yourself
 ]

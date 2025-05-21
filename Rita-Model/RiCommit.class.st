@@ -8,7 +8,7 @@ Class {
 		'ancestors',
 		'children',
 		'repository',
-		'iceCommit'
+		'iceGitCommit'
 	],
 	#category : 'Rita-Model-Core',
 	#package : 'Rita-Model',
@@ -16,9 +16,9 @@ Class {
 }
 
 { #category : 'instance creation' }
-RiCommit class >> repository: aRiRepository iceCommit: anIceCommit [
+RiCommit class >> repository: aRiRepository iceGitCommit: anIceCommit [
 	^ self basicNew
-		initializeWithRepository: aRiRepository iceCommit: anIceCommit;
+		initializeWithRepository: aRiRepository iceGitCommit: anIceCommit;
 		yourself
 ]
 
@@ -44,12 +44,12 @@ RiCommit >> ancestors [
 
 { #category : 'converting' }
 RiCommit >> asIceObject [
-	^ iceCommit
+	^ iceGitCommit
 ]
 
 { #category : 'accessing' }
 RiCommit >> author [
-	^ iceCommit libgitCommit author
+	^ iceGitCommit libgitCommit author
 ]
 
 { #category : 'accessing' }
@@ -59,7 +59,7 @@ RiCommit >> authorEmail [
 
 { #category : 'accessing' }
 RiCommit >> authorName [
-	^ iceCommit author
+	^ iceGitCommit author
 ]
 
 { #category : 'accessing' }
@@ -69,12 +69,12 @@ RiCommit >> children [
 
 { #category : 'accessing' }
 RiCommit >> comment [
-	^ iceCommit comment
+	^ iceGitCommit comment
 ]
 
 { #category : 'accessing' }
 RiCommit >> committer [
-	^ iceCommit libgitCommit committer
+	^ iceGitCommit libgitCommit committer
 ]
 
 { #category : 'accessing' }
@@ -84,29 +84,30 @@ RiCommit >> committerEmail [
 
 { #category : 'accessing' }
 RiCommit >> dateAndTime [
-	^ RiDatePrinter new stringFor: iceCommit datetime asDate
+	^ RiDatePrinter new stringFor: iceGitCommit datetime asDate
 ]
 
 { #category : 'diff' }
 RiCommit >> diffTo: aRiCommit [ 
-	^ iceCommit diffTo: aRiCommit iceCommit
+	^ iceGitCommit diffTo: aRiCommit iceGitCommit
 ]
 
 { #category : 'accessing' }
-RiCommit >> iceCommit [
-	^ iceCommit
+RiCommit >> iceGitCommit [
+	^ iceGitCommit
 ]
 
 { #category : 'accessing' }
 RiCommit >> id [
-	^ iceCommit id
+	^ iceGitCommit id
 ]
 
 { #category : 'initialization' }
-RiCommit >> initializeWithRepository: aRiRepository iceCommit: anIceCommit [
+RiCommit >> initializeWithRepository: aRiRepository iceGitCommit: anIceGitCommit [
+
 	self initialize.
 	repository := aRiRepository.
-	iceCommit := anIceCommit.
+	iceGitCommit := anIceGitCommit.
 	children := #().
 	ancestors := #()
 ]
@@ -138,5 +139,5 @@ RiCommit >> shortDescription [
 
 { #category : 'accessing' }
 RiCommit >> shortId [
-	^ iceCommit shortId
+	^ iceGitCommit shortId
 ]

@@ -7,7 +7,8 @@ Class {
 }
 
 { #category : 'accessing' }
-RiDiffModel >> iceDiffTo: targetRiCommit [ 
+RiDiffModel >> iceDiffFrom: targetRiElement [
+
 	^ self subclassResponsibility
 ]
 
