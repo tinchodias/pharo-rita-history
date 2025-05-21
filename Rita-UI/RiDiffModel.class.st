@@ -7,11 +7,6 @@ Class {
 }
 
 { #category : 'accessing' }
-RiDiffModel >> allChildrenNodes [
-	self shouldBeImplemented.
-]
-
-{ #category : 'accessing' }
 RiDiffModel >> iceDiffTo: targetRiCommit [ 
 	^ self subclassResponsibility
 ]

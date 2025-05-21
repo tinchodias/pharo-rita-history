@@ -2,7 +2,7 @@ Class {
 	#name : 'RiPinDiffModel',
 	#superclass : 'RiDiffModel',
 	#instVars : [
-		'sourceRiCommit'
+		'sourceRiElement'
 	],
 	#category : 'Rita-UI-Models',
 	#package : 'Rita-UI',
