@@ -39,46 +39,6 @@ RiceAddition >> leftContents [
 	^ definition contents
 ]
 
-{ #category : 'merging' }
-RiceAddition >> mergeWithLeftAddition: anIceAddition [ 
-	
-	"If the addition is the same, I can just keep any of them."
-	anIceAddition definition = self definition 
-		ifTrue: [ ^ RiceNonConflictingOperation operation: anIceAddition ].
-		
-	^ RiceConflictingOperation left: anIceAddition right: self
-]
-
-{ #category : 'merging' }
-RiceAddition >> mergeWithLeftModification: anIceModification [ 
-	
-	"This should not happen. If I represent an addition of a node, that means that the original definition did not exist on the base version.
-	Thus, the left version can never MODIFY a non existing version. It can add it too."
-	self shouldNotImplement
-]
-
-{ #category : 'merging' }
-RiceAddition >> mergeWithLeftNoOperation: anIceNoModification [ 
-	
-	"This should not happen. If I represent an addition of a node, that means that the original definition did not exist on the base version.
-	Thus, the left version can never have an operation on the same element."
-	self shouldNotImplement
-]
-
-{ #category : 'merging' }
-RiceAddition >> mergeWithLeftRemoval: anIceRemoval [ 
-	
-	"This should not happen. If I represent an addition of a node, that means that the original definition did not exist on the base version.
-	Thus, the left version can never REMOVE a non existing version. It can add it too."
-	self shouldNotImplement
-]
-
-{ #category : 'merging' }
-RiceAddition >> mergeWithOperation: anOperation [
-	
-	^ anOperation mergeWithLeftAddition: self
-]
-
 { #category : 'accessing' }
 RiceAddition >> rightContents [
 	

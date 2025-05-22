@@ -167,36 +167,6 @@ RiceOperation >> leftDefinition: aNode [
 	definition := aNode
 ]
 
-{ #category : 'merging' }
-RiceOperation >> mergeWithLeftAddition: anIceAddition [ 
-	
-	self subclassResponsibility
-]
-
-{ #category : 'merging' }
-RiceOperation >> mergeWithLeftModification: anIceModification [ 
-	
-	^ self subclassResponsibility
-]
-
-{ #category : 'merging' }
-RiceOperation >> mergeWithLeftNoOperation: anIceNoModification [ 
-	
-	^ self subclassResponsibility
-]
-
-{ #category : 'merging' }
-RiceOperation >> mergeWithLeftRemoval: anIceRemoval [ 
-	
-	self subclassResponsibility
-]
-
-{ #category : 'merging' }
-RiceOperation >> mergeWithOperation: anOperation [
-	
-	self subclassResponsibility
-]
-
 { #category : 'accessing' }
 RiceOperation >> name [
 	

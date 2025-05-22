@@ -71,42 +71,6 @@ RiceModification >> leftContents [
 	^ definition contents
 ]
 
-{ #category : 'merging' }
-RiceModification >> mergeWithLeftAddition: anIceAddition [ 
-	
-	"This should not happen. If I represent a modification of a node, that means that the original definition existed on the base version.
-	Thus, the right version can never ADD an already existing version. It can remove it or modify it."
-	self shouldNotImplement
-]
-
-{ #category : 'merging' }
-RiceModification >> mergeWithLeftModification: anIceModification [ 
-	
-	"If the modification is the same, I can just keep any of them."
-	anIceModification leftDefinition = self leftDefinition 
-		ifTrue: [ ^ RiceNonConflictingOperation operation: anIceModification ].
-		
-	^ RiceConflictingOperation left: anIceModification right: self
-]
-
-{ #category : 'merging' }
-RiceModification >> mergeWithLeftNoOperation: anIceNoModification [ 
-	
-	^ RiceNonConflictingOperation operation: self
-]
-
-{ #category : 'merging' }
-RiceModification >> mergeWithLeftRemoval: anIceRemoval [ 
-	
-	^ RiceConflictingOperation left: anIceRemoval right: self
-]
-
-{ #category : 'merging' }
-RiceModification >> mergeWithOperation: anOperation [
-	
-	^ anOperation mergeWithLeftModification: self
-]
-
 { #category : 'accessing' }
 RiceModification >> oldDefinition [
 	
