@@ -2,7 +2,7 @@ Extension { #name : 'RicePropertyDefinition' }
 
 { #category : '*Rita-UI' }
 RicePropertyDefinition >> ritaAsTextForPRConversation [
-	^ self ownerIceDefinition ritaAsTextForPRConversation, ' (', self ritaAsText, ')'
+	^ self containerIceDefinition ritaAsTextForPRConversation, ' (', self ritaAsText, ')'
 ]
 
 { #category : '*Rita-UI' }
@@ -12,7 +12,7 @@ RicePropertyDefinition >> ritaAsTextForTree0 [
 
 { #category : '*Rita-UI' }
 RicePropertyDefinition >> ritaAsTextForTree1 [
-	^ super ritaAsTextForTree1, ' of ', self ownerIceDefinition ritaBasicAsText
+	^ super ritaAsTextForTree1, ' of ', self containerIceDefinition ritaBasicAsText
 ]
 
 { #category : '*Rita-UI' }
