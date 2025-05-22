@@ -35,7 +35,7 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 
 	| iceDiff expandedNodes |
 	iceDiff := aRiDiffModel iceDiffFrom: targetRiCommit.
-	expandedNodes := Array streamContents: [ :stream |
+	expandedNodes := OrderedCollection streamContents: [ :stream |
 		iceDiff tree withAllChildrenDo: [ :each | stream nextPut: each ] ].
 
 	^ (self instantiate: RiFullDiffPresenter)
