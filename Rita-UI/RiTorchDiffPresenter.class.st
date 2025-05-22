@@ -244,19 +244,19 @@ RiTorchDiffPresenter >> newSettingsToolBar [
 			label: 'Fit Zoom';
 			icon: (self iconNamed: #glamorousZoomToFit);
 			help: 'Zoom canvas to fit camera on all visual objects.';
-			action: [ RSZoomToFitCanvas new animatedZoomToFit: canvas. ];
+			action: [ RSZoomToFitCanvasInteraction new animatedZoomToFit: canvas. ];
 			yourself.
 	zoomInButton := (self instantiate: SpToolbarButtonPresenter)
 			label: 'Zoom in';
 			icon: (self iconNamed: #glamorousZoomIn);
 			help: 'Increase zoom (in canvas).';
-			action: [ RSKeyNavigationCanvas new zoomIn: canvas ];
+			action: [ RSKeyNavigationCanvasInteraction new zoomIn: canvas ];
 			yourself.
 	zoomOutButton := (self instantiate: SpToolbarButtonPresenter)
 			label: 'Zoom out';
 			icon: (self iconNamed: #glamorousZoomOut);
 			help: 'Decrease zoom (in canvas).';
-			action: [ RSKeyNavigationCanvas new zoomOut: canvas ];
+			action: [ RSKeyNavigationCanvasInteraction new zoomOut: canvas ];
 			yourself.
 
 	collapseAllButton := (self instantiate: SpToolbarButtonPresenter)
@@ -300,7 +300,7 @@ RiTorchDiffPresenter >> packInteraction [
 	"Interaction to pack hierarachies."
 
 	| packer |
-	packer := RSHierarchyPacker new.
+	packer := RSHierarchyPackerInteraction new.
 	packer rectanglePackLayout gap: self aesthetics gapBetweenHierarchies.
 	^ packer
 

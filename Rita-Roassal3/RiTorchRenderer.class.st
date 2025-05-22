@@ -199,7 +199,7 @@ RiTorchRenderer >> popupFor: iceNode [
 { #category : 'popup building' }
 RiTorchRenderer >> popupForCollapsedNode [
 
-	^ RSMorphicPopup new
+	^ RSMorphicPopupInteraction new
 		gapFromPointer: aesthetics widthForMethod asPoint;
 		morphBuilder: [ :iceNode |
 			| selector popupContent |
@@ -237,7 +237,7 @@ RiTorchRenderer >> popupForCollapsedNode [
 
 { #category : 'popup building' }
 RiTorchRenderer >> popupForExpandedNode [
-	^ RSMorphicPopup new
+	^ RSMorphicPopupInteraction new
 		gapFromPointer: aesthetics widthForMethod asPoint;
 		morphBuilder: [ :iceNode |
 			self announceAction: #torchPopup iceNode: iceNode.
