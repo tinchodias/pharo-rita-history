@@ -26,7 +26,7 @@ RiPackageSearchPage >> checkIfInvalid: aBlockClosure [
 RiPackageSearchPage >> initializePresenters [
 	packageNameInput := self
 		instantiate:
-			(SpLabelledPresenter
+			(SpLabeledPresenter
 				label: 'Package'
 				input: self newTextInput
 				description: 'The exact name of the package (case-sensitive)').

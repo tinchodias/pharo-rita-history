@@ -26,7 +26,7 @@ RiPathSearchPage >> checkIfInvalid: aBlockClosure [
 RiPathSearchPage >> initializePresenters [
 	pathInput := self
 		instantiate:
-			(SpLabelledPresenter
+			(SpLabeledPresenter
 				label: 'Path'
 				input: self newTextInput
 				description: 'A relative path, from the root of the repository. Example: README.md')

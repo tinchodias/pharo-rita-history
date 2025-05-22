@@ -28,7 +28,7 @@ RiMethodSearchPage >> initializePresenters [
 	super initializePresenters.
 	methodSelectorInput := self
 		instantiate:
-			(SpLabelledPresenter
+			(SpLabeledPresenter
 				label: 'Selector'
 				input: self newTextInput
 				description: 'The exact selector of the method (case-sensitive)').

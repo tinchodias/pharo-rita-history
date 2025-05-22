@@ -28,7 +28,7 @@ RiClassSearchPage >> initializePresenters [
 	super initializePresenters.
 	classNameInput := self
 		instantiate:
-			(SpLabelledPresenter
+			(SpLabeledPresenter
 				label: 'Class name'
 				input: self newTextInput
 				description: 'The exact name of the class (case-sensitive)').
