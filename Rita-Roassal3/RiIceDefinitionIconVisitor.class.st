@@ -1,67 +1,68 @@
 Class {
-	#name : #RiIceDefinitionIconVisitor,
-	#superclass : #Object,
+	#name : 'RiIceDefinitionIconVisitor',
+	#superclass : 'Object',
 	#instVars : [
 		'aesthetics'
 	],
-	#category : #'Rita-Roassal3'
+	#category : 'Rita-Roassal3',
+	#package : 'Rita-Roassal3'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiIceDefinitionIconVisitor class >> newForAesthetics: aRiAestheticsModel [
 	^ self basicNew
 		initializeForAesthetics: aRiAestheticsModel;
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiIceDefinitionIconVisitor >> initializeForAesthetics: aRiAestheticsModel [ 
 	self initialize.
 	aesthetics := aRiAestheticsModel.
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceDefinitionIconVisitor >> visitClassDefinition: anIceClassDefinition [
 	^ self iconNamed: #class
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceDefinitionIconVisitor >> visitDirectoryDefinition: d [
 	^ self iconNamed: #emptyPackage
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceDefinitionIconVisitor >> visitExtensionDefinition: anIceExtensionDefinition [
 	^ self iconNamed: #group
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceDefinitionIconVisitor >> visitFileNode: anIceFileDefinition [
 	^ self iconNamed: #book
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceDefinitionIconVisitor >> visitMethodNode: anIceMethodDefinition [
 	^ self iconNamed: #tinyMenu
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceDefinitionIconVisitor >> visitPackage: anIcePackageDefinition [
 	^ self iconNamed: #package
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceDefinitionIconVisitor >> visitPropertyDefinition: anIcePropertyDefinition [ 
 	^ aesthetics iconForClassPropertyDefinition: anIcePropertyDefinition
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceDefinitionIconVisitor >> visitTraitDefinition: anIceTraitDefinition [
 	^ self iconNamed: #trait
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceDefinitionIconVisitor >> visitVariableDefinition: anIceVariableDefinition [
 	^ aesthetics iconForClassVariableDefinition: anIceVariableDefinition
 ]

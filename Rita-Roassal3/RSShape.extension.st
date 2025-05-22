@@ -1,6 +1,6 @@
-Extension { #name : #RSShape }
+Extension { #name : 'RSShape' }
 
-{ #category : #'*Rita-Roassal3' }
+{ #category : '*Rita-Roassal3' }
 RSShape >> ritaUpdatePositionFromModelShape [
 	self position: self model position
 ]

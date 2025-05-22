@@ -1,42 +1,43 @@
 Class {
-	#name : #RiIceOperationColorVisitor,
-	#superclass : #Object,
+	#name : 'RiIceOperationColorVisitor',
+	#superclass : 'Object',
 	#instVars : [
 		'aesthetics'
 	],
-	#category : #'Rita-Roassal3'
+	#category : 'Rita-Roassal3',
+	#package : 'Rita-Roassal3'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiIceOperationColorVisitor class >> newForAesthetics: aRiAestheticsModel [
 	^ self basicNew
 		initializeForAesthetics: aRiAestheticsModel;
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiIceOperationColorVisitor >> initializeForAesthetics: aRiAestheticsModel [ 
 	self initialize.
 	aesthetics := aRiAestheticsModel.
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceOperationColorVisitor >> visitAddition: anIceAddition [ 
 	^ aesthetics colorForLineInsert
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceOperationColorVisitor >> visitModification: anIceModification [ 
 	^ aesthetics colorForLineModification
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceOperationColorVisitor >> visitNoModification: anIceNoModification [
 	^ aesthetics colorForLineNoModification
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiIceOperationColorVisitor >> visitRemoval: anIceRemoval [
 	^ aesthetics colorForLineRemove
 ]

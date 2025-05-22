@@ -2,12 +2,13 @@
 I help to abbreviate text according into a maximum width.
 "
 Class {
-	#name : #RiTextWidthKeeper,
-	#superclass : #Object,
-	#category : #'Rita-Roassal3'
+	#name : 'RiTextWidthKeeper',
+	#superclass : 'Object',
+	#category : 'Rita-Roassal3',
+	#package : 'Rita-Roassal3'
 }
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 RiTextWidthKeeper class >> endingTruncationFor: aString font: aFont maxSize: anInteger [
 	| width |
 	width := aFont widthOfString: aString.
@@ -16,7 +17,7 @@ RiTextWidthKeeper class >> endingTruncationFor: aString font: aFont maxSize: anI
 		ifFalse: [ self endingTruncationFor: ((aString allButLast: 2), '…') font: aFont maxSize: anInteger ]
 ]
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 RiTextWidthKeeper class >> middleTruncationFor: originalString font: aFont maxSize: max [
 	| length width result |
 	result := originalString.
@@ -30,7 +31,7 @@ RiTextWidthKeeper class >> middleTruncationFor: originalString font: aFont maxSi
 
 ]
 
-{ #category : #convenience }
+{ #category : 'convenience' }
 RiTextWidthKeeper class >> startingTruncationFor: aString font: aFont maxSize: anInteger [
 	| width |
 	width := aFont widthOfString: aString.

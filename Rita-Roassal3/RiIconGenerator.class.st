@@ -1,6 +1,6 @@
 Class {
-	#name : #RiIconGenerator,
-	#superclass : #Object,
+	#name : 'RiIconGenerator',
+	#superclass : 'Object',
 	#instVars : [
 		'extent',
 		'foregroundColor',
@@ -9,10 +9,11 @@ Class {
 		'shapes',
 		'labelScale'
 	],
-	#category : #'Rita-Roassal3'
+	#category : 'Rita-Roassal3',
+	#package : 'Rita-Roassal3'
 }
 
-{ #category : #examples }
+{ #category : 'examples' }
 RiIconGenerator class >> examples [
 	| shapeSelectors instances textColor backColor |
 	textColor := Smalltalk ui theme textColor.
@@ -39,7 +40,7 @@ RiIconGenerator class >> examples [
 
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 RiIconGenerator >> addBordered: aRSShape color: aColor [
 
 	shapes add: 
@@ -51,7 +52,7 @@ RiIconGenerator >> addBordered: aRSShape color: aColor [
 
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 RiIconGenerator >> addFilled: aRSShape color: aColor [
 
 	shapes add: 
@@ -63,7 +64,7 @@ RiIconGenerator >> addFilled: aRSShape color: aColor [
 
 ]
 
-{ #category : #drawing }
+{ #category : 'drawing' }
 RiIconGenerator >> addLabel: aString color: aColor [
 
 	shapes add: 
@@ -73,47 +74,47 @@ RiIconGenerator >> addLabel: aString color: aColor [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> backgroundColor [
 	^ backgroundColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> backgroundColor: aColor [
 	backgroundColor := aColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> border [
 	^ border
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> border: aRSBorder [
 	border := aRSBorder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> extent [
 	^ extent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> extent: aPoint [
 	extent := aPoint
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> foregroundColor [
 	^ foregroundColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> foregroundColor: aColor [
 	foregroundColor := aColor
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiIconGenerator >> initialize [
 	| theme |
 	theme := Smalltalk ui theme.
@@ -125,17 +126,17 @@ RiIconGenerator >> initialize [
 	labelScale := 0.08.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> labelScale [
 	^ labelScale
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> labelScale: aFloat [
 	labelScale := aFloat
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiIconGenerator >> labelWith: aString [
 	^ RSLabel new
 		text: aString;
@@ -147,19 +148,19 @@ RiIconGenerator >> labelWith: aString [
 		yourself
 ]
 
-{ #category : #generation }
+{ #category : 'generation' }
 RiIconGenerator >> newForm [
 	^ self newMorph imageForm
 ]
 
-{ #category : #generation }
+{ #category : 'generation' }
 RiIconGenerator >> newMorph [
 	^ self newRSCanvas createMorph
 		extent: extent;
 		yourself
 ]
 
-{ #category : #generation }
+{ #category : 'generation' }
 RiIconGenerator >> newRSCanvas [
 	^ RSCanvas new
 		addAll: shapes;
@@ -167,7 +168,7 @@ RiIconGenerator >> newRSCanvas [
 		yourself
 ]
 
-{ #category : #generation }
+{ #category : 'generation' }
 RiIconGenerator >> newRSComposite [
 	^ RSComposite new
 		shapes: shapes;
@@ -175,7 +176,7 @@ RiIconGenerator >> newRSComposite [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiIconGenerator >> shapes [
 	^ shapes
 ]

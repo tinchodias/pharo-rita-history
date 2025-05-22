@@ -1,61 +1,62 @@
 Class {
-	#name : #RiDetailedPopupHackyVisitor,
-	#superclass : #Object,
+	#name : 'RiDetailedPopupHackyVisitor',
+	#superclass : 'Object',
 	#instVars : [
 		'renderer'
 	],
-	#category : #'Rita-Roassal3'
+	#category : 'Rita-Roassal3',
+	#package : 'Rita-Roassal3'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiDetailedPopupHackyVisitor >> visitClassDefinition: anIceClassDefinition [
 
 	^ #shapeForClassInExpandedMode:
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiDetailedPopupHackyVisitor >> visitDirectoryDefinition: d [
 
 	^ #popupDiffMorphFor:
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiDetailedPopupHackyVisitor >> visitExtensionDefinition: anIceExtensionDefinition [
 
 	^ #shapeForClassInExpandedMode:
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiDetailedPopupHackyVisitor >> visitFileNode: anIceFileDefinition [
 
 	^ #popupDiffMorphFor:
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiDetailedPopupHackyVisitor >> visitMethodNode: anIceMethodDefinition [
 
 	^ #popupDiffMorphFor:
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiDetailedPopupHackyVisitor >> visitPackage: anIcePackageDefinition [
 
 	^ #shapeForContentsOfCollapsedPackage:
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiDetailedPopupHackyVisitor >> visitPropertyDefinition: anIcePropertyDefinition [
 
 	^ #popupDiffMorphFor:
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiDetailedPopupHackyVisitor >> visitTraitDefinition: anIceTraitDefinition [
 
 	^ #shapeForClassInExpandedMode:
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiDetailedPopupHackyVisitor >> visitVariableDefinition: anIceVariableDefinition [
 
 	^ #popupDiffMorphFor:

@@ -2,44 +2,45 @@
 I am polymorphic to RSUMLClassDescriptor.
 "
 Class {
-	#name : #RiTorchModelDescriptor,
-	#superclass : #Object,
-	#category : #'Rita-Roassal3'
+	#name : 'RiTorchModelDescriptor',
+	#superclass : 'Object',
+	#category : 'Rita-Roassal3',
+	#package : 'Rita-Roassal3'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RiTorchModelDescriptor >> childrenToShowFor: node withClassName: aClassName [
 	^ (node children
 		select: [ :each | each value definition class name = aClassName ])
 		sorted: [ :a :b | a value definition class name < b value definition class name ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchModelDescriptor >> classProperties [
 	^ [ :node | self childrenToShowFor: node withClassName: #RicePropertyDefinition ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchModelDescriptor >> classname [
 	^ [ :node | node value name ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchModelDescriptor >> instVars [
 	^ [ :node | self childrenToShowFor: node withClassName: #RiceVariableDefinition ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchModelDescriptor >> methods [
 	^ [ :node | self methodsToShowFor: node ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiTorchModelDescriptor >> methodsLimit [
 	^ SmallInteger maxVal
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RiTorchModelDescriptor >> methodsToShowFor: iceNodeWithBehavior [
 
 	| methodNodes |

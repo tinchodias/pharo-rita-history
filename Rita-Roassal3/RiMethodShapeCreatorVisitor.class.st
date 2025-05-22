@@ -1,31 +1,32 @@
 Class {
-	#name : #RiMethodShapeCreatorVisitor,
-	#superclass : #RiceTreeVisitor,
+	#name : 'RiMethodShapeCreatorVisitor',
+	#superclass : 'RiceTreeVisitor',
 	#instVars : [
 		'colorMap',
 		'aesthetics'
 	],
-	#category : #'Rita-Roassal3'
+	#category : 'Rita-Roassal3',
+	#package : 'Rita-Roassal3'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RiMethodShapeCreatorVisitor class >> aesthetics: anObject [
 	^ self basicNew
 		initialize: anObject;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMethodShapeCreatorVisitor >> heightForMethod: node [
 	^ node definition linesOfCode * self heightScale
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMethodShapeCreatorVisitor >> heightScale [
 	^ 3
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RiMethodShapeCreatorVisitor >> initialize: aRiAestheticsModel [
 	self initialize.
 	aesthetics := aRiAestheticsModel.
@@ -36,7 +37,7 @@ RiMethodShapeCreatorVisitor >> initialize: aRiAestheticsModel [
 		} asDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMethodShapeCreatorVisitor >> newForPatchSequence: patchSequence [
 
 	| scale canvas |
@@ -51,7 +52,7 @@ RiMethodShapeCreatorVisitor >> newForPatchSequence: patchSequence [
 	^ RSBitmap new form: (canvas finish; form); yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMethodShapeCreatorVisitor >> newForPlain: anIceChange [
 	^ RSBox new
 		extent: self widthForMethod @ (self heightForMethod: anIceChange);
@@ -59,12 +60,12 @@ RiMethodShapeCreatorVisitor >> newForPlain: anIceChange [
 		yourself
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiMethodShapeCreatorVisitor >> visitAddition: anIceAddition [ 
 	^ self newForPlain: anIceAddition
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiMethodShapeCreatorVisitor >> visitModification: anIceModification [
 	^ self
 		newForPatchSequence:
@@ -74,17 +75,17 @@ RiMethodShapeCreatorVisitor >> visitModification: anIceModification [
 				buildPatchSequence
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiMethodShapeCreatorVisitor >> visitNoModification: anIceNoModification [ 
 	^ self newForPlain: anIceNoModification
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RiMethodShapeCreatorVisitor >> visitRemoval: anIceRemoval [ 
 	^ self newForPlain: anIceRemoval
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RiMethodShapeCreatorVisitor >> widthForMethod [
 	^ aesthetics widthForMethod
 ]

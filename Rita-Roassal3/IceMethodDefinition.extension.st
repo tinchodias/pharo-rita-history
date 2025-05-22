@@ -1,6 +1,6 @@
-Extension { #name : #IceMethodDefinition }
+Extension { #name : 'IceMethodDefinition' }
 
-{ #category : #'*Rita-Roassal3' }
+{ #category : '*Rita-Roassal3' }
 IceMethodDefinition >> isUnitTest [
 	^ self name beginsWith: 'test'
 ]

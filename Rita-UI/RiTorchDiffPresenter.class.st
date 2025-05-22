@@ -47,7 +47,7 @@ RiTorchDiffPresenter >> buildCanvas [
 		addInteraction: self zoomingInteraction;
 		addInteraction: self packInteraction;
 		when: RSMouseClick do: [
-			highlighingController setPrimaryOutlineTo: nil ].
+			highlighingController setPrimaryOutlineTo: nil ] for: self.
 
 	self buildHelpIcon.
 	
