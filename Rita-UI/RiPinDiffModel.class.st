@@ -20,7 +20,7 @@ RiPinDiffModel class >> sourceRiElement: aRiElement [
 { #category : 'accessing' }
 RiPinDiffModel >> iceDiffFrom: targetRiElement [
 
-	^ targetRiElement asIceObject diffTo: sourceRiElement asIceObject
+	^ targetRiElement diffTo: sourceRiElement asIceObject
 ]
 
 { #category : 'accessing' }

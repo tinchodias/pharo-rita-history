@@ -91,7 +91,7 @@ RiceChangeImporter >> visitCypressPropertiesChange: anIceCypressPropertiesChange
 RiceChangeImporter >> visitGitChange: anIceGitChange [ 
 
 	| importer |
-	importer := IceGitChangeImporter new
+	importer := RiceGitChangeImporter new
 		path: anIceGitChange path;
 		diff: diff;
 		version: version;

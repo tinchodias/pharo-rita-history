@@ -88,8 +88,9 @@ RiCommit >> dateAndTime [
 ]
 
 { #category : 'diff' }
-RiCommit >> diffTo: aRiCommit [ 
-	^ iceGitCommit diffTo: aRiCommit iceGitCommit
+RiCommit >> diffTo: aRiCommit [
+
+	^ RiceDiff from: iceGitCommit to: aRiCommit iceGitCommit
 ]
 
 { #category : 'accessing' }
