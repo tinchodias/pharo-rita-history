@@ -52,7 +52,7 @@ RicePackageDefinition >> asMCDefinition [
 { #category : 'as yet unclassified' }
 RicePackageDefinition >> canBeBrowsed [
 	
-	^ RPackage organizer includesPackageNamed: name
+	^ self packageOrganizer includesPackageNamed: name
 ]
 
 { #category : 'as yet unclassified' }
