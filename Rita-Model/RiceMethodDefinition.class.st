@@ -171,6 +171,12 @@ RiceMethodDefinition >> isMethodDefinition [
 	^ true
 ]
 
+{ #category : 'testing' }
+RiceMethodDefinition >> isUnitTest [
+
+	^ self name beginsWith: 'test'
+]
+
 { #category : 'accessing' }
 RiceMethodDefinition >> key [
 	^ self classIsMeta
