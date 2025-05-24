@@ -24,7 +24,7 @@ RiceDefinition >> ritaAsTextForTree1 [
 RiceDefinition >> ritaBasicAsText [
 	"Answer the type of object to print in Rita. Assumes classes has Rice as prefix and Definition as suffix."
 
-	^ (self className
+	^ (self class name
 			allButFirst: 'Rice' size)
 			allButLast: 'Definition' size
 ]
