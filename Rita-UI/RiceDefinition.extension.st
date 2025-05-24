@@ -22,6 +22,9 @@ RiceDefinition >> ritaAsTextForTree1 [
 
 { #category : '*Rita-UI' }
 RiceDefinition >> ritaBasicAsText [
-	^ (self class name allButFirst: 'Ice' size)
-		allButLast: 'Definition' size
+	"Answer the type of object to print in Rita. Assumes classes has Rice as prefix and Definition as suffix."
+
+	^ (self className
+			allButFirst: 'Rice' size)
+			allButLast: 'Definition' size
 ]

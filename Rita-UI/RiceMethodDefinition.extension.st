@@ -7,6 +7,7 @@ RiceMethodDefinition >> linesOfCode [
 
 { #category : '*Rita-UI' }
 RiceMethodDefinition >> ritaBasicAsText [
+
 	^ (classIsMeta
 		ifTrue: [ 'Class ' ]
 		ifFalse: [ '' ]) asText allBold, super ritaBasicAsText
