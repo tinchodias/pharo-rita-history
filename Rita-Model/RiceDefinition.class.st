@@ -68,11 +68,6 @@ RiceDefinition >> icon [
 	self subclassResponsibility
 ]
 
-{ #category : 'as yet unclassified' }
-RiceDefinition >> iconNamed: aSymbol [
-	^ Smalltalk ui icons iconNamed: aSymbol
-]
-
 { #category : 'testing' }
 RiceDefinition >> isClassDefinition [
 	

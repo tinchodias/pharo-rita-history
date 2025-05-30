@@ -1,11 +1,6 @@
 Extension { #name : 'RicePropertyDefinition' }
 
 { #category : '*Rita-UI' }
-RicePropertyDefinition >> ritaAsTextForPRConversation [
-	^ self containerIceDefinition ritaAsTextForPRConversation, ' (', self ritaAsText, ')'
-]
-
-{ #category : '*Rita-UI' }
 RicePropertyDefinition >> ritaAsTextForTree0 [
 	^ self ritaNameToShow
 ]
