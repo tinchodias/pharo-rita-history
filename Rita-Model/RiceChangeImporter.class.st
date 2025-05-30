@@ -87,7 +87,7 @@ RiceChangeImporter >> visitCypressPropertiesChange: anIceCypressPropertiesChange
 	version properties addToChangeBuilder: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'visiting' }
 RiceChangeImporter >> visitGitChange: anIceGitChange [ 
 
 	| importer |
@@ -110,7 +110,7 @@ RiceChangeImporter >> visitImageChange: anIceImageChange [
 	^ importer importOn: (self ensureSourceCodeParentNodeIn: parentNode)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'visiting' }
 RiceChangeImporter >> visitMemoryChange: anIceMemoryChange [ 
 	
 	| importer |
