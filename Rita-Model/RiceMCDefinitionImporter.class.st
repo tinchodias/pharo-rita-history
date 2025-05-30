@@ -13,6 +13,16 @@ Class {
 	#tag : 'Changes'
 }
 
+{ #category : 'private' }
+RiceMCDefinitionImporter >> definitionForMethodContainerNamed: aString ifAbsent: aBlock [
+
+	^ snapshot definitions
+		detect: [ :e |
+			"Both Monticello class and trait definition answer true"
+			e isClassDefinition and: [ e className = aString ] ]
+		ifNone: aBlock
+]
+
 { #category : 'visiting' }
 RiceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isTrait: isTrait isExtension: isExtension [
 	
@@ -33,7 +43,7 @@ RiceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isTrait: isTrait i
 { #category : 'testing' }
 RiceMCDefinitionImporter >> isExtension: aString [ 
 	
-	snapshot definitionForMethodContainerNamed: aString ifAbsent: [ ^ true ].
+	self definitionForMethodContainerNamed: aString ifAbsent: [ ^ true ].
 	^ false
 ]
 
@@ -41,7 +51,7 @@ RiceMCDefinitionImporter >> isExtension: aString [
 RiceMCDefinitionImporter >> isTrait: aString [ 
 	
 	| definition |
-	definition := snapshot definitionForMethodContainerNamed: aString ifAbsent: [ ^ false ].
+	definition := self definitionForMethodContainerNamed: aString ifAbsent: [ ^ false ].
 	^ definition isTraitDefinition
 ]
 
