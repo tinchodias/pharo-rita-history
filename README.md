@@ -13,11 +13,11 @@ On Linux and Mac (tested on Debian 10 and Catalina, respectively):
 1. Open a terminal, go to some temp directory and execute:
    * `git clone https://github.com/tinchodias/pharo-rita-history.git`
    * `cd pharo-rita-history`
-   * `./build.sh`
+   * `./script/build.sh`
    * `cd build`
    * `./pharo-ui Pharo.image`
 2. When finished do: `cd build` and `./pharo-ui Pharo.image`.
-3. Click on `World Menu -> Tools -> Torch`.
+3. Click on `World Menu -> Tools -> Rita`.
 
 On Windows 10, the build process was only tested using the git-bash terminal (MINGW64).
 

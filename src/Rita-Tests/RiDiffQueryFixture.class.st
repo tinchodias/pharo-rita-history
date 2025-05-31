@@ -8,7 +8,8 @@ Class {
 		'commit1',
 		'commit5',
 		'commit6',
-		'commit7'
+		'commit7',
+		'riRepository'
 	],
 	#category : 'Rita-Tests',
 	#package : 'Rita-Tests'
@@ -57,6 +58,46 @@ RiDiffQueryFixture >> commit7 [
 	^ commit7
 ]
 
+{ #category : 'accessing' }
+RiDiffQueryFixture >> riCommit1 [
+
+	^ self riRepository commitAtSha: commit1 id
+]
+
+{ #category : 'accessing' }
+RiDiffQueryFixture >> riCommit2 [
+
+	^ self riRepository commitAtSha: commit2 id
+]
+
+{ #category : 'accessing' }
+RiDiffQueryFixture >> riCommit5 [
+
+	^ self riRepository commitAtSha: commit5 id
+]
+
+{ #category : 'accessing' }
+RiDiffQueryFixture >> riCommit6 [
+
+	^ self riRepository commitAtSha: commit6 id
+]
+
+{ #category : 'accessing' }
+RiDiffQueryFixture >> riCommit7 [
+
+	^ self riRepository commitAtSha: commit7 id
+]
+
+{ #category : 'accessing' }
+RiDiffQueryFixture >> riRepository [
+
+	^ riRepository ifNil: [
+		riRepository := RiRepository iceRepository: repository.
+		riRepository process.
+		riRepository ]
+
+]
+
 { #category : 'running' }
 RiDiffQueryFixture >> setUp [
 	super setUp.
@@ -82,7 +123,7 @@ RiDiffQueryFixture >> setUp [
 
 	"Removal of slot and methods"
 	commit4 := repository workingCopy
-		removeBehavior: 'B';
+		removeClassNamed: 'B';
 		removeMethod: #initialize fromClass: 'A';
 		removeMethod: #one fromClass: 'A';
 		modifyBehavior: 'A' with: [ :c | c instanceVariables: #() ];
