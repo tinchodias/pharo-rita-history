@@ -1,8 +1,9 @@
 # Rita
 
-[![Build Status](https://travis-ci.org/tinchodias/pharo-rita-history.png)](http://travis-ci.org/tinchodias/pharo-rita-history)
+[![Tests](https://github.com/tinchodias/pharo-rita-history/actions/workflows/tests.yml/badge.svg)](https://github.com/tinchodias/pharo-rita-history/actions/workflows/tests.yml)
 
-This repository is home of several experiments on understanding of code changes with Pharo inspired in [Torch](http://rmod.inria.fr/archives/papers/Uqui10a-Torch-WCRE10.pdf).
+A tool to help understanding git code changes in Pharo IDE.
+Inspired on [Torch](http://rmod.inria.fr/archives/papers/Uqui10a-Torch-WCRE10.pdf).
 
 ![Screenshot](small.png)
 
