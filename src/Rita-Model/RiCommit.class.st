@@ -93,6 +93,12 @@ RiCommit >> diffTo: aRiCommit [
 	^ RiceDiff from: iceGitCommit to: aRiCommit iceGitCommit
 ]
 
+{ #category : 'API - changes' }
+RiCommit >> diffToParent [
+	
+	^ self diffTo: ancestors first
+]
+
 { #category : 'accessing' }
 RiCommit >> iceGitCommit [
 	^ iceGitCommit

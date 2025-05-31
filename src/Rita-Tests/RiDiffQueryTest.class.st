@@ -12,9 +12,10 @@ RiDiffQueryTest >> newFixture [
 
 { #category : 'tests' }
 RiDiffQueryTest >> test01ConsiderOnlyChangedButThereIsntAny [
+
 	| query nodes |
 	query := RiDiffQuery new
-		diff: fixture commit1 diffToParent;
+		diff: fixture riCommit1 diffToParent;
 		yourself.
 	nodes := query nodesForBehaviors.
 	self assert: nodes size equals: 1.
@@ -28,7 +29,7 @@ RiDiffQueryTest >> test01ConsiderOnlyChangedButThereIsntAny [
 RiDiffQueryTest >> test02ConsiderOnlyChangedThenItSkipsUnmodified [
 	| query nodes |
 	query := RiDiffQuery new
-		diff: fixture commit2 diffToParent;
+		diff: fixture riCommit2 diffToParent;
 		yourself.
 	nodes := query nodesForBehaviors.
 	self assert: nodes size equals: 1.
@@ -42,7 +43,7 @@ RiDiffQueryTest >> test02ConsiderOnlyChangedThenItSkipsUnmodified [
 RiDiffQueryTest >> test03ConsiderUnchangedWorks [
 	| query nodes |
 	query := RiDiffQuery new
-		diff: fixture commit2 diffToParent;
+		diff: fixture riCommit2 diffToParent;
 		onlyConsiderChanged: false;
 		yourself.
 	nodes := query nodesForBehaviors.
@@ -59,7 +60,7 @@ RiDiffQueryTest >> test03ConsiderUnchangedWorks [
 RiDiffQueryTest >> test04ConsiderUnchangedWithFileChanged [
 	| query nodes |
 	query := RiDiffQuery new
-		diff: fixture commit5 diffToParent;
+		diff: fixture riCommit5 diffToParent;
 		onlyConsiderChanged: false;
 		yourself.
 	nodes := query nodesForBehaviors.
@@ -72,7 +73,7 @@ RiDiffQueryTest >> test05ConsiderUnchangedWithAnotherPackage [
 
 	| query nodes |
 	query := RiDiffQuery new
-		diff: fixture commit6 diffToParent;
+		diff: fixture riCommit6 diffToParent;
 		onlyConsiderChanged: false;
 		yourself.
 	nodes := query nodesForBehaviors.
@@ -85,7 +86,7 @@ RiDiffQueryTest >> test06ConsiderOnlyChangedWithFiles [
 
 	| query nodes |
 	query := RiDiffQuery new
-		diff: fixture commit7 diffToParent;
+		diff: fixture riCommit7 diffToParent;
 		onlyConsiderChanged: true;
 		yourself.
 	nodes := query nodesForFiles.
