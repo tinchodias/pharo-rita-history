@@ -18,7 +18,7 @@ Metacello new
 	load
 ```
 
-Then, click on `World Menu -> Tools -> Rita`.
+Then, click on `World Menu -> Library -> Rita`.
 
 ## Install via Bash script:
 
@@ -32,7 +32,7 @@ Alternatively, we provide a bash script that downloads Pharo and installs the pr
 In fact, you can execute the script from other directory, no need to be there the git repository was cloned.
 
 To start Rita, do: `cd build` and `./pharo-ui Pharo.image`.
-Then, click on `World Menu -> Tools -> Rita`.
+Then, click on `World Menu -> Library -> Rita`.
 
 ---
 
