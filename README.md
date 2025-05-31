@@ -7,24 +7,37 @@ Inspired on [Torch](http://rmod.inria.fr/archives/papers/Uqui10a-Torch-WCRE10.pd
 
 ![Screenshot](small.png)
 
-## Install and execute
+## Install
 
-On Linux and Mac (tested on Debian 10 and Catalina, respectively):
+Load in Pharo 13 with:
 
-1. Open a terminal, go to some temp directory and execute:
-   * `git clone https://github.com/tinchodias/pharo-rita-history.git`
-   * `cd pharo-rita-history`
-   * `./script/build.sh`
-   * `cd build`
-   * `./pharo-ui Pharo.image`
-2. When finished do: `cd build` and `./pharo-ui Pharo.image`.
-3. Click on `World Menu -> Tools -> Rita`.
+```smalltalk
+Metacello new
+	baseline: 'Rita';
+	repository: 'github://tinchodias/pharo-rita-history:Pharo13/src';
+	load
+```
 
-On Windows 10, the build process was only tested using the git-bash terminal (MINGW64).
+Then, click on `World Menu -> Tools -> Rita`.
+
+## Install via Bash script:
+
+Alternatively, we provide a bash script that downloads Pharo and installs the project. Open a terminal, create a directory and execute:
+1. `git clone https://github.com/tinchodias/pharo-rita-history.git`
+2. `cd pharo-rita-history`
+3. `./script/build.sh`
+4. `cd build`
+5. `./pharo-ui Pharo.image`
+
+In fact, you can execute the script from other directory, no need to be there the git repository was cloned.
+
+To start Rita, do: `cd build` and `./pharo-ui Pharo.image`.
+Then, click on `World Menu -> Tools -> Rita`.
 
 ---
 
 ## License
+
 The code is licensed under [MIT](LICENSE).
 
 ## What's *rita*?
