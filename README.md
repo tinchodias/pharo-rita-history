@@ -7,6 +7,33 @@ Inspired on [Torch](http://rmod.inria.fr/archives/papers/Uqui10a-Torch-WCRE10.pd
 
 ![Screenshot](small.png)
 
+### Repository view (left)
+
+Rita presents all git branches, tags, and the _working copy_ at once. The `WORKING COPY` pseudo‑tag represents the commit loaded in the image (when present). 
+
+### Diff view (right)
+
+Rita keeps a strict one-to-one correspondence between each visual element on the Roassal canvas and each node in the tree view. The goal is a tight, predictable UX so you can move fluidly between seeing structure and interacting with it.
+
+Key interaction rules
+- Expand / contract: collapsing or expanding a package/class hides or shows the exact same items in both the tree and the canvas.
+- Hover: moving the cursor over an item in the tree highlights the corresponding canvas shape with the same light color.
+- Selection: clicking an item in the tree selects and highlights its matching shape in the canvas (and vice‑versa).
+- Navigation: the tree supports fast keyboard and click navigation while the canvas provides spatial context—both stay synchronized.
+
+UX benefits
+- Predictability: both views always show the same set of items for a given expand/contract state.
+- Faster, confident navigation: the tree is efficient for precise traversal; the canvas gives visual context—keeping them mirrored reduces mental switching cost.
+- Clear discovery: hover and selection highlighting make it easy to find and confirm the same entity in both representations.
+
+The strict 1:1 mapping makes the visualization and the tree work as a single, cohesive interface rather than two separate tools.
+
+## Documentation
+
+A short note about our [Rice code-changes model](doc/RiceModel.md).
+
+Documentation can also be browsed via Pharo IDE -> World Menu -> Help -> Documentation Browser.
+
 ## Install
 
 Load in Pharo 13 with:
