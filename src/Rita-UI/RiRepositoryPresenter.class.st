@@ -7,7 +7,6 @@ Class {
 	#superclass : 'RiPresenter',
 	#instVars : [
 		'table',
-		'blockForPinToCompareFrom',
 		'rowBuilder',
 		'actionBar',
 		'cleanSearchButton',
@@ -338,14 +337,17 @@ RiRepositoryPresenter >> refreshOnAvatarsUpdate [
 
 { #category : 'accessing' }
 RiRepositoryPresenter >> refreshOnModelUpdate [
+
 	self isBuilt ifFalse: [ ^ self ].
 
 	self riRepository ensureProcessed.
 
-	model at: #elementsInSearchResult put: #().
+	model at: #elementsInSearchResult put: #(  ).
 	rowBuilder refresh.
 
-	table items: self riRepository elements
+	table items: self riRepository elements.
+	self flag: #todo. "Maybe that if we had an element already selected we should keep the same selection?"
+	table selectFirst
 ]
 
 { #category : 'accessing' }

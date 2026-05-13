@@ -1,3 +1,12 @@
+"
+I am the root presenter of Rita. 
+
+I'll open on a list of repositories that are accessible in `Iceberg`. When the user select one of the repository, I'll open a tab displaying some details on the repository such as its history and a visualization of changes applied on the project. 
+
+Visualization can be a powerful tool compared to text in order to review the impact of a change.
+
+TODOX Document the spawn pages (for now I do not know what they are)
+"
 Class {
 	#name : 'RiRootPresenter',
 	#superclass : 'RiPresenter',
