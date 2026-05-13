@@ -3,7 +3,7 @@ Class {
 	#superclass : 'RiPresenter',
 	#instVars : [
 		'detailPresenter',
-		'masterPresenter'
+		'repositoryCommitsPresenter'
 	],
 	#category : 'Rita-UI-Spec2-Repository',
 	#package : 'Rita-UI',
@@ -13,7 +13,7 @@ Class {
 { #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> connectPresenters [
 
-	masterPresenter blockForElementSelected: [ :targetRiElement |
+	repositoryCommitsPresenter whenSelectionChangedDo: [ :targetRiElement |
 			detailPresenter model: (model
 					 at: #element put: targetRiElement;
 					 at: #parentDiffModels put: (self parentDiffModelsFor: targetRiElement);
@@ -35,7 +35,7 @@ RiRepositoryMasterDetailPresenter >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: 20 percent;
-		  add: masterPresenter;
+		  add: repositoryCommitsPresenter;
 		  add: detailPresenter;
 		  yourself
 ]
@@ -49,7 +49,7 @@ RiRepositoryMasterDetailPresenter >> detailPresenter [
 { #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> initializePresenters [
 
-	masterPresenter := self instantiate: RiRepositoryPresenter.
+	repositoryCommitsPresenter := self instantiate: RiRepositoryCommitsPresenter.
 	detailPresenter := self instantiate: RiElementPresenter
 ]
 
@@ -57,12 +57,6 @@ RiRepositoryMasterDetailPresenter >> initializePresenters [
 RiRepositoryMasterDetailPresenter >> isForRepository: aRiRepository [
 
 	^ aRiRepository = self repository
-]
-
-{ #category : 'accessing' }
-RiRepositoryMasterDetailPresenter >> masterPresenter [
-
-	^ masterPresenter
 ]
 
 { #category : 'initialization' }
@@ -81,7 +75,7 @@ RiRepositoryMasterDetailPresenter >> refreshOnModelUpdate [
 	
 	model at: #blockWhenPinsChanged put: [
 		"Refresh only table to show the pin: the detail will refresh on next table selection."
-		masterPresenter refreshOnPinsUpdate ].
+		repositoryCommitsPresenter refreshOnPinsUpdate ].
 
 	model at: #blockForIterateNext put: [
 		self currentFullDiffPresenterIfPresent: [ :p |
@@ -90,7 +84,7 @@ RiRepositoryMasterDetailPresenter >> refreshOnModelUpdate [
 		self currentFullDiffPresenterIfPresent: [ :p |
 			p selectBackIceNode ] ].
 
-	masterPresenter model: model.
+	repositoryCommitsPresenter model: model.
 
 ]
 

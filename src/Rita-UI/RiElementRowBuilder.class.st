@@ -115,20 +115,15 @@ RiElementRowBuilder >> morphAt: item [
 	| row |
 	row := RiRowMorph new.
 
-	{ self hiedraMorphAt: item. '   ' asMorph },
-		(self avatarsFor: item),
-		(self pinMorphsFor: item),
-		(self markMorphsAt: item),
-		{ item comment asMorph
-			color: (self textColorFor: item);
-			hResizing: #spaceFill;
-			yourself }
-				do: [ :each | row addItemLeft: each ].
+	{
+		(self hiedraMorphAt: item).
+		'   ' asMorph } , (self avatarsFor: item) , (self pinMorphsFor: item) , (self markMorphsAt: item) , { (item comment asMorph
+		 color: (self textColorFor: item);
+		 hResizing: #spaceFill;
+		 yourself) } do: [ :each | row addItemLeft: each ].
 
-	row addItemRight: (' [{1}]		{2}		     '
-		format: { item shortId. item dateAndTime }) asMorph.
+
 	^ row
-
 ]
 
 { #category : 'accessing' }

@@ -1,9 +1,12 @@
 "
-I am a Spec2 presenter for RiRepository objects.
+I am a presenter displaying the list of commits (and their info) in the form of a tree for a `RiRepository`.
 
+I'll display informations such as the commit SHA, the author and the date. 
+
+I also have a toolbar with some actions such as a search, previous, next...
 "
 Class {
-	#name : 'RiRepositoryPresenter',
+	#name : 'RiRepositoryCommitsPresenter',
 	#superclass : 'RiPresenter',
 	#instVars : [
 		'table',
@@ -19,26 +22,26 @@ Class {
 }
 
 { #category : 'pin/unpin commits' }
-RiRepositoryPresenter >> actionAddPin: aRiElement [
+RiRepositoryCommitsPresenter >> actionAddPin: aRiElement [
 	(model at: #pinDiffModels)
 		add: (RiPinDiffModel sourceRiElement: aRiElement).
 	(model at: #blockWhenPinsChanged) value
 ]
 
 { #category : 'search' }
-RiRepositoryPresenter >> actionCleanSearchResults [
+RiRepositoryCommitsPresenter >> actionCleanSearchResults [
 	model at: #elementsInSearchResult put: #().
 	self refreshOnSearchResultsUpdate
 ]
 
 { #category : 'actions' }
-RiRepositoryPresenter >> actionForceRefresh [
+RiRepositoryCommitsPresenter >> actionForceRefresh [
 	self riRepository process.
 	self refreshOnModelUpdate
 ]
 
 { #category : 'search' }
-RiRepositoryPresenter >> actionJumpToNextInSearchResults [
+RiRepositoryCommitsPresenter >> actionJumpToNextInSearchResults [
 	| results elementToJump |
 	results := model at: #elementsInSearchResult.
 	elementToJump := table selection isEmpty
@@ -50,7 +53,7 @@ RiRepositoryPresenter >> actionJumpToNextInSearchResults [
 ]
 
 { #category : 'search' }
-RiRepositoryPresenter >> actionJumpToPreviousInSearchResults [
+RiRepositoryCommitsPresenter >> actionJumpToPreviousInSearchResults [
 	| results elementToJump |
 	results := model at: #elementsInSearchResult.
 	elementToJump := table selection isEmpty
@@ -63,28 +66,28 @@ RiRepositoryPresenter >> actionJumpToPreviousInSearchResults [
 ]
 
 { #category : 'actions' }
-RiRepositoryPresenter >> actionLoadBranch: aRiBranchMark [
+RiRepositoryCommitsPresenter >> actionLoadBranch: aRiBranchMark [
 	aRiBranchMark local checkout.
 	self riRepository process.
 	self refreshOnModelUpdate.
 ]
 
 { #category : 'actions' }
-RiRepositoryPresenter >> actionLoadCommit: aRiCommit [
+RiRepositoryCommitsPresenter >> actionLoadCommit: aRiCommit [
 	aRiCommit iceGitCommit checkout.
 	self riRepository process.
 	self refreshOnModelUpdate.
 ]
 
 { #category : 'pin/unpin commits' }
-RiRepositoryPresenter >> actionRemovePin: aRiElement [
+RiRepositoryCommitsPresenter >> actionRemovePin: aRiElement [
 	(model at: #pinDiffModels)
 		removeAllSuchThat: [ :each | each sourceRiElement = aRiElement ].
 	(model at: #blockWhenPinsChanged) value
 ]
 
 { #category : 'search' }
-RiRepositoryPresenter >> actionSearch [
+RiRepositoryCommitsPresenter >> actionSearch [
 	| searchPresenter searchDialog results |
 	searchPresenter := self instantiate: RiRepositorySearchPresenter.
 	searchPresenter model: model.
@@ -107,13 +110,7 @@ RiRepositoryPresenter >> actionSearch [
 ]
 
 { #category : 'initialization' }
-RiRepositoryPresenter >> blockForElementSelected: aBlock [
-	table whenSelectionChangedDo: [:selection |
-		selection selectedItem ifNotNil: aBlock ]
-]
-
-{ #category : 'initialization' }
-RiRepositoryPresenter >> contextMenuForGoToFuture: aRiElement [
+RiRepositoryCommitsPresenter >> contextMenuForGoToFuture: aRiElement [
 	| menu |
 	menu := self newMenu.
 	
@@ -139,7 +136,7 @@ RiRepositoryPresenter >> contextMenuForGoToFuture: aRiElement [
 ]
 
 { #category : 'initialization' }
-RiRepositoryPresenter >> contextMenuForGoToPast: aRiElement [
+RiRepositoryCommitsPresenter >> contextMenuForGoToPast: aRiElement [
 	| menu |
 	menu := self newMenu.
 	
@@ -165,7 +162,7 @@ RiRepositoryPresenter >> contextMenuForGoToPast: aRiElement [
 ]
 
 { #category : 'initialization' }
-RiRepositoryPresenter >> contextMenuForTable [
+RiRepositoryCommitsPresenter >> contextMenuForTable [
 	| menu selected |
 	menu := self newMenu.
 	
@@ -228,7 +225,7 @@ RiRepositoryPresenter >> contextMenuForTable [
 ]
 
 { #category : 'layout' }
-RiRepositoryPresenter >> defaultLayout [
+RiRepositoryCommitsPresenter >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: table;
@@ -237,92 +234,95 @@ RiRepositoryPresenter >> defaultLayout [
 ]
 
 { #category : 'search' }
-RiRepositoryPresenter >> hasSearchResults [
+RiRepositoryCommitsPresenter >> hasSearchResults [
 	^ (model at: #elementsInSearchResult) notEmpty
 ]
 
 { #category : 'initialization' }
-RiRepositoryPresenter >> initializeActionBar [
-	
-	| refreshButton |
+RiRepositoryCommitsPresenter >> initializeActionBar [
+
 	cleanSearchButton := self newButton
-			label: 'Clean';
-			icon: (self iconNamed: #windowClose);
-			help: 'Clean search results.';
-			action: [ self actionCleanSearchResults ];
-			addStyle: 'ritaNarrow';
-			enabled: false;
-			yourself.
+		                     label: 'Clean';
+		                     iconName: #windowClose;
+		                     help: 'Clean search results.';
+		                     action: [ self actionCleanSearchResults ];
+		                     addStyle: 'ritaNarrow';
+		                     enabled: false;
+		                     yourself.
 	nextJumpToNextButton := self newButton
-			icon: (self iconNamed: #down);
-			help: 'Jump to next commit in search results.';
-			action: [ self actionJumpToNextInSearchResults ];
-			addStyle: 'ritaNarrow';
-			enabled: false;
-			yourself.
+		                        iconName: #down;
+		                        help: 'Jump to next commit in search results.';
+		                        action: [ self actionJumpToNextInSearchResults ];
+		                        addStyle: 'ritaNarrow';
+		                        enabled: false;
+		                        yourself.
 	nextJumpToPreviousButton := self newButton
-			icon: (self iconNamed: #up);
-			help: 'Jump to previous commit in search results.';
-			action: [ self actionJumpToPreviousInSearchResults ];
-			addStyle: 'ritaNarrow';
-			enabled: false;
-			yourself.
+		                            iconName: #up;
+		                            help: 'Jump to previous commit in search results.';
+		                            action: [ self actionJumpToPreviousInSearchResults ];
+		                            addStyle: 'ritaNarrow';
+		                            enabled: false;
+		                            yourself.
 
-	refreshButton := self newButton
-			icon: (self iconNamed: #smallUpdate);
-			help: 'Process again this repository and reload the list of commits.';
-			action: [ self actionForceRefresh ];
-			addStyle: 'ritaNarrow';
-			yourself.
-		
 	actionBar := self newActionBar
-		add: (self newButton
-			label: 'Search';
-			icon: (self iconNamed: #glamorousSearch);
-			help: 'Search in the commits of this repository.';
-			action: [ self actionSearch ];
-			yourself);
-		add: nextJumpToNextButton;
-		add: nextJumpToPreviousButton;
-		add: cleanSearchButton;
-		addLast: refreshButton;
-		yourself.
-
+		             add: (self newButton
+				              label: 'Search';
+				              iconName: #search;
+				              help: 'Search in the commits of this repository.';
+				              action: [ self actionSearch ];
+				              yourself);
+		             add: nextJumpToNextButton;
+		             add: nextJumpToPreviousButton;
+		             add: cleanSearchButton;
+		             addLast: (self newButton
+				              iconName: #smallUpdate;
+				              help: 'Process again this repository and reload the list of commits.';
+				              action: [ self actionForceRefresh ];
+				              addStyle: 'ritaNarrow';
+				              yourself);
+		             yourself
 ]
 
 { #category : 'initialization' }
-RiRepositoryPresenter >> initializePresenters [
+RiRepositoryCommitsPresenter >> initializePresenters [
 	self initializeTable.
 	self initializeActionBar
 ]
 
 { #category : 'initialization' }
-RiRepositoryPresenter >> initializeTable [
+RiRepositoryCommitsPresenter >> initializeTable [
 
 	rowBuilder := RiElementRowBuilder newForRepositoryPresenter: self.
 	table := self newTable.
 	table
-		hideColumnHeaders;
 		contextMenu: [ self contextMenuForTable ];
+		addColumn: (SpStringTableColumn new
+				 title: 'Commit';
+				 evaluated: [ :item | item shortId ];
+				 width: 65;
+				 yourself);
+		addColumn: (SpStringTableColumn new
+				 title: 'Date';
+				 evaluated: [ :item | item dateAndTime ];
+				 width: 70;
+				 yourself);
 		addColumn: (SpImageTableColumn new
-			evaluated: [ :item | rowBuilder morphAt: item ];
-			displayAlignment: [ :each | SpColumnAlignment left ];
-			beNotExpandable;
-			yourself).
+				 evaluated: [ :item | rowBuilder morphAt: item ];
+				 displayAlignment: [ :each | SpColumnAlignment left ];
+				 beNotExpandable;
+				 yourself).
 
-	table whenBuiltDo: [ :ann |
-		self refreshOnModelUpdate ].
-
+	table whenBuiltDo: [ :ann | self refreshOnModelUpdate ]
 ]
 
 { #category : 'pin/unpin commits' }
-RiRepositoryPresenter >> isPinned: aRiElement [
+RiRepositoryCommitsPresenter >> isPinned: aRiElement [
 	^ (model at: #pinDiffModels)
 		anySatisfy: [ :each | each sourceRiElement = aRiElement ]
 ]
 
 { #category : 'initialization' }
-RiRepositoryPresenter >> printStringForMarksOf: aRiElement [
+RiRepositoryCommitsPresenter >> printStringForMarksOf: aRiElement [
 	^ String
 		streamContents: [ :stream | 
 			aRiElement marks
@@ -331,12 +331,12 @@ RiRepositoryPresenter >> printStringForMarksOf: aRiElement [
 ]
 
 { #category : 'accessing' }
-RiRepositoryPresenter >> refreshOnAvatarsUpdate [
+RiRepositoryCommitsPresenter >> refreshOnAvatarsUpdate [
 	self defer: [table adapter widget refresh]
 ]
 
 { #category : 'accessing' }
-RiRepositoryPresenter >> refreshOnModelUpdate [
+RiRepositoryCommitsPresenter >> refreshOnModelUpdate [
 
 	self isBuilt ifFalse: [ ^ self ].
 
@@ -351,12 +351,12 @@ RiRepositoryPresenter >> refreshOnModelUpdate [
 ]
 
 { #category : 'accessing' }
-RiRepositoryPresenter >> refreshOnPinsUpdate [
+RiRepositoryCommitsPresenter >> refreshOnPinsUpdate [
 	self refreshOnAvatarsUpdate
 ]
 
 { #category : 'search' }
-RiRepositoryPresenter >> refreshOnSearchResultsUpdate [
+RiRepositoryCommitsPresenter >> refreshOnSearchResultsUpdate [
 	{	cleanSearchButton.
 		nextJumpToPreviousButton.
 		nextJumpToNextButton}
@@ -367,22 +367,28 @@ RiRepositoryPresenter >> refreshOnSearchResultsUpdate [
 ]
 
 { #category : 'accessing' }
-RiRepositoryPresenter >> riRepository [
+RiRepositoryCommitsPresenter >> riRepository [
 	^ model at: #repository
 ]
 
 { #category : 'accessing' }
-RiRepositoryPresenter >> rowHeightForHiedra [
+RiRepositoryCommitsPresenter >> rowHeightForHiedra [
 	^ table adapter widget rowHeight floor
 ]
 
 { #category : 'search' }
-RiRepositoryPresenter >> searchResultIncudes: aRiElement [
+RiRepositoryCommitsPresenter >> searchResultIncudes: aRiElement [
 	^ aRiElement isUncommited not
 		and: [ (model at: #elementsInSearchResult) includes: aRiElement ]
 ]
 
 { #category : 'actions' }
-RiRepositoryPresenter >> selectRiElement: aRiElement [
+RiRepositoryCommitsPresenter >> selectRiElement: aRiElement [
 	table selectItem: aRiElement scrollToSelection: true
+]
+
+{ #category : 'initialization' }
+RiRepositoryCommitsPresenter >> whenSelectionChangedDo: aBlock [
+
+	table whenSelectionChangedDo: [ :selection | selection selectedItem ifNotNil: [ :item | aBlock value: item ] ]
 ]
