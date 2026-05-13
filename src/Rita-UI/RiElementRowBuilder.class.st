@@ -101,10 +101,7 @@ RiElementRowBuilder >> morphAt: item [
 
 	{
 		(self hiedraMorphAt: item).
-		'   ' asMorph } , (self pinMorphsFor: item) , (self markMorphsAt: item) , { (item comment asMorph
-		 color: (self textColorFor: item);
-		 hResizing: #spaceFill;
-		 yourself) } do: [ :each | row addItemLeft: each ].
+		'   ' asMorph } , (self pinMorphsFor: item) , (self markMorphsAt: item) do: [ :each | row addItemLeft: each ].
 
 
 	^ row

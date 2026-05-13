@@ -316,6 +316,7 @@ RiRepositoryCommitsPresenter >> initializeTable [
 	table
 		contextMenu: [ self contextMenuForTable ];
 		addStyle: 'ritaTable';
+		beResizable;
 		addColumn: (SpImageTableColumn new
 				 evaluated: [ :item | rowBuilder morphAt: item ];
 				 yourself);
@@ -333,6 +334,12 @@ RiRepositoryCommitsPresenter >> initializeTable [
 				 title: 'Author';
 				 evaluated: [ :item | self avatarFor: item authorEmail ];
 				 width: 40;
+				 yourself);
+		addColumn: (SpStringTableColumn new
+				 title: 'Comment';
+				 evaluated: [ :item | item comment ];
+				width: 100;
+				isSortable: false;
 				 yourself).
 
 	table whenBuiltDo: [ :ann | self refreshOnModelUpdate ]
