@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'table',
 		'blockForOpenPullRequests',
-		'blockForOpenRepository'
+		'openRepositoryBlock'
 	],
 	#category : 'Rita-UI-Spec2-Repository',
 	#package : 'Rita-UI',
@@ -35,11 +35,6 @@ RiRepositoryListPresenter >> blockForOpenPullRequests: aBlock [
 	blockForOpenPullRequests:= aBlock
 ]
 
-{ #category : 'accessing' }
-RiRepositoryListPresenter >> blockForOpenRepository: aBlock [
-	blockForOpenRepository := aBlock
-]
-
 { #category : 'initialization' }
 RiRepositoryListPresenter >> contextMenuForPullRequestsFor: aRiRepository [
 	| menu |
@@ -65,7 +60,7 @@ RiRepositoryListPresenter >> contextMenuForTable [
 	menu addItem: [ :item |
 		item
 			name: 'Open Repository';
-			action: [ blockForOpenRepository value: selected ] ].
+			action: [ openRepositoryBlock value: selected ] ].
 	menu addItem: [ :item |
 		item
 			name: 'View Pull Requests';
@@ -111,8 +106,7 @@ RiRepositoryListPresenter >> initializePresenters [
 	"Set up actions"
 	table
 		contextMenu: [ self contextMenuForTable ];
-		whenActivatedDo: [:selection |
-			blockForOpenRepository value: selection selectedItem ].
+		whenActivatedDo: [:selection | openRepositoryBlock value: selection selectedItem ].
 	
 	table whenBuiltDo: [ :ann |
 		self refreshOnModelUpdate ].
@@ -122,4 +116,10 @@ RiRepositoryListPresenter >> initializePresenters [
 { #category : 'accessing' }
 RiRepositoryListPresenter >> refreshOnModelUpdate [
 	table items: model.
+]
+
+{ #category : 'enumerating' }
+RiRepositoryListPresenter >> whenOpeningRepositoryDo: aBlock [
+
+	openRepositoryBlock := aBlock
 ]

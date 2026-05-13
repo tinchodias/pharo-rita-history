@@ -35,6 +35,12 @@ RiRepositoryMasterDetailPresenter >> initializeKeyBindings [
 	self bindKeyCombination: $b meta toAction: [ (model at: #blockForIterateBack) value ].
 ]
 
+{ #category : 'testing' }
+RiRepositoryMasterDetailPresenter >> isForRepository: aRiRepository [
+
+	^ aRiRepository = self repository
+]
+
 { #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> masterPresenterClass [
 	^ RiRepositoryPresenter
@@ -67,4 +73,10 @@ RiRepositoryMasterDetailPresenter >> refreshOnModelUpdate [
 
 	masterPresenter model: model.
 
+]
+
+{ #category : 'accessing' }
+RiRepositoryMasterDetailPresenter >> repository [
+
+	^ self model at: #repository
 ]

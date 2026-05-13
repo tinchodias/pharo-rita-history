@@ -9,16 +9,10 @@ Class {
 	#tag : 'Spec2-Base'
 }
 
-{ #category : 'layout' }
-RiRootPresenter class >> defaultLayout [
-	^ SpBoxLayout newVertical
-		add: #notebook;
-"		add:
-			(SpBoxLayout newHorizontal
-				add: #checkbox withConstraints: [ :constraints | constraints width: 20 ];
-				add: 'Show dynamic presenter')
-			withConstraints: [ :constraints | constraints height: self labelHeight ];"
-		yourself
+{ #category : 'accessing' }
+RiRootPresenter class >> defaultPreferredExtent [
+
+	^ 1000 @ 800
 ]
 
 { #category : 'examples' }
@@ -48,13 +42,25 @@ RiRootPresenter class >> worldMenuItemOn: aBuilder [
 		parent: #Tools;
 		action: [ self open ];
 		icon: (self iconNamed: self taskbarIconName);
-		help:
-			'Rita is a tool that helps developers to understand code changes in a git repository.';
-		order: 0.5
+		help: 'Rita is a tool that helps developers to understand code changes in a git repository.';
+		order: 1
+]
+
+{ #category : 'layout' }
+RiRootPresenter >> defaultLayout [
+	^ SpBoxLayout newVertical
+		add: notebook;
+"		add:
+			(SpBoxLayout newHorizontal
+				add: checkbox withConstraints: [ :constraints | constraints width: 20 ];
+				add: 'Show dynamic presenter')
+			withConstraints: [ :constraints | constraints height: self labelHeight ];"
+		yourself
 ]
 
 { #category : 'initialization' }
 RiRootPresenter >> initialize [
+
 	super initialize.
 
 	self model: RiRootModel newWithRegisteredRepositories
@@ -62,70 +68,54 @@ RiRootPresenter >> initialize [
 
 { #category : 'initialization' }
 RiRootPresenter >> initializePresenters [
+
+	super initializePresenters.
 	notebook := self newNotebook.
 	notebook addPage: self newHomePage
 ]
 
-{ #category : 'initialization' }
-RiRootPresenter >> initializeWindow: aSpWindowPresenter [
-	aSpWindowPresenter
-		initialExtent: 1000 @ 800;
-		title: 'History Explorer'
-]
-
 { #category : 'private' }
 RiRootPresenter >> newHomePage [
-	^ SpNotebookPage
-		title: 'Home'
-		icon: (self iconNamed: #homeIcon)
-		provider: [
-			RiRepositoryListPresenter new
-				model: model repositories;
-				blockForOpenRepository: [ :aRiRepository |
-					self openRepository: aRiRepository ];
-				yourself ]
+
+	^ SpNotebookPage title: 'Home' icon: (self iconNamed: #homeIcon) provider: [
+			  RiRepositoryListPresenter new
+				  model: model repositories;
+				  whenOpeningRepositoryDo: [ :aRiRepository | self openRepository: aRiRepository ];
+				  yourself ]
 ]
 
 { #category : 'private' }
 RiRootPresenter >> newRepositoryPageFor: aRiRepository [
-	^ SpNotebookPage
-		title: ''
-		icon: (self iconNamed: #git)
-		provider: [
-			RiRepositoryMasterDetailPresenter new
-				model: { 
-					#repository -> aRiRepository. 
-					#root -> model.
-					#aesthetics -> model aesthetics.
-					#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ]
-					} asDictionary;
-				yourself ]
 
+	^ SpNotebookPage title: aRiRepository name icon: (self iconNamed: #git) provider: [
+			  RiRepositoryMasterDetailPresenter new
+				  model: {
+						  (#repository -> aRiRepository).
+						  (#root -> model).
+						  (#aesthetics -> model aesthetics).
+						  (#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ]) } asDictionary;
+				  yourself ]
 ]
 
 { #category : 'private' }
 RiRootPresenter >> newSpawnPageFor: modelToSpawn [
-	^ SpNotebookPage
-		title: ''
-		icon: (self iconNamed: #git)
-		provider: [
-			RiFullDiffPresenter new
-				model: modelToSpawn;
-				yourself ]
+
+	^ SpNotebookPage title: (self titleForSpawnPage: modelToSpawn) icon: (self iconNamed: #git) provider: [
+			  RiFullDiffPresenter new
+				  model: modelToSpawn;
+				  yourself ]
 ]
 
 { #category : 'private' }
-RiRootPresenter >> openPage: anObject title: aString ifAbsentBuildWith: aBlock [
+RiRootPresenter >> openPage: anObject ifAbsentBuildWith: aBlock [
 	"Ensure a notebook's page is open (and selected)."
 
 	| page |
-	self flag: #todo. "Use model as key instead of the title, to know if it's already a page."
-	notebook pages
-		detect: [ :each | each title = aString ]
+	notebook pages allButFirst
+		detect: [ :each | each activePresenter isForRepository: anObject ]
 		ifFound: [ :foundPage | ^ notebook selectPage: foundPage ].
-	
+
 	page := aBlock value.
-	page title: aString.
 	page beCloseable.
 	notebook
 		addPage: page;
@@ -134,28 +124,14 @@ RiRootPresenter >> openPage: anObject title: aString ifAbsentBuildWith: aBlock [
 
 { #category : 'private' }
 RiRootPresenter >> openRepository: aRiRepository [
-	self
-		openPage: aRiRepository
-		title: (self titleForRepositoryPage: aRiRepository)
-		ifAbsentBuildWith: [ self newRepositoryPageFor: aRiRepository ]
+
+	self openPage: aRiRepository ifAbsentBuildWith: [ self newRepositoryPageFor: aRiRepository ]
 ]
 
 { #category : 'private' }
 RiRootPresenter >> openSpawnFor: modelToSpawn [
-	self
-		openPage: modelToSpawn
-		title: (self titleForSpawnPage: modelToSpawn)
-		ifAbsentBuildWith: [ self newSpawnPageFor: modelToSpawn ]
-]
 
-{ #category : 'private' }
-RiRootPresenter >> titleForPullRequestsPage: anIceRemote [
-	^ 'Pull Requests on {1}' format: {anIceRemote displayString}
-]
-
-{ #category : 'private' }
-RiRootPresenter >> titleForRepositoryPage: aRiRepository [
-	^ aRiRepository name
+	self openPage: modelToSpawn ifAbsentBuildWith: [ self newSpawnPageFor: modelToSpawn ]
 ]
 
 { #category : 'private' }
@@ -164,4 +140,10 @@ RiRootPresenter >> titleForSpawnPage: modelToSpawn [
 		format:
 			{(modelToSpawn at: #repository) name.
 			(modelToSpawn at: #iceDiff) ritaShortId}
+]
+
+{ #category : 'initialization' }
+RiRootPresenter >> windowTitle [
+
+	^ 'History Explorer'
 ]
