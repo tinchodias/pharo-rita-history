@@ -14,7 +14,8 @@ Class {
 		'actionBar',
 		'cleanSearchButton',
 		'nextJumpToNextButton',
-		'nextJumpToPreviousButton'
+		'nextJumpToPreviousButton',
+		'avatarByEmail'
 	],
 	#category : 'Rita-UI-Spec2-Repository',
 	#package : 'Rita-UI',
@@ -107,6 +108,16 @@ RiRepositoryCommitsPresenter >> actionSearch [
 	results ifNotEmpty: [
 		self actionJumpToNextInSearchResults ].
 
+]
+
+{ #category : 'accessing' }
+RiRepositoryCommitsPresenter >> avatarFor: email [
+
+	^ avatarByEmail at: email ifAbsentPut: [
+			  | hash avatarUrl |
+			  hash := (SHA256 hashMessage: email asByteArray) hex.
+			  avatarUrl := 'https://www.gravatar.com/avatar/' , hash , '?d=identicon&s=200'.
+			  (ImageReadWriter formFromStream: (ZnClient new get: avatarUrl) readStream) scaledToSize: 16 @ 16 ]
 ]
 
 { #category : 'initialization' }
@@ -239,6 +250,14 @@ RiRepositoryCommitsPresenter >> hasSearchResults [
 ]
 
 { #category : 'initialization' }
+RiRepositoryCommitsPresenter >> initialize [
+
+	super initialize.
+
+	avatarByEmail := Dictionary new
+]
+
+{ #category : 'initialization' }
 RiRepositoryCommitsPresenter >> initializeActionBar [
 
 	cleanSearchButton := self newButton
@@ -296,6 +315,7 @@ RiRepositoryCommitsPresenter >> initializeTable [
 	table := self newTable.
 	table
 		contextMenu: [ self contextMenuForTable ];
+		addStyle: 'ritaTable';
 		addColumn: (SpImageTableColumn new
 				 evaluated: [ :item | rowBuilder morphAt: item ];
 				 yourself);
@@ -308,6 +328,11 @@ RiRepositoryCommitsPresenter >> initializeTable [
 				 title: 'Date';
 				 evaluated: [ :item | item dateAndTime ];
 				 width: 70;
+				 yourself);
+		addColumn: (SpImageTableColumn new
+				 title: 'Author';
+				 evaluated: [ :item | self avatarFor: item authorEmail ];
+				 width: 40;
 				 yourself).
 
 	table whenBuiltDo: [ :ann | self refreshOnModelUpdate ]
