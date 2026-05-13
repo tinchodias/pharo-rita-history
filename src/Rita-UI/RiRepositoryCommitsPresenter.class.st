@@ -296,6 +296,9 @@ RiRepositoryCommitsPresenter >> initializeTable [
 	table := self newTable.
 	table
 		contextMenu: [ self contextMenuForTable ];
+		addColumn: (SpImageTableColumn new
+				 evaluated: [ :item | rowBuilder morphAt: item ];
+				 yourself);
 		addColumn: (SpStringTableColumn new
 				 title: 'Commit';
 				 evaluated: [ :item | item shortId ];
@@ -305,11 +308,6 @@ RiRepositoryCommitsPresenter >> initializeTable [
 				 title: 'Date';
 				 evaluated: [ :item | item dateAndTime ];
 				 width: 70;
-				 yourself);
-		addColumn: (SpImageTableColumn new
-				 evaluated: [ :item | rowBuilder morphAt: item ];
-				 displayAlignment: [ :each | SpColumnAlignment left ];
-				 beNotExpandable;
 				 yourself).
 
 	table whenBuiltDo: [ :ann | self refreshOnModelUpdate ]
