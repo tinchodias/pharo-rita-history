@@ -11,21 +11,18 @@ Class {
 }
 
 { #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> connectMasterToDetail [
+RiRepositoryMasterDetailPresenter >> connectPresenters [
+
 	masterPresenter blockForElementSelected: [ :targetRiElement |
-		detailPresenter model: 
-			(model
-				at: #element put: targetRiElement;
-				at: #parentDiffModels put: (self parentDiffModelsFor: targetRiElement);
-				yourself) ].
+			detailPresenter model: (model
+					 at: #element put: targetRiElement;
+					 at: #parentDiffModels put: (self parentDiffModelsFor: targetRiElement);
+					 yourself) ].
 	
 	"Bindings are not added before building."
-	self whenBuiltDo: [ self initializeKeyBindings ]
-]
-
-{ #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> connectPresenters [
-	self connectMasterToDetail
+	self whenBuiltDo: [
+			self bindKeyCombination: $n meta toAction: [ (model at: #blockForIterateNext) value ].
+			self bindKeyCombination: $b meta toAction: [ (model at: #blockForIterateBack) value ] ]
 ]
 
 { #category : 'private' }
@@ -37,7 +34,7 @@ RiRepositoryMasterDetailPresenter >> currentFullDiffPresenterIfPresent: aBlockCl
 RiRepositoryMasterDetailPresenter >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 30 percent;
+		  positionOfSlider: 20 percent;
 		  add: masterPresenter;
 		  add: detailPresenter;
 		  yourself
@@ -50,30 +47,10 @@ RiRepositoryMasterDetailPresenter >> detailPresenter [
 ]
 
 { #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> detailPresenterClass [
-	^ RiElementPresenter
-]
-
-{ #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> initializeDetailPresenter [
-	detailPresenter := self instantiate: self detailPresenterClass
-]
-
-{ #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> initializeKeyBindings [
-	self bindKeyCombination: $n meta toAction: [ (model at: #blockForIterateNext) value ].
-	self bindKeyCombination: $b meta toAction: [ (model at: #blockForIterateBack) value ].
-]
-
-{ #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> initializeMasterPresenter [
-	masterPresenter := self instantiate: self masterPresenterClass
-]
-
-{ #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> initializePresenters [
-	self initializeMasterPresenter.
-	self initializeDetailPresenter
+
+	masterPresenter := self instantiate: RiRepositoryPresenter.
+	detailPresenter := self instantiate: RiElementPresenter
 ]
 
 { #category : 'testing' }
@@ -86,11 +63,6 @@ RiRepositoryMasterDetailPresenter >> isForRepository: aRiRepository [
 RiRepositoryMasterDetailPresenter >> masterPresenter [
 
 	^ masterPresenter
-]
-
-{ #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> masterPresenterClass [
-	^ RiRepositoryPresenter
 ]
 
 { #category : 'initialization' }

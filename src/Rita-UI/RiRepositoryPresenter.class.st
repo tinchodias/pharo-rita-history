@@ -18,15 +18,6 @@ Class {
 	#tag : 'Spec2-Repository'
 }
 
-{ #category : 'layout' }
-RiRepositoryPresenter class >> defaultLayout [
-	^ SpBoxLayout newVertical
-		add: #table;
-		add: #actionBar
-			withConstraints: [ :constraints | constraints height: self toolbarHeight ];
-		yourself
-]
-
 { #category : 'pin/unpin commits' }
 RiRepositoryPresenter >> actionAddPin: aRiElement [
 	(model at: #pinDiffModels)
@@ -234,6 +225,15 @@ RiRepositoryPresenter >> contextMenuForTable [
 				action: [ selected inspect ] ] ].
 
 	^ menu
+]
+
+{ #category : 'layout' }
+RiRepositoryPresenter >> defaultLayout [
+
+	^ SpBoxLayout newVertical
+		  add: table;
+		  add: actionBar expand: false;
+		  yourself
 ]
 
 { #category : 'search' }
