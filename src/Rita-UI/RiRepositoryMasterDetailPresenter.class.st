@@ -1,6 +1,10 @@
 Class {
 	#name : 'RiRepositoryMasterDetailPresenter',
-	#superclass : 'RiMasterDetailPresenter',
+	#superclass : 'RiPresenter',
+	#instVars : [
+		'detailPresenter',
+		'masterPresenter'
+	],
 	#category : 'Rita-UI-Spec2-Repository',
 	#package : 'Rita-UI',
 	#tag : 'Spec2-Repository'
@@ -19,9 +23,30 @@ RiRepositoryMasterDetailPresenter >> connectMasterToDetail [
 	self whenBuiltDo: [ self initializeKeyBindings ]
 ]
 
+{ #category : 'initialization' }
+RiRepositoryMasterDetailPresenter >> connectPresenters [
+	self connectMasterToDetail
+]
+
 { #category : 'private' }
 RiRepositoryMasterDetailPresenter >> currentFullDiffPresenterIfPresent: aBlockClosure [ 
 	^ detailPresenter selectedDiffModelIfFound: aBlockClosure
+]
+
+{ #category : 'layout' }
+RiRepositoryMasterDetailPresenter >> defaultLayout [
+
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 30 percent;
+		  add: masterPresenter;
+		  add: detailPresenter;
+		  yourself
+]
+
+{ #category : 'accessing' }
+RiRepositoryMasterDetailPresenter >> detailPresenter [
+
+	^ detailPresenter
 ]
 
 { #category : 'initialization' }
@@ -30,15 +55,37 @@ RiRepositoryMasterDetailPresenter >> detailPresenterClass [
 ]
 
 { #category : 'initialization' }
+RiRepositoryMasterDetailPresenter >> initializeDetailPresenter [
+	detailPresenter := self instantiate: self detailPresenterClass
+]
+
+{ #category : 'initialization' }
 RiRepositoryMasterDetailPresenter >> initializeKeyBindings [
 	self bindKeyCombination: $n meta toAction: [ (model at: #blockForIterateNext) value ].
 	self bindKeyCombination: $b meta toAction: [ (model at: #blockForIterateBack) value ].
+]
+
+{ #category : 'initialization' }
+RiRepositoryMasterDetailPresenter >> initializeMasterPresenter [
+	masterPresenter := self instantiate: self masterPresenterClass
+]
+
+{ #category : 'initialization' }
+RiRepositoryMasterDetailPresenter >> initializePresenters [
+	self initializeMasterPresenter.
+	self initializeDetailPresenter
 ]
 
 { #category : 'testing' }
 RiRepositoryMasterDetailPresenter >> isForRepository: aRiRepository [
 
 	^ aRiRepository = self repository
+]
+
+{ #category : 'accessing' }
+RiRepositoryMasterDetailPresenter >> masterPresenter [
+
+	^ masterPresenter
 ]
 
 { #category : 'initialization' }
