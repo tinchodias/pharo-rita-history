@@ -1,5 +1,5 @@
 Class {
-	#name : 'RiRepositoryMasterDetailPresenter',
+	#name : 'RiRepositoryPresenter',
 	#superclass : 'RiPresenter',
 	#instVars : [
 		'detailPresenter',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> connectPresenters [
+RiRepositoryPresenter >> connectPresenters [
 
 	repositoryCommitsPresenter whenSelectionChangedDo: [ :targetRiElement |
 			detailPresenter model: (model
@@ -26,41 +26,41 @@ RiRepositoryMasterDetailPresenter >> connectPresenters [
 ]
 
 { #category : 'private' }
-RiRepositoryMasterDetailPresenter >> currentFullDiffPresenterIfPresent: aBlockClosure [ 
+RiRepositoryPresenter >> currentFullDiffPresenterIfPresent: aBlockClosure [ 
 	^ detailPresenter selectedDiffModelIfFound: aBlockClosure
 ]
 
 { #category : 'layout' }
-RiRepositoryMasterDetailPresenter >> defaultLayout [
+RiRepositoryPresenter >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 20 percent;
+		  positionOfSlider: repositoryCommitsPresenter presenterWidthInPercent percent;
 		  add: repositoryCommitsPresenter;
 		  add: detailPresenter;
 		  yourself
 ]
 
 { #category : 'accessing' }
-RiRepositoryMasterDetailPresenter >> detailPresenter [
+RiRepositoryPresenter >> detailPresenter [
 
 	^ detailPresenter
 ]
 
 { #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> initializePresenters [
+RiRepositoryPresenter >> initializePresenters [
 
 	repositoryCommitsPresenter := self instantiate: RiRepositoryCommitsPresenter.
 	detailPresenter := self instantiate: RiElementPresenter
 ]
 
 { #category : 'testing' }
-RiRepositoryMasterDetailPresenter >> isForRepository: aRiRepository [
+RiRepositoryPresenter >> isForRepository: aRiRepository [
 
 	^ aRiRepository = self repository
 ]
 
 { #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> parentDiffModelsFor: targetRiElement [
+RiRepositoryPresenter >> parentDiffModelsFor: targetRiElement [
 	"IMPORTANT: As other tools only answer the diff to the first ancestor (potentially ignoring others, in case of merge)."
 
 	^ targetRiElement
@@ -70,7 +70,7 @@ RiRepositoryMasterDetailPresenter >> parentDiffModelsFor: targetRiElement [
 ]
 
 { #category : 'initialization' }
-RiRepositoryMasterDetailPresenter >> refreshOnModelUpdate [
+RiRepositoryPresenter >> refreshOnModelUpdate [
 	model at: #pinDiffModels put: OrderedCollection new.
 	
 	model at: #blockWhenPinsChanged put: [
@@ -89,7 +89,7 @@ RiRepositoryMasterDetailPresenter >> refreshOnModelUpdate [
 ]
 
 { #category : 'accessing' }
-RiRepositoryMasterDetailPresenter >> repository [
+RiRepositoryPresenter >> repository [
 
 	^ self model at: #repository
 ]

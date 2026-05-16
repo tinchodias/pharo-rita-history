@@ -97,7 +97,7 @@ RiRootPresenter >> newHomePage [
 RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 
 	^ SpNotebookPage title: aRiRepository name icon: (self iconNamed: #git) provider: [
-			  RiRepositoryMasterDetailPresenter new
+			  RiRepositoryPresenter new
 				  model: {
 						  (#repository -> aRiRepository).
 						  (#root -> model).

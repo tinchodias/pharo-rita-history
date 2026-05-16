@@ -15,7 +15,8 @@ Class {
 		'cleanSearchButton',
 		'nextJumpToNextButton',
 		'nextJumpToPreviousButton',
-		'avatarByEmail'
+		'avatarByEmail',
+		'presenterWidthInPercent'
 	],
 	#category : 'Rita-UI-Spec2-Repository',
 	#package : 'Rita-UI',
@@ -254,7 +255,8 @@ RiRepositoryCommitsPresenter >> initialize [
 
 	super initialize.
 
-	avatarByEmail := Dictionary new
+	avatarByEmail := Dictionary new.
+	presenterWidthInPercent := 15
 ]
 
 { #category : 'initialization' }
@@ -299,6 +301,16 @@ RiRepositoryCommitsPresenter >> initializeActionBar [
 				              action: [ self actionForceRefresh ];
 				              addStyle: 'ritaNarrow';
 				              yourself);
+		             addLast: (self newButton
+				              iconName: #changeUpdate;
+				              help: 'Expands/Collapses the repository commit panel.';
+				              action: [ "Expands or collapse the panel and rebuild my owner"
+						              presenterWidthInPercent := presenterWidthInPercent = 15
+							                                         ifTrue: [ 75 ]
+							                                         ifFalse: [ 15 ].
+						              self owner layout: self owner defaultLayout ];
+				              addStyle: 'ritaNarrow';
+				              yourself);
 		             yourself
 ]
 
@@ -317,13 +329,16 @@ RiRepositoryCommitsPresenter >> initializeTable [
 		contextMenu: [ self contextMenuForTable ];
 		addStyle: 'ritaTable';
 		beResizable;
-		addColumn: (SpImageTableColumn new
-				 evaluated: [ :item | rowBuilder morphAt: item ];
-				 yourself);
 		addColumn: (SpStringTableColumn new
 				 title: 'Commit';
 				 evaluated: [ :item | item shortId ];
 				 width: 65;
+				 yourself);
+		addColumn: (SpStringTableColumn new
+				 title: 'Comment';
+				 evaluated: [ :item | item comment ];
+				 width: 300;
+				 isSortable: false;
 				 yourself);
 		addColumn: (SpStringTableColumn new
 				 title: 'Date';
@@ -335,11 +350,8 @@ RiRepositoryCommitsPresenter >> initializeTable [
 				 evaluated: [ :item | self avatarFor: item authorEmail ];
 				 width: 40;
 				 yourself);
-		addColumn: (SpStringTableColumn new
-				 title: 'Comment';
-				 evaluated: [ :item | item comment ];
-				width: 100;
-				isSortable: false;
+		addColumn: (SpImageTableColumn new
+				 evaluated: [ :item | rowBuilder morphAt: item ];
 				 yourself).
 
 	table whenBuiltDo: [ :ann | self refreshOnModelUpdate ]
@@ -349,6 +361,13 @@ RiRepositoryCommitsPresenter >> initializeTable [
 RiRepositoryCommitsPresenter >> isPinned: aRiElement [
 	^ (model at: #pinDiffModels)
 		anySatisfy: [ :each | each sourceRiElement = aRiElement ]
+]
+
+{ #category : 'accessing' }
+RiRepositoryCommitsPresenter >> presenterWidthInPercent [
+	"I have a button to expand me in my parent via this variable."
+
+	^ presenterWidthInPercent
 ]
 
 { #category : 'initialization' }
