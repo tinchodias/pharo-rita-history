@@ -89,7 +89,6 @@ RiRootModel >> flyDiff: anObject [
 { #category : 'initialization' }
 RiRootModel >> initialize [
 	super initialize.
-	aesthetics := RiAestheticsModel new.
 	considerOnlyChanged := true.
 	isExpanded := true.
 	connectHierarchies := true.

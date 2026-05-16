@@ -33,18 +33,6 @@ RiAestheticsModel >> backgroundColor [
 	^ self currentTheme backgroundColor
 ]
 
-{ #category : 'colors' }
-RiAestheticsModel >> backgroundColorFor: node [
-	^ (node value accept: self)
-		mixed: 0.2
-		with: self backgroundColor
-]
-
-{ #category : 'colors' }
-RiAestheticsModel >> backgroundColorMixedWith: aColor [ 
-	^ aColor mixed: 0.4 with: self backgroundColor
-]
-
 { #category : 'accessing' }
 RiAestheticsModel >> classBoxBorder [
 	^ RSBorder new

@@ -12,6 +12,12 @@ Class {
 	#tag : 'Spec2-Base'
 }
 
+{ #category : 'canvas building' }
+RiPresenter >> aesthetics [
+
+	^ self application aesthetics
+]
+
 { #category : 'accessing' }
 RiPresenter >> model [
 	^ model

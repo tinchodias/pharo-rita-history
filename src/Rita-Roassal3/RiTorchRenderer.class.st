@@ -12,11 +12,12 @@ Class {
 }
 
 { #category : 'instance creation' }
-RiTorchRenderer class >> model: aModel highlighingController: highlighingController [
+RiTorchRenderer class >> model: aModel aesthetics: aestetics highlighingController: highlighingController [
+
 	^ self basicNew
-		initializeWithModel: aModel
-			highlighingController: highlighingController;
-		yourself
+		  aesthetics: aestetics;
+		  initializeWithModel: aModel highlighingController: highlighingController;
+		  yourself
 ]
 
 { #category : 'private' }
@@ -26,6 +27,11 @@ RiTorchRenderer >> adjustTitle: title on: aGroup [
 	title position: title position - (0@1).
 	title height: title height - 2.
 
+]
+
+{ #category : 'accessing' }
+RiTorchRenderer >> aesthetics: anObject [
+	aesthetics := anObject
 ]
 
 { #category : 'popup building' }
@@ -157,11 +163,11 @@ RiTorchRenderer >> defaultTextColor [
 
 { #category : 'initialization' }
 RiTorchRenderer >> initializeWithModel: aModel highlighingController: aHighlighingController [
+
 	self initialize.
-	
+
 	model := aModel.
 	highlighingController := aHighlighingController.
-	aesthetics := model at: #aesthetics.
 	methodShapeCreatorVisitor := RiMethodShapeCreatorVisitor aesthetics: aesthetics.
 	modelDescriptor := RiTorchModelDescriptor new
 ]

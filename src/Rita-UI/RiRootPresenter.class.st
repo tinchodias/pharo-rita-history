@@ -101,7 +101,6 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 				  model: {
 						  (#repository -> aRiRepository).
 						  (#root -> model).
-						  (#aesthetics -> model aesthetics).
 						  (#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ]) } asDictionary;
 				  yourself ]
 ]

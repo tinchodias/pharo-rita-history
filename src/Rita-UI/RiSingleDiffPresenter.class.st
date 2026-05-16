@@ -27,7 +27,7 @@ RiSingleDiffPresenter >> initializePresenters [
 { #category : 'initialization' }
 RiSingleDiffPresenter >> newRubTextMorph [
 
-	^ (model at: #aesthetics) scrolledUnifiedDiffMorph
+	^ self aesthetics scrolledUnifiedDiffMorph
 ]
 
 { #category : 'accessing' }
@@ -41,7 +41,5 @@ RiSingleDiffPresenter >> selectIceNode: anIceNode [
 
 	anIceNode ifNil: [ ^ self ].
 
-	(model at: #aesthetics)
-		fillUnifiedDiff: diffMorphPresenter morph textArea
-		with: anIceNode value newUnifiedStringDiff
+	self aesthetics fillUnifiedDiff: diffMorphPresenter morph textArea with: anIceNode value newUnifiedStringDiff
 ]
