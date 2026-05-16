@@ -108,10 +108,10 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 { #category : 'private' }
 RiRootPresenter >> newSpawnPageFor: modelToSpawn [
 
-	^ SpNotebookPage title: (self titleForSpawnPage: modelToSpawn) icon: (self iconNamed: #git) provider: [
-			  RiFullDiffPresenter new
-				  model: modelToSpawn;
-				  yourself ]
+	^ SpNotebookPage
+		  title: (self titleForSpawnPage: modelToSpawn)
+		  icon: (self iconNamed: #git)
+		  provider: [ self instantiate: RiFullDiffPresenter on: modelToSpawn ]
 ]
 
 { #category : 'private' }

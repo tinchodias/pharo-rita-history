@@ -15,14 +15,6 @@ Class {
 	#tag : 'Spec2-Diff'
 }
 
-{ #category : 'layout' }
-RiTorchDiffPresenter class >> defaultLayout [
-	^ SpBoxLayout newVertical
-		add: #toolBar withConstraints: [ :constraints | constraints height: self toolbarHeight + 8];
-		add: #roassalPresenter;
-		yourself
-]
-
 { #category : 'canvas building' }
 RiTorchDiffPresenter >> buildCanvas [
 
@@ -126,6 +118,15 @@ RiTorchDiffPresenter >> canvasLayout [
 		verticalGap: self aesthetics gapFromClassToSubclass;
 		horizontalGap: self aesthetics gapFromSubclassToSibling;
 		yourself
+]
+
+{ #category : 'layout' }
+RiTorchDiffPresenter >> defaultLayout [
+
+	^ SpBoxLayout newVertical
+		  add: toolBar expand: false;
+		  add: roassalPresenter;
+		  yourself
 ]
 
 { #category : 'accessing' }
