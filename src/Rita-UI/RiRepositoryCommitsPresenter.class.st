@@ -93,7 +93,7 @@ RiRepositoryCommitsPresenter >> actionSearch [
 	| searchPresenter searchDialog results |
 	searchPresenter := self instantiate: RiRepositorySearchPresenter.
 	searchPresenter model: model.
-	searchDialog := searchPresenter openModalWithSpec.
+	searchDialog := searchPresenter openModal.
 	searchDialog isCancelled ifTrue: [ ^ self ].
 	searchPresenter checkIfInvalid: [ :message |
 		^ self inform: message ].
