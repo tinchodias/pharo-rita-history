@@ -19,17 +19,13 @@ RiMultipleDiffsPresenter class >> defaultLayout [
 { #category : 'initialization' }
 RiMultipleDiffsPresenter >> diffMorphFor: iceNode [
 
-	| aesthetics |
-	aesthetics := model at: #aesthetics.
-
-	^ aesthetics columnMorphWithAll: {
-			aesthetics pathMorphWith: iceNode.
-			(aesthetics diffMorphFor: iceNode)
-				hResizing: #spaceFill;
-				vResizing: #spaceFill;
-				beWrapped;
-				yourself
-		}
+	^ self aesthetics columnMorphWithAll: {
+			  (self aesthetics pathMorphWith: iceNode).
+			  ((self aesthetics diffMorphFor: iceNode)
+				   hResizing: #spaceFill;
+				   vResizing: #spaceFill;
+				   beWrapped;
+				   yourself) }
 ]
 
 { #category : 'initialization' }

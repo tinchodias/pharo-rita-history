@@ -15,6 +15,9 @@ RiSpMorphicConfiguration >> styleSheet [
 	.application [
 		.ritaNarrow [
 			Geometry { #width: 20 }
-		]
+			],
+		.ritaTable [ 
+			Container { #rowHeight: 25 }
+			]
 	]')
 ]

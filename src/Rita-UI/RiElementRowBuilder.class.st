@@ -6,7 +6,6 @@ Class {
 	#name : 'RiElementRowBuilder',
 	#superclass : 'Object',
 	#instVars : [
-		'avatarDatabase',
 		'repositoryPresenter',
 		'hiedraColumnController'
 	],
@@ -20,20 +19,6 @@ RiElementRowBuilder class >> newForRepositoryPresenter: aRiRepositoryPresenter [
 	^ self basicNew
 		initializeForRepositoryPresenter: aRiRepositoryPresenter;
 		yourself
-]
-
-{ #category : 'accessing' }
-RiElementRowBuilder >> avatarsFor: item [
-	
-	| authorEmail committerEmail |
-	authorEmail := item authorEmail.
-	committerEmail := item committerEmail.
-	
-	^ Array streamContents: [ :stream |
-		stream nextPut: (avatarDatabase avatarFor: authorEmail) asMorph.
-		authorEmail ~= committerEmail ifTrue: [
-			stream nextPut: (avatarDatabase avatarFor: committerEmail) asMorph
-		] ]
 ]
 
 { #category : 'accessing' }
@@ -68,7 +53,6 @@ RiElementRowBuilder >> initializeForRepositoryPresenter: aRiRepositoryPresenter 
 
 	self initialize.
 
-	avatarDatabase := RiAvatarsDatabase new.
 	repositoryPresenter := aRiRepositoryPresenter
 ]
 
@@ -115,20 +99,12 @@ RiElementRowBuilder >> morphAt: item [
 	| row |
 	row := RiRowMorph new.
 
-	{ self hiedraMorphAt: item. '   ' asMorph },
-		(self avatarsFor: item),
-		(self pinMorphsFor: item),
-		(self markMorphsAt: item),
-		{ item comment asMorph
-			color: (self textColorFor: item);
-			hResizing: #spaceFill;
-			yourself }
-				do: [ :each | row addItemLeft: each ].
+	{
+		(self hiedraMorphAt: item).
+		'   ' asMorph } , (self pinMorphsFor: item) , (self markMorphsAt: item) do: [ :each | row addItemLeft: each ].
 
-	row addItemRight: (' [{1}]		{2}		     '
-		format: { item shortId. item dateAndTime }) asMorph.
+
 	^ row
-
 ]
 
 { #category : 'accessing' }
@@ -162,18 +138,10 @@ RiElementRowBuilder >> process: aRiRepository rowHeight: aHeight [
 
 { #category : 'accessing' }
 RiElementRowBuilder >> refresh [
-	[ self
-		process: repositoryPresenter riRepository 
-		rowHeight: repositoryPresenter rowHeightForHiedra ] future
-			onSuccessDo: [ :_ | repositoryPresenter refreshOnAvatarsUpdate ];
-			onFailureDo: [ :error | repositoryPresenter reportWarning: error ].
 
-	[ avatarDatabase
-		riRepository: repositoryPresenter riRepository;
-		process ] future
-			onSuccessDo: [ :_ | repositoryPresenter refreshOnAvatarsUpdate ];
-			onFailureDo: [ :error | repositoryPresenter reportWarning: error ]
-
+	[ self process: repositoryPresenter riRepository rowHeight: repositoryPresenter rowHeightForHiedra ] future
+		onSuccessDo: [ :_ | repositoryPresenter refreshOnAvatarsUpdate ];
+		onFailureDo: [ :error | repositoryPresenter reportWarning: error ]
 ]
 
 { #category : 'mark morph building' }

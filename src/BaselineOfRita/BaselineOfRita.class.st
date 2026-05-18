@@ -16,8 +16,7 @@ BaselineOfRita >> baseline: spec [
 			package: 'Rita-Model';
 			package: 'Rita-Tests' with: [ spec requires: #('Rita-Model' 'Iceberg') ];
 			package: 'Rita-Roassal3' with: [ spec requires: #('Rita-Model' 'Roassal') ];
-			package: 'Rita-Avatars' with: [ spec requires: #('Rita-Roassal3') ];
-			package: 'Rita-UI' with: [ spec requires: #('Rita-Avatars' 'Rita-Model' 'Rita-Roassal3') ] ]
+				package: 'Rita-UI' with: [ spec requires: #('Rita-Model' 'Rita-Roassal3') ] ]
 ]
 
 { #category : 'baselines' }

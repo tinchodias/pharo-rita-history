@@ -15,7 +15,7 @@ Class {
 RiFullDiffPresenter class >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
-		positionOfSlider: 60 percent;
+		positionOfSlider: 75 percent;
 		add: #torchDiffPresenter;
 		add:
 			(SpPanedLayout newVertical

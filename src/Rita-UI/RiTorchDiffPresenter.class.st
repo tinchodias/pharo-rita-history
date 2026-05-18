@@ -15,44 +15,27 @@ Class {
 	#tag : 'Spec2-Diff'
 }
 
-{ #category : 'layout' }
-RiTorchDiffPresenter class >> defaultLayout [
-	^ SpBoxLayout newVertical
-		add: #toolBar withConstraints: [ :constraints | constraints height: self toolbarHeight + 8];
-		add: #roassalPresenter;
-		yourself
-]
-
-{ #category : 'canvas building' }
-RiTorchDiffPresenter >> aesthetics [
-	^ model at: #aesthetics
-]
-
 { #category : 'canvas building' }
 RiTorchDiffPresenter >> buildCanvas [
 
 	canvas color: self aesthetics backgroundColor.
 
-	highlighingController := RiHighlightingController
-		canvas: canvas
-		aesthetics: self aesthetics.
-	renderer := RiTorchRenderer model: model highlighingController: highlighingController.
+	highlighingController := RiHighlightingController canvas: canvas aesthetics: self aesthetics.
+	renderer := RiTorchRenderer model: model aesthetics: self aesthetics highlighingController: highlighingController.
 
 	self buildClassesTraitsExtensionsAndConnections.
 	self buildFileStructureAndConnections.
-	
+
 	self canvasLayout on: canvas nodes.
 
 	canvas
 		addInteraction: self zoomingInteraction;
 		addInteraction: self packInteraction;
-		when: RSMouseClick do: [
-			highlighingController setPrimaryOutlineTo: nil ] for: self.
+		when: RSMouseClick do: [ highlighingController setPrimaryOutlineTo: nil ] for: self.
 
 	self buildHelpIcon.
-	
-	self highlightChildrenOfExpandedNodes.
 
+	self highlightChildrenOfExpandedNodes
 ]
 
 { #category : 'canvas building' }
@@ -135,6 +118,15 @@ RiTorchDiffPresenter >> canvasLayout [
 		verticalGap: self aesthetics gapFromClassToSubclass;
 		horizontalGap: self aesthetics gapFromSubclassToSibling;
 		yourself
+]
+
+{ #category : 'layout' }
+RiTorchDiffPresenter >> defaultLayout [
+
+	^ SpBoxLayout newVertical
+		  add: toolBar expand: false;
+		  add: roassalPresenter;
+		  yourself
 ]
 
 { #category : 'accessing' }
