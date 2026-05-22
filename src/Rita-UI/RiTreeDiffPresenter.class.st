@@ -332,7 +332,7 @@ RiTreeDiffPresenter >> refreshOnCheckedIceNodesChanged [
 	self defer: [ treeTable adapter widget refresh ]
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
 RiTreeDiffPresenter >> refreshOnModelUpdate [
 	| iceNodes |
 	iceNodes := (model at: #iceDiff) tree children.

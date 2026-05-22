@@ -40,7 +40,7 @@ RiMultipleDiffsPresenter >> initializePresenters [
 		yourself
 ]
 
-{ #category : 'initialization' }
+{ #category : 'updating' }
 RiMultipleDiffsPresenter >> refreshOnModelUpdate [
 	
 	table items: ((model at: #diffQuery) allLeafChildren

@@ -30,7 +30,7 @@ RiSingleDiffPresenter >> newRubTextMorph [
 	^ self aesthetics scrolledUnifiedDiffMorph
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
 RiSingleDiffPresenter >> refreshOnModelUpdate [
 
 	diffMorphPresenter morph: self newRubTextMorph

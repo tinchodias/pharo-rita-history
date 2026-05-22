@@ -25,7 +25,7 @@ RiRepositoryPresenter >> connectPresenters [
 	repositoryCommitsPresenter whenSelectionChangedDo: [ :targetRiElement |
 			detailPresenter model: (model
 					 at: #element put: targetRiElement;
-					 at: #parentDiffModels put: (self parentDiffModelsFor: targetRiElement);
+					 at: #parentDiffModel put: (self parentDiffModelFor: targetRiElement);
 					 yourself).
 
 			commitDetailsWidget text: targetRiElement commitText ].
@@ -73,16 +73,13 @@ RiRepositoryPresenter >> isForRepository: aRiRepository [
 ]
 
 { #category : 'initialization' }
-RiRepositoryPresenter >> parentDiffModelsFor: targetRiElement [
+RiRepositoryPresenter >> parentDiffModelFor: targetRiElement [
 	"IMPORTANT: As other tools only answer the diff to the first ancestor (potentially ignoring others, in case of merge)."
 
-	^ targetRiElement
-		ancestorToDiffIfPresent: [ :ancestor | {
-			RiParentDiffModel parentRiElement: ancestor } ]
-		ifAbsent: [ #() ]
+	^ targetRiElement ancestorToDiffIfPresent: [ :ancestor | RiParentDiffModel parentRiElement: ancestor ] ifAbsent: [ nil ]
 ]
 
-{ #category : 'initialization' }
+{ #category : 'updating' }
 RiRepositoryPresenter >> refreshOnModelUpdate [
 	model at: #pinDiffModels put: OrderedCollection new.
 	

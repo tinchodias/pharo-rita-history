@@ -44,16 +44,17 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 { #category : 'initialization' }
 RiElementPresenter >> initializePresenters [
 
+	super initializePresenters.
 	notebook := self newNotebook
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
 RiElementPresenter >> refreshOnModelUpdate [
 
 	| element |
 	element := model at: #element.
 	notebook removeAll.
-	(model at: #parentDiffModels) do: [ :each | self addPageFor: each to: element ].
+	(model at: #parentDiffModel) ifNotNil: [ :diff | self addPageFor: diff to: element ].
 	(model at: #pinDiffModels)
 		select: [ :each | each shouldCompareTo: element ]
 		thenDo: [ :each | self addPageFor: each to: element ].

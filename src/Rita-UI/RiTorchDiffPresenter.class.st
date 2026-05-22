@@ -304,7 +304,7 @@ RiTorchDiffPresenter >> refreshOnCheckedIceNodesChanged [
 		setShadowedIceNodes: (model at: #shadowedIceNodes)
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
 RiTorchDiffPresenter >> refreshOnModelUpdate [
 	roassalPresenter refresh.
 	spawnButton action: [ (model at: #blockForSpawn) value: model ]

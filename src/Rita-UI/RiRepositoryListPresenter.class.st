@@ -113,7 +113,7 @@ RiRepositoryListPresenter >> initializePresenters [
 
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
 RiRepositoryListPresenter >> refreshOnModelUpdate [
 	table items: model.
 ]

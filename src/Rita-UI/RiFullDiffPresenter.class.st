@@ -39,7 +39,7 @@ RiFullDiffPresenter >> nodesToIterate [
 	^ (treeDiffPresenter model at: #diffQuery) allLeafChildren
 ]
 
-{ #category : 'initialization' }
+{ #category : 'updating' }
 RiFullDiffPresenter >> refreshOnModelUpdate [
 
 	| modelCopy |
