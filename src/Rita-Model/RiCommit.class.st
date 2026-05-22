@@ -22,11 +22,6 @@ RiCommit class >> repository: aRiRepository iceGitCommit: anIceCommit [
 		yourself
 ]
 
-{ #category : 'visiting' }
-RiCommit >> accept: aVisitor [
-	^ aVisitor visitCommit: self
-]
-
 { #category : 'accessing' }
 RiCommit >> addAncestor: aRiElement [
 	ancestors := ancestors copyWith: aRiElement

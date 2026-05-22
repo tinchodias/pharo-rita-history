@@ -8,7 +8,7 @@ Visualization can be a powerful tool compared to text in order to review the imp
 TODOX Document the spawn pages (for now I do not know what they are)
 "
 Class {
-	#name : 'RiRootPresenter',
+	#name : 'RitaBrowserPresenter',
 	#superclass : 'RiPresenter',
 	#instVars : [
 		'notebook'
@@ -19,32 +19,32 @@ Class {
 }
 
 { #category : 'accessing' }
-RiRootPresenter class >> defaultPreferredExtent [
+RitaBrowserPresenter class >> defaultPreferredExtent [
 
 	^ 1000 @ 800
 ]
 
 { #category : 'examples' }
-RiRootPresenter class >> open [
+RitaBrowserPresenter class >> open [
 	<script>
 
 	^ self openWithApplication: RiSpApplication new
 ]
 
 { #category : 'examples' }
-RiRootPresenter class >> openWithApplication: aSpApplication [
+RitaBrowserPresenter class >> openWithApplication: aSpApplication [
 
 	^ (self newApplication: aSpApplication) open
 ]
 
 { #category : 'accessing' }
-RiRootPresenter class >> taskbarIconName [
+RitaBrowserPresenter class >> taskbarIconName [
 
 	^ #git
 ]
 
 { #category : 'accessing' }
-RiRootPresenter class >> worldMenuItemOn: aBuilder [
+RitaBrowserPresenter class >> worldMenuItemOn: aBuilder [
 
 	<worldMenu>
 	(aBuilder item: 'Rita')
@@ -56,7 +56,7 @@ RiRootPresenter class >> worldMenuItemOn: aBuilder [
 ]
 
 { #category : 'layout' }
-RiRootPresenter >> defaultLayout [
+RitaBrowserPresenter >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: notebook;
 "		add:
@@ -68,7 +68,7 @@ RiRootPresenter >> defaultLayout [
 ]
 
 { #category : 'initialization' }
-RiRootPresenter >> initialize [
+RitaBrowserPresenter >> initialize [
 
 	super initialize.
 
@@ -76,7 +76,7 @@ RiRootPresenter >> initialize [
 ]
 
 { #category : 'initialization' }
-RiRootPresenter >> initializePresenters [
+RitaBrowserPresenter >> initializePresenters [
 
 	super initializePresenters.
 	notebook := self newNotebook.
@@ -84,7 +84,7 @@ RiRootPresenter >> initializePresenters [
 ]
 
 { #category : 'private' }
-RiRootPresenter >> newHomePage [
+RitaBrowserPresenter >> newHomePage [
 
 	^ SpNotebookPage title: 'Home' icon: (self iconNamed: #homeIcon) provider: [
 			  RiRepositoryListPresenter new
@@ -94,7 +94,7 @@ RiRootPresenter >> newHomePage [
 ]
 
 { #category : 'private' }
-RiRootPresenter >> newRepositoryPageFor: aRiRepository [
+RitaBrowserPresenter >> newRepositoryPageFor: aRiRepository [
 
 	^ SpNotebookPage title: aRiRepository name icon: (self iconNamed: #git) provider: [
 			  RiRepositoryPresenter new
@@ -106,7 +106,7 @@ RiRootPresenter >> newRepositoryPageFor: aRiRepository [
 ]
 
 { #category : 'private' }
-RiRootPresenter >> newSpawnPageFor: modelToSpawn [
+RitaBrowserPresenter >> newSpawnPageFor: modelToSpawn [
 
 	^ SpNotebookPage
 		  title: (self titleForSpawnPage: modelToSpawn)
@@ -115,7 +115,7 @@ RiRootPresenter >> newSpawnPageFor: modelToSpawn [
 ]
 
 { #category : 'private' }
-RiRootPresenter >> openPage: anObject ifAbsentBuildWith: aBlock [
+RitaBrowserPresenter >> openPage: anObject ifAbsentBuildWith: aBlock [
 	"Ensure a notebook's page is open (and selected)."
 
 	| page |
@@ -131,19 +131,19 @@ RiRootPresenter >> openPage: anObject ifAbsentBuildWith: aBlock [
 ]
 
 { #category : 'private' }
-RiRootPresenter >> openRepository: aRiRepository [
+RitaBrowserPresenter >> openRepository: aRiRepository [
 
 	self openPage: aRiRepository ifAbsentBuildWith: [ self newRepositoryPageFor: aRiRepository ]
 ]
 
 { #category : 'private' }
-RiRootPresenter >> openSpawnFor: modelToSpawn [
+RitaBrowserPresenter >> openSpawnFor: modelToSpawn [
 
 	self openPage: modelToSpawn ifAbsentBuildWith: [ self newSpawnPageFor: modelToSpawn ]
 ]
 
 { #category : 'private' }
-RiRootPresenter >> titleForSpawnPage: modelToSpawn [
+RitaBrowserPresenter >> titleForSpawnPage: modelToSpawn [
 	^ '{1}: {2}'
 		format:
 			{(modelToSpawn at: #repository) name.
@@ -151,7 +151,7 @@ RiRootPresenter >> titleForSpawnPage: modelToSpawn [
 ]
 
 { #category : 'initialization' }
-RiRootPresenter >> windowTitle [
+RitaBrowserPresenter >> windowTitle [
 
 	^ 'History Explorer'
 ]

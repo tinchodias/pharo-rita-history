@@ -3,31 +3,25 @@ Class {
 	#superclass : 'RiPresenter',
 	#instVars : [
 		'diffPresenter',
-		'notebook',
-		'header'
+		'notebook'
 	],
 	#category : 'Rita-UI-Spec2-Repository',
 	#package : 'Rita-UI',
 	#tag : 'Spec2-Repository'
 }
 
-{ #category : 'layout' }
-RiElementPresenter class >> defaultLayout [
-	^ SpPanedLayout newVertical
-		positionOfSlider: 0.07;
-		add: #header;
-		add: #notebook;
-		yourself
-]
-
 { #category : 'private' }
 RiElementPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
-	| page |
-	page := SpNotebookPage
-		title: aRiDiffModel title
-		icon: aRiDiffModel icon
-		provider: [ self diffPresenterFor: aRiDiffModel to: targetRiCommit ].
-	notebook addPage: page
+
+	notebook addPage: (SpNotebookPage title: aRiDiffModel title icon: aRiDiffModel icon provider: [ self diffPresenterFor: aRiDiffModel to: targetRiCommit ])
+]
+
+{ #category : 'layout' }
+RiElementPresenter >> defaultLayout [
+
+	^ SpBoxLayout newVertical
+		  add: notebook;
+		  yourself
 ]
 
 { #category : 'private' }
@@ -49,25 +43,21 @@ RiElementPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 
 { #category : 'initialization' }
 RiElementPresenter >> initializePresenters [
-	header := self instantiate: RiElementHeaderPresenter.
-	notebook := self newNotebook.
 
+	notebook := self newNotebook
 ]
 
 { #category : 'accessing' }
 RiElementPresenter >> refreshOnModelUpdate [
+
 	| element |
 	element := model at: #element.
-	header model: element.
-
 	notebook removeAll.
-	(model at: #parentDiffModels)
-		do: [ :each | self addPageFor: each to: element ].
+	(model at: #parentDiffModels) do: [ :each | self addPageFor: each to: element ].
 	(model at: #pinDiffModels)
 		select: [ :each | each shouldCompareTo: element ]
 		thenDo: [ :each | self addPageFor: each to: element ].
-	notebook pages ifNotEmpty: [
-		notebook selectPage: notebook pages first ]
+	notebook pages ifNotEmpty: [ notebook selectPage: notebook pages first ]
 ]
 
 { #category : 'private' }

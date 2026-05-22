@@ -1,8 +1,16 @@
+"
+I am a presenter to browse a repository.
+
+I'll display a list of commits and a visualization representing the current commit.
+
+It is also possible to toggle an option to have the visualization in full screen in order to browse it better.
+"
 Class {
 	#name : 'RiRepositoryPresenter',
 	#superclass : 'RiPresenter',
 	#instVars : [
 		'detailPresenter',
+		'commitDetailsWidget',
 		'repositoryCommitsPresenter'
 	],
 	#category : 'Rita-UI-Spec2-Repository',
@@ -13,12 +21,15 @@ Class {
 { #category : 'initialization' }
 RiRepositoryPresenter >> connectPresenters [
 
+	super connectPresenters.
 	repositoryCommitsPresenter whenSelectionChangedDo: [ :targetRiElement |
 			detailPresenter model: (model
 					 at: #element put: targetRiElement;
 					 at: #parentDiffModels put: (self parentDiffModelsFor: targetRiElement);
-					 yourself) ].
-	
+					 yourself).
+
+			commitDetailsWidget text: targetRiElement commitText ].
+		
 	"Bindings are not added before building."
 	self whenBuiltDo: [
 			self bindKeyCombination: $n meta toAction: [ (model at: #blockForIterateNext) value ].
@@ -36,21 +47,23 @@ RiRepositoryPresenter >> defaultLayout [
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: repositoryCommitsPresenter presenterWidthInPercent percent;
 		  add: repositoryCommitsPresenter;
-		  add: detailPresenter;
+		  add: (SpPanedLayout newVertical
+				   positionOfSlider: 0.07;
+				   add: commitDetailsWidget;
+				   add: detailPresenter;
+				   yourself);
 		  yourself
-]
-
-{ #category : 'accessing' }
-RiRepositoryPresenter >> detailPresenter [
-
-	^ detailPresenter
 ]
 
 { #category : 'initialization' }
 RiRepositoryPresenter >> initializePresenters [
 
+	super initializePresenters.
 	repositoryCommitsPresenter := self instantiate: RiRepositoryCommitsPresenter.
-	detailPresenter := self instantiate: RiElementPresenter
+	detailPresenter := self instantiate: RiElementPresenter.
+	commitDetailsWidget := self newText
+		                       beNotEditable;
+		                       yourself
 ]
 
 { #category : 'testing' }

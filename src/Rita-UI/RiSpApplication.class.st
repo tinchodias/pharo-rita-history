@@ -32,5 +32,5 @@ RiSpApplication >> start [
 	self new start
 	"
 	
-	(self new: RiRootPresenter) open
+	(self new: RitaBrowserPresenter) open
 ]
