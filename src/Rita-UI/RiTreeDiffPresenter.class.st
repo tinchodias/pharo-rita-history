@@ -210,7 +210,7 @@ RiTreeDiffPresenter >> initializePresenters [
 							  onDeactivation: [ :iceNode | self doUncheck: iceNode ];
 							  width: 20;
 							  yourself).
-						 (SpImageTableColumn evaluated: [ :each | self aesthetics iconForChange: each value ]).
+						 (SpImageTableColumn evaluated: [ :each | each value icon ]).
 						 (SpStringTableColumn evaluated: [ :each | ' ' , each value definition ritaAsTextForTree0 ]).
 						 (SpStringTableColumn evaluated: [ :each |
 								  (' ·  ' , each value definition ritaAsTextForTree1) asText

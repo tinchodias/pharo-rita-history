@@ -3,8 +3,7 @@ Class {
 	#superclass : 'RiPresenter',
 	#instVars : [
 		'table',
-		'blockForOpenPullRequests',
-		'openRepositoryBlock'
+		'blockForOpenPullRequests'
 	],
 	#category : 'Rita-UI-Spec2-Repository',
 	#package : 'Rita-UI',
@@ -43,42 +42,43 @@ RiRepositoryListPresenter >> contextMenuForPullRequestsFor: aRiRepository [
 
 { #category : 'initialization' }
 RiRepositoryListPresenter >> contextMenuForTable [
+
 	| menu selected |
 	menu := self newMenu.
-	
+
 	selected := table selection selectedItem.
 
 	menu addItem: [ :item |
-		item
-			name: 'Open Repository';
-			action: [ openRepositoryBlock value: selected ] ].
+			item
+				name: 'Open Repository';
+				action: [ table doActivateAtIndex: table selection selectedIndex ] ].
 	menu addItem: [ :item |
-		item
-			name: 'View Pull Requests';
-			subMenu: (self contextMenuForPullRequestsFor: selected) ].
+			item
+				name: 'View Pull Requests';
+				subMenu: (self contextMenuForPullRequestsFor: selected) ].
 	menu addItem: [ :item |
-		item
-			name: 'Open folder';
-			action: [ selected openInNativeBrowser ] ].
+			item
+				name: 'Open folder';
+				action: [ selected openInNativeBrowser ] ].
 	menu addItem: [ :item |
-		item
-			name: 'Browse code in HEAD';
-			action: [ RiCommitBrowseUtility browse: selected iceRepository headCommit ] ].
-	menu addItem: [ :item | 
-		item
-			name: 'Fetch';
-			icon: (self iconNamed: #smallUpdate);
-			action: [ self actionFetch ] ].
-	menu addItem: [ :item | 
-		item
-			name: 'Refresh list';
-			icon: (self iconNamed: #smallUpdate);
-			action: [ self refreshOnModelUpdate ] ].
-	menu addItem: [ :item | 
-		item
-			name: 'Inspect object';
-			icon: (self iconNamed: #smallInspectIt);
-			action: [ selected inspect ] ].
+			item
+				name: 'Browse code in HEAD';
+				action: [ RiCommitBrowseUtility browse: selected iceRepository headCommit ] ].
+	menu addItem: [ :item |
+			item
+				name: 'Fetch';
+				icon: (self iconNamed: #smallUpdate);
+				action: [ self actionFetch ] ].
+	menu addItem: [ :item |
+			item
+				name: 'Refresh list';
+				icon: (self iconNamed: #smallUpdate);
+				action: [ self refreshOnModelUpdate ] ].
+	menu addItem: [ :item |
+			item
+				name: 'Inspect object';
+				icon: (self iconNamed: #smallInspectIt);
+				action: [ selected inspect ] ].
 
 	^ menu
 ]
@@ -103,9 +103,7 @@ RiRepositoryListPresenter >> initializePresenters [
 		addColumn: (SpStringTableColumn title: 'Description' evaluated: #description).
 
 	"Set up actions"
-	table
-		contextMenu: [ self contextMenuForTable ];
-		whenActivatedDo: [:selection | openRepositoryBlock value: selection selectedItem ].
+	table contextMenu: [ self contextMenuForTable ].
 	
 	table whenBuiltDo: [ :ann |
 		self refreshOnModelUpdate ].
@@ -128,5 +126,5 @@ RiRepositoryListPresenter >> refreshOnModelUpdate [
 { #category : 'enumerating' }
 RiRepositoryListPresenter >> whenOpeningRepositoryDo: aBlock [
 
-	openRepositoryBlock := aBlock
+	table whenActivatedDo: [ :selection | aBlock value: selection selectedItem ]
 ]

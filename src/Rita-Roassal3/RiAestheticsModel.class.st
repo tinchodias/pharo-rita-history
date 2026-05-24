@@ -215,11 +215,6 @@ RiAestheticsModel >> iceOperationColorVisitor [
 ]
 
 { #category : 'icons' }
-RiAestheticsModel >> iconForChange: iceNode [
-	^ iceNode icon
-]
-
-{ #category : 'icons' }
 RiAestheticsModel >> iconForClassPropertyDefinition: iceDefinition [
 	^ RiIconGenerator new
 		extent: 12 asPoint;
