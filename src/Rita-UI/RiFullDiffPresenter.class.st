@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'torchDiffPresenter',
 		'treeDiffPresenter',
-		'sourceCodePanel'
+		'sourceDiffWidget'
 	],
 	#category : 'Rita-UI-Spec2-Diff',
 	#package : 'Rita-UI',
@@ -12,26 +12,31 @@ Class {
 }
 
 { #category : 'layout' }
-RiFullDiffPresenter class >> defaultLayout [
+RiFullDiffPresenter >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
-		positionOfSlider: 75 percent;
-		add: #torchDiffPresenter;
-		add:
-			(SpPanedLayout newVertical
-				positionOfSlider: 50 percent;
-				add: #treeDiffPresenter;
-				add: #sourceCodePanel;
-				yourself);
-		yourself
+		  positionOfSlider: 75 percent;
+		  add: torchDiffPresenter;
+		  add: (SpPanedLayout newVertical
+				   positionOfSlider: 50 percent;
+				   add: treeDiffPresenter;
+				   add: sourceDiffWidget;
+				   yourself);
+		  yourself
 ]
 
 { #category : 'initialization' }
 RiFullDiffPresenter >> initializePresenters [
+
 	torchDiffPresenter := self instantiate: RiTorchDiffPresenter.
 	treeDiffPresenter := self instantiate: RiTreeDiffPresenter.
-	sourceCodePanel := self instantiate: RiSingleDiffPresenter.
+	sourceDiffWidget := self newMorph
+]
 
+{ #category : 'instance creation' }
+RiFullDiffPresenter >> newRubTextMorph [
+
+	^ self aesthetics scrolledUnifiedDiffMorph
 ]
 
 { #category : 'private' }
@@ -44,42 +49,39 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 
 	| modelCopy |
 	modelCopy := model copy
-		add: #blockWhenNodeSelected -> [ :iceNode |
-			self selectIceNode: iceNode ];
-		add: #blockWhenNodeExpandToggle -> [ :iceNode |
-			"Note this is uni-directional: It delegates from
+		             add: #blockWhenNodeSelected -> [ :iceNode | self selectIceNode: iceNode ];
+		             add: #blockWhenNodeExpandToggle -> [ :iceNode | "Note this is uni-directional: It delegates from
 			double-click on a box to the tree toggle."
-			treeDiffPresenter selectIceNode: iceNode.
-			treeDiffPresenter doToggleExpandOneLevel ];
-		add: #blockWhenNodeExpandAll -> [
-			(model at: #iceDiff) tree childrenDo: [:each |
-				treeDiffPresenter selectIceNode: each.
-				treeDiffPresenter doExpandWithAllChildren ] ];
-		add: #blockWhenNodeCollapseAll -> [
-			(model at: #iceDiff) tree childrenDo: [:each |
-				treeDiffPresenter selectIceNode: each.
-				treeDiffPresenter doCollapseWithAllChildren ] ];
-		add: #blockWhenNodesHighlighted -> [ :iceNodeCollection |
-			treeDiffPresenter highlightIceNode: iceNodeCollection.
-			torchDiffPresenter highlightIceNode: iceNodeCollection ];
-		add: #blockWhenShadowedIceNodesChanged -> [ 
-			torchDiffPresenter refreshOnCheckedIceNodesChanged.
-			treeDiffPresenter refreshOnCheckedIceNodesChanged ];
-		add: #blockWhenExpandedIceNodesChanged -> [
-			torchDiffPresenter
-				refreshOnModelUpdate;
-				refreshOnCheckedIceNodesChanged.
-			treeDiffPresenter refreshOnCheckedIceNodesChanged ];
-		add: #diffQuery -> (RiDiffQuery new
-			diff: (model at: #iceDiff);
-			onlyConsiderChanged: (model at: #root) considerOnlyChanged;
-			yourself);
-		yourself.
+					             treeDiffPresenter selectIceNode: iceNode.
+					             treeDiffPresenter doToggleExpandOneLevel ];
+		             add: #blockWhenNodeExpandAll -> [
+					             (model at: #iceDiff) tree childrenDo: [ :each |
+								             treeDiffPresenter selectIceNode: each.
+								             treeDiffPresenter doExpandWithAllChildren ] ];
+		             add: #blockWhenNodeCollapseAll -> [
+					             (model at: #iceDiff) tree childrenDo: [ :each |
+								             treeDiffPresenter selectIceNode: each.
+								             treeDiffPresenter doCollapseWithAllChildren ] ];
+		             add: #blockWhenNodesHighlighted -> [ :iceNodeCollection |
+					             treeDiffPresenter highlightIceNode: iceNodeCollection.
+					             torchDiffPresenter highlightIceNode: iceNodeCollection ];
+		             add: #blockWhenShadowedIceNodesChanged -> [
+					             torchDiffPresenter refreshOnCheckedIceNodesChanged.
+					             treeDiffPresenter refreshOnCheckedIceNodesChanged ];
+		             add: #blockWhenExpandedIceNodesChanged -> [
+					             torchDiffPresenter
+						             refreshOnModelUpdate;
+						             refreshOnCheckedIceNodesChanged.
+					             treeDiffPresenter refreshOnCheckedIceNodesChanged ];
+		             add: #diffQuery -> (RiDiffQuery new
+				              diff: (model at: #iceDiff);
+				              onlyConsiderChanged: (model at: #root) considerOnlyChanged;
+				              yourself);
+		             yourself.
 
 	torchDiffPresenter model: modelCopy.
 	treeDiffPresenter model: modelCopy.
-	sourceCodePanel model: modelCopy.
-
+	sourceDiffWidget morph: self newRubTextMorph
 ]
 
 { #category : 'actions' }
@@ -102,11 +104,13 @@ RiFullDiffPresenter >> selectBackIceNode [
 { #category : 'initialization' }
 RiFullDiffPresenter >> selectIceNode: iceNode [
 
+	iceNode ifNil: [ ^ self ].
 	(model at: #root) announceAction: #select iceNode: iceNode.
 
 	treeDiffPresenter selectIceNode: iceNode.
 	torchDiffPresenter selectIceNode: iceNode.
-	sourceCodePanel selectIceNode: iceNode
+
+	self aesthetics fillUnifiedDiff: sourceDiffWidget morph textArea with: iceNode value newUnifiedStringDiff
 ]
 
 { #category : 'actions' }

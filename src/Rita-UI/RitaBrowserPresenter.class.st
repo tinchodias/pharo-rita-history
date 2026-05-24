@@ -49,9 +49,10 @@ RitaBrowserPresenter class >> worldMenuItemOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: 'Rita')
 		parent: #Tools;
+		label: 'Git changes visualizer - Rita';
 		action: [ self open ];
 		icon: (self iconNamed: self taskbarIconName);
-		help: 'Rita is a tool that helps developers to understand code changes in a git repository.';
+		help: 'I am a tool that helps developers to understand code changes in a git repository.';
 		order: 1
 ]
 
