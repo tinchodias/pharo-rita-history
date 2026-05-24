@@ -5,7 +5,8 @@ Class {
 		'treeTable',
 		'highlightDeferrer',
 		'iceNodeCollectionToHighlight',
-		'expandDeferrer'
+		'expandDeferrer',
+		'checkedSelectionUpdateBlock'
 	],
 	#category : 'Rita-UI-Spec2-Diff',
 	#package : 'Rita-UI',
@@ -17,6 +18,15 @@ RiTreeDiffPresenter class >> defaultLayout [
 	^ SpBoxLayout newHorizontal
 		add: #treeTable;
 		yourself
+]
+
+{ #category : 'private' }
+RiTreeDiffPresenter >> actOnSelectionChange [
+
+	checkedSelectionUpdateBlock value.
+	
+	"We refresh the table to propagate changes to children"
+	treeTable refresh
 ]
 
 { #category : 'initialization' }
@@ -45,13 +55,12 @@ RiTreeDiffPresenter >> contextMenuForTable [
 
 { #category : 'check/uncheck' }
 RiTreeDiffPresenter >> doCheck: anIceNode [
+
 	self shadowedIceNodes
 		removeAllFoundIn: anIceNode allChildren;
 		removeAllFoundIn: anIceNode withAllParentNodes.
 
-	"Trigger update in self and in Torch view"
-	(model at: #blockWhenShadowedIceNodesChanged) value.
-
+	self actOnSelectionChange
 ]
 
 { #category : 'expand/collapse' }
@@ -123,12 +132,12 @@ RiTreeDiffPresenter >> doToggleExpandOneLevel [
 
 { #category : 'check/uncheck' }
 RiTreeDiffPresenter >> doUncheck: anIceNode [
+
 	self shadowedIceNodes
 		add: anIceNode;
 		addAll: anIceNode allChildren.
 
-	"Trigger update in self and in Torch view"
-	(model at: #blockWhenShadowedIceNodesChanged) value
+	self actOnSelectionChange
 ]
 
 { #category : 'expand/collapse' }
@@ -329,4 +338,11 @@ RiTreeDiffPresenter >> toggleSelection [
 	(self isChecked: anIceNode)
 		ifTrue: [ self doUncheck: anIceNode ]
 		ifFalse: [ self doCheck: anIceNode ]
+]
+
+{ #category : 'enumerating' }
+RiTreeDiffPresenter >> whenCheckedSelectionChangedDo: aBlock [
+	"I save an action to execute when the use click the checkboxes of the tree."
+
+	checkedSelectionUpdateBlock := aBlock
 ]

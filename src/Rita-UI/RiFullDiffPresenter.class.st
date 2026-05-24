@@ -11,6 +11,14 @@ Class {
 	#tag : 'Spec2-Diff'
 }
 
+{ #category : 'initialization' }
+RiFullDiffPresenter >> connectPresenters [
+
+	super connectPresenters.
+
+	treeDiffPresenter whenCheckedSelectionChangedDo: [ torchDiffPresenter refreshOnCheckedIceNodesChanged ]
+]
+
 { #category : 'layout' }
 RiFullDiffPresenter >> defaultLayout [
 
@@ -63,9 +71,6 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 		             add: #blockWhenNodesHighlighted -> [ :iceNodeCollection |
 					             treeDiffPresenter highlightIceNode: iceNodeCollection.
 					             torchDiffPresenter highlightIceNode: iceNodeCollection ];
-		             add: #blockWhenShadowedIceNodesChanged -> [
-					             torchDiffPresenter refreshOnCheckedIceNodesChanged.
-					             treeDiffPresenter refreshOnCheckedIceNodesChanged ];
 		             add: #blockWhenExpandedIceNodesChanged -> [
 					             torchDiffPresenter
 						             refreshOnModelUpdate;
