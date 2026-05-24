@@ -101,54 +101,24 @@ RitaBrowserPresenter >> newRepositoryPageFor: aRiRepository [
 			  RiRepositoryPresenter new
 				  model: {
 						  (#repository -> aRiRepository).
-						  (#root -> model).
-						  (#blockForSpawn -> [ :modelToSpawn | self openSpawnFor: modelToSpawn ]) } asDictionary;
+						  (#root -> model) } asDictionary;
 				  yourself ]
 ]
 
 { #category : 'private' }
-RitaBrowserPresenter >> newSpawnPageFor: modelToSpawn [
-
-	^ SpNotebookPage
-		  title: (self titleForSpawnPage: modelToSpawn)
-		  icon: (self iconNamed: #git)
-		  provider: [ self instantiate: RiFullDiffPresenter on: modelToSpawn ]
-]
-
-{ #category : 'private' }
-RitaBrowserPresenter >> openPage: anObject ifAbsentBuildWith: aBlock [
+RitaBrowserPresenter >> openRepository: aRiRepository [
 	"Ensure a notebook's page is open (and selected)."
 
 	| page |
-	notebook pages allButFirst
-		detect: [ :each | each activePresenter isForRepository: anObject ]
+	notebook pages
+		detect: [ :each | each activePresenter isForRepository: aRiRepository ]
 		ifFound: [ :foundPage | ^ notebook selectPage: foundPage ].
 
-	page := aBlock value.
+	page := self newRepositoryPageFor: aRiRepository.
 	page beCloseable.
 	notebook
 		addPage: page;
 		selectPage: page
-]
-
-{ #category : 'private' }
-RitaBrowserPresenter >> openRepository: aRiRepository [
-
-	self openPage: aRiRepository ifAbsentBuildWith: [ self newRepositoryPageFor: aRiRepository ]
-]
-
-{ #category : 'private' }
-RitaBrowserPresenter >> openSpawnFor: modelToSpawn [
-
-	self openPage: modelToSpawn ifAbsentBuildWith: [ self newSpawnPageFor: modelToSpawn ]
-]
-
-{ #category : 'private' }
-RitaBrowserPresenter >> titleForSpawnPage: modelToSpawn [
-	^ '{1}: {2}'
-		format:
-			{(modelToSpawn at: #repository) name.
-			(modelToSpawn at: #iceDiff) ritaShortId}
 ]
 
 { #category : 'initialization' }

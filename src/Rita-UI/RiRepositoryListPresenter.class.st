@@ -113,6 +113,13 @@ RiRepositoryListPresenter >> initializePresenters [
 
 ]
 
+{ #category : 'testing' }
+RiRepositoryListPresenter >> isForRepository: aRiRepository [
+	"I am the home page. Not a page specific for a repository"
+
+	^ false
+]
+
 { #category : 'updating' }
 RiRepositoryListPresenter >> refreshOnModelUpdate [
 	table items: model.

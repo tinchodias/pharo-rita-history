@@ -2,7 +2,6 @@ Class {
 	#name : 'RiTorchDiffPresenter',
 	#superclass : 'RiPresenter',
 	#instVars : [
-		'spawnButton',
 		'roassalPresenter',
 		'toolBar',
 		'highlighingController',
@@ -209,82 +208,75 @@ RiTorchDiffPresenter >> newRootModelToggleButtonFor: aSymbol label: label icon: 
 RiTorchDiffPresenter >> newSettingsToolBar [
 
 	| connectHierarchiesButton iterateNextButton iterateBackButton zoomToFitButton zoomInButton zoomOutButton expandAllButton refreshButton collapseAllButton |
-	spawnButton := (self instantiate: SpToolbarButtonPresenter)
-			label: 'Maximize';
-			icon: (self iconNamed: #smallRemoteOpen);
-			help: 'Open this diff view in a new notebook page.';
-			yourself.
 	connectHierarchiesButton := self
-		newRootModelToggleButtonFor: #connectHierarchies
-		label: 'Hierarchy'
-		icon: #hierarchy
-		help: 'Whether connect subclasses or leave them free.'.
+		                            newRootModelToggleButtonFor: #connectHierarchies
+		                            label: 'Hierarchy'
+		                            icon: #hierarchy
+		                            help: 'Whether connect subclasses or leave them free.'.
 	iterateNextButton := (self instantiate: SpToolbarButtonPresenter)
-			label: 'Next';
-			icon: (self iconNamed: #forward);
-			help: 'Select next leaf in the tree';
-			action: [ (model at: #blockForIterateNext) value ];
-			yourself.
+		                     label: 'Next';
+		                     icon: (self iconNamed: #forward);
+		                     help: 'Select next leaf in the tree';
+		                     action: [ (model at: #blockForIterateNext) value ];
+		                     yourself.
 	iterateBackButton := (self instantiate: SpToolbarButtonPresenter)
-			label: 'Back';
-			icon: (self iconNamed: #back);
-			help: 'Select previous leaf in the tree';
-			action: [ (model at: #blockForIterateBack) value ];
-			yourself.
+		                     label: 'Back';
+		                     icon: (self iconNamed: #back);
+		                     help: 'Select previous leaf in the tree';
+		                     action: [ (model at: #blockForIterateBack) value ];
+		                     yourself.
 
 	zoomToFitButton := (self instantiate: SpToolbarButtonPresenter)
-			label: 'Fit Zoom';
-			icon: (self iconNamed: #glamorousZoomToFit);
-			help: 'Zoom canvas to fit camera on all visual objects.';
-			action: [ RSZoomToFitCanvasInteraction new animatedZoomToFit: canvas. ];
-			yourself.
+		                   label: 'Fit Zoom';
+		                   icon: (self iconNamed: #glamorousZoomToFit);
+		                   help: 'Zoom canvas to fit camera on all visual objects.';
+		                   action: [ RSZoomToFitCanvasInteraction new animatedZoomToFit: canvas ];
+		                   yourself.
 	zoomInButton := (self instantiate: SpToolbarButtonPresenter)
-			label: 'Zoom in';
-			icon: (self iconNamed: #glamorousZoomIn);
-			help: 'Increase zoom (in canvas).';
-			action: [ RSKeyNavigationCanvasInteraction new zoomIn: canvas ];
-			yourself.
+		                label: 'Zoom in';
+		                icon: (self iconNamed: #glamorousZoomIn);
+		                help: 'Increase zoom (in canvas).';
+		                action: [ RSKeyNavigationCanvasInteraction new zoomIn: canvas ];
+		                yourself.
 	zoomOutButton := (self instantiate: SpToolbarButtonPresenter)
-			label: 'Zoom out';
-			icon: (self iconNamed: #glamorousZoomOut);
-			help: 'Decrease zoom (in canvas).';
-			action: [ RSKeyNavigationCanvasInteraction new zoomOut: canvas ];
-			yourself.
+		                 label: 'Zoom out';
+		                 icon: (self iconNamed: #glamorousZoomOut);
+		                 help: 'Decrease zoom (in canvas).';
+		                 action: [ RSKeyNavigationCanvasInteraction new zoomOut: canvas ];
+		                 yourself.
 
 	collapseAllButton := (self instantiate: SpToolbarButtonPresenter)
-			label: 'Collapse All';
-			icon: (self iconNamed: #haloDup);
-			help: 'Collapse all visual objects.';
-			action: [ (model at: #blockWhenNodeCollapseAll) value ];
-			yourself.
+		                     label: 'Collapse All';
+		                     icon: (self iconNamed: #haloDup);
+		                     help: 'Collapse all visual objects.';
+		                     action: [ (model at: #blockWhenNodeCollapseAll) value ];
+		                     yourself.
 	expandAllButton := (self instantiate: SpToolbarButtonPresenter)
-			label: 'Expand All';
-			icon: (self iconNamed: #haloDrag);
-			help: 'Expand all visual objects.';
-			action: [ (model at: #blockWhenNodeExpandAll) value ];
-			yourself.
+		                   label: 'Expand All';
+		                   icon: (self iconNamed: #haloDrag);
+		                   help: 'Expand all visual objects.';
+		                   action: [ (model at: #blockWhenNodeExpandAll) value ];
+		                   yourself.
 
 	refreshButton := (self instantiate: SpToolbarButtonPresenter)
-			label: 'Refresh';
-			icon: (self iconNamed: #glamorousRefresh);
-			help: 'Redraw the canvas.';
-			action: [
-				roassalPresenter refresh.
-				canvas morph resumeAfterDrawError ];
-			yourself.
+		                 label: 'Refresh';
+		                 icon: (self iconNamed: #glamorousRefresh);
+		                 help: 'Redraw the canvas.';
+		                 action: [
+				                 roassalPresenter refresh.
+				                 canvas morph resumeAfterDrawError ];
+		                 yourself.
 
 
 	^ self newToolbar
-		addItem: refreshButton;
-		addItem: spawnButton;
-		addItem: expandAllButton;
-		addItem: collapseAllButton;
-		addItem: connectHierarchiesButton;
-
-		addItemRight: zoomInButton;
-		addItemRight: zoomOutButton;
-		addItemRight: zoomToFitButton;
-		yourself
+		  addItem: refreshButton;
+		  addItem: expandAllButton;
+		  addItem: collapseAllButton;
+		  addItem: connectHierarchiesButton;
+		  addItemRight: zoomInButton;
+		  addItemRight: zoomOutButton;
+		  addItemRight: zoomToFitButton;
+		  yourself
 ]
 
 { #category : 'canvas building' }
@@ -306,8 +298,8 @@ RiTorchDiffPresenter >> refreshOnCheckedIceNodesChanged [
 
 { #category : 'updating' }
 RiTorchDiffPresenter >> refreshOnModelUpdate [
-	roassalPresenter refresh.
-	spawnButton action: [ (model at: #blockForSpawn) value: model ]
+
+	roassalPresenter refresh
 ]
 
 { #category : 'accessing' }
