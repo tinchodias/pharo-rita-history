@@ -178,19 +178,12 @@ RiTreeDiffPresenter >> highlightIceNode: iceNodeCollection [
 
 { #category : 'initialization' }
 RiTreeDiffPresenter >> initialize [
+
 	super initialize.
 
-	highlightDeferrer :=
-		OmDeferrer 
-			send: #refreshHighlight
-			to: self
-			after: 100 milliSeconds.
+	highlightDeferrer := OmDeferrer send: #refreshHighlight to: self after: 100 milliSeconds.
 
-	expandDeferrer :=
-		OmDeferrer 
-			send: #refreshExpand
-			to: self
-			after: 100 milliSeconds
+	expandDeferrer := OmDeferrer send: #refreshExpand to: self after: 100 milliSeconds
 ]
 
 { #category : 'initialization' }
@@ -201,7 +194,20 @@ RiTreeDiffPresenter >> initializePresenters [
 		children: [ :each | each children ];
 		whenSelectionChangedDo: [ :selection | (model at: #blockWhenNodeSelected) value: selection selectedItem ];
 		contextMenu: [ self contextMenuForTable ];
-		addColumn: self newColumnWithCheckboxes.
+		addColumn: (SpCompositeTableColumn withAll: {
+						 (SpCheckBoxTableColumn new
+							  evaluated: [ :iceNode | self isChecked: iceNode ];
+							  onActivation: [ :iceNode | self doCheck: iceNode ];
+							  onDeactivation: [ :iceNode | self doUncheck: iceNode ];
+							  width: 20;
+							  yourself).
+						 (SpImageTableColumn evaluated: [ :each | self aesthetics iconForChange: each value ]).
+						 (SpStringTableColumn evaluated: [ :each | ' ' , each value definition ritaAsTextForTree0 ]).
+						 (SpStringTableColumn evaluated: [ :each |
+								  (' ·  ' , each value definition ritaAsTextForTree1) asText
+									  addAttribute: (TextFontReference toFont: StandardFonts balloonFont);
+									  makeAllColor: self aesthetics secondaryTextColor;
+									  yourself ]) }).
 
 	treeTable whenBuiltDo: [ :ann | "Note: All items are already instantiated at this point"
 			| table |
@@ -232,49 +238,6 @@ RiTreeDiffPresenter >> initializeTreeKeyCombinations [
 { #category : 'check/uncheck' }
 RiTreeDiffPresenter >> isChecked: anIceNode [
 	^ (self shadowedIceNodes includes: anIceNode) not
-]
-
-{ #category : 'initialization' }
-RiTreeDiffPresenter >> newColumnWithCheckboxes [
-	^ self newColumnWithIceNodes 
-		addColumnFirst:
-			(SpCheckBoxTableColumn new
-				evaluated: [ :iceNode | self isChecked: iceNode ];
-				onActivation: [ :iceNode | self doCheck: iceNode ];
-				onDeactivation: [ :iceNode | self doUncheck: iceNode ];
-				width: 20;
-				yourself);
-		yourself
-]
-
-{ #category : 'initialization' }
-RiTreeDiffPresenter >> newColumnWithIceNodes [
-
-	^ SpCompositeTableColumn withAll: {
-			  (SpImageTableColumn evaluated: [ :each | self aesthetics iconForChange: each value ]).
-			  (SpStringTableColumn evaluated: [ :each | ' ' , each value definition ritaAsTextForTree0 ]).
-			  (SpStringTableColumn evaluated: [ :each |
-					   (' ·  ' , each value definition ritaAsTextForTree1) asText
-						   addAttribute: (TextFontReference toFont: StandardFonts balloonFont);
-						   makeAllColor: self aesthetics secondaryTextColor;
-						   yourself ]) }
-]
-
-{ #category : 'initialization' }
-RiTreeDiffPresenter >> newColumnWithIceNodesOld [
-
-	self flag: #todo. "Delete with unused methods"
-	^ SpCompositeTableColumn new
-		  addColumn: (SpImageTableColumn new
-				   evaluated: [ :each | self aesthetics iconForChange: each value ];
-				   yourself);
-		  addColumn: (SpImageTableColumn new
-				   evaluated: [ :each | self aesthetics iconForDefinition: each value definition ];
-				   yourself);
-		  addColumn: (SpImageTableColumn new
-				   evaluated: [ :each | self aesthetics rowForChange: each ];
-				   yourself);
-		  yourself
 ]
 
 { #category : 'expand/collapse' }
