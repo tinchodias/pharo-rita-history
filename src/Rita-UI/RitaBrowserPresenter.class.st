@@ -154,5 +154,5 @@ RitaBrowserPresenter >> titleForSpawnPage: modelToSpawn [
 { #category : 'initialization' }
 RitaBrowserPresenter >> windowTitle [
 
-	^ 'History Explorer'
+	^ 'Git History Explorer'
 ]

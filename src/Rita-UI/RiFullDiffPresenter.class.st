@@ -30,13 +30,11 @@ RiFullDiffPresenter >> initializePresenters [
 
 	torchDiffPresenter := self instantiate: RiTorchDiffPresenter.
 	treeDiffPresenter := self instantiate: RiTreeDiffPresenter.
-	sourceDiffWidget := self newMorph
-]
+	sourceDiffWidget := self newDiff.
 
-{ #category : 'instance creation' }
-RiFullDiffPresenter >> newRubTextMorph [
-
-	^ self aesthetics scrolledUnifiedDiffMorph
+	sourceDiffWidget
+		showOnlyDestination: true;
+		showOptions: false
 ]
 
 { #category : 'private' }
@@ -80,8 +78,7 @@ RiFullDiffPresenter >> refreshOnModelUpdate [
 		             yourself.
 
 	torchDiffPresenter model: modelCopy.
-	treeDiffPresenter model: modelCopy.
-	sourceDiffWidget morph: self newRubTextMorph
+	treeDiffPresenter model: modelCopy
 ]
 
 { #category : 'actions' }
@@ -110,7 +107,9 @@ RiFullDiffPresenter >> selectIceNode: iceNode [
 	treeDiffPresenter selectIceNode: iceNode.
 	torchDiffPresenter selectIceNode: iceNode.
 
-	self aesthetics fillUnifiedDiff: sourceDiffWidget morph textArea with: iceNode value newUnifiedStringDiff
+	sourceDiffWidget
+		leftText: iceNode value leftContents;
+		rightText: iceNode value rightContents
 ]
 
 { #category : 'actions' }
