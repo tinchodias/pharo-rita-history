@@ -81,10 +81,8 @@ RiTorchRenderer >> blockForMouseLeaveOnIceNode [
 
 { #category : 'private' }
 RiTorchRenderer >> classBoxMaxWidth [
-	^ (model at: #root) isExpanded
-		ifTrue: [ 200 ]
-		ifFalse: [ 60 ]
 
+	^ 200
 ]
 
 { #category : 'hooks' }

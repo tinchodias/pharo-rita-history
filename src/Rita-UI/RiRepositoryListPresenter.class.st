@@ -11,15 +11,6 @@ Class {
 	#tag : 'Spec2-Repository'
 }
 
-{ #category : 'layout' }
-RiRepositoryListPresenter class >> defaultLayout [
-	^ SpBoxLayout newVertical
-"		add: #menuBar
-			withConstraints: [ :constraints | constraints height: self toolbarHeight ];"
-		add: #table;
-		yourself
-]
-
 { #category : 'commands' }
 RiRepositoryListPresenter >> actionFetch [
 
@@ -92,6 +83,14 @@ RiRepositoryListPresenter >> contextMenuForTable [
 	^ menu
 ]
 
+{ #category : 'layout' }
+RiRepositoryListPresenter >> defaultLayout [
+
+	^ SpBoxLayout newVertical
+		  add: table;
+		  yourself
+]
+
 { #category : 'initialization' }
 RiRepositoryListPresenter >> initializePresenters [
 
@@ -122,7 +121,8 @@ RiRepositoryListPresenter >> isForRepository: aRiRepository [
 
 { #category : 'updating' }
 RiRepositoryListPresenter >> refreshOnModelUpdate [
-	table items: model.
+
+	table items: model
 ]
 
 { #category : 'enumerating' }

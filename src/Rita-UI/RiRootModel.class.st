@@ -7,11 +7,7 @@ Class {
 	#instVars : [
 		'repositories',
 		'considerOnlyChanged',
-		'isExpanded',
 		'connectHierarchies',
-		'flyDiff',
-		'showPackages',
-		'aesthetics',
 		'actionsAnnouncer'
 	],
 	#category : 'Rita-UI-Models',
@@ -36,11 +32,6 @@ RiRootModel class >> newWithRegisteredRepositories [
 { #category : 'accessing' }
 RiRootModel >> actionsAnnouncer [
 	^ actionsAnnouncer
-]
-
-{ #category : 'accessing' }
-RiRootModel >> aesthetics [
-	^ aesthetics
 ]
 
 { #category : 'accessing' }
@@ -76,35 +67,13 @@ RiRootModel >> considerOnlyChanged: aBoolean [
 	considerOnlyChanged := aBoolean
 ]
 
-{ #category : 'accessing' }
-RiRootModel >> flyDiff [
-	^ flyDiff
-]
-
-{ #category : 'accessing' }
-RiRootModel >> flyDiff: anObject [
-	flyDiff := anObject
-]
-
 { #category : 'initialization' }
 RiRootModel >> initialize [
+
 	super initialize.
 	considerOnlyChanged := true.
-	isExpanded := true.
 	connectHierarchies := true.
-	flyDiff := true.
-	showPackages := false.
-	actionsAnnouncer := Announcer new.
-]
-
-{ #category : 'accessing' }
-RiRootModel >> isExpanded [
-	^ isExpanded
-]
-
-{ #category : 'accessing' }
-RiRootModel >> isExpanded: aBoolean [
-	isExpanded := aBoolean
+	actionsAnnouncer := Announcer new
 ]
 
 { #category : 'accessing' }
@@ -118,18 +87,7 @@ RiRootModel >> repositories: aCollection [
 ]
 
 { #category : 'accessing' }
-RiRootModel >> showPackages [
-	^ showPackages
-]
-
-{ #category : 'accessing' }
-RiRootModel >> showPackages: aBoolean [
-	showPackages := aBoolean
-]
-
-{ #category : 'accessing' }
 RiRootModel >> toggle: aSymbol [
-	self
-		perform: aSymbol asMutator
-		with: (self perform: aSymbol) not
+
+	self perform: aSymbol asMutator with: (self perform: aSymbol) not
 ]
