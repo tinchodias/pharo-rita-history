@@ -5,7 +5,8 @@ Class {
 		'treeTable',
 		'highlightDeferrer',
 		'iceNodeCollectionToHighlight',
-		'expandDeferrer'
+		'expandDeferrer',
+		'checkedSelectionUpdateBlock'
 	],
 	#category : 'Rita-UI-Spec2-Diff',
 	#package : 'Rita-UI',
@@ -17,6 +18,15 @@ RiTreeDiffPresenter class >> defaultLayout [
 	^ SpBoxLayout newHorizontal
 		add: #treeTable;
 		yourself
+]
+
+{ #category : 'private' }
+RiTreeDiffPresenter >> actOnSelectionChange [
+
+	checkedSelectionUpdateBlock value.
+	
+	"We refresh the table to propagate changes to children"
+	treeTable refresh
 ]
 
 { #category : 'initialization' }
@@ -45,13 +55,12 @@ RiTreeDiffPresenter >> contextMenuForTable [
 
 { #category : 'check/uncheck' }
 RiTreeDiffPresenter >> doCheck: anIceNode [
+
 	self shadowedIceNodes
 		removeAllFoundIn: anIceNode allChildren;
 		removeAllFoundIn: anIceNode withAllParentNodes.
 
-	"Trigger update in self and in Torch view"
-	(model at: #blockWhenShadowedIceNodesChanged) value.
-
+	self actOnSelectionChange
 ]
 
 { #category : 'expand/collapse' }
@@ -123,12 +132,12 @@ RiTreeDiffPresenter >> doToggleExpandOneLevel [
 
 { #category : 'check/uncheck' }
 RiTreeDiffPresenter >> doUncheck: anIceNode [
+
 	self shadowedIceNodes
 		add: anIceNode;
 		addAll: anIceNode allChildren.
 
-	"Trigger update in self and in Torch view"
-	(model at: #blockWhenShadowedIceNodesChanged) value
+	self actOnSelectionChange
 ]
 
 { #category : 'expand/collapse' }
@@ -178,39 +187,44 @@ RiTreeDiffPresenter >> highlightIceNode: iceNodeCollection [
 
 { #category : 'initialization' }
 RiTreeDiffPresenter >> initialize [
+
 	super initialize.
 
-	highlightDeferrer :=
-		OmDeferrer 
-			send: #refreshHighlight
-			to: self
-			after: 100 milliSeconds.
+	highlightDeferrer := OmDeferrer send: #refreshHighlight to: self after: 100 milliSeconds.
 
-	expandDeferrer :=
-		OmDeferrer 
-			send: #refreshExpand
-			to: self
-			after: 100 milliSeconds
+	expandDeferrer := OmDeferrer send: #refreshExpand to: self after: 100 milliSeconds
 ]
 
 { #category : 'initialization' }
 RiTreeDiffPresenter >> initializePresenters [
+
 	treeTable := self newTreeTable.
 	treeTable
 		children: [ :each | each children ];
-		whenSelectionChangedDo: [ :selection |
-			(model at: #blockWhenNodeSelected) value: selection selectedItem ];
+		whenSelectionChangedDo: [ :selection | (model at: #blockWhenNodeSelected) value: selection selectedItem ];
 		contextMenu: [ self contextMenuForTable ];
-		addColumn: self newColumnWithCheckboxes.
-	
-	treeTable whenBuiltDo: [:ann |
-		"Note: All items are already instantiated at this point"
-		| table |
-		table := ann widget.
-		self hackFastTableForSecondaryHighligthing: table.
-		self doInitialTreeExpansionOn: table.
-		self hackFastTableForExpandCollapse: table.
-		self initializeTreeKeyCombinations ]
+		addColumn: (SpCompositeTableColumn withAll: {
+						 (SpCheckBoxTableColumn new
+							  evaluated: [ :iceNode | self isChecked: iceNode ];
+							  onActivation: [ :iceNode | self doCheck: iceNode ];
+							  onDeactivation: [ :iceNode | self doUncheck: iceNode ];
+							  width: 20;
+							  yourself).
+						 (SpImageTableColumn evaluated: [ :each | each value icon ]).
+						 (SpStringTableColumn evaluated: [ :each | ' ' , each value definition ritaAsTextForTree0 ]).
+						 (SpStringTableColumn evaluated: [ :each |
+								  (' ·  ' , each value definition ritaAsTextForTree1) asText
+									  addAttribute: (TextFontReference toFont: StandardFonts balloonFont);
+									  makeAllColor: self aesthetics secondaryTextColor;
+									  yourself ]) }).
+
+	treeTable whenBuiltDo: [ :ann | "Note: All items are already instantiated at this point"
+			| table |
+			table := ann widget.
+			self hackFastTableForSecondaryHighligthing: table.
+			self doInitialTreeExpansionOn: table.
+			self hackFastTableForExpandCollapse: table.
+			self initializeTreeKeyCombinations ]
 ]
 
 { #category : 'initialization' }
@@ -233,49 +247,6 @@ RiTreeDiffPresenter >> initializeTreeKeyCombinations [
 { #category : 'check/uncheck' }
 RiTreeDiffPresenter >> isChecked: anIceNode [
 	^ (self shadowedIceNodes includes: anIceNode) not
-]
-
-{ #category : 'initialization' }
-RiTreeDiffPresenter >> newColumnWithCheckboxes [
-	^ self newColumnWithIceNodes 
-		addColumnFirst:
-			(SpCheckBoxTableColumn new
-				evaluated: [ :iceNode | self isChecked: iceNode ];
-				onActivation: [ :iceNode | self doCheck: iceNode ];
-				onDeactivation: [ :iceNode | self doUncheck: iceNode ];
-				width: 20;
-				yourself);
-		yourself
-]
-
-{ #category : 'initialization' }
-RiTreeDiffPresenter >> newColumnWithIceNodes [
-
-	^ SpCompositeTableColumn withAll: {
-			  (SpImageTableColumn evaluated: [ :each | self aesthetics iconForChange: each value ]).
-			  (SpStringTableColumn evaluated: [ :each | ' ' , each value definition ritaAsTextForTree0 ]).
-			  (SpStringTableColumn evaluated: [ :each |
-					   (' ·  ' , each value definition ritaAsTextForTree1) asText
-						   addAttribute: (TextFontReference toFont: StandardFonts balloonFont);
-						   makeAllColor: self aesthetics secondaryTextColor;
-						   yourself ]) }
-]
-
-{ #category : 'initialization' }
-RiTreeDiffPresenter >> newColumnWithIceNodesOld [
-
-	self flag: #todo. "Delete with unused methods"
-	^ SpCompositeTableColumn new
-		  addColumn: (SpImageTableColumn new
-				   evaluated: [ :each | self aesthetics iconForChange: each value ];
-				   yourself);
-		  addColumn: (SpImageTableColumn new
-				   evaluated: [ :each | self aesthetics iconForDefinition: each value definition ];
-				   yourself);
-		  addColumn: (SpImageTableColumn new
-				   evaluated: [ :each | self aesthetics rowForChange: each ];
-				   yourself);
-		  yourself
 ]
 
 { #category : 'expand/collapse' }
@@ -332,7 +303,7 @@ RiTreeDiffPresenter >> refreshOnCheckedIceNodesChanged [
 	self defer: [ treeTable adapter widget refresh ]
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
 RiTreeDiffPresenter >> refreshOnModelUpdate [
 	| iceNodes |
 	iceNodes := (model at: #iceDiff) tree children.
@@ -367,4 +338,11 @@ RiTreeDiffPresenter >> toggleSelection [
 	(self isChecked: anIceNode)
 		ifTrue: [ self doUncheck: anIceNode ]
 		ifFalse: [ self doCheck: anIceNode ]
+]
+
+{ #category : 'enumerating' }
+RiTreeDiffPresenter >> whenCheckedSelectionChangedDo: aBlock [
+	"I save an action to execute when the use click the checkboxes of the tree."
+
+	checkedSelectionUpdateBlock := aBlock
 ]

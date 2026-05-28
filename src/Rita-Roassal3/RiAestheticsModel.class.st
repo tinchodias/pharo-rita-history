@@ -150,30 +150,6 @@ RiAestheticsModel >> fillUnifiedDiff: textArea from: from to: to [
 
 ]
 
-{ #category : 'diff morph creation' }
-RiAestheticsModel >> fillUnifiedDiff: textArea with: diff [
-
-	textArea
-		removeAllSegments;
-		setTextWith: diff unifiedString;
-		font: StandardFonts codeFont. "Don't know why it's necessary to set font again"
-
-	diff lineJoins do: [:each |
-		colorMap at: each kindSymbol ifPresent: [ :color |
-			textArea addSegment: ((RiRubricTextSegment from: each fromIndex to: each toIndex)
-				color: color;
-				yourself).
-		] ].
-
-	diff inlineJoins do: [:each |
-		inlinecolorMap at: each kindSymbol ifPresent: [ :color |
-			textArea addSegment: ((RubPlainSegmentMorph from: each fromIndex to: each toIndex)
-				color: color;
-				yourself).
-		] ].
-
-]
-
 { #category : 'colors' }
 RiAestheticsModel >> foregroundColor [
 	^ self currentTheme textColor
@@ -236,11 +212,6 @@ RiAestheticsModel >> geometryForClassVariable [
 { #category : 'colors' }
 RiAestheticsModel >> iceOperationColorVisitor [
 	^ iceOperationColorVisitor
-]
-
-{ #category : 'icons' }
-RiAestheticsModel >> iconForChange: iceNode [
-	^ iceNode icon
 ]
 
 { #category : 'icons' }

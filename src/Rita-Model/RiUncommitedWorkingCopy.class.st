@@ -12,11 +12,6 @@ Class {
 	#tag : 'Core'
 }
 
-{ #category : 'visiting' }
-RiUncommitedWorkingCopy >> accept: aVisitor [
-	^ aVisitor visitUncommitedWorkingCopy: self
-]
-
 { #category : 'accessing' }
 RiUncommitedWorkingCopy >> ancestors [
 	^ { referenceCommit }

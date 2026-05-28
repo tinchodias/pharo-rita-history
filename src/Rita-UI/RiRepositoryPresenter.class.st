@@ -1,23 +1,34 @@
+"
+I am a presenter to browse a repository.
+
+I'll display the list of commits of the project (including a virtual commit of uncommited changes), info on the selected commit and a visualization to see the diff of this commit (to its parent or to some pinned commits).
+
+
+"
 Class {
 	#name : 'RiRepositoryPresenter',
 	#superclass : 'RiPresenter',
 	#instVars : [
-		'detailPresenter',
-		'repositoryCommitsPresenter'
+		'commitDetailsWidget',
+		'repositoryCommitsPresenter',
+		'notebook'
 	],
 	#category : 'Rita-UI-Spec2-Repository',
 	#package : 'Rita-UI',
 	#tag : 'Spec2-Repository'
 }
 
+{ #category : 'private' }
+RiRepositoryPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
+
+	notebook addPage: (SpNotebookPage title: aRiDiffModel title icon: aRiDiffModel icon provider: [ self diffPresenterFor: aRiDiffModel to: targetRiCommit ])
+]
+
 { #category : 'initialization' }
 RiRepositoryPresenter >> connectPresenters [
 
-	repositoryCommitsPresenter whenSelectionChangedDo: [ :targetRiElement |
-			detailPresenter model: (model
-					 at: #element put: targetRiElement;
-					 at: #parentDiffModels put: (self parentDiffModelsFor: targetRiElement);
-					 yourself) ].
+	super connectPresenters.
+	repositoryCommitsPresenter whenSelectionChangedDo: [ :targetRiElement | self selectCommit: targetRiElement ].
 	
 	"Bindings are not added before building."
 	self whenBuiltDo: [
@@ -26,8 +37,9 @@ RiRepositoryPresenter >> connectPresenters [
 ]
 
 { #category : 'private' }
-RiRepositoryPresenter >> currentFullDiffPresenterIfPresent: aBlockClosure [ 
-	^ detailPresenter selectedDiffModelIfFound: aBlockClosure
+RiRepositoryPresenter >> currentFullDiffPresenterIfPresent: aBlockClosure [
+
+	^ aBlockClosure value: notebook selectedPage activePresenter
 ]
 
 { #category : 'layout' }
@@ -36,21 +48,40 @@ RiRepositoryPresenter >> defaultLayout [
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: repositoryCommitsPresenter presenterWidthInPercent percent;
 		  add: repositoryCommitsPresenter;
-		  add: detailPresenter;
+		  add: (SpPanedLayout newVertical
+				   positionOfSlider: 0.07;
+				   add: commitDetailsWidget;
+				   add: notebook;
+				   yourself);
 		  yourself
 ]
 
-{ #category : 'accessing' }
-RiRepositoryPresenter >> detailPresenter [
+{ #category : 'private' }
+RiRepositoryPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
 
-	^ detailPresenter
+	| iceDiff expandedNodes |
+	iceDiff := aRiDiffModel iceDiffFrom: targetRiCommit.
+	expandedNodes := OrderedCollection streamContents: [ :stream |
+		iceDiff tree withAllChildrenDo: [ :each | stream nextPut: each ] ].
+
+	^ (self instantiate: RiFullDiffPresenter)
+			model: (model copy
+				add: #iceDiff -> iceDiff;
+				add: #shadowedIceNodes -> IdentitySet new;
+				add: #expandedIceNodes -> expandedNodes;
+				yourself);
+			yourself
 ]
 
 { #category : 'initialization' }
 RiRepositoryPresenter >> initializePresenters [
 
+	super initializePresenters.
 	repositoryCommitsPresenter := self instantiate: RiRepositoryCommitsPresenter.
-	detailPresenter := self instantiate: RiElementPresenter
+	commitDetailsWidget := self newText
+		                       beNotEditable;
+		                       yourself.
+	notebook := self newNotebook
 ]
 
 { #category : 'testing' }
@@ -60,16 +91,13 @@ RiRepositoryPresenter >> isForRepository: aRiRepository [
 ]
 
 { #category : 'initialization' }
-RiRepositoryPresenter >> parentDiffModelsFor: targetRiElement [
+RiRepositoryPresenter >> parentDiffModelFor: targetRiElement [
 	"IMPORTANT: As other tools only answer the diff to the first ancestor (potentially ignoring others, in case of merge)."
 
-	^ targetRiElement
-		ancestorToDiffIfPresent: [ :ancestor | {
-			RiParentDiffModel parentRiElement: ancestor } ]
-		ifAbsent: [ #() ]
+	^ targetRiElement ancestorToDiffIfPresent: [ :ancestor | RiParentDiffModel parentRiElement: ancestor ] ifAbsent: [ nil ]
 ]
 
-{ #category : 'initialization' }
+{ #category : 'updating' }
 RiRepositoryPresenter >> refreshOnModelUpdate [
 	model at: #pinDiffModels put: OrderedCollection new.
 	
@@ -92,4 +120,20 @@ RiRepositoryPresenter >> refreshOnModelUpdate [
 RiRepositoryPresenter >> repository [
 
 	^ self model at: #repository
+]
+
+{ #category : 'initialization' }
+RiRepositoryPresenter >> selectCommit: commit [
+	"When we select a commit we reset the notebook and add the pages related to this commit. We also update the commit details widget to display the right info"
+
+	notebook removeAll.
+	(self parentDiffModelFor: commit) ifNotNil: [ :diff | self addPageFor: diff to: commit ].
+
+	(model at: #pinDiffModels)
+		select: [ :each | each shouldCompareTo: commit ]
+		thenDo: [ :each | self addPageFor: each to: commit ].
+
+	notebook pages ifNotEmpty: [ notebook selectPage: notebook pages first ].
+
+	commitDetailsWidget text: commit commitText
 ]

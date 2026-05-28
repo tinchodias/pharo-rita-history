@@ -384,7 +384,7 @@ RiRepositoryCommitsPresenter >> refreshOnAvatarsUpdate [
 	self defer: [table adapter widget refresh]
 ]
 
-{ #category : 'accessing' }
+{ #category : 'updating' }
 RiRepositoryCommitsPresenter >> refreshOnModelUpdate [
 
 	self isBuilt ifFalse: [ ^ self ].

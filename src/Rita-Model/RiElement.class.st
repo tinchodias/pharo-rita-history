@@ -12,11 +12,6 @@ Class {
 	#tag : 'Core'
 }
 
-{ #category : 'visiting' }
-RiElement >> accept: aVisitor [
-	^ self subclassResponsibility
-]
-
 { #category : 'accessing' }
 RiElement >> addMark: aRiMark [
 	self marks add: aRiMark.
