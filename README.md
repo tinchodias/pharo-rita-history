@@ -36,6 +36,15 @@ Documentation can also be browsed via Pharo IDE -> World Menu -> Help -> Documen
 
 ## Install
 
+Load in Pharo 14 with:
+
+```smalltalk
+Metacello new
+	baseline: 'Rita';
+	repository: 'github://tinchodias/pharo-rita-history:Pharo14/src';
+	load
+```
+
 Load in Pharo 13 with:
 
 ```smalltalk
