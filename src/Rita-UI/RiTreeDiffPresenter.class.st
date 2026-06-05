@@ -104,26 +104,6 @@ RiTreeDiffPresenter >> doExpandWithAllChildren [
 ]
 
 { #category : 'expand/collapse' }
-RiTreeDiffPresenter >> doInitialTreeExpansionOn: aFastTable [
-	
-	| expanded items |
-	model ifNil: [ ^ self ].
-	
-	expanded := model at: #expandedIceNodes.
-	
-	"Initially, all items are collapsed. Iterate from roots to expand those marked in the model."
-	items := OrderedCollection withAll: aFastTable dataSource rootsItems.
-	[ items notEmpty ] whileTrue: [
-		| aFastTableItem |
-		aFastTableItem := items removeFirst.
-		(expanded includes: aFastTableItem data) ifTrue: [
-			aFastTableItem expand.
-			items addAll: aFastTableItem children ] ].
-
-	aFastTable refresh.
-]
-
-{ #category : 'expand/collapse' }
 RiTreeDiffPresenter >> doToggleExpandOneLevel [
 	self
 		doValueOnSelectedFastTableItemToExpandOrCollapse: [ :fastTableItem | 
@@ -222,7 +202,6 @@ RiTreeDiffPresenter >> initializePresenters [
 			| table |
 			table := ann widget.
 			self hackFastTableForSecondaryHighligthing: table.
-			self doInitialTreeExpansionOn: table.
 			self hackFastTableForExpandCollapse: table.
 			self initializeTreeKeyCombinations ]
 ]
@@ -247,6 +226,18 @@ RiTreeDiffPresenter >> initializeTreeKeyCombinations [
 { #category : 'check/uncheck' }
 RiTreeDiffPresenter >> isChecked: anIceNode [
 	^ (self shadowedIceNodes includes: anIceNode) not
+]
+
+{ #category : 'accessing' }
+RiTreeDiffPresenter >> model: aModel [
+
+	super model: aModel.
+	
+	"We expand all expanded nodes."
+	(aModel at: #expandedIceNodes) reverseDo: [ :each |
+			[ treeTable expandPath: (treeTable selection pathOf: each) ]
+				on: NotFound
+				do: [ "If a node is not in the list, we just ignore it" ] ]
 ]
 
 { #category : 'expand/collapse' }
