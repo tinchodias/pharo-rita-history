@@ -103,23 +103,13 @@ RiTreeDiffPresenter >> doExpandWithAllChildren [
 ]
 
 { #category : 'expand/collapse' }
-RiTreeDiffPresenter >> doInitialTreeExpansionOn: aFastTable [
-	
-	| expanded items |
-	model ifNil: [ ^ self ].
-	
-	expanded := model at: #expandedIceNodes.
-	
-	"Initially, all items are collapsed. Iterate from roots to expand those marked in the model."
-	items := OrderedCollection withAll: aFastTable dataSource rootsItems.
-	[ items notEmpty ] whileTrue: [
-		| aFastTableItem |
-		aFastTableItem := items removeFirst.
-		(expanded includes: aFastTableItem data) ifTrue: [
-			aFastTableItem expand.
-			items addAll: aFastTableItem children ] ].
+RiTreeDiffPresenter >> doInitialTreeExpansion [
+	"We expand all expanded nodes."
 
-	aFastTable refresh.
+	self expandedIceNodes reverseDo: [ :each |
+			[ treeTable expandPath: (treeTable selection pathOf: each) ]
+				on: NotFound
+				do: [ "If a node is not in the list, we just ignore it" ] ]
 ]
 
 { #category : 'expand/collapse' }
@@ -212,29 +202,14 @@ RiTreeDiffPresenter >> initializePresenters [
 					ifFalse: [ ann item withAllChildrenDo: [ :element | self expandedIceNodes remove: element ifAbsent: [ ] ] ].
 				oldSize = self expandedIceNodes size ifFalse: [ self refreshExpand ] ].
 
+	treeTable
+		bindKeyCombination: Character space toAction: [ self toggleSelection ];
+		bindKeyCombination: Character arrowLeft toAction: [ self doCollapseOneLevel ];
+		bindKeyCombination: Character arrowRight toAction: [ self doExpandOneLevel ].
+
 	treeTable whenBuiltDo: [ :ann | "Note: All items are already instantiated at this point"
-			| table |
-			table := ann widget.
-			self hackFastTableForSecondaryHighligthing: table.
-			self doInitialTreeExpansionOn: table.
-			self initializeTreeKeyCombinations ]
-]
-
-{ #category : 'initialization' }
-RiTreeDiffPresenter >> initializeTreeKeyCombinations [
-		
-	treeTable
-		bindKeyCombination: Character space 
-			toAction: [ self toggleSelection ].
-
-	treeTable
-		bindKeyCombination: Character arrowLeft
-			toAction: [ self doCollapseOneLevel ].
-
-	treeTable
-		bindKeyCombination: Character arrowRight
-			toAction: [ self doExpandOneLevel ].
-
+			self hackFastTableForSecondaryHighligthing: ann widget.
+			self doInitialTreeExpansion ]
 ]
 
 { #category : 'check/uncheck' }
