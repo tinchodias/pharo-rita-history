@@ -5,7 +5,6 @@ Class {
 		'treeTable',
 		'highlightDeferrer',
 		'iceNodeCollectionToHighlight',
-		'expandDeferrer',
 		'checkedSelectionUpdateBlock'
 	],
 	#category : 'Rita-UI-Spec2-Diff',
@@ -150,20 +149,9 @@ RiTreeDiffPresenter >> doValueOnSelectedFastTableItemToExpandOrCollapse: aBlock 
 ]
 
 { #category : 'expand/collapse' }
-RiTreeDiffPresenter >> hackFastTableForExpandCollapse: aFastTable [
-	RiFTRootItem adoptInstance: aFastTable dataSource rootItem.
-	aFastTable dataSource rootItem
-		allChildrenDo: [ :each | RiFTBasicItem adoptInstance: each ].
+RiTreeDiffPresenter >> expandedIceNodes [
 
-	RiFTBasicItem hackyAnnouncer weak
-		when: RiFTHackyExpand
-		send: #onHackyExpand:
-		to: self.
-		
-	RiFTBasicItem hackyAnnouncer weak
-		when: RiFTHackyCollapse
-		send: #onHackyCollapse:
-		to: self
+	^ model at: #expandedIceNodes
 ]
 
 { #category : 'highlighting' }
@@ -190,9 +178,7 @@ RiTreeDiffPresenter >> initialize [
 
 	super initialize.
 
-	highlightDeferrer := OmDeferrer send: #refreshHighlight to: self after: 100 milliSeconds.
-
-	expandDeferrer := OmDeferrer send: #refreshExpand to: self after: 100 milliSeconds
+	highlightDeferrer := OmDeferrer send: #refreshHighlight to: self after: 100 milliSeconds
 ]
 
 { #category : 'initialization' }
@@ -216,14 +202,21 @@ RiTreeDiffPresenter >> initializePresenters [
 								  (' ·  ' , each value definition ritaAsTextForTree1) asText
 									  addAttribute: (TextFontReference toFont: StandardFonts balloonFont);
 									  makeAllColor: self aesthetics secondaryTextColor;
-									  yourself ]) }).
+									  yourself ]) });
+		whenExpandChangedDo: [ :ann |
+				| oldSize |
+				oldSize := self expandedIceNodes size.
+				self flag: #todo. "Maybe the expanded Ice nodes should be a set to avoid the duplication check. Also we should set this after setting the model."
+				ann expanded
+					ifTrue: [ ann item withAllChildrenDo: [ :element | (self expandedIceNodes includes: element) ifFalse: [ self expandedIceNodes add: element ] ] ]
+					ifFalse: [ ann item withAllChildrenDo: [ :element | self expandedIceNodes remove: element ifAbsent: [ ] ] ].
+				oldSize = self expandedIceNodes size ifFalse: [ self refreshExpand ] ].
 
 	treeTable whenBuiltDo: [ :ann | "Note: All items are already instantiated at this point"
 			| table |
 			table := ann widget.
 			self hackFastTableForSecondaryHighligthing: table.
 			self doInitialTreeExpansionOn: table.
-			self hackFastTableForExpandCollapse: table.
 			self initializeTreeKeyCombinations ]
 ]
 
@@ -249,25 +242,10 @@ RiTreeDiffPresenter >> isChecked: anIceNode [
 	^ (self shadowedIceNodes includes: anIceNode) not
 ]
 
-{ #category : 'expand/collapse' }
-RiTreeDiffPresenter >> onHackyCollapse: anAnnouncement [
-	self flag: #todo. "Make not hacky"
-	(anAnnouncement belongsToSpTableTree: treeTable) ifFalse: [ ^ self ].
-	(model at: #expandedIceNodes)
-		remove: anAnnouncement fastTableItem data
-		ifAbsent: [].
-	expandDeferrer schedule.
+{ #category : 'accessing' }
+RiTreeDiffPresenter >> model: aModel [
 
-]
-
-{ #category : 'expand/collapse' }
-RiTreeDiffPresenter >> onHackyExpand: anAnnouncement [
-	self flag: #todo. "Make not hacky"
-	(anAnnouncement belongsToSpTableTree: treeTable) ifFalse: [ ^ self ].
-	(model at: #expandedIceNodes)
-		add: anAnnouncement fastTableItem data.
-	expandDeferrer schedule.
-
+	super model: aModel
 ]
 
 { #category : 'expand/collapse' }
