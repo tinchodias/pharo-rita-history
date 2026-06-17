@@ -77,8 +77,8 @@ RiHighlightingController >> addSecondaryOutlineTo: aRSShape [
 		model: aRSShape;
 		border: (RSBorder new 
 				joinMiter;
-				color: aesthetics secondaryOutlineColor;
-				width: aesthetics outlineSize;
+				color: aesthetics outlineColor;
+				width: aesthetics outlineSize + 3;
 				yourself);
 		noPaint;
 		extent: aRSShape extent + aesthetics outlineSize;

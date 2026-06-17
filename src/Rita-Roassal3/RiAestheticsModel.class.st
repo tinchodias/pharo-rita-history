@@ -450,11 +450,6 @@ RiAestheticsModel >> scrolledUnifiedDiffMorph [
 ]
 
 { #category : 'colors' }
-RiAestheticsModel >> secondaryOutlineColor [
-	^ self outlineColor alpha: 0.7
-]
-
-{ #category : 'colors' }
 RiAestheticsModel >> secondaryTextColor [
 	^ "self currentTheme caretColor mixed: 0.3 with: "
 	self currentTheme textColor alpha: 0.6
