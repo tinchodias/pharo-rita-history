@@ -91,9 +91,8 @@ RiAestheticsModel >> currentTheme [
 ]
 
 { #category : 'diff morph creation' }
-RiAestheticsModel >> diffMorphFor2: iceNode [
+RiAestheticsModel >> diffMorphFor: iceNode [
 	| oldString newString morph |
-	self flag: #todo. "Duplicated code"
 	oldString := self asContentsToDiff: iceNode value rightContents.
 	newString := self asContentsToDiff: iceNode value leftContents.
 	morph := self scrolledUnifiedDiffMorph.
@@ -102,14 +101,6 @@ RiAestheticsModel >> diffMorphFor2: iceNode [
 		from: oldString
 		to: newString.
 	^ morph
-]
-
-{ #category : 'diff morph creation' }
-RiAestheticsModel >> diffMorphFor: iceNode [
-	| oldString newString |
-	oldString := self asContentsToDiff: iceNode value rightContents.
-	newString := self asContentsToDiff: iceNode value leftContents.
-	^ self unifiedDiffFrom: oldString to: newString
 ]
 
 { #category : 'colors' }
@@ -121,8 +112,6 @@ RiAestheticsModel >> fillColorFor: iceNode [
 RiAestheticsModel >> fillUnifiedDiff: textArea from: from to: to [
 
 	| diff |
-	self flag: #todo. "Duplicated code"
-	
 	diff := RiUnifiedStringDiff new
 		oldString: from;
 		newString: to;
@@ -381,7 +370,7 @@ RiAestheticsModel >> popupDiffMorphFor: iceNode [
 	font := LogicalFont 
 		familyName: StandardFonts codeFont familyName
 		pointSize: 7.
-	diffMorph := (self diffMorphFor2: iceNode)
+	diffMorph := (self diffMorphFor: iceNode)
 		font: font;
 		hScrollbarShowNever;
 		vScrollbarShowNever;
@@ -543,43 +532,6 @@ RiAestheticsModel >> temporaryOutlineColor [
 { #category : 'accessing' }
 RiAestheticsModel >> tinyBoxBorder [
 	^ tinyBoxBorder
-]
-
-{ #category : 'diff morph creation' }
-RiAestheticsModel >> unifiedDiffFrom: from to: to [
-
-	| textArea diff |
-	textArea := RubEditingArea new
-		beReadOnly;
-		font: StandardFonts codeFont;
-		margins: 0 asMargin;
-		yourself.
-		
-	diff := RiUnifiedStringDiff new
-		oldString: from;
-		newString: to;
-		build;
-		yourself.
-
-	textArea
-		removeAllSegments;
-		updateTextWith: diff unifiedString.
-
-	diff lineJoins do: [:each |
-		colorMap at: each kindSymbol ifPresent: [ :color |
-			textArea addSegment: ((RiRubricTextSegment from: each fromIndex to: each toIndex)
-				color: color;
-				yourself).
-		] ].
-
-	diff inlineJoins do: [:each |
-		inlinecolorMap at: each kindSymbol ifPresent: [ :color |
-			textArea addSegment: ((RubPlainSegmentMorph from: each fromIndex to: each toIndex)
-				color: color;
-				yourself).
-		] ].
-
-	^ textArea
 ]
 
 { #category : 'accessing' }

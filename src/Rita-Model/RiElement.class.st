@@ -69,8 +69,18 @@ RiElement >> ancestors [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'converting' }
+RiElement >> asIceObject [
+	^ self subclassResponsibility
+]
+
 { #category : 'accessing' }
 RiElement >> author [
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+RiElement >> authorEmail [
 	^ self subclassResponsibility
 ]
 
@@ -81,6 +91,11 @@ RiElement >> children [
 
 { #category : 'accessing' }
 RiElement >> comment [
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+RiElement >> committerEmail [
 	^ self subclassResponsibility
 ]
 
@@ -101,6 +116,17 @@ RiElement >> detectInAllChildren: aBlockClosure ifFound: foundBlockClosure [
 	self allChildrenDo: [ :each | 
 		(aBlockClosure value: each)
 			ifTrue: [ ^ foundBlockClosure cull: each ] ]
+]
+
+{ #category : 'diff' }
+RiElement >> diffTo: aRiCommit [
+
+	^ RiceDiff from: self asIceObject to: aRiCommit iceGitCommit
+]
+
+{ #category : 'accessing' }
+RiElement >> id [
+	^ self subclassResponsibility
 ]
 
 { #category : 'testing' }

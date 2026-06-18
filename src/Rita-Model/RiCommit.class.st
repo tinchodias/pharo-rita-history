@@ -82,12 +82,6 @@ RiCommit >> dateAndTime [
 	^ RiDatePrinter new stringFor: iceGitCommit datetime asDate
 ]
 
-{ #category : 'diff' }
-RiCommit >> diffTo: aRiCommit [
-
-	^ RiceDiff from: iceGitCommit to: aRiCommit iceGitCommit
-]
-
 { #category : 'API - changes' }
 RiCommit >> diffToParent [
 	

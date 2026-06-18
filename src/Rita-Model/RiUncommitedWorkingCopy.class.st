@@ -52,14 +52,6 @@ RiUncommitedWorkingCopy >> dateAndTime [
 	^ '---'
 ]
 
-{ #category : 'diff' }
-RiUncommitedWorkingCopy >> diffTo: aRiCommit [
-
-	^ RiceDiff
-		from: self repository iceRepository workingCopy
-		to: aRiCommit iceGitCommit
-]
-
 { #category : 'accessing' }
 RiUncommitedWorkingCopy >> id [
 	^ '---'
