@@ -6,9 +6,9 @@ Class {
 		'kind',
 		'data'
 	],
-	#category : 'Rita-UI-Announcements',
+	#category : 'Rita-UI-Support',
 	#package : 'Rita-UI',
-	#tag : 'Announcements'
+	#tag : 'Support'
 }
 
 { #category : 'converting' }

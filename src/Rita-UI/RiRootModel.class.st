@@ -40,7 +40,7 @@ RiRootModel >> announceAction: aSymbol iceNode: iceNode [
 	iceNode ifNil: [ ^self ].
 
 	actionsAnnouncer announce: 
-		(RiBasicActionAnnouncement new
+		(RiActionAnnouncement new
 			 kind: aSymbol;
 			 data: iceNode key asString;
 			 yourself)

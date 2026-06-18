@@ -359,7 +359,7 @@ RiAestheticsModel >> outlineSize [
 RiAestheticsModel >> pathMorphWith: iceNode [
 
 	| separator segments |
-	segments := iceNode withAllParentNodes collect: [:each | each value ritaKey ].
+	segments := iceNode withAllParentNodes collect: [:each | each value name ].
 
 	separator :=
 		' / ' asText 
@@ -430,7 +430,7 @@ RiAestheticsModel >> rowForChange: iceNode [
 	^ (String streamContents: [:stream |
 		stream
 			space;
-			nextPutAll: iceNode value ritaKey.
+			nextPutAll: iceNode value name.
 		iceNode children ifNotEmpty: [ :c |
 			stream
 				nextPutAll: '  (';
