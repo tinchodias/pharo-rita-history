@@ -7,16 +7,15 @@ Class {
 
 { #category : 'baselines' }
 BaselineOfRita >> baseline: spec [
-	<baseline>
 
-	spec for: #'common' do: [
-		self declareIcebergOn: spec.
-		self declareRoassalOn: spec.
-		spec
-			package: 'Rita-Model';
-			package: 'Rita-Tests' with: [ spec requires: #('Rita-Model' 'Iceberg') ];
-			package: 'Rita-Roassal3' with: [ spec requires: #('Rita-Model' 'Roassal') ];
-				package: 'Rita-UI' with: [ spec requires: #('Rita-Model' 'Rita-Roassal3') ] ]
+	<baseline>
+	spec for: #common do: [
+			self declareIcebergOn: spec.
+			spec
+				package: 'Rita-Model';
+				package: 'Rita-Tests' with: [ spec requires: #( 'Rita-Model' 'Iceberg' ) ];
+				package: 'Rita-Roassal3' with: [ spec requires: #( 'Rita-Model' ) ];
+				package: 'Rita-UI' with: [ spec requires: #( 'Rita-Model' 'Rita-Roassal3' ) ] ]
 ]
 
 { #category : 'baselines' }
@@ -26,13 +25,4 @@ BaselineOfRita >> declareIcebergOn: spec [
 		spec
 			repository: 'github://pharo-vcs/iceberg:Pharo14/';
 			loads: #(allTests) ]
-]
-
-{ #category : 'baselines' }
-BaselineOfRita >> declareRoassalOn: spec [
-
-	spec baseline: 'Roassal' with: [
-		spec
-			repository: 'github://pharo-graphics/Roassal:Pharo14/src';
-			loads: #(Full) ]
 ]
