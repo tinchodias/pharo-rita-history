@@ -3,7 +3,7 @@
 [![Tests](https://github.com/tinchodias/pharo-rita-history/actions/workflows/tests.yml/badge.svg)](https://github.com/tinchodias/pharo-rita-history/actions/workflows/tests.yml)
 
 A tool to help understanding git code changes in Pharo IDE.
-Inspired on [Torch](http://rmod.inria.fr/archives/papers/Uqui10a-Torch-WCRE10.pdf).
+Extends [Iceberg](https://github.com/pharo-vcs/iceberg). Inspired on [Torch](http://rmod.inria.fr/archives/papers/Uqui10a-Torch-WCRE10.pdf).
 
 ![Screenshot](small.png)
 
