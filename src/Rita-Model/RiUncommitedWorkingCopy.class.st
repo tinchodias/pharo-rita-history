@@ -86,3 +86,10 @@ RiUncommitedWorkingCopy >> shortDescription [
 RiUncommitedWorkingCopy >> shortId [
 	^ '---'
 ]
+
+{ #category : 'accessing' }
+RiUncommitedWorkingCopy >> targetRiElement [
+	"I am not a commit, so there is no commit for a diff to end at."
+
+	^ nil
+]

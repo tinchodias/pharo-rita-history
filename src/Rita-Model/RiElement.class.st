@@ -3,7 +3,7 @@ Represents an element in the contents list of a repository.
 "
 Class {
 	#name : 'RiElement',
-	#superclass : 'Object',
+	#superclass : 'RiAbstractElement',
 	#instVars : [
 		'marks'
 	],
@@ -129,21 +129,9 @@ RiElement >> id [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'testing' }
-RiElement >> isUncommited [
-	^ false
-]
-
 { #category : 'accessing' }
 RiElement >> marks [
 	^ marks ifNil: [ marks := OrderedCollection new ]
-]
-
-{ #category : 'accessing' }
-RiElement >> repository [
-	"Answer the RiRepository that contains me."
-
-	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
@@ -154,6 +142,22 @@ RiElement >> shortDescription [
 { #category : 'accessing' }
 RiElement >> shortId [
 	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+RiElement >> sourceRiElement [
+	"Answer the element my diff starts from: my first ancestor.
+	IMPORTANT: as other tools do, a merge is diffed against its first ancestor only, ignoring the others."
+
+	^ self ancestorToDiffIfPresent: [ :ancestor | ancestor ] ifAbsent: [ nil ]
+]
+
+{ #category : 'accessing' }
+RiElement >> targetRiElement [
+	"Answer the element my diff ends at: me.
+	RiUncommitedWorkingCopy overrides this, because it is not a commit and there is nothing to diff to."
+
+	^ self
 ]
 
 { #category : 'enumeration' }
