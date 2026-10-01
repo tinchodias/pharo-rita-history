@@ -24,27 +24,6 @@ RiRepositoryPresenter >> addPageFor: aRiDiffModel to: targetRiElement [
 	notebook addPage: (SpNotebookPage title: aRiDiffModel title icon: aRiDiffModel icon provider: [ self diffPresenterFor: aRiDiffModel to: targetRiElement ])
 ]
 
-{ #category : 'private' }
-RiRepositoryPresenter >> addPageForComposite: aRiCompositeElement [
-	"A range of elements is always one single cumulative page: there is no parent page, and a pin compares to a single element so it never applies to a range."
-
-	| base tip |
-	base := aRiCompositeElement sourceRiElement.
-	tip := aRiCompositeElement targetRiElement.
-	(base isNotNil and: [ tip isNotNil ]) ifTrue: [ self addPageFor: (RiCompositeDiffModel riCompositeElement: aRiCompositeElement) to: aRiCompositeElement ]
-]
-
-{ #category : 'private' }
-RiRepositoryPresenter >> addPagesForSingleElement: aRiElement [
-	"A single element is compared to its parent and to every pin asking for it."
-
-	(self parentDiffModelFor: aRiElement) ifNotNil: [ :diff | self addPageFor: diff to: aRiElement ].
-
-	(model at: #pinDiffModels)
-		select: [ :each | each shouldCompareTo: aRiElement ]
-		thenDo: [ :each | self addPageFor: each to: aRiElement ]
-]
-
 { #category : 'initialization' }
 RiRepositoryPresenter >> connectPresenters [
 
@@ -110,13 +89,6 @@ RiRepositoryPresenter >> isForRepository: aRiRepository [
 	^ aRiRepository = self repository
 ]
 
-{ #category : 'initialization' }
-RiRepositoryPresenter >> parentDiffModelFor: targetRiElement [
-	"IMPORTANT: As other tools only answer the diff to the first ancestor (potentially ignoring others, in case of merge)."
-
-	^ targetRiElement ancestorToDiffIfPresent: [ :ancestor | RiParentDiffModel parentRiElement: ancestor ] ifAbsent: [ nil ]
-]
-
 { #category : 'updating' }
 RiRepositoryPresenter >> refreshOnModelUpdate [
 	model at: #pinDiffModels put: OrderedCollection new.
@@ -157,14 +129,16 @@ RiRepositoryPresenter >> selectElements: aCollectionOfRiElement [
 
 	| selectedRiAbstractElement |
 	aCollectionOfRiElement ifEmpty: [ ^ self ].
-
-	selectedRiAbstractElement := self riElementFor: aCollectionOfRiElement.
-
+	selectedRiAbstractElement := self riElementFor: (self selectionInRepositoryOrder: aCollectionOfRiElement).
 	notebook removeAll.
-	selectedRiAbstractElement isComposite
-		ifTrue: [ self addPageForComposite: selectedRiAbstractElement ]
-		ifFalse: [ self addPagesForSingleElement: selectedRiAbstractElement ].
-		
+	(selectedRiAbstractElement diffModelsWithPins: (model at: #pinDiffModels)) do: [ :diffModel | self addPageFor: diffModel to: selectedRiAbstractElement ].
 	notebook pages ifNotEmpty: [ notebook selectPage: notebook pages first ].
 	commitDetailsWidget text: selectedRiAbstractElement commitText
+]
+
+{ #category : 'private' }
+RiRepositoryPresenter >> selectionInRepositoryOrder: aCollectionOfRiElement [
+	"Answer the selected elements ordered the way the repository lists them (newest first). The table delivers the selection in click order, but a composite trusts the caller to pass it in repository order."
+
+	^ self repository elements select: [ :element | aCollectionOfRiElement includes: element ]
 ]

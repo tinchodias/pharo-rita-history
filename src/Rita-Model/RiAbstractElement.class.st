@@ -22,12 +22,6 @@ RiAbstractElement class >> isAbstract [
 ]
 
 { #category : 'testing' }
-RiAbstractElement >> isComposite [
-
-	^ false
-]
-
-{ #category : 'testing' }
 RiAbstractElement >> isUncommited [
 	^ false
 ]

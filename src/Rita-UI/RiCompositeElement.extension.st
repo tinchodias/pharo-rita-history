@@ -22,3 +22,12 @@ RiCompositeElement >> commitText [
 				        nextPutAll: self targetRiElement shortId ].
 	^ text
 ]
+
+{ #category : '*Rita-UI' }
+RiCompositeElement >> diffModelsWithPins: pinDiffModels [
+	"Answer the single cumulative diff model for my whole range. Pins compare to a single element, so none of them applies to me."
+
+	^ (self sourceRiElement isNotNil and: [ self targetRiElement isNotNil ])
+		  ifTrue: [ { (RiCompositeDiffModel riCompositeElement: self) } ]
+		  ifFalse: [ #(  ) ]
+]

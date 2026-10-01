@@ -439,9 +439,7 @@ RiRepositoryCommitsPresenter >> selectRiElement: aRiElement [
 
 { #category : 'initialization' }
 RiRepositoryCommitsPresenter >> whenSelectionChangedDo: aBlock [
+	"The block receives all the selected elements, in the order the table reports them (click order)."
 
-	"The block receives all the selected elements, ordered the way the table lists them: newest commit first."
-
-	table whenSelectionChangedDo: [ :selection |
-		selection selectedItems ifNotEmpty: [ :items | aBlock value: items ] ]
+	table whenSelectionChangedDo: [ :selection | selection selectedItems ifNotEmpty: [ :items | aBlock value: items ] ]
 ]
