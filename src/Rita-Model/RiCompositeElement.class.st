@@ -33,6 +33,12 @@ RiCompositeElement >> includesElement: aRiElement [
 	^ riElements includes: aRiElement
 ]
 
+{ #category : 'testing' }
+RiCompositeElement >> isComposite [
+
+	^ true
+]
+
 { #category : 'accessing' }
 RiCompositeElement >> newestElement [
 	"Answer the newest RiElement I am made of. Because I always hold at least two elements, I always answer one."

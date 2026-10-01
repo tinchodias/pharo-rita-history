@@ -19,17 +19,38 @@ Class {
 }
 
 { #category : 'private' }
-RiRepositoryPresenter >> addPageFor: aRiDiffModel to: targetRiCommit [
+RiRepositoryPresenter >> addPageFor: aRiDiffModel to: targetRiElement [
 
-	notebook addPage: (SpNotebookPage title: aRiDiffModel title icon: aRiDiffModel icon provider: [ self diffPresenterFor: aRiDiffModel to: targetRiCommit ])
+	notebook addPage: (SpNotebookPage title: aRiDiffModel title icon: aRiDiffModel icon provider: [ self diffPresenterFor: aRiDiffModel to: targetRiElement ])
+]
+
+{ #category : 'private' }
+RiRepositoryPresenter >> addPageForComposite: aRiCompositeElement [
+	"A range of elements is always one single cumulative page: there is no parent page, and a pin compares to a single element so it never applies to a range."
+
+	| base tip |
+	base := aRiCompositeElement sourceRiElement.
+	tip := aRiCompositeElement targetRiElement.
+	(base isNotNil and: [ tip isNotNil ]) ifTrue: [ self addPageFor: (RiCompositeDiffModel riCompositeElement: aRiCompositeElement) to: aRiCompositeElement ]
+]
+
+{ #category : 'private' }
+RiRepositoryPresenter >> addPagesForSingleElement: aRiElement [
+	"A single element is compared to its parent and to every pin asking for it."
+
+	(self parentDiffModelFor: aRiElement) ifNotNil: [ :diff | self addPageFor: diff to: aRiElement ].
+
+	(model at: #pinDiffModels)
+		select: [ :each | each shouldCompareTo: aRiElement ]
+		thenDo: [ :each | self addPageFor: each to: aRiElement ]
 ]
 
 { #category : 'initialization' }
 RiRepositoryPresenter >> connectPresenters [
 
 	super connectPresenters.
-	repositoryCommitsPresenter whenSelectionChangedDo: [ :targetRiElement | self selectCommit: targetRiElement ].
-	
+	repositoryCommitsPresenter whenSelectionChangedDo: [ :selectedRiElements | self selectElements: selectedRiElements ].
+
 	"Bindings are not added before building."
 	self whenBuiltDo: [
 			self bindKeyCombination: $n meta toAction: [ (model at: #blockForIterateNext) value ].
@@ -57,20 +78,19 @@ RiRepositoryPresenter >> defaultLayout [
 ]
 
 { #category : 'private' }
-RiRepositoryPresenter >> diffPresenterFor: aRiDiffModel to: targetRiCommit [
+RiRepositoryPresenter >> diffPresenterFor: aRiDiffModel to: targetRiElement [
 
 	| iceDiff expandedNodes |
-	iceDiff := aRiDiffModel iceDiffFrom: targetRiCommit.
-	expandedNodes := OrderedCollection streamContents: [ :stream |
-		iceDiff tree withAllChildrenDo: [ :each | stream nextPut: each ] ].
+	iceDiff := aRiDiffModel iceDiffFrom: targetRiElement.
+	expandedNodes := OrderedCollection streamContents: [ :stream | iceDiff tree withAllChildrenDo: [ :each | stream nextPut: each ] ].
 
 	^ (self instantiate: RiFullDiffPresenter)
-			model: (model copy
-				add: #iceDiff -> iceDiff;
-				add: #shadowedIceNodes -> IdentitySet new;
-				add: #expandedIceNodes -> expandedNodes;
-				yourself);
-			yourself
+		  model: (model copy
+				   add: #iceDiff -> iceDiff;
+				   add: #shadowedIceNodes -> IdentitySet new;
+				   add: #expandedIceNodes -> expandedNodes;
+				   yourself);
+		  yourself
 ]
 
 { #category : 'initialization' }
@@ -122,18 +142,29 @@ RiRepositoryPresenter >> repository [
 	^ self model at: #repository
 ]
 
+{ #category : 'private' }
+RiRepositoryPresenter >> riElementFor: aCollectionOfRiElement [
+	"One selected element stays itself, several of them become a composite."
+
+	^ aCollectionOfRiElement size = 1
+		  ifTrue: [ aCollectionOfRiElement first ]
+		  ifFalse: [ RiCompositeElement of: aCollectionOfRiElement ]
+]
+
 { #category : 'initialization' }
-RiRepositoryPresenter >> selectCommit: commit [
-	"When we select a commit we reset the notebook and add the pages related to this commit. We also update the commit details widget to display the right info"
+RiRepositoryPresenter >> selectElements: aCollectionOfRiElement [
+	"When the selection changes I reset the notebook and add the pages related to the selection: a single element gets its parent and pin pages, a range of elements gets one single cumulative page. I also update the commit details widget to display the right info"
+
+	| selectedRiAbstractElement |
+	aCollectionOfRiElement ifEmpty: [ ^ self ].
+
+	selectedRiAbstractElement := self riElementFor: aCollectionOfRiElement.
 
 	notebook removeAll.
-	(self parentDiffModelFor: commit) ifNotNil: [ :diff | self addPageFor: diff to: commit ].
-
-	(model at: #pinDiffModels)
-		select: [ :each | each shouldCompareTo: commit ]
-		thenDo: [ :each | self addPageFor: each to: commit ].
-
+	selectedRiAbstractElement isComposite
+		ifTrue: [ self addPageForComposite: selectedRiAbstractElement ]
+		ifFalse: [ self addPagesForSingleElement: selectedRiAbstractElement ].
+		
 	notebook pages ifNotEmpty: [ notebook selectPage: notebook pages first ].
-
-	commitDetailsWidget text: commit commitText
+	commitDetailsWidget text: selectedRiAbstractElement commitText
 ]

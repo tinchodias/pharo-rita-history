@@ -329,6 +329,7 @@ RiRepositoryCommitsPresenter >> initializeTable [
 		contextMenu: [ self contextMenuForTable ];
 		addStyle: 'ritaTable';
 		beResizable;
+		beMultipleSelection;
 		addColumn: (SpStringTableColumn new
 				 title: 'Commit';
 				 evaluated: [ :item | item shortId ];
@@ -439,5 +440,8 @@ RiRepositoryCommitsPresenter >> selectRiElement: aRiElement [
 { #category : 'initialization' }
 RiRepositoryCommitsPresenter >> whenSelectionChangedDo: aBlock [
 
-	table whenSelectionChangedDo: [ :selection | selection selectedItem ifNotNil: [ :item | aBlock value: item ] ]
+	"The block receives all the selected elements, ordered the way the table lists them: newest commit first."
+
+	table whenSelectionChangedDo: [ :selection |
+		selection selectedItems ifNotEmpty: [ :items | aBlock value: items ] ]
 ]
