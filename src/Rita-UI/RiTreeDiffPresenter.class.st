@@ -104,12 +104,15 @@ RiTreeDiffPresenter >> doExpandWithAllChildren [
 
 { #category : 'expand/collapse' }
 RiTreeDiffPresenter >> doInitialTreeExpansion [
-	"We expand all expanded nodes."
+	"We expand the nodes we saved as expanded in a single pass: the tree refreshes and notifies #whenExpandChangedDo: handlers only once."
 
-	self expandedIceNodes reverseDo: [ :each |
-			[ treeTable expandPath: (treeTable selection pathOf: each) ]
+	| paths |
+	paths := OrderedCollection new.
+	self expandedIceNodes do: [ :each |
+			[ paths add: (treeTable selection pathOf: each) ]
 				on: NotFound
-				do: [ "If a node is not in the list, we just ignore it" ] ]
+				do: [ "If a node is not in the list, we just ignore it" ] ].
+	treeTable expandPaths: paths
 ]
 
 { #category : 'expand/collapse' }
@@ -197,9 +200,11 @@ RiTreeDiffPresenter >> initializePresenters [
 				| oldSize |
 				oldSize := self expandedIceNodes size.
 				self flag: #todo. "Maybe the expanded Ice nodes should be a set to avoid the duplication check. Also we should set this after setting the model."
-				ann expanded
-					ifTrue: [ ann item withAllChildrenDo: [ :element | (self expandedIceNodes includes: element) ifFalse: [ self expandedIceNodes add: element ] ] ]
-					ifFalse: [ ann item withAllChildrenDo: [ :element | self expandedIceNodes remove: element ifAbsent: [ ] ] ].
+				ann items do: [ :item |
+						item withAllChildrenDo: [ :element |
+								ann expanded
+									ifTrue: [ (self expandedIceNodes includes: element) ifFalse: [ self expandedIceNodes add: element ] ]
+									ifFalse: [ self expandedIceNodes remove: element ifAbsent: [ ] ] ] ].
 				oldSize = self expandedIceNodes size ifFalse: [ self refreshExpand ] ].
 
 	treeTable
