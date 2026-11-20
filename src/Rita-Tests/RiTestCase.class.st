@@ -1,8 +1,17 @@
+"
+I am the superclass of the tests of Rita that need a git repository.
+Each test gets a new empty Iceberg repository in a temporary folder of the image directory, available through #repository, and it is deleted after the test.
+I only rely on the Iceberg that ships with Pharo, not on the Iceberg test packages.
+"
 Class {
 	#name : 'RiTestCase',
-	#superclass : 'IceAbstractTestCase',
+	#superclass : 'TestCase',
 	#instVars : [
-		'repository'
+		'repository',
+		'iceRepository',
+		'location',
+		'sharingBetweenImages',
+		'credentialsProviderType'
 	],
 	#category : 'Rita-Tests',
 	#package : 'Rita-Tests'
@@ -64,7 +73,38 @@ RiTestCase >> deleteBranch: aString [
 
 ]
 
+{ #category : 'accessing' }
+RiTestCase >> repository [
+	"Answer the Iceberg repository of the test"
+
+	^ iceRepository
+]
+
 { #category : 'running' }
-RiTestCase >> newFixture [
-	^ IceBasicRepositoryFixture inGit
+RiTestCase >> setUp [
+
+	super setUp.
+	sharingBetweenImages := IceLibgitRepository shareRepositoriesBetweenImages.
+	IceLibgitRepository shareRepositoriesBetweenImages: false.
+	credentialsProviderType := IceCredentialsProvider providerType.
+	IceCredentialsProvider providerType: IceNonInteractiveCredentialsProvider.
+	location := FileLocator imageDirectory / 'test' / UUID new asString.
+	iceRepository := IceRepositoryCreator new
+		                 location: location;
+		                 subdirectory: '';
+		                 createNewRepositoryNamed: 'test-project'
+]
+
+{ #category : 'running' }
+RiTestCase >> tearDown [
+
+	iceRepository ifNotNil: [ :anIceRepository |
+		anIceRepository free.
+		Smalltalk garbageCollect ].
+	[ location ensureDeleteAll ] on: CannotDeleteFileException do: [ "On Windows the files may still be locked by libgit until they are finalized"
+		Smalltalk garbageCollect.
+		location ensureDeleteAll ].
+	IceCredentialsProvider providerType: credentialsProviderType.
+	IceLibgitRepository shareRepositoriesBetweenImages: sharingBetweenImages.
+	super tearDown
 ]

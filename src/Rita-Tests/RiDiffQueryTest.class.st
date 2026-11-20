@@ -1,13 +1,18 @@
 Class {
 	#name : 'RiDiffQueryTest',
-	#superclass : 'IceAbstractTestCase',
+	#superclass : 'RiTestCase',
+	#instVars : [
+		'fixture'
+	],
 	#category : 'Rita-Tests',
 	#package : 'Rita-Tests'
 }
 
 { #category : 'running' }
-RiDiffQueryTest >> newFixture [
-	^ RiDiffQueryFixture inGit
+RiDiffQueryTest >> setUp [
+
+	super setUp.
+	fixture := RiDiffQueryFixture on: self repository
 ]
 
 { #category : 'tests' }
