@@ -9,15 +9,27 @@ Class {
 	#tag : 'Spec2-Base'
 }
 
+{ #category : 'constants' }
+RiSpMorphicConfiguration class >> commitsRowHeight [
+
+	^ 25
+]
+
+{ #category : 'constants' }
+RiSpMorphicConfiguration >> commitsRowHeight [
+	^ self class commitsRowHeight
+]
+
 { #category : 'styling' }
-RiSpMorphicConfiguration >> styleSheet [ 
-	^ super styleSheet, (SpStyleSTONReader fromString: '
+RiSpMorphicConfiguration >> styleSheet [
+
+	^ styleSheet := super styleSheet , (SpStyleVariableSTONReader fromString: '
 	.application [
 		.ritaNarrow [
 			Geometry { #width: 20 }
 			],
-		.ritaTable [ 
-			Container { #rowHeight: 25 }
+		.ritaTable [
+			Container { #rowHeight: ' , self commitsRowHeight asString , ' }
 			]
 	]')
 ]

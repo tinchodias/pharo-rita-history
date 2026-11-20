@@ -31,16 +31,16 @@ RiRowMorph >> addItemRight: aMorph [
 
 { #category : 'initialization' }
 RiRowMorph >> initialize [
+
 	super initialize.
 
 	self
 		changeTableLayout;
 		listDirection: #leftToRight;
-		hResizing: #spaceFill;
-		vResizing: #spaceFill;
-		color: Color transparent;
-		extent: 0@0.
-	
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap;
+		color: Color transparent.
+
 	self initializePanels
 ]
 
@@ -61,13 +61,13 @@ RiRowMorph >> initializePanels [
 { #category : 'private factory' }
 RiRowMorph >> newPanelMorph [
 
-	^ Morph new 
-		changeTableLayout;
-		listDirection: #leftToRight;
-		hResizing: #spaceFill;
-		vResizing: #shrinkWrap;
-		cellInset: 3@0;
-		extent: 0@0;
-		color: Color transparent;
-		yourself
+	^ Morph new
+		  changeTableLayout;
+		  listDirection: #leftToRight;
+		  hResizing: #shrinkWrap;
+		  vResizing: #shrinkWrap;
+		  cellInset: 3 @ 0;
+		  extent: 0 @ 0;
+		  color: Color transparent;
+		  yourself
 ]

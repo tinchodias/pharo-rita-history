@@ -61,7 +61,10 @@ RiRepositoryPresenter >> diffPresenterFor: aRiDiffModel to: targetRiElement [
 
 	| iceDiff expandedNodes |
 	iceDiff := aRiDiffModel iceDiffFrom: targetRiElement.
-	expandedNodes := OrderedCollection streamContents: [ :stream | iceDiff tree withAllChildrenDo: [ :each | stream nextPut: each ] ].
+
+	"Using an identity set because we will look a lot in this collection and elements are slow to compare since they also compare their children. Identity comparison is much much faster.
+	If you need to change this one day, do a profiling on big repositories with a commit updating a lot of elements at once (like the merge of a big pull request)."
+	expandedNodes := IdentitySet withAll: (Array streamContents: [ :stream | iceDiff tree withAllChildrenDo: [ :each | stream nextPut: each ] ]).
 
 	^ (self instantiate: RiFullDiffPresenter)
 		  model: (model copy
@@ -129,16 +132,9 @@ RiRepositoryPresenter >> selectElements: aCollectionOfRiElement [
 
 	| selectedRiAbstractElement |
 	aCollectionOfRiElement ifEmpty: [ ^ self ].
-	selectedRiAbstractElement := self riElementFor: (self selectionInRepositoryOrder: aCollectionOfRiElement).
+	selectedRiAbstractElement := self riElementFor: aCollectionOfRiElement.
 	notebook removeAll.
 	(selectedRiAbstractElement diffModelsWithPins: (model at: #pinDiffModels)) do: [ :diffModel | self addPageFor: diffModel to: selectedRiAbstractElement ].
 	notebook pages ifNotEmpty: [ notebook selectPage: notebook pages first ].
 	commitDetailsWidget text: selectedRiAbstractElement commitText
-]
-
-{ #category : 'private' }
-RiRepositoryPresenter >> selectionInRepositoryOrder: aCollectionOfRiElement [
-	"Answer the selected elements ordered the way the repository lists them (newest first). The table delivers the selection in click order, but a composite trusts the caller to pass it in repository order."
-
-	^ self repository elements select: [ :element | aCollectionOfRiElement includes: element ]
 ]

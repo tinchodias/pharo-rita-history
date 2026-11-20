@@ -23,6 +23,6 @@ BaselineOfRita >> declareIcebergOn: spec [
 
 	spec baseline: 'Iceberg' with: [
 		spec
-			repository: 'github://pharo-vcs/iceberg:Pharo14/';
+			repository: 'github://pharo-vcs/iceberg:Pharo15/';
 			loads: #(allTests) ]
 ]

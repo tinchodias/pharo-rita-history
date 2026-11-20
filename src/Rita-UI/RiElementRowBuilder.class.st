@@ -26,9 +26,10 @@ RiElementRowBuilder >> hiedraMorphAt: item [
 
 	self flag: #todo. "Fix this async problem in other way"
 
-	^ (hiedraColumnController notNil and: [ hiedraColumnController isReady ])
-		ifFalse: [ ^ Morph new ]
-		ifTrue: [ hiedraColumnController cellMorphAtValue: item ]
+	^ (hiedraColumnController isNotNil and: [
+		   hiedraColumnController ruler isNotNil and: [ hiedraColumnController isReady and: [ hiedraColumnController ruler valueIndices includesKey: item ] ] ])
+		  ifFalse: [ Morph new ]
+		  ifTrue: [ hiedraColumnController cellMorphAtValue: item ]
 ]
 
 { #category : 'mark morph building' }
@@ -103,6 +104,8 @@ RiElementRowBuilder >> morphAt: item [
 		(self hiedraMorphAt: item).
 		'   ' asMorph } , (self pinMorphsFor: item) , (self markMorphsAt: item) do: [ :each | row addItemLeft: each ].
 
+	"We need a fixed size for the row so that Spec does not add margins"
+	row extent: row minExtent x @ RiSpMorphicConfiguration commitsRowHeight.
 
 	^ row
 ]
@@ -115,31 +118,38 @@ RiElementRowBuilder >> pinMorphsFor: aRiElement [
 ]
 
 { #category : 'refreshing' }
-RiElementRowBuilder >> process: aRiRepository rowHeight: aHeight [
+RiElementRowBuilder >> processElements: aCollectionOfRiElement [
+
+	| elementsSet |
+	elementsSet := aCollectionOfRiElement asIdentitySet.
 
 	hiedraColumnController := HiColumnController new.
 	hiedraColumnController renderer
-		rowHeight: aHeight;
-		nodeRadius: 1.5;
+		rowHeight: RiSpMorphicConfiguration commitsRowHeight;
+		nodeRadius: 2;
 		nodeBorderWidth: 3.0;
-		arrowSize: 0;
-		nodeConnectionOffset: 3;
-		cellWidth: 6.75.
-	self setUniformColors.
+		arrowSize: 0; "No arrow"
+		cellWidth: 15.
+
+	self setMultipleColors.
 
 	"Create a new ruler model with current table elements"
-	hiedraColumnController ruler: (HiRulerBuilder
-		newRulerValues: aRiRepository elements
-		linksBlock: [ :each | each ancestors ]).
+	hiedraColumnController ruler:
+		(HiRulerBuilder newRulerValues: aCollectionOfRiElement linksBlock: [ :each | each ancestors select: [ :ancestor | elementsSet includes: ancestor ] ]).
 
-	hiedraColumnController reset.
-
+	hiedraColumnController reset
 ]
 
-{ #category : 'accessing' }
+{ #category : 'refreshing' }
 RiElementRowBuilder >> refresh [
 
-	[ self process: repositoryPresenter riRepository rowHeight: repositoryPresenter rowHeightForHiedra ] future
+	self refreshForElements: repositoryPresenter riRepository elements
+]
+
+{ #category : 'refreshing' }
+RiElementRowBuilder >> refreshForElements: aCollectionOfRiElement [
+
+	[ self processElements: aCollectionOfRiElement ] future
 		onSuccessDo: [ :_ | repositoryPresenter refreshOnAvatarsUpdate ];
 		onFailureDo: [ :error | repositoryPresenter reportWarning: error ]
 ]
@@ -167,15 +177,6 @@ RiElementRowBuilder >> setMultipleColors [
 		collect: [ :each | each mixed: 0.75 with: Smalltalk ui theme textColor ]).
 		
 
-]
-
-{ #category : 'accessing' }
-RiElementRowBuilder >> setUniformColors [
-
-	hiedraColumnController renderer useUniformColorStrategy.
-	hiedraColumnController renderer colorStrategy
-		linkColor: Smalltalk ui theme textColor;
-		nodeColor: Smalltalk ui theme textColor
 ]
 
 { #category : 'accessing' }

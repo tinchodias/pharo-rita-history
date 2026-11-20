@@ -104,12 +104,17 @@ RiTreeDiffPresenter >> doExpandWithAllChildren [
 
 { #category : 'expand/collapse' }
 RiTreeDiffPresenter >> doInitialTreeExpansion [
-	"We expand all expanded nodes."
+	"We expand the nodes we saved as expanded in a single pass: the tree refreshes and notifies #whenExpandChangedDo: handlers only once. The index path of a node is computed from its parents, and the children of each parent are read once: searching the tree for each node is quadratic. Nodes that are not shown in the tree (the root, or a node whose ancestor is not shown) are ignored."
 
-	self expandedIceNodes reverseDo: [ :each |
-			[ treeTable expandPath: (treeTable selection pathOf: each) ]
-				on: NotFound
-				do: [ "If a node is not in the list, we just ignore it" ] ]
+	| paths childrenByParent |
+	paths := OrderedCollection new.
+	childrenByParent := IdentityDictionary new.
+	self expandedIceNodes do: [ :each |
+			each hasParent ifTrue: [
+					| indexPath |
+					indexPath := each withAllParentNodes collect: [ :node | (childrenByParent at: node parent ifAbsentPut: [ node parent children asArray ]) identityIndexOf: node ].
+					(indexPath includes: 0) ifFalse: [ paths add: indexPath ] ] ].
+	treeTable expandPaths: paths
 ]
 
 { #category : 'expand/collapse' }
@@ -197,9 +202,11 @@ RiTreeDiffPresenter >> initializePresenters [
 				| oldSize |
 				oldSize := self expandedIceNodes size.
 				self flag: #todo. "Maybe the expanded Ice nodes should be a set to avoid the duplication check. Also we should set this after setting the model."
-				ann expanded
-					ifTrue: [ ann item withAllChildrenDo: [ :element | (self expandedIceNodes includes: element) ifFalse: [ self expandedIceNodes add: element ] ] ]
-					ifFalse: [ ann item withAllChildrenDo: [ :element | self expandedIceNodes remove: element ifAbsent: [ ] ] ].
+				ann items do: [ :item |
+						item withAllChildrenDo: [ :element |
+								ann expanded
+									ifTrue: [ (self expandedIceNodes includes: element) ifFalse: [ self expandedIceNodes add: element ] ]
+									ifFalse: [ self expandedIceNodes remove: element ifAbsent: [ ] ] ] ].
 				oldSize = self expandedIceNodes size ifFalse: [ self refreshExpand ] ].
 
 	treeTable

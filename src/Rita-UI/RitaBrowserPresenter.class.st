@@ -84,10 +84,18 @@ RitaBrowserPresenter >> initializePresenters [
 	notebook addPage: self newHomePage
 ]
 
+{ #category : 'initialization' }
+RitaBrowserPresenter >> initializeWindow: aWindow [
+
+	super initializeWindow: aWindow.
+
+	aWindow whenClosedDo: [ self releaseAllRepositories ]
+]
+
 { #category : 'private' }
 RitaBrowserPresenter >> newHomePage [
 
-	^ SpNotebookPage title: 'Home' icon: (self iconNamed: #homeIcon) provider: [
+	^ SpNotebookPage title: 'Home' icon: (self iconNamed: #home) provider: [
 			  RiRepositoryListPresenter new
 				  model: model repositories;
 				  whenOpeningRepositoryDo: [ :aRiRepository | self openRepository: aRiRepository ];
@@ -119,6 +127,14 @@ RitaBrowserPresenter >> openRepository: aRiRepository [
 	notebook
 		addPage: page;
 		selectPage: page
+]
+
+{ #category : 'private' }
+RitaBrowserPresenter >> releaseAllRepositories [
+	"Release the libgit2 handles of all my repositories, when the window closes. Repositories without an open handle are left alone.
+	This is used to free memory"
+
+	model repositories do: [ :repository | repository iceRepository free ]
 ]
 
 { #category : 'initialization' }

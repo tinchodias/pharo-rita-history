@@ -14,6 +14,44 @@ Class {
 	#tag : 'Changes'
 }
 
+{ #category : 'private' }
+RiceMCPackageImporter >> definitionsOfFileNamed: aFileName [
+	"Answer the Monticello definitions of one Tonel file of my package at my version, reading only that file. I answer none when the file does not exist in this version or cannot be parsed."
+
+	| reader file |
+	reader := IceLibgitTonelReader on: version libgitCommit iceVersion: (version versionFor: self package).
+	file := reader packageDirectory entries
+		        detect: [ :each | (reader fileUtils fileName: each) = aFileName ]
+		        ifNone: [ ^ #(  ) ].
+	^ reader parseTonelFile: file onError: [ :error | #(  ) ]
+]
+
+{ #category : 'importing' }
+RiceMCPackageImporter >> importFileNamed: aFileName onto: aNode [
+	"Import the definitions of one changed file of my package, and the organization of the package (package.st). The rest of the package is not imported: the commit did not change it, so it shows no difference. The class file of each class my methods belong to is read only to tell whether that class is defined in my package, so that its methods are not shown as extensions. The package node is created even when the file is absent in this version, so that both sides of a diff have it."
+
+	| packageNode fileNames definitions lookupFileNames snapshot |
+	(version includesPackageNamed: self packageName) ifFalse: [ ^ self ].
+
+	packageNode := aNode childAt: self packageName ifAbsentPut: [ RicePackageDefinition named: self packageName ].
+	packageNode value path: packageNode path.
+
+	fileNames := {
+		             'package.st'.
+		             aFileName } asSet.
+	definitions := fileNames asArray flatCollect: [ :each | self definitionsOfFileNamed: each ].
+	lookupFileNames := (definitions
+		                    select: [ :each | each isMethodDefinition ]
+		                    thenCollect: [ :each | each className , '.class.st' ]) asSet reject: [ :each | fileNames includes: each ].
+	snapshot := MCSnapshot fromDefinitions: definitions , (lookupFileNames asArray flatCollect: [ :each | self definitionsOfFileNamed: each ]).
+	definitions do: [ :definition |
+			definition accept: (RiceMCDefinitionImporter new
+					 packageNode: packageNode;
+					 snapshot: snapshot;
+					 yourself) ].
+	^ packageNode
+]
+
 { #category : 'importing' }
 RiceMCPackageImporter >> importOn: aNode [
 	

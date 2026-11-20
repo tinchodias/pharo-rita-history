@@ -32,6 +32,8 @@ The strict 1:1 mapping makes the visualization and the tree work as a single, co
 
 A short note about our [Rice code-changes model](doc/RiceModel.md).
 
+A description of the [information Rita needs to build its model](resources/RitaModelInformation.md): the data a repository source (today Iceberg) must provide for the commit history and for the diff tree.
+
 Documentation can also be browsed via Pharo IDE -> World Menu -> Help -> Documentation Browser.
 
 ## Install

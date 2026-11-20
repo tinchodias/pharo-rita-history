@@ -25,6 +25,22 @@ RiRepository class >> iceRepository: anIceLibgitRepository [
 ]
 
 { #category : 'accessing' }
+RiRepository >> ancestorsOrSelfOf: aRiElement [
+	"Answer an IdentitySet holding aRiElement and all its ancestors, visiting each element once."
+
+	| result pending |
+	result := IdentitySet new.
+	pending := OrderedCollection with: aRiElement.
+	[ pending isEmpty ] whileFalse: [
+			| element |
+			element := pending removeLast.
+			(result includes: element) ifFalse: [
+					result add: element.
+					pending addAll: element ancestors ] ].
+	^ result
+]
+
+{ #category : 'accessing' }
 RiRepository >> commitAtSha: hexString [
 	^ self commits detect: [ :each | each id = hexString ]
 ]
@@ -52,6 +68,17 @@ RiRepository >> elementMarks [
 { #category : 'accessing' }
 RiRepository >> elements [
 	^ elements
+]
+
+{ #category : 'accessing' }
+RiRepository >> elementsFrom: aRiElement downTo: aBoundRiElementOrNil [
+	"Answer my elements that are aRiElement or one of its ancestors, in my order (newest first).
+	When aBoundRiElementOrNil is not nil, also exclude it and its ancestors, so I answer the range strictly above the bound, up to aRiElement included."
+
+	| scopeElements |
+	scopeElements := self ancestorsOrSelfOf: aRiElement.
+	aBoundRiElementOrNil ifNotNil: [ :bound | scopeElements removeAll: (self ancestorsOrSelfOf: bound) ].
+	^ self elements select: [ :element | scopeElements includes: element ]
 ]
 
 { #category : 'processing' }
@@ -99,6 +126,20 @@ RiRepository >> newIceCommitWalk [
 { #category : 'actions' }
 RiRepository >> openInNativeBrowser [
 	iceRepository location openInNativeBrowser
+]
+
+{ #category : 'accessing' }
+RiRepository >> previousReleaseElementOf: aRiElement [
+	"Answer the previous release of aRiElement: the newest of its ancestors that is the commit of one of my tags (a release), or nil if there is none."
+
+	| tagTipElements ancestors |
+	tagTipElements := IdentitySet withAll: (self elementMarks
+			                   select: #isTagMark
+			                   thenCollect: #element).
+	ancestors := self ancestorsOrSelfOf: aRiElement.
+	^ self elements
+		  detect: [ :element | element ~~ aRiElement and: [ (ancestors includes: element) and: [ tagTipElements includes: element ] ] ]
+		  ifNone: [ nil ]
 ]
 
 { #category : 'printing' }
@@ -159,15 +200,17 @@ RiRepository >> processBranchMark: anIceCommitish [
 
 { #category : 'private' }
 RiRepository >> processCommitGraph [
-	"Connect all collected RiCommits in terms of child/parent."
+	"Connect all collected RiCommits in terms of child/parent. The parents are looked up by id in a dictionary, so no commit is read again from the repository. This cache made the opening of Pharo (38k commits) go from 7.5sec to 4sec"
 
-	self commits do: [ :each | 
-		each iceGitCommit ancestors
-			collect: [ :iceAncestor |
-				elementByCommit at: iceAncestor ]
-			thenDo: [ :ancestor |
-				ancestor addChildren: each.
-				each addAncestor: ancestor ] ]
+	| elementById |
+	elementById := Dictionary new.
+	elementByCommit keysAndValuesDo: [ :commit :element | elementById at: commit id put: element ].
+	self commits do: [ :each |
+			each iceGitCommit ancestorIds
+				collect: [ :ancestorId | elementById at: ancestorId ]
+				thenDo: [ :ancestor |
+						ancestor addChildren: each.
+						each addAncestor: ancestor ] ]
 ]
 
 { #category : 'private' }
@@ -178,35 +221,35 @@ RiRepository >> processCommits [
 	elements := OrderedCollection new.
 	elementByCommit := Dictionary new.
 
-	iceRepository head isUnbornBranch ifTrue: [ ^self ].
+	iceRepository head isUnbornBranch ifTrue: [ ^ self ].
 
-	self newIceCommitWalk commitsDo: [:each |
-		| newCommit |
-		newCommit := RiCommit repository: self iceGitCommit: each.
-		elements add: newCommit.
-		elementByCommit at: each put: newCommit ].
-
+	self withIceCommitWalkDo: [ :walk |
+			walk commitsDo: [ :each |
+					| newCommit |
+					newCommit := RiCommit repository: self iceGitCommit: each.
+					elements add: newCommit.
+					elementByCommit at: each put: newCommit ] ]
 ]
 
 { #category : 'accessing' }
 RiRepository >> processImageMark [
+	"Add an IMAGE mark to the commit my working copy is based on, or to an uncommitted working copy when it is modified.
+	When the reference commit is unknown (e.g. it is not present in the local clone), there is nothing to mark."
 
 	| aRiCommit |
-	iceRepository hasLoadedPackages ifFalse: [ ^self ].
+	iceRepository hasLoadedPackages ifFalse: [ ^ self ].
 
-	aRiCommit := elementByCommit at: iceRepository workingCopy referenceCommit.
-	
-	iceRepository workingCopy isModified
-		ifTrue: [
+	aRiCommit := elementByCommit at: iceRepository workingCopy referenceCommit ifAbsent: [ ^ self ].
+
+	iceRepository workingCopy isModified ifTrue: [
 			| tmp |
 			tmp := RiUncommitedWorkingCopy new referenceCommit: aRiCommit.
-			elements
-				add: tmp
-				before: aRiCommit.
+			elements add: tmp before: aRiCommit.
 			aRiCommit := tmp ].
 
-	aRiCommit addMark: (RiImageMark new element: aRiCommit; yourself).
-
+	aRiCommit addMark: (RiImageMark new
+			 element: aRiCommit;
+			 yourself)
 ]
 
 { #category : 'private' }
@@ -250,26 +293,27 @@ RiRepository >> processTagMark: anIceCommitish [
 
 { #category : 'accessing' }
 RiRepository >> processWorkdirMark [
+	"Add a WORKDIR mark to the commit of my HEAD, or to an uncommitted working copy when there are changes in the working directory.
+	When the HEAD commit is unknown (e.g. it is not present in the local clone), there is nothing to mark."
 
 	| aRiCommit diff |
-	iceRepository headCommit isNoCommit ifTrue: [ ^self ].
+	iceRepository headCommit isNoCommit ifTrue: [ ^ self ].
 
-	aRiCommit := elementByCommit at: iceRepository headCommit.
-	
+	aRiCommit := elementByCommit at: iceRepository headCommit ifAbsent: [ ^ self ].
+
 	diff := (LGitDiff of: iceRepository repositoryHandle)
-		diffIndexToWorkDir;
-		yourself.
+		        diffIndexToWorkDir;
+		        yourself.
 
 	diff numberOfDeltas > 0 ifTrue: [
-		| tmp |
-		tmp := RiUncommitedWorkingCopy new referenceCommit: aRiCommit.
-		elements
-			add: tmp
-			before: aRiCommit.
-		aRiCommit := tmp ].
+			| tmp |
+			tmp := RiUncommitedWorkingCopy new referenceCommit: aRiCommit.
+			elements add: tmp before: aRiCommit.
+			aRiCommit := tmp ].
 
-	aRiCommit addMark: (RiWorkdirMark new element: aRiCommit; yourself).
-
+	aRiCommit addMark: (RiWorkdirMark new
+			 element: aRiCommit;
+			 yourself)
 ]
 
 { #category : 'processing' }
@@ -292,20 +336,27 @@ RiRepository >> selectLibgitCommitsWithChangesAt: aPath [
 	diffOptions pathspec: (LGitStringArray withAll: { aPath }).
 
 	results := OrderedCollection new.
-	self newIceCommitWalk commitsDo: [:each |
-		| tree commit |
-		commit := each libgitCommit.
-		tree := commit tree.
-		commit numberOfParents = 0
-			ifTrue: [
-				(tree matchesPathSpec: pathSpec)
-					ifTrue: [ results add: (self commitAtSha: commit id hexString) ] ]
-			ifFalse: [
-				| parent diff |
-				parent := commit parentAt: 1.
-				diff := tree diffTo: parent tree options: diffOptions. 
-				diff numberOfDeltas > 0 ifTrue: [
-					results add: (self commitAtSha: commit id hexString) ] ] ].
+	self withIceCommitWalkDo: [ :walk |
+			walk commitsDo: [ :each |
+					| tree commit |
+					commit := each libgitCommit.
+					tree := commit tree.
+					commit numberOfParents = 0
+						ifTrue: [ (tree matchesPathSpec: pathSpec) ifTrue: [ results add: (self commitAtSha: commit id hexString) ] ]
+						ifFalse: [
+								| parent diff |
+								parent := commit parentAt: 1.
+								diff := tree diffTo: parent tree options: diffOptions.
+								diff numberOfDeltas > 0 ifTrue: [ results add: (self commitAtSha: commit id hexString) ] ] ] ].
 
 	^ results
+]
+
+{ #category : 'private' }
+RiRepository >> withIceCommitWalkDo: aBlock [
+	"Evaluate aBlock with a new IceCommitWalk, then close the walk even if the block fails, so its libgit2 revwalk is freed without waiting for the garbage collector."
+
+	| walk |
+	walk := self newIceCommitWalk.
+	^ [ aBlock value: walk ] ensure: [ walk close ]
 ]
