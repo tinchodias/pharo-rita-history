@@ -21,7 +21,8 @@ RiceTraitDefinition >> accept: aVisitor [
 
 { #category : 'accessing' }
 RiceTraitDefinition >> contents [
-	^ mcDefinition definitionString
+
+	^ self definition
 ]
 
 { #category : 'as yet unclassified' }

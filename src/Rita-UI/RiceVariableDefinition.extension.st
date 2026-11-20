@@ -2,7 +2,8 @@ Extension { #name : 'RiceVariableDefinition' }
 
 { #category : '*Rita-UI' }
 RiceVariableDefinition >> ritaAsTextForTree0 [
-	^ mcVariableDefinition name
+
+	^ name
 ]
 
 { #category : '*Rita-UI' }

@@ -72,6 +72,6 @@ RicePropertyDefinition >> propertyName [
 
 { #category : 'accessing' }
 RicePropertyDefinition >> propertyValue [
-	^ propertyValue ifNil: [
-		propertyValue := containerDefinition asMCDefinition basicAtPropertyNamed: name ]
+
+	^ propertyValue ifNil: [ propertyValue := containerDefinition propertyValueAt: name ]
 ]

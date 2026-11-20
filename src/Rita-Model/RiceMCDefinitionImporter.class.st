@@ -40,6 +40,20 @@ RiceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isTrait: isTrait i
 	^ packageNode childAt: newDefinition key ifAbsentPut: [ newDefinition ]
 ]
 
+{ #category : 'importing' }
+RiceMCDefinitionImporter >> fill: aContainerDefinition from: aMCClassDefinition [
+	"Copy the properties and the variables of a Monticello class or trait definition into plain values of the Rice definition"
+
+	| propertyNames |
+	propertyNames := MCClassDefinition instVarNames copyWithoutAll: #( name variables commentStamp ).
+	aContainerDefinition
+		propertyValues: (propertyNames inject: OrderedDictionary new into: [ :dictionary :propertyName |
+			 dictionary
+				 at: propertyName put: (aMCClassDefinition instVarNamed: propertyName);
+				 yourself ]);
+		variables: (aMCClassDefinition variables collect: [ :each | each name -> each class type ])
+]
+
 { #category : 'testing' }
 RiceMCDefinitionImporter >> isExtension: aString [ 
 	
@@ -66,31 +80,25 @@ RiceMCDefinitionImporter >> snapshot: aMCSnapshot [
 ]
 
 { #category : 'visiting' }
-RiceMCDefinitionImporter >> visitClassDefinition: aMCClassDefinition [ 
-	
+RiceMCDefinitionImporter >> visitClassDefinition: aMCClassDefinition [
+
 	| classDefinitionNode iceDefinition |
-	classDefinitionNode := self
-		ensureMethodOwnerNamed: aMCClassDefinition className
-		isTrait: false
-		isExtension: false.
+	classDefinitionNode := self ensureMethodOwnerNamed: aMCClassDefinition className isTrait: false isExtension: false.
 	iceDefinition := classDefinitionNode value.
-	iceDefinition mcDefinition: aMCClassDefinition.
-	
-	iceDefinition childrenDefinitions do: [ :each |
-		classDefinitionNode addChild: each ].
-	
+	self fill: iceDefinition from: aMCClassDefinition.
+	iceDefinition definition: aMCClassDefinition fullDefinitionString.
+
+	iceDefinition childrenDefinitions do: [ :each | classDefinitionNode addChild: each ].
+
 	^ classDefinitionNode
 ]
 
 { #category : 'visiting' }
-RiceMCDefinitionImporter >> visitClassTraitDefinition: aMCClassTraitDefinition [ 
+RiceMCDefinitionImporter >> visitClassTraitDefinition: aMCClassTraitDefinition [
 
 	| classTraitDefinitionNode |
-	classTraitDefinitionNode := self
-		ensureMethodOwnerNamed: aMCClassTraitDefinition className
-		isTrait: true
-		isExtension: false.
-	classTraitDefinitionNode value mcDefinition: aMCClassTraitDefinition.
+	classTraitDefinitionNode := self ensureMethodOwnerNamed: aMCClassTraitDefinition className isTrait: true isExtension: false.
+	classTraitDefinitionNode value definition: aMCClassTraitDefinition definitionString.
 	^ classTraitDefinitionNode
 ]
 
@@ -141,13 +149,11 @@ RiceMCDefinitionImporter >> visitOrganizationDefinition: aMCOrganizationDefiniti
 ]
 
 { #category : 'visiting' }
-RiceMCDefinitionImporter >> visitTraitDefinition: aMCTraitDefinition [ 
-	
+RiceMCDefinitionImporter >> visitTraitDefinition: aMCTraitDefinition [
+
 	| traitDefinitionNode |
-	traitDefinitionNode := self
-		ensureMethodOwnerNamed: aMCTraitDefinition className
-		isTrait: true
-		isExtension: false.
-	traitDefinitionNode value mcDefinition: aMCTraitDefinition.
+	traitDefinitionNode := self ensureMethodOwnerNamed: aMCTraitDefinition className isTrait: true isExtension: false.
+	self fill: traitDefinitionNode value from: aMCTraitDefinition.
+	traitDefinitionNode value definition: aMCTraitDefinition definitionString.
 	^ traitDefinitionNode
 ]

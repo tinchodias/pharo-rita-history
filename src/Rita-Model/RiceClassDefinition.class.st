@@ -26,8 +26,8 @@ RiceClassDefinition >> basicName [
 
 { #category : 'accessing' }
 RiceClassDefinition >> contents [
-	mcDefinition ifNil: [ ^'' ].
-	^ mcDefinition fullDefinitionString
+
+	^ self definition
 ]
 
 { #category : 'as yet unclassified' }
@@ -42,6 +42,10 @@ RiceClassDefinition >> isClassDefinition [
 ]
 
 { #category : 'testing' }
-RiceClassDefinition >> isLowImpactAppliedTo: anIceClassDefinition [ 
-	^ mcDefinition isEqualIgnoringCommentTo: anIceClassDefinition mcDefinition 
+RiceClassDefinition >> isLowImpactAppliedTo: anotherClassDefinition [
+	"The definitions are equal, ignoring their comments"
+
+	^ self variables = anotherClassDefinition variables and: [
+		  (self propertyValues associations reject: [ :each | #( comment commentStamp ) includes: each key ])
+		  = (anotherClassDefinition propertyValues associations reject: [ :each | #( comment commentStamp ) includes: each key ]) ]
 ]

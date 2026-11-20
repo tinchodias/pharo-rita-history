@@ -7,7 +7,7 @@ Class {
 	#name : 'RiceVariableDefinition',
 	#superclass : 'RiceContainedDefinition',
 	#instVars : [
-		'mcVariableDefinition'
+		'variableType'
 	],
 	#category : 'Rita-Model-Changes',
 	#package : 'Rita-Model',
@@ -16,10 +16,8 @@ Class {
 
 { #category : 'comparing' }
 RiceVariableDefinition >> = anObject [
-	"Answer whether the receiver and anObject represent the same object."
 
-	^ super = anObject
-		and: [ mcVariableDefinition = anObject mcVariableDefinition ]
+	^ super = anObject and: [ variableType = anObject variableType ]
 ]
 
 { #category : 'visiting' }
@@ -35,9 +33,8 @@ RiceVariableDefinition >> contents [
 
 { #category : 'comparing' }
 RiceVariableDefinition >> hash [
-	"Answer an integer value that is related to the identity of the receiver."
 
-	^ super hash bitXor: mcVariableDefinition hash
+	^ super hash bitXor: variableType hash
 ]
 
 { #category : 'accessing' }
@@ -47,18 +44,8 @@ RiceVariableDefinition >> icon [
 
 { #category : 'accessing' }
 RiceVariableDefinition >> key [
-	^ '>Variable (' , self typeToShow, '): ', mcVariableDefinition name
-]
 
-{ #category : 'accessing' }
-RiceVariableDefinition >> mcVariableDefinition [
-	^ mcVariableDefinition
-]
-
-{ #category : 'accessing' }
-RiceVariableDefinition >> mcVariableDefinition: aMCVariableDefinition [
-	mcVariableDefinition := aMCVariableDefinition.
-	self name: mcVariableDefinition name
+	^ '>Variable (' , self typeToShow , '): ' , name
 ]
 
 { #category : 'printing' }
@@ -75,5 +62,19 @@ RiceVariableDefinition >> printOn: aStream [
 
 { #category : 'accessing' }
 RiceVariableDefinition >> typeToShow [
-	^ mcVariableDefinition class type
+
+	^ variableType
+]
+
+{ #category : 'accessing' }
+RiceVariableDefinition >> variableType [
+	"Answer the type of the variable, such as 'instance' or 'class'"
+
+	^ variableType
+]
+
+{ #category : 'accessing' }
+RiceVariableDefinition >> variableType: aString [
+
+	variableType := aString
 ]

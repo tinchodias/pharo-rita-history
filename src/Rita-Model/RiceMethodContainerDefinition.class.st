@@ -11,7 +11,9 @@ Class {
 	#name : 'RiceMethodContainerDefinition',
 	#superclass : 'RiceCodeDefinition',
 	#instVars : [
-		'mcDefinition'
+		'propertyValues',
+		'variables',
+		'definition'
 	],
 	#category : 'Rita-Model-Changes',
 	#package : 'Rita-Model',
@@ -28,12 +30,9 @@ RiceMethodContainerDefinition class >> named: aString [
 
 { #category : 'patching' }
 RiceMethodContainerDefinition >> allPropertyNames [
-	^ MCClassDefinition instVarNames copyWithoutAll: #(name variables commentStamp)
-]
+	"Answer the names of the properties of the container, in the order given by the backend"
 
-{ #category : 'patching' }
-RiceMethodContainerDefinition >> asMCDefinition [
-	^ mcDefinition
+	^ self propertyValues keys
 ]
 
 { #category : 'as yet unclassified' }
@@ -62,22 +61,58 @@ RiceMethodContainerDefinition >> childrenDefinitions [
 	^ self propertyDefinitions, self variableDefinitions
 ]
 
-{ #category : 'patching' }
-RiceMethodContainerDefinition >> mcDefinition [
-	^ mcDefinition
+{ #category : 'accessing' }
+RiceMethodContainerDefinition >> definition [
+	"Answer the text that defines the container, as shown to the user. The backend gives it."
+
+	^ definition ifNil: [ '' ]
 ]
 
-{ #category : 'patching' }
-RiceMethodContainerDefinition >> mcDefinition: aMCDefinition [
-	mcDefinition := aMCDefinition
+{ #category : 'accessing' }
+RiceMethodContainerDefinition >> definition: aString [
+
+	definition := aString
+]
+
+{ #category : 'accessing' }
+RiceMethodContainerDefinition >> propertyValueAt: aPropertyName [
+
+	^ self propertyValues at: aPropertyName ifAbsent: [ nil ]
+]
+
+{ #category : 'accessing' }
+RiceMethodContainerDefinition >> propertyValues [
+	"Answer an ordered dictionary of the properties of the container, such as its superclass name, its comment or its traits. The backend gives their values."
+
+	^ propertyValues ifNil: [ propertyValues := OrderedDictionary new ]
+]
+
+{ #category : 'accessing' }
+RiceMethodContainerDefinition >> propertyValues: anOrderedDictionary [
+
+	propertyValues := anOrderedDictionary
 ]
 
 { #category : 'patching' }
 RiceMethodContainerDefinition >> variableDefinitions [
-	^ mcDefinition variables
-		collect: [ :each | 
-			RiceVariableDefinition new
-				mcVariableDefinition: each;
-				containerIceDefinition: self;
-				yourself ]
+
+	^ self variables collect: [ :each |
+		  RiceVariableDefinition new
+			  name: each key;
+			  variableType: each value;
+			  containerIceDefinition: self;
+			  yourself ]
+]
+
+{ #category : 'accessing' }
+RiceMethodContainerDefinition >> variables [
+	"Answer the variables of the container as associations from the name of the variable to its type, such as 'instance' or 'class'"
+
+	^ variables ifNil: [ variables := #(  ) ]
+]
+
+{ #category : 'accessing' }
+RiceMethodContainerDefinition >> variables: aCollectionOfAssociations [
+
+	variables := aCollectionOfAssociations
 ]
