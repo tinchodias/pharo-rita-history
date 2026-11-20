@@ -88,40 +88,6 @@ RiceChangeImporter >> visitCypressPropertiesChange: anIceCypressPropertiesChange
 ]
 
 { #category : 'visiting' }
-RiceChangeImporter >> visitGitChange: anIceGitChange [ 
-
-	| importer |
-	importer := RiceGitChangeImporter new
-		path: anIceGitChange path;
-		diff: diff;
-		version: version;
-		yourself.
-	importer importOn: parentNode.
-]
-
-{ #category : 'visiting' }
-RiceChangeImporter >> visitImageChange: anIceImageChange [ 
-
-	| importer |
-	importer := RiceMCPackageImporter new
-		package: anIceImageChange package;
-		version: version;
-		yourself.
-	^ importer importOn: (self ensureSourceCodeParentNodeIn: parentNode)
-]
-
-{ #category : 'visiting' }
-RiceChangeImporter >> visitMemoryChange: anIceMemoryChange [ 
-	
-	| importer |
-	importer := RiceMCPackageImporter new
-		package: anIceMemoryChange package;
-		version: version;
-		yourself.
-	^ importer importOn: parentNode
-]
-
-{ #category : 'visiting' }
 RiceChangeImporter >> visitProjectChange: anIceProjectChange [ 
 	
 	"Import the project file extracted from the commit without utterly post-treatment to create the new project file"

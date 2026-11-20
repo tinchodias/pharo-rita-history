@@ -5,12 +5,11 @@ Class {
 	#name : 'RiceMCPackageImporter',
 	#superclass : 'Object',
 	#instVars : [
-		'packageName',
 		'version',
 		'package'
 	],
-	#category : 'Rita-Model-Changes',
-	#package : 'Rita-Model',
+	#category : 'Rita-Iceberg-Changes',
+	#package : 'Rita-Iceberg',
 	#tag : 'Changes'
 }
 

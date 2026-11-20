@@ -6,8 +6,8 @@ Class {
 		'diff',
 		'version'
 	],
-	#category : 'Rita-Model-Changes',
-	#package : 'Rita-Model',
+	#category : 'Rita-Iceberg-Changes',
+	#package : 'Rita-Iceberg',
 	#tag : 'Changes'
 }
 
