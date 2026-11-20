@@ -10,14 +10,14 @@ A Pharo tool that visualizes git changes so a commit can be reviewed with pictur
 
 ## Packages and entry points (`src/`)
 
-- `BaselineOfRita` — the only baseline. Pins Iceberg to `github://pharo-vcs/iceberg:Pharo14/` with `loads: #(allTests)`.
+- `BaselineOfRita` — the only baseline. It declares no Iceberg dependency: Rita uses only the Iceberg that ships with Pharo.
 - `Rita-Model` — headless. `RiRepository` walks an `IceLibGitRepository` into `RiElement`/`RiCommit`/`RiUncommitedWorkingCopy` decorated with `Ri*Mark`s (branch/tag/image/workdir). `RiDiffQuery` filters that diff tree.
 - `RiAbstractElement` — common superclass of `RiElement` and `RiCompositeElement`. Its whole API is the two endpoints of a range: `#sourceRiElement` (older) and `#targetRiElement` (newer). It deliberately has **no** `#diff`; the existing seam is `RiDiffModel>>iceDiffFrom:`, which already owns "base + target → diff", so a second `target diffTo: source` on the model would duplicate the rule. **No selector on `RiAbstractElement` has a production sender yet** — it is the agreed seam for upcoming multi-selection, not yet wired. `RiParentDiffModel`/`RiPinDiffModel` are not redundant: they wrap a fixed base for the "compare to X" pages.
 - `Rita-Roassal3` — Roassal3 canvas: `RiTorchRenderer`, `RiAestheticsModel`, `RiHighlightingController`, icon/colour visitors.
 - `Rita-UI` — Spec2 presenters. App entry point: `RitaBrowserPresenter class>>open` (the `<worldMenu>` pragma in that same class registers the menu item).
   - `RiRepositoryListPresenter` → home page; `RiRepositoryPresenter` → per-repository page (commit list + commit details + notebook of diffs).
   - `RiFullDiffPresenter` is the real diff page: it pairs `RiTreeDiffPresenter` (tree) with `RiTorchDiffPresenter` (canvas) and owns the source diff widget.
-- `Rita-Tests` — three test classes (`RiDiffQueryTest`, `RiRepositoryModelTest`, `RiCompositeElementTest`). **No UI test coverage exists.**
+- `Rita-Tests` — three test classes (`RiDiffQueryTest`, `RiRepositoryModelTest`, `RiCompositeElementTest`) on top of `RiTestCase`, a plain `TestCase` that creates an empty Iceberg repository in a temporary folder with `IceRepositoryCreator`. They use no Iceberg test package (`Iceberg-Tests`, `Iceberg-Memory`). `RiDiffQueryFixture` builds its 7 commits by writing Tonel files and committing through the git index. Each test repository gets its own local git identity, so no global git configuration is needed. **No UI test coverage exists.**
 
 ## `Rice*` is a fork of Iceberg's `Ice*` metamodel
 
@@ -39,7 +39,7 @@ A Pharo tool that visualizes git changes so a commit can be reviewed with pictur
 
 ## Undeclared dependencies — do not "fix" without asking
 
-- The baseline declares only Iceberg. Roassal is deliberately **not** declared (commit d579540, "Do not load the full roassal with Rita"), yet `Rita-Roassal3` subclasses `RSAbstractUMLClassRenderer` and `Rita-UI` uses `SpRoassalPresenter`, `RSShapeFactory`, `RSCanvasController`, `RSZoomToFitCanvasInteraction`, … So the target image must already contain Roassal 3, plus Iceberg-UI (FastTable) and Spec2.
+- The baseline declares nothing external. Roassal is deliberately **not** declared (commit d579540, "Do not load the full roassal with Rita"), yet `Rita-Roassal3` subclasses `RSAbstractUMLClassRenderer` and `Rita-UI` uses `SpRoassalPresenter`, `RSShapeFactory`, `RSCanvasController`, `RSZoomToFitCanvasInteraction`, … So the target image must already contain Roassal 3, plus Iceberg-UI (FastTable) and Spec2.
 - `Rita-Model` calls into Iceberg (`#changesTo:`, `IceGitChange`, `MCDefinition` extensions) without listing it in `requires:`.
 - `Rita-UI` monkey-patches third-party internals: `FTTableMorph>>beRitaContainer`, `FTTreeDataSource>>indexOfElement:`, `HiColumnController>>isReady`, `HiSimpleRenderer>>isReady`, `SpAbstractListPresenter>>selectItem:scrollToSelection:`, `RubAbstractTextArea>>removeAllSegments`. These are version-fragile — an Iceberg upgrade can break tree/hiedra rendering, and the failure will not look like an Iceberg failure.
 - `RiTreeDiffPresenter` also deliberately bypasses FastTable's public API (`basicHighlightIndexes:`, `hackFastTableForSecondaryHighligthing:`). Don't "clean that up".
@@ -49,7 +49,7 @@ A Pharo tool that visualizes git changes so a commit can be reviewed with pictur
 - No Makefile, no lint/format config, no codegen. There is no lint/typecheck step to run.
 - CI (`.github/workflows/tests.yml`) is the only automated check: `smalltalkci -s Pharo64-15 .ci.ston`, Windows only, 10 min timeout. Requires Docker running locally to reproduce.
 - Bootstrap script: `scripts/build.sh` (downloads Pharo, loads the baseline from `tonel://<repo>/src`, writes `./build`). Caveats: README says `./script/build.sh` — the directory is `scripts/`; the script pins Pharo 13 while the baseline pins Iceberg's Pharo14 branch and CI runs Pharo 15, so treat it as stale and prefer your own image.
-- Pharo MCP image: use the **`pharo2`** server — Pharo 15 with Rita, Iceberg (including `Iceberg-Tests` and `Iceberg-Memory`, so `RiTestCase` and its fixtures resolve) and `Iceberg-TipUI` (FastTable + Hiedra) already loaded, and in sync with this tree. Do **not** use the `pharo` server: it is a different image, Pharo 14, without Rita. Reload from the working tree after adding or editing classes, never from GitHub:
+- Pharo MCP image: use the **`pharo2`** server — Pharo 15 with Rita, Iceberg and `Iceberg-TipUI` (FastTable + Hiedra) already loaded, and in sync with this tree. Do **not** use the `pharo` server: it is a different image, Pharo 14, without Rita. Reload from the working tree after adding or editing classes, never from GitHub:
   ```smalltalk
   Metacello new
       baseline: 'Rita';
@@ -58,7 +58,7 @@ A Pharo tool that visualizes git changes so a commit can be reviewed with pictur
   ```
 - Running tests: `(RiDiffQueryTest suite run)` or `(RiDiffQueryTest suite run: #test06ConsiderOnlyChangedWithFiles)` in the image; `./pharo Pharo.image test 'RiDiffQueryTest'` from the CLI; or the dedicated MCP test tool.
 - Tests are git-integration heavy and create throwaway repos per test: `RiDiffQueryFixture` scripts 7 commits, `RiTestCase` uses `IceBasicRepositoryFixture inGit`. `RiRepositoryModelTest` (ancestors/children/merge/refresh) is the fast one. `RiTestCase>>deleteBranch:` has a hardcoded 500 ms `wait` with the comment "without this the image is broken after running the whole test suite" — leave it.
-- **`RiDiffQueryTest` cannot run in the `pharo2` image** — it dies escaping a `Deprecation` from Iceberg's `IceClassDefinition>>asMCDefinitionWithoutMetaSide` (`Object>>deepCopy`), which `RiDiffQueryTest` does not silence. This is pre-existing and unrelated to Rita code. So running the whole `Rita-Tests` package aborts; run `RiRepositoryModelTest` and `RiCompositeElementTest` individually instead. Two other Iceberg deprecations (`AbstractFileReference>>asUrl` from `IceGitTestFactory>>remoteFileUrl`) had to be worked around in the image to get any test to run at all.
+- All of `Rita-Tests` runs in the image (20 tests). The old `RiDiffQueryTest` crash came from Iceberg's in-memory working copy, which the tests no longer use.
 - `RiCompositeElement` **trusts its caller**: `#of:` requires a collection that is already unique and ordered the way `RiRepository>>elements` orders it (newest first), and refuses fewer than 2 elements (so a single selected commit is not a composite). It does **not** dedupe or re-sort — a mis-ordered collection silently inverts the composite (`#newestElement` is `first`, `#oldestElement` is `last`, and `#targetRiElement` is a `detect:` over the collection). Whoever builds the selection must therefore pass repository-ordered elements; row order in the UI comes from `RiRepositoryCommitsPresenter>>refreshOnModelUpdate` (`table items: self riRepository elements`), but **selection order is not row order** and nothing verifies it. There is no UI test coverage to catch a mistake here.
 - Two gotchas in `RiElement`'s ancestor API, both silent-wrong-answer traps: `#ancestors` is a collection and returns an empty one for the root commit, but `#detectInAllAncestors:ifFound:` answers **the receiver** when nothing matches rather than `nil`. `#ancestorToDiffIfPresent:ifAbsent:` ignores the block and just answers the first ancestor. Prefer `ancestors detect:ifNone:`.
 - UI changes cannot be covered by tests. Verify by opening `RitaBrowserPresenter` (or a single repository) in the image.
