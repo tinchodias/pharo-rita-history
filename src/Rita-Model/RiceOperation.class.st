@@ -92,12 +92,6 @@ RiceOperation >> icon [
 ]
 
 { #category : 'operations' }
-RiceOperation >> install [
-	
-	self leftDefinition install
-]
-
-{ #category : 'operations' }
 RiceOperation >> inverse [
 	
 	self subclassResponsibility

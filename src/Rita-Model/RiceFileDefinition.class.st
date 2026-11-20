@@ -96,8 +96,3 @@ RiceFileDefinition >> isFileDefinition [
 	
 	^ true
 ]
-
-{ #category : 'operations' }
-RiceFileDefinition >> removeFrom: aVisitor [ 
-	aVisitor removeFile: self
-]

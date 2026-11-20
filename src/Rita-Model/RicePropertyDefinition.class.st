@@ -26,15 +26,6 @@ RicePropertyDefinition >> accept: aVisitor [
 	^ aVisitor visitPropertyDefinition: self
 ]
 
-{ #category : 'patching' }
-RicePropertyDefinition >> addedIn: aMCDefinition [
-
-	^ aMCDefinition copy
-		basicAtPropertyNamed: self propertyName
-			put: self propertyValue;
-		yourself
-]
-
 { #category : 'accessing' }
 RicePropertyDefinition >> contents [
 	^ self propertyValue asString
@@ -83,10 +74,4 @@ RicePropertyDefinition >> propertyName [
 RicePropertyDefinition >> propertyValue [
 	^ propertyValue ifNil: [
 		propertyValue := containerDefinition asMCDefinition basicAtPropertyNamed: name ]
-]
-
-{ #category : 'patching' }
-RicePropertyDefinition >> removeFromPatcher: aMCPatcher [
-	"Cannot remove a property, just change it."
-
 ]

@@ -67,9 +67,3 @@ RiceFileSystemDefinition >> path [
 RiceFileSystemDefinition >> path: anObject [
 	path := anObject
 ]
-
-{ #category : 'visiting' }
-RiceFileSystemDefinition >> removeFrom: aVisitor [
-	
-	aVisitor removeFileReferenceInPath: self path
-]

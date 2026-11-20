@@ -73,12 +73,6 @@ RiceMethodContainerDefinition >> mcDefinition: aMCDefinition [
 ]
 
 { #category : 'patching' }
-RiceMethodContainerDefinition >> removeFrom: aPatcher [
-	
-	aPatcher removeClass: self
-]
-
-{ #category : 'patching' }
 RiceMethodContainerDefinition >> variableDefinitions [
 	^ mcDefinition variables
 		collect: [ :each | 

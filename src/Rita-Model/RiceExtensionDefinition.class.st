@@ -37,18 +37,6 @@ RiceExtensionDefinition >> accept: aVisitor [
 	^ aVisitor visitExtensionDefinition: self
 ]
 
-{ #category : 'patching' }
-RiceExtensionDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
-
-	"Do nothing. Monticello does not have definitions for extensions"
-]
-
-{ #category : 'patching' }
-RiceExtensionDefinition >> addToPatcher: aMCPatcher [ 
-	
-	"Monticello does not reify extensions"
-]
-
 { #category : 'accessing' }
 RiceExtensionDefinition >> contents [
 	^ ''
@@ -83,16 +71,4 @@ RiceExtensionDefinition >> packageName [
 { #category : 'accessing' }
 RiceExtensionDefinition >> packageName: anObject [
 	packageName := anObject
-]
-
-{ #category : 'patching' }
-RiceExtensionDefinition >> removeFrom: aPatcher [
-	
-	"Do nothing. Do not remove extensions"
-]
-
-{ #category : 'patching' }
-RiceExtensionDefinition >> removeFromPatcher: aMCPatcher [ 
-	
-	"Monticello does not reify extensions"
 ]

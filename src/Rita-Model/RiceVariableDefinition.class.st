@@ -27,11 +27,6 @@ RiceVariableDefinition >> accept: aVisitor [
 	^ aVisitor visitVariableDefinition: self
 ]
 
-{ #category : 'patching' }
-RiceVariableDefinition >> addedIn: aMCDefinition [
-	^ aMCDefinition copyWithVariable: mcVariableDefinition
-]
-
 { #category : 'accessing' }
 RiceVariableDefinition >> contents [
 	
@@ -76,24 +71,6 @@ RiceVariableDefinition >> printOn: aStream [
 		print: self typeToShow;
 		nextPut: $]
 
-]
-
-{ #category : 'printing' }
-RiceVariableDefinition >> removeFromPatcher: aMCPatcher [
-
-	self flag: #todo. "Check this"
-	(aMCPatcher isKindOf: MCPackageLoader)
-		ifTrue: [ ^ self	"containerIceDefinition is just fine" ].
-	aMCPatcher definitionIndex
-		definitionLike: self containerIceDefinition asMCDefinition
-		ifPresent: [ :currentDefinition |
-			aMCPatcher addDefinition: (self removedIn: currentDefinition) ]
-		ifAbsent: [ "Nothing to do: the container of this variable was removed." ]
-]
-
-{ #category : 'patching' }
-RiceVariableDefinition >> removedIn: aMCDefinition [
-	^ aMCDefinition copyWithoutVariable: mcVariableDefinition
 ]
 
 { #category : 'accessing' }

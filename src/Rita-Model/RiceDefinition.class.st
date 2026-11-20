@@ -144,9 +144,3 @@ RiceDefinition >> printOn: aStream [
 		print: name;
 		nextPut: $)
 ]
-
-{ #category : 'visiting' }
-RiceDefinition >> removeFrom: aVisitor [
-	
-	self subclassResponsibility
-]

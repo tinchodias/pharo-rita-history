@@ -27,38 +27,6 @@ RiceContainedDefinition >> accept: aVisitor [
 	^ aVisitor visitContainedDefinition: self
 ]
 
-{ #category : 'patching' }
-RiceContainedDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
-
-(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [ ^self "containerMCDefinition did it" ].
-
-	aMCPatcher definitionIndex
-		definitionLike: anotherIceDefinition containerMCDefinition
-		ifPresent: [ :currentDefinition | 
-			aMCPatcher addDefinition: (self addedIn: currentDefinition) ]
-		ifAbsent: [ self error ].
-
-]
-
-{ #category : 'patching' }
-RiceContainedDefinition >> addToPatcher: aMCPatcher [ 
-
-	(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [
-		^ self "containerIceDefinition is just fine" ].
-
-	aMCPatcher definitionIndex
-		definitionLike: self containerIceDefinition asMCDefinition
-		ifPresent: [ :currentDefinition |
-			aMCPatcher addDefinition: (self addedIn: currentDefinition) ]
-		ifAbsent: [ self error ].
-
-]
-
-{ #category : 'patching' }
-RiceContainedDefinition >> addedIn: aMCDefinition [
-	^ self subclassResponsibility
-]
-
 { #category : 'accessing' }
 RiceContainedDefinition >> browse [
 	self containerIceDefinition browse
@@ -72,11 +40,6 @@ RiceContainedDefinition >> containerIceDefinition [
 { #category : 'accessing' }
 RiceContainedDefinition >> containerIceDefinition: anObject [
 	containerDefinition := anObject
-]
-
-{ #category : 'accessing' }
-RiceContainedDefinition >> containerMCDefinition [
-	^ containerDefinition asMCDefinition
 ]
 
 { #category : 'accessing' }
@@ -100,15 +63,4 @@ RiceContainedDefinition >> icon [
 { #category : 'testing' }
 RiceContainedDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [ 
 	^ false
-]
-
-{ #category : 'patching' }
-RiceContainedDefinition >> removeFrom: aPatcher [
-	(self className , 'removeFrom: ' , aPatcher asString) traceCr
-]
-
-{ #category : 'patching' }
-RiceContainedDefinition >> removeFromPatcher: aMCPatcher [ 
-	
-	self subclassResponsibility
 ]

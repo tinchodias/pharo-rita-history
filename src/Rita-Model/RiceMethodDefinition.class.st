@@ -51,31 +51,6 @@ RiceMethodDefinition >> actualClass [
 	^ self contextClass
 ]
 
-{ #category : 'patching' }
-RiceMethodDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
-	aMCPatcher
-		modifyDefinition: anotherIceDefinition asMCDefinition
-		to: self asMCDefinition
-]
-
-{ #category : 'patching' }
-RiceMethodDefinition >> addToPatcher: aMCPatcher [ 
-	
-	aMCPatcher addDefinition: self asMCDefinition
-]
-
-{ #category : 'patching' }
-RiceMethodDefinition >> asMCDefinition [
-
-	^ MCMethodDefinition 
-		className: self className
-		classIsMeta: self classIsMeta
-		selector: self name
-		category: self protocol
-		timeStamp: ''
-		source: sourceCode
-]
-
 { #category : 'accessing' }
 RiceMethodDefinition >> ast [
 
@@ -148,12 +123,6 @@ RiceMethodDefinition >> icon [
 	^ self iconNamed: #changeUpdate
 ]
 
-{ #category : 'actions' }
-RiceMethodDefinition >> install [
-	
-	self asMCDefinition load
-]
-
 { #category : 'morphic-compatibility' }
 RiceMethodDefinition >> isLoadable [
 	^ self contextClass notNil
@@ -198,18 +167,6 @@ RiceMethodDefinition >> protocol [
 { #category : 'accessing' }
 RiceMethodDefinition >> protocol: anObject [
 	protocol := anObject
-]
-
-{ #category : 'patching' }
-RiceMethodDefinition >> removeFrom: aPatcher [
-	
-	aPatcher removeMethod: self
-]
-
-{ #category : 'patching' }
-RiceMethodDefinition >> removeFromPatcher: aMCPatcher [ 
-	
-	aMCPatcher removeDefinition: self asMCDefinition
 ]
 
 { #category : 'accessing' }

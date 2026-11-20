@@ -26,18 +26,6 @@ RiceCodeDefinition >> = anotherDefinition [
 		and: [ self contents = anotherDefinition contents ]
 ]
 
-{ #category : 'patching' }
-RiceCodeDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [ 
-	
-	self subclassResponsibility
-]
-
-{ #category : 'patching' }
-RiceCodeDefinition >> addToPatcher: aMCPatcher [ 
-	
-	self subclassResponsibility
-]
-
 { #category : 'properties' }
 RiceCodeDefinition >> allPropertyNames [
 	^ #()
@@ -65,10 +53,4 @@ RiceCodeDefinition >> propertyDefinitions [
 		thenReject: [ :each |
 			each isDefaultValue ].
 
-]
-
-{ #category : 'patching' }
-RiceCodeDefinition >> removeFrom: aPatcher [
-	
-	self subclassResponsibility
 ]

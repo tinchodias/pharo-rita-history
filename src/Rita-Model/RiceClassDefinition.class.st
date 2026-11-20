@@ -19,46 +19,6 @@ RiceClassDefinition >> accept: aVisitor [
 	^ aVisitor visitClassDefinition: self
 ]
 
-{ #category : 'patching' }
-RiceClassDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
-	
-	"Let the original MCClassDefinition intact, and give the responsability to modify it to the IceContainedDefinitions."
-	
-	"NOTE: MCPatcher is the other kind of visitor"
-	
-	(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [ 
-							aMCPatcher
-		modifyDefinition: anotherIceDefinition asMCDefinition
-		to: self asMCDefinition 
-		
-		]
-
-]
-
-{ #category : 'patching' }
-RiceClassDefinition >> addToPatcher: aMCPatcher [ 
-	
-	aMCPatcher addDefinition: self asMCDefinition "copyWithoutVariables" "Variables will be added by IceVariableDefinitions"
-]
-
-{ #category : 'converting' }
-RiceClassDefinition >> asMCDefinitionWithoutMetaSide [
-	
-	^ MCClassDefinition
-		name: mcDefinition className
-		superclassName: mcDefinition superclassName
-		traitComposition: mcDefinition traitCompositionString
-		classTraitComposition: mcDefinition classTraitCompositionString
-		category: mcDefinition category
-		instVarNames: mcDefinition instanceVariablesString
-		classVarNames: mcDefinition classVariablesString
-		poolDictionaryNames: mcDefinition poolDictionaries
-		classInstVarNames: #()
-		type: mcDefinition type
-		comment: mcDefinition comment
-		commentStamp: mcDefinition commentStamp
-]
-
 { #category : 'accessing' }
 RiceClassDefinition >> basicName [
 	^ name
@@ -84,10 +44,4 @@ RiceClassDefinition >> isClassDefinition [
 { #category : 'testing' }
 RiceClassDefinition >> isLowImpactAppliedTo: anIceClassDefinition [ 
 	^ mcDefinition isEqualIgnoringCommentTo: anIceClassDefinition mcDefinition 
-]
-
-{ #category : 'patching' }
-RiceClassDefinition >> removeFromPatcher: aMCPatcher [ 
-	
-	aMCPatcher removeDefinition: self asMCDefinition 
 ]
