@@ -92,7 +92,11 @@ RiTestCase >> setUp [
 	iceRepository := IceRepositoryCreator new
 		                 location: location;
 		                 subdirectory: '';
-		                 createNewRepositoryNamed: 'test-project'
+		                 createNewRepositoryNamed: 'test-project'.
+	"The commits need an author, and the machine running the tests may not have a global git identity"
+	iceRepository repositoryHandle config
+		username: 'Rita Tests';
+		email: 'rita-tests@example.org'
 ]
 
 { #category : 'running' }
