@@ -1,8 +1,8 @@
 Class {
 	#name : 'RiRepositoryModelTest',
 	#superclass : 'RiTestCase',
-	#category : 'Rita-Tests',
-	#package : 'Rita-Tests'
+	#category : 'Rita-Iceberg-Tests',
+	#package : 'Rita-Iceberg-Tests'
 }
 
 { #category : 'tests' }

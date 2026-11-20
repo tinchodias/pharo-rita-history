@@ -18,8 +18,8 @@ Class {
 		'riRepository',
 		'lastCommit'
 	],
-	#category : 'Rita-Tests',
-	#package : 'Rita-Tests'
+	#category : 'Rita-Iceberg-Tests',
+	#package : 'Rita-Iceberg-Tests'
 }
 
 { #category : 'instance creation' }
