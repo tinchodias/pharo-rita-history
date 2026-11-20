@@ -298,15 +298,7 @@ RiRepositoryCommitsPresenter >> defaultLayout [
 { #category : 'private' }
 RiRepositoryCommitsPresenter >> fetchPullRequests [
 
-	| remotes api result |
-	result := OrderedCollection new.
-	remotes := self riRepository iceRepository remotes select: [ :aRemote | aRemote host = 'github.com' ].
-
-	api := IceGitHubAPI new.
-	remotes do: [ :remote |
-			result addAll: ((api getPullRequests: remote owner project: remote projectName) all collect: [ :json |
-					 RiPullRequest from: (IceGitHubPullRequest fromJSON: json) repository: self riRepository remote: remote ]) ].
-	^ result
+	^ self riRepository pullRequests
 ]
 
 { #category : 'accessing' }

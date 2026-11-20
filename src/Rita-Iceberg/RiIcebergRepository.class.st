@@ -223,6 +223,16 @@ RiIcebergRepository >> processWorkdirMark [
 			 yourself)
 ]
 
+{ #category : 'accessing' }
+RiIcebergRepository >> pullRequests [
+	"Answer the GitHub pull requests of the remotes of my Iceberg repository. This asks GitHub, so it is slow."
+
+	| api |
+	api := IceGitHubAPI new.
+	^ (iceRepository remotes select: [ :remote | remote host = 'github.com' ]) flatCollect: [ :remote |
+		  (api getPullRequests: remote owner project: remote projectName) all collect: [ :json | RiPullRequest from: (IceGitHubPullRequest fromJSON: json) repository: self remote: remote ] ]
+]
+
 { #category : 'dependencies' }
 RiIcebergRepository >> release [
 

@@ -12,8 +12,8 @@ Class {
 		'headCommit',
 		'mergeBaseCommit'
 	],
-	#category : 'Rita-UI-Models',
-	#package : 'Rita-UI',
+	#category : 'Rita-Iceberg-Models',
+	#package : 'Rita-Iceberg',
 	#tag : 'Models'
 }
 

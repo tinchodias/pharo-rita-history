@@ -197,6 +197,13 @@ RiRepository >> processWorkdirMark [
 	
 ]
 
+{ #category : 'accessing' }
+RiRepository >> pullRequests [
+	"Answer the pull requests of my repository that Rita can review. A backend without pull requests answers none."
+
+	^ #(  )
+]
+
 { #category : 'processing' }
 RiRepository >> refresh [
 	self reset; process

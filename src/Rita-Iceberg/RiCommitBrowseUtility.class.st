@@ -1,8 +1,8 @@
 Class {
 	#name : 'RiCommitBrowseUtility',
 	#superclass : 'Object',
-	#category : 'Rita-UI-Support',
-	#package : 'Rita-UI',
+	#category : 'Rita-Iceberg-Support',
+	#package : 'Rita-Iceberg',
 	#tag : 'Support'
 }
 
