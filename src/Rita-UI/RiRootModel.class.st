@@ -21,7 +21,7 @@ RiRootModel class >> newWithRegisteredRepositories [
 	| repositories |
 	repositories := (IceRepository registry 
 		sorted: [ :a :b | a name asLowercase < b name asLowercase ])
-		collect: [ :each | RiRepository iceRepository: each ].
+		collect: [ :each | RiIcebergRepository iceRepository: each ].
 
 	^ self new
 		repositories: repositories;

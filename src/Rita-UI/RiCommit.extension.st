@@ -22,14 +22,14 @@ RiCommit >> commitText [
 ]
 
 { #category : '*Rita-UI' }
-RiCommit >> textForSignature: aLGitSignature role: aString [
+RiCommit >> textForSignature: aSignature role: aString [
 
 	^ Text streamContents: [ :stream |
-			  stream
-				  nextPutAll: aString asText allBold;
-				  nextPutAll: ': ';
-				  nextPutAll: ('{1} ({2}) - {3}' format: {
-								   aLGitSignature name.
-								   aLGitSignature email.
-								   aLGitSignature dateAndTime asEmailString }) ]
+		  stream
+			  nextPutAll: aString asText allBold;
+			  nextPutAll: ': ';
+			  nextPutAll: ('{1} ({2}) - {3}' format: {
+				   aSignature name.
+				   aSignature email.
+				   aSignature dateAndTime asEmailString }) ]
 ]

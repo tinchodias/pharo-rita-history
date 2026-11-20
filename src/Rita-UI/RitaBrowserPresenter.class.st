@@ -134,7 +134,7 @@ RitaBrowserPresenter >> releaseAllRepositories [
 	"Release the libgit2 handles of all my repositories, when the window closes. Repositories without an open handle are left alone.
 	This is used to free memory"
 
-	model repositories do: [ :repository | repository iceRepository free ]
+	model repositories do: [ :repository | repository release ]
 ]
 
 { #category : 'initialization' }

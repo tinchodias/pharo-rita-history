@@ -24,5 +24,5 @@ RiSearchPage >> pathIn: aRiRepository [
 { #category : 'searching' }
 RiSearchPage >> searchResultsIn: aRiRepository [
 	^ aRiRepository
-		selectLibgitCommitsWithChangesAt: (self pathIn: aRiRepository iceRepository)
+		selectCommitsWithChangesAt: (self pathIn: aRiRepository iceRepository)
 ]

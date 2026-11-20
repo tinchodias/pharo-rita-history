@@ -25,7 +25,7 @@ RiTestCase class >> isAbstract [
 
 { #category : 'running' }
 RiTestCase >> buildRepository [
-	repository := (RiRepository iceRepository: self repository)
+	repository := (RiIcebergRepository iceRepository: self repository)
 		process;
 		yourself
 

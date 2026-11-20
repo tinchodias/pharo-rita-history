@@ -61,14 +61,14 @@ RiPullRequest >> commits [
 	walk uptoCommit: self mergeBaseCommit.
 
 	riCommitByIceCommit := Dictionary new.
-	riCommitByIceCommit at: self mergeBaseCommit put: (RiCommit repository: self riRepository iceGitCommit: self mergeBaseCommit).
+	riCommitByIceCommit at: self mergeBaseCommit put: (RiIcebergCommit repository: self riRepository iceGitCommit: self mergeBaseCommit).
 	riCommits := OrderedCollection new.
 
 	"First we create all ri commits, then close the walk even if one of them fails"
 	[
 		walk commitsDo: [ :iceCommit |
 				| riCommit |
-				riCommit := RiCommit repository: self riRepository iceGitCommit: iceCommit.
+				riCommit := RiIcebergCommit repository: self riRepository iceGitCommit: iceCommit.
 				riCommitByIceCommit at: iceCommit put: riCommit.
 				riCommits add: riCommit ] ] ensure: [ walk close ].
 

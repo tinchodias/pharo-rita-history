@@ -203,7 +203,7 @@ RiDiffQueryFixture >> riCommit7 [
 RiDiffQueryFixture >> riRepository [
 
 	^ riRepository ifNil: [
-		riRepository := RiRepository iceRepository: repository.
+		riRepository := RiIcebergRepository iceRepository: repository.
 		riRepository process.
 		riRepository ]
 

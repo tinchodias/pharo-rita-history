@@ -17,11 +17,6 @@ RiUncommitedWorkingCopy >> ancestors [
 	^ { referenceCommit }
 ]
 
-{ #category : 'converting' }
-RiUncommitedWorkingCopy >> asIceObject [
-	^ self repository iceRepository workingCopy
-]
-
 { #category : 'accessing' }
 RiUncommitedWorkingCopy >> author [
 	^ '---'

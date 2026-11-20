@@ -1,5 +1,5 @@
 "
-Represents a commit, independently if it's already pushed to a remote or only local.
+I represent a commit, independently if it's already pushed to a remote or only local. I am the generic part: a subclass reads a concrete backend, such as RiIcebergCommit, and implements the accessors that answer the id, the comment, the author, the committer, the date and the ids of the ancestors. The author and the committer answer #name, #email and #dateAndTime.
 "
 Class {
 	#name : 'RiCommit',
@@ -7,20 +7,12 @@ Class {
 	#instVars : [
 		'ancestors',
 		'children',
-		'repository',
-		'iceGitCommit'
+		'repository'
 	],
 	#category : 'Rita-Model-Core',
 	#package : 'Rita-Model',
 	#tag : 'Core'
 }
-
-{ #category : 'instance creation' }
-RiCommit class >> repository: aRiRepository iceGitCommit: anIceCommit [
-	^ self basicNew
-		initializeWithRepository: aRiRepository iceGitCommit: anIceCommit;
-		yourself
-]
 
 { #category : 'accessing' }
 RiCommit >> addAncestor: aRiElement [
@@ -33,28 +25,26 @@ RiCommit >> addChildren: aRiElement [
 ]
 
 { #category : 'accessing' }
+RiCommit >> ancestorIds [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
 RiCommit >> ancestors [
 	^ ancestors
 ]
 
-{ #category : 'converting' }
-RiCommit >> asIceObject [
-	^ iceGitCommit
-]
-
-{ #category : 'accessing' }
-RiCommit >> author [
-	^ iceGitCommit libgitCommit author
-]
-
-{ #category : 'accessing' }
-RiCommit >> authorEmail [
-	^ self author email
-]
-
 { #category : 'accessing' }
 RiCommit >> authorName [
-	^ iceGitCommit author
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+RiCommit >> checkout [
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
@@ -63,23 +53,9 @@ RiCommit >> children [
 ]
 
 { #category : 'accessing' }
-RiCommit >> comment [
-	^ iceGitCommit comment
-]
-
-{ #category : 'accessing' }
 RiCommit >> committer [
-	^ iceGitCommit libgitCommit committer
-]
 
-{ #category : 'accessing' }
-RiCommit >> committerEmail [
-	^ self committer email
-]
-
-{ #category : 'accessing' }
-RiCommit >> dateAndTime [
-	^ RiDatePrinter new stringFor: iceGitCommit datetime asDate
+	^ self subclassResponsibility
 ]
 
 { #category : 'API - changes' }
@@ -88,24 +64,13 @@ RiCommit >> diffToParent [
 	^ self diffTo: ancestors first
 ]
 
-{ #category : 'accessing' }
-RiCommit >> iceGitCommit [
-	^ iceGitCommit
-]
-
-{ #category : 'accessing' }
-RiCommit >> id [
-	^ iceGitCommit id
-]
-
 { #category : 'initialization' }
-RiCommit >> initializeWithRepository: aRiRepository iceGitCommit: anIceGitCommit [
+RiCommit >> initializeWithRepository: aRiRepository [
 
 	self initialize.
 	repository := aRiRepository.
-	iceGitCommit := anIceGitCommit.
-	children := #().
-	ancestors := #()
+	children := #(  ).
+	ancestors := #(  )
 ]
 
 { #category : 'printing' }
@@ -131,9 +96,4 @@ RiCommit >> repository: anObject [
 { #category : 'accessing' }
 RiCommit >> shortDescription [
 	^ ' ' join: { self shortId. self comment printStringLimitedTo: 50. self dateAndTime }
-]
-
-{ #category : 'accessing' }
-RiCommit >> shortId [
-	^ iceGitCommit shortId
 ]

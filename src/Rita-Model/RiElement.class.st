@@ -69,11 +69,6 @@ RiElement >> ancestors [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'converting' }
-RiElement >> asIceObject [
-	^ self subclassResponsibility
-]
-
 { #category : 'accessing' }
 RiElement >> author [
 	^ self subclassResponsibility
@@ -118,10 +113,11 @@ RiElement >> detectInAllChildren: aBlockClosure ifFound: foundBlockClosure [
 			ifTrue: [ ^ foundBlockClosure cull: each ] ]
 ]
 
-{ #category : 'diff' }
-RiElement >> diffTo: aRiCommit [
+{ #category : 'diffing' }
+RiElement >> diffTo: aRiElement [
+	"Answer the RiceDiff from me to aRiElement"
 
-	^ RiceDiff from: self asIceObject to: aRiCommit iceGitCommit
+	^ self repository newDiffFrom: self to: aRiElement
 ]
 
 { #category : 'accessing' }

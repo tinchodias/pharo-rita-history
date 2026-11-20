@@ -111,7 +111,7 @@ RiRepositoryCommitsPresenter >> actionLoadBranch: aRiBranchMark [
 
 { #category : 'actions' }
 RiRepositoryCommitsPresenter >> actionLoadCommit: aRiCommit [
-	aRiCommit iceGitCommit checkout.
+	aRiCommit checkout.
 	self riRepository process.
 	self refreshOnModelUpdate.
 ]

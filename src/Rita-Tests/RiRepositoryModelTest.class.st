@@ -196,7 +196,7 @@ RiRepositoryModelTest >> testPreviousReleaseElement [
 { #category : 'tests' }
 RiRepositoryModelTest >> testRefresh [
 
-	repository := RiRepository iceRepository: self repository.
+	repository := RiIcebergRepository iceRepository: self repository.
 	repository refresh.
 	self assert: repository elements size equals: 0.
 	self assert: repository elementMarks size equals: 0.
